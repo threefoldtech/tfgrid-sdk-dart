@@ -1,0 +1,3 @@
+name: tfgrid-sdk-dart
+packages:
+  - packages/*
