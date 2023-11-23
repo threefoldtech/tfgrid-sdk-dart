@@ -1,7 +1,7 @@
 part of signer;
 
 class Signer {
-  late KeyPair _keyring;
+  KeyPair? _keyring;
 
   Future<void> fromMnemonic(String mnemonic) async {
     _keyring = await KeyPair.fromMnemonic(mnemonic);
@@ -12,21 +12,21 @@ class Signer {
   }
 
   Future<Uint8List> sign(Uint8List data) async {
-    if (_keyring == Null) {
+    if (_keyring == null) {
       throw Exception(
           "Keyring not initialized. Call the appropriate constructor first.");
     }
 
-    final signature = await _keyring.sign(data);
+    final signature = await _keyring!.sign(data);
     return signature;
   }
 
   Future<bool> verify(Uint8List signature, Uint8List data) async {
-    if (_keyring == Null) {
+    if (_keyring == null) {
       throw Exception(
           "Keyring not initialized. Call the appropriate constructor first.");
     }
 
-    return await _keyring.verify(data, signature);
+    return await _keyring!.verify(data, signature);
   }
 }
