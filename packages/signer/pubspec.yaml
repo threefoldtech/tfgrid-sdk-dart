@@ -6,6 +6,7 @@ environment:
   sdk: ^3.2.0
 
 dependencies:
+  hex: ^0.2.0
   polkadart_keyring: ^0.2.1
 
 dev_dependencies:
