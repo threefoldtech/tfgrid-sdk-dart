@@ -3,11 +3,11 @@ part of signer;
 class Signer {
   late KeyPair _keyring;
 
-  Future<void> initializeFromMnemonic(String mnemonic) async {
+  Future<void> fromMnemonic(String mnemonic) async {
     _keyring = await KeyPair.fromMnemonic(mnemonic);
   }
 
-  Future<void> initializeFromSeed(Uint8List seed) async {
+  Future<void> fromSeed(Uint8List seed) async {
     _keyring = await KeyPair.fromSeed(seed);
   }
 
