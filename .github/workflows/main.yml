@@ -3,11 +3,7 @@ name: tfgrid-sdk-dart Workflow
 on:
   push:
     branches:
-<<<<<<< HEAD
-      - "*"
-=======
       - main
->>>>>>> 5d1cb29 (Update main.yml)
 
 jobs:
   build:
