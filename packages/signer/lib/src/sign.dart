@@ -7,7 +7,7 @@ class Signer {
     try {
       _keypair = await KeyPair.fromMnemonic(mnemonic);
     } catch (e) {
-      throw Exception("Failed to create keypair from mnemonic. Error: $e");
+      throw Exception("Failed to create keyPair from mnemonic. Error: $e");
     }
   }
 
@@ -15,37 +15,39 @@ class Signer {
     try {
       _keypair = await KeyPair.fromSeed(seed);
     } catch (e) {
-      throw Exception("Failed to create keypair from seed. Error: $e");
+      throw Exception("Failed to create keyPair from seed. Error: $e");
     }
   }
 
-  Future<void> fromHexSeed(String seed) async {
+  Future<void> fromHexSeed(String hexSeed) async {
     try {
-      final hexSeed = HEX.decode(seed.replaceAll('0x', ''));
-      _keypair = await KeyPair.fromSeed(Uint8List.fromList(hexSeed));
+      final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
+      _keypair = await KeyPair.fromSeed(Uint8List.fromList(seed));
     } catch (e) {
-      throw Exception("Failed to create keypair from hex seed. Error: $e");
+      throw Exception("Failed to create keyPair from hex seed. Error: $e");
     }
   }
 
-  Future<Uint8List> sign(Uint8List data) async {
+  Future<Uint8List> sign(String data) async {
     if (_keypair == null) {
-      throw Exception("Keypair not initialized.");
+      throw Exception("keypair not initialized.");
     }
     try {
-      final signature = await _keypair!.sign(data);
+      final dataBytes = Uint8List.fromList(utf8.encode(data));
+      final signature = await _keypair!.sign(dataBytes);
       return signature;
     } catch (e) {
       throw Exception("Failed to sign data. Error: $e");
     }
   }
 
-  Future<bool> verify(Uint8List signature, Uint8List data) async {
+  Future<bool> verify(Uint8List signature, String data) async {
     if (_keypair == null) {
-      throw Exception("Keypair not initialized.");
+      throw Exception("keypair not initialized.");
     }
     try {
-      return await _keypair!.verify(data, signature);
+      final dataBytes = Uint8List.fromList(utf8.encode(data));
+      return await _keypair!.verify(dataBytes, signature);
     } catch (e) {
       throw Exception("Failed to verify signature. Error: $e");
     }
