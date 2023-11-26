@@ -1,0 +1,30 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Dart
+        run:  dart-lang/setup-dart@v3  
+                
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Check format
+        run: dart format --set-exit-if-changed .
+
+      - name: Analyze
+        run: dart analyze .
+
+      - name: Run tests
+        run: melos run test
