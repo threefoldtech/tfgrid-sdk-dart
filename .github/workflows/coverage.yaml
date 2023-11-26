@@ -1,4 +1,4 @@
-name: Build and Test
+name: Upload Coverage
 
 on:
   push:
@@ -19,20 +19,22 @@ jobs:
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.6.0
         with:
-          sdk: 'stable'
+          sdk: "stable"
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'    
+          flutter-version: "3.16.0"
 
       - name: Install Melos
-        run: dart pub global activate melos      
+        run: dart pub global activate melos
 
       - name: Install dependencies
         run: melos bootstrap
 
       - name: Run unit tests
         run: melos run unit_test
+      - name: Create coverage directory
+        run: mkdir -p coverage
 
       - name: Merge coverage
         run: melos run unit_test_and_coverage
