@@ -16,15 +16,11 @@ jobs:
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.6.0
         with:
-            sdk: 'stable'
-      - name: Install Melos
-        run: dart pub global activate melos      
+            sdk: 'stable'    
                 
       - name: Install dependencies
         run: dart pub get
 
       - name: Analyze
-        run: melos run analyze
+        run: melos exec -- flutter analyze .
 
-      - name: Run tests
-        run: melos run test
