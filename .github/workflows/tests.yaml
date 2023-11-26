@@ -21,7 +21,7 @@ jobs:
         run: dart pub global activate melos      
                 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub global run melos bootstrap
 
       - name: Analyze
         run: dart analyze .
