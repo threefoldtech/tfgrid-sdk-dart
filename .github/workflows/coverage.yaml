@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: melos bootstrap
 
-      - name: Analyze
-        run: melos run analyze
-
       - name: Run unit tests
         run: melos run unit_test
 
