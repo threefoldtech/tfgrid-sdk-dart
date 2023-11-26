@@ -44,6 +44,14 @@ jobs:
           melos exec --dir-exists="coverage" -- bash -c 'dart pub global run coverde filter --input coverage/lcov.info --output coverage/filtered.lcov.info --filters .g.dart'
           melos exec --dir-exists="coverage" -- bash -c 'dart pub global run coverde value -i coverage/filtered.lcov.info > coverage/result.txt'
 
+      - name: Print COVERAGE_PERCENTAGE
+        run: |
+          COVERAGE_PERCENTAGE=$(grep -A1 "GLOBAL:" coverage/result.txt | tail -n 1 | cut -d ' ' -f 1)
+          echo "COVERAGE_PERCENTAGE: $COVERAGE_PERCENTAGE"
+
+      - name: Update Coverage Badge
+        run: echo "::set-output name=COVERAGE_PERCENTAGE::$COVERAGE_PERCENTAGE"    
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
