@@ -1,4 +1,4 @@
-part of signer;
+part of '../signer.dart';
 
 class Signer {
   KeyPair? _keypair;
@@ -13,7 +13,7 @@ class Signer {
 
   Future<void> fromSeed(Uint8List seed) async {
     try {
-      _keypair = await KeyPair.fromSeed(seed);
+      _keypair = KeyPair.fromSeed(seed);
     } catch (e) {
       throw Exception("Failed to create keyPair from seed. Error: $e");
     }
@@ -22,7 +22,7 @@ class Signer {
   Future<void> fromHexSeed(String hexSeed) async {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
-      _keypair = await KeyPair.fromSeed(Uint8List.fromList(seed));
+      _keypair = KeyPair.fromSeed(Uint8List.fromList(seed));
     } catch (e) {
       throw Exception("Failed to create keyPair from hex seed. Error: $e");
     }
@@ -34,7 +34,7 @@ class Signer {
     }
     try {
       final dataBytes = Uint8List.fromList(utf8.encode(data));
-      final signature = await _keypair!.sign(dataBytes);
+      final signature = _keypair!.sign(dataBytes);
       return signature;
     } catch (e) {
       throw Exception("Failed to sign data. Error: $e");
@@ -47,7 +47,7 @@ class Signer {
     }
     try {
       final dataBytes = Uint8List.fromList(utf8.encode(data));
-      return await _keypair!.verify(dataBytes, signature);
+      return _keypair!.verify(dataBytes, signature);
     } catch (e) {
       throw Exception("Failed to verify signature. Error: $e");
     }
