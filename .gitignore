@@ -1,6 +1,5 @@
 pubspec.lock
 
 .dart_tool/
-coverage/
 *.iml
 .idea/
