@@ -1,6 +1,7 @@
 # tfgrid-sdk-dart
 
-[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos) [![Coverage Status](https://img.shields.io/badge/coverage-86.36-%23ff69b4)](https://app.codecov.io/gh/codescalers/tfgrid-sdk-dart)
+
 ## Prerequisites
 
 Make sure you have the following tools installed:
