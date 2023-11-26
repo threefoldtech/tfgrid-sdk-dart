@@ -13,8 +13,11 @@ jobs:
       - name: Set up Repository
         uses: actions/checkout@v2
 
-      - name: Set up Dart
-        run:  dart-lang/setup-dart@v1 
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1.6.0
+            
+        with:
+            sdk: 'stable'
                 
 
       - name: Install dependencies
