@@ -33,11 +33,16 @@ jobs:
 
       - name: Run unit tests
         run: melos run unit_test
+
       - name: Create coverage directory
         run: mkdir -p coverage
 
       - name: Merge coverage
-        run: melos run unit_test_and_coverage
+        run: |
+          melos exec rm -rf coverage
+          melos run unit_test
+          melos exec bash -c 'cd $(pwd) && dart pub global run coverde filter --input coverage/lcov.info --output coverage/filtered.lcov.info --filters .g.dart'
+          melos exec bash -c 'cd $(pwd) && dart pub global run coverde value -i coverage/filtered.lcov.info > coverage/result.txt'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
