@@ -5,7 +5,7 @@ packages:
 scripts:
   analyze:
     run: melos exec -- flutter analyze .
-    description: Run `dart analyze` in all packages.
+    description: Run `dart analyze` in all packages (linting).
   unit_test:
     run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
     description: Run all Flutter tests in this project.

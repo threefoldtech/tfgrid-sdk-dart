@@ -23,6 +23,6 @@ jobs:
       - name: Install dependencies
         run: dart pub global run melos bootstrap
 
-      - name: Analyze
+      - name: Linting
         run: dart analyze .
 
