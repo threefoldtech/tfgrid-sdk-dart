@@ -10,6 +10,11 @@ Make sure you have the following tools installed:
 - [Melos](https://pub.dev/packages/melos)
 - [Coverde](https://pub.dev/packages/coverde)
 
+## Packages
+
+- [signer](./packages/signer/README.md)
+- [tfchain_client](./packages/tfchain_client/README.md)
+
 ## Initialize Workspace
 
 To initialize workspace in all packages run the following command
