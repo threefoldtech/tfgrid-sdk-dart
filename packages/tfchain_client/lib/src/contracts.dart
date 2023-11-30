@@ -36,9 +36,9 @@ class QueryContracts {
   }
 
   Future<BigInt?> getContractIdByNodeIdAndHash(
-      {required int nodeId, required String hash}) async {
+      {required int nodeId, required List<int> hash}) async {
     final res = await client.api.query.smartContractModule
-        .contractIDByNodeIDAndHash(nodeId, hash as List<int>);
+        .contractIDByNodeIDAndHash(nodeId, hash);
     return res;
   }
 

@@ -1,15 +1,24 @@
 part of '../tfchain_client.dart';
-// TODO: Disconnect
 
 class QueryClient {
   final String url;
   late final Provider provider;
   late final polkadot.Dev api;
   late QueryContracts contracts;
+  late QueryBalances balances;
+  late QueryFarms farms;
+  late QueryNodes nodes;
+  late QueryPricingPolicies policies;
+  late QueryTwins twins;
 
   QueryClient(this.url) {
     newProvider();
     contracts = QueryContracts(this);
+    balances = QueryBalances(this);
+    farms = QueryFarms(this);
+    nodes = QueryNodes(this);
+    policies = QueryPricingPolicies(this);
+    twins = QueryTwins(this);
   }
 
   void newProvider() {
@@ -25,5 +34,9 @@ class QueryClient {
 
   void connect() async {
     checkInputs();
+  }
+
+  void disconnect() async {
+    await api.disconnect();
   }
 }
