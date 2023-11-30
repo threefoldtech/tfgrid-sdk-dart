@@ -1,5 +1,4 @@
 import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/twin.dart';
-import 'package:tfchain_client/generated/dev/types/sp_core/crypto/account_id32.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryTwins {
@@ -12,7 +11,8 @@ class QueryTwins {
   }
 
   Future<int?> getTwinIdByAccountId({required List<int> accountId}) async {
-    final res = await client.api.query.tfgridModule.twinIdByAccountID(accountId);
+    final res =
+        await client.api.query.tfgridModule.twinIdByAccountID(accountId);
     return res;
   }
 }
