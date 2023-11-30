@@ -1,0 +1,6 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    - package:lints/rules.yaml
+    - exclude: packages/tfchain_client/lib/generated/**
