@@ -24,5 +24,6 @@ jobs:
         run: dart pub global run melos bootstrap
 
       - name: Linting
-        run: dart analyze .
+        run: find . -name "*.dart" -not -path "./packages/tfchain_client/lib/generated/*" | xargs dart analyze
+
 
