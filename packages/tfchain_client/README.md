@@ -21,3 +21,11 @@ final contract = await client.contracts.get(contractId: BigInt.from(123456));
 print(contract!.toJson());
 client.disconnect();
 ```
+
+## Run Tests
+
+To run the tests, run the following command
+
+```bash
+dart test
+```

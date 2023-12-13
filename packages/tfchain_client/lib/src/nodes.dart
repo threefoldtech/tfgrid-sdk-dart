@@ -1,3 +1,4 @@
+import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/node.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
@@ -13,3 +14,40 @@ class QueryNodes {
     return res as Node;
   }
 }
+
+class Nodes extends QueryNodes {
+  Nodes(Client client) : super(client);
+
+  Future<RuntimeCall> setPower(
+      {required int nodeId, required bool power}) async {
+    Map<String, bool?> powerTarget = {
+      'up': null,
+      'down': null,
+    };
+    if (power) {
+      powerTarget['up'] = true;
+    } else {
+      powerTarget['down'] = true;
+    }
+    final extrinsic = client.api.tx.tfgridModule
+        .changePowerTarget(nodeId: nodeId, powerTarget: powerTarget);
+    return extrinsic;
+  }
+}
+
+// TODO: what to do with this for addNodePublicConfig function
+// interface NodePublicConfigOptions {
+//   farmId: number;
+//   nodeId: number;
+//   publicConfig?: {
+//     ip4: {
+//       ip: string;
+//       gw: string;
+//     };
+//     ip6?: {
+//       ip: string;
+//       gw: string;
+//     } | null;
+//     domain?: string | null;
+//   } | null;
+// }

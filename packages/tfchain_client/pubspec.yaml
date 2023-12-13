@@ -11,10 +11,12 @@ dependencies:
   substrate_bip39: ^0.2.0
   polkadart_cli: ^0.2.2
   hex: ^0.2.0
+  bip39: ^1.0.6
 
 dev_dependencies:
   lints: ^3.0.0
   test: ^1.24.0
+  coverage: ^1.7.1
 
 polkadart:
   output_dir: lib/generated

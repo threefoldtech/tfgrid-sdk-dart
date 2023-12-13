@@ -2,6 +2,7 @@ import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/grid_co
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/service_contract.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 const twoWeeks = 1209600000;
@@ -78,5 +79,65 @@ class QueryContracts {
     final res = await client.api.query.smartContractModule
         .dedicatedNodesExtraFee(nodeId);
     return res;
+  }
+}
+
+class Contracts extends QueryContracts {
+  Contracts(Client client) : super(client);
+
+  Future<RuntimeCall> createNode(
+      {required int nodeId,
+      required List<int> deploymentHash,
+      required List<int> deploymentData,
+      required int publicIps}) async {
+    final extrinsic = client.api.tx.smartContractModule.createNodeContract(
+        nodeId: nodeId,
+        deploymentHash: deploymentHash,
+        deploymentData: deploymentData,
+        publicIps: publicIps);
+
+    return extrinsic;
+  }
+
+  Future<RuntimeCall> updateNode(
+      {required int contractId,
+      required List<int> deploymentHash,
+      required List<int> deploymentData}) async {
+    final extrinsic = client.api.tx.smartContractModule.updateNodeContract(
+        contractId: contractId,
+        deploymentHash: deploymentHash,
+        deploymentData: deploymentData);
+    return extrinsic;
+  }
+
+  Future<RuntimeCall> createName({required String name}) async {
+    final extrinsic =
+        client.api.tx.smartContractModule.createNameContract(name: name);
+    return extrinsic;
+  }
+
+  Future<RuntimeCall> createRent(
+      {required int nodeId, required int solutionProviderId}) async {
+    final extrinsic = client.api.tx.smartContractModule.createRentContract(
+        nodeId: nodeId, solutionProviderId: solutionProviderId);
+    return extrinsic;
+  }
+
+  Future<RuntimeCall> cancel({required BigInt contractId}) async {
+    final contract = await get(contractId: contractId);
+    if (contract == null) {
+      throw Exception("Contract not found");
+    }
+
+    final extrinsic = client.api.tx.smartContractModule
+        .cancelContract(contractId: contractId);
+    return extrinsic;
+  }
+
+  Future<RuntimeCall> setDedicatedNodeExtraFee(
+      {required int nodeId, required int extraFee}) async {
+    final extrinsic = client.api.tx.smartContractModule
+        .setDedicatedNodeExtraFee(nodeId: nodeId, extraFee: extraFee);
+    return extrinsic;
   }
 }
