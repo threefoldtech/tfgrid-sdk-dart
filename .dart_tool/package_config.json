@@ -434,16 +434,10 @@
       "languageVersion": "3.0"
     },
     {
-      "name": "ristretto255",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/ristretto255-1.0.2",
+      "name": "rmb_client",
+      "rootUri": "../packages/rmb_client",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "secp256k1_ecdsa",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/secp256k1_ecdsa-0.4.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "shelf",
@@ -627,9 +621,9 @@
     },
     {
       "name": "web_socket_channel",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.5",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.3",
       "packageUri": "lib/",
-      "languageVersion": "3.3"
+      "languageVersion": "3.2"
     },
     {
       "name": "webkit_inspection_protocol",
@@ -662,7 +656,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-04-18T09:13:15.973441Z",
+  "generated": "2024-01-10T13:39:16.827881Z",
   "generator": "pub",
   "generatorVersion": "3.3.3"
 }
