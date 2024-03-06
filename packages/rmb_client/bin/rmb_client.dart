@@ -1,18 +1,15 @@
-import 'dart:html';
+import 'package:rmb_client/rmb_client.dart';
 
 void main() async {
-  var webSocket = new WebSocket('wss://relay.dev.grid.tf');
-  if (webSocket != null && webSocket.readyState == WebSocket.OPEN) {
-    webSocket.send("");
-  } else {
-    print('WebSocket not connected ');
-  }
+  final client = Client(
+      "wss://relay.dev.grid.tf",
+      "wss://tfchain.dev.grid.tf/ws",
+      "picnic flip cigar rival risk scatter slide aware trust garlic solution token",
+      "session",
+      retries: 3,
+      keypairType: "ed25519");
 
-  // var socket = await WebSocket.connect('wss://relay.dev.grid.tf');
+  await client.connect();
 
-  // socket.listen((data) {
-  //   print('$data');
-  // });
-
-  // await socket.close();
+  // client.closeConnection();
 }

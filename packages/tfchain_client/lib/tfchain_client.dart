@@ -17,3 +17,4 @@ import 'package:bip39/bip39.dart';
 import 'package:convert/convert.dart';
 
 part 'src/client.dart';
+

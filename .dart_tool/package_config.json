@@ -374,6 +374,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "protobuf",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/protobuf-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "pub_semver",
       "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/pub_semver-2.1.4",
       "packageUri": "lib/",
@@ -408,6 +414,12 @@
       "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/rest_client-2.4.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "rmb_client",
+      "rootUri": "../packages/rmb_client",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "shelf",
@@ -579,9 +591,9 @@
     },
     {
       "name": "web_socket_channel",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.3",
       "packageUri": "lib/",
-      "languageVersion": "2.15"
+      "languageVersion": "3.2"
     },
     {
       "name": "webkit_inspection_protocol",
@@ -614,7 +626,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2023-12-07T08:50:13.267937Z",
+  "generated": "2024-01-10T13:39:16.827881Z",
   "generator": "pub",
   "generatorVersion": "3.2.0"
 }
