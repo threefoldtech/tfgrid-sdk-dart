@@ -11,15 +11,16 @@ class QueryClient {
   late final QueryPricingPolicies policies;
   late final QueryTwins twins;
   late final QueryBridge bridge;
+  late final Dao.QueryDao dao;
   late final QueryTFTPrice price;
   // TODO: handle calling signer pkg
-  late final signer;
+  // late final signer;
   late final address;
 
   QueryClient(this.url) {
     provider = Provider.fromUri(Uri.parse(url));
     api = polkadot.Dev(provider);
-    
+
     contracts = QueryContracts(this);
     balances = balance.QueryBalances(this);
     farms = QueryFarms(this);
@@ -28,6 +29,7 @@ class QueryClient {
     twins = QueryTwins(this);
     bridge = QueryBridge(this);
     price = QueryTFTPrice(this);
+    dao = Dao.QueryDao(this);
   }
 
   void checkInputs() {
@@ -51,6 +53,7 @@ class Client extends QueryClient {
   late final balance.Balances clientBalances;
   late final Contracts clientContracts;
   late final Farms clientFarms;
+  late final Dao.Dao clientDao;
 
   Client(String url, this.mnemonic) : super(url) {
     if (provider == null) {
@@ -60,6 +63,7 @@ class Client extends QueryClient {
     clientBalances = balance.Balances(this);
     clientContracts = Contracts(this);
     clientFarms = Farms(this);
+    clientDao = Dao.Dao(this);
   }
   @override
   void checkInputs() {
@@ -111,9 +115,9 @@ class Client extends QueryClient {
         .result
         .replaceAll('0x', '');
 
-    final keyring = await KeyPair.fromMnemonic(mnemonic);
+    final keyring = await KeyPair.sr25519.fromMnemonic(mnemonic);
 
-    final encodedCall = hex.encode(runtimeCall.encode());
+    final encodedCall = runtimeCall.encode();
     final nonce = await api.rpc.system.accountNextIndex(keyring.address);
 
     final payloadToSign = SigningPayload(
@@ -135,15 +139,15 @@ class Client extends QueryClient {
 
     final publicKey = hex.encode(keyring.publicKey.bytes);
 
-    final extrinsic = Extrinsic(
-            signer: publicKey,
+    final extrinsic = ExtrinsicPayload(
+            signer: Uint8List.fromList(keyring.bytes()),
             method: encodedCall,
-            signature: hexSignature,
+            signature: signature,
             eraPeriod: 64,
             blockNumber: blockNumber,
             nonce: nonce,
             tip: 0)
-        .encode(api.registry);
+        .encode(api.registry, SignatureType.sr25519);
 
     final hexExtrinsic = hex.encode(extrinsic);
     print('Extrinsic: $hexExtrinsic');

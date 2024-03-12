@@ -15,7 +15,7 @@ void main() {
     test('Test sign and verify using mnemonic', () async {
       final mnemonic =
           'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic);
+      await signer.fromMnemonic(mnemonic, KPType.ed25519);
       final data = 'dummyData';
 
       final signature = await signer.sign(data);
@@ -37,14 +37,14 @@ void main() {
 
     test('Test with invalid mnemonic', () async {
       final invalidMnemonic = 'invalid mnemonic phrase';
-      expect(() async => await signer.fromMnemonic(invalidMnemonic),
+      expect(() async => await signer.fromMnemonic(invalidMnemonic, KPType.sr25519),
           throwsException);
     });
 
     test('Test sign and verify with wrong signature', () async {
       final mnemonic =
           'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic);
+      await signer.fromMnemonic(mnemonic, KPType.ed25519);
 
       final data = 'dummyData';
       final signature = await signer.sign(data);
@@ -90,7 +90,7 @@ void main() {
         177,
         228
       ]);
-      await signer.fromSeed(seed);
+      await signer.fromSeed(seed, KPType.ed25519);
 
       final data = 'dummyData';
       final signature = await signer.sign(data);
@@ -106,12 +106,12 @@ void main() {
         148,
         202,
       ]);
-      expect(() async => await signer.fromSeed(invalidSeed), throwsException);
+      expect(() async => await signer.fromSeed(invalidSeed, KPType.sr25519), throwsException);
     });
 
     test('Test sign and verify with hex seed', () async {
       await signer.fromHexSeed(
-          '0x6c1d94caa7bf0a0d7ef0983c1823e9ac6abed57221d57d0922654352d85cb1e4');
+          '0x6c1d94caa7bf0a0d7ef0983c1823e9ac6abed57221d57d0922654352d85cb1e4', KPType.sr25519);
       final data = 'dummyData';
       final signature = await signer.sign(data);
 
@@ -120,13 +120,13 @@ void main() {
     });
 
     test('Test sign with invalid hex seed', () async {
-      expect(() async => await signer.fromHexSeed('0x6c1'), throwsException);
+      expect(() async => await signer.fromHexSeed('0x6c1', KPType.sr25519), throwsException);
     });
 
     test('Test verify with empty data', () async {
       final mnemonic =
           'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic);
+      await signer.fromMnemonic(mnemonic, KPType.ed25519);
 
       final data = '';
       final signature = await signer.sign(data);
@@ -138,7 +138,7 @@ void main() {
     test('Test verify with different data', () async {
       final mnemonic =
           'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic);
+      await signer.fromMnemonic(mnemonic, KPType.ed25519);
 
       final originalData = 'originalData';
       final signature = await signer.sign(originalData);
@@ -152,9 +152,9 @@ void main() {
       final signer = Signer();
       final mnemonic =
           'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic);
+      await signer.fromMnemonic(mnemonic, KPType.sr25519);
 
-      final keypair = await KeyPair.fromMnemonic(mnemonic);
+      final keypair = await KeyPair.sr25519.fromMnemonic(mnemonic);
       final address = keypair.address;
 
       final pair = await signer.keypairFromAddress(address);

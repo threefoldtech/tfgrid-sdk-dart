@@ -2,27 +2,50 @@ part of '../signer.dart';
 
 class Signer {
   KeyPair? _keypair;
+  KPType? _type;
 
-  Future<void> fromMnemonic(String mnemonic) async {
+  Future<void> fromMnemonic(String mnemonic, KPType type) async {
     try {
-      _keypair = await KeyPair.fromMnemonic(mnemonic);
+      if (type.value == KPType.sr25519.value) {
+        _keypair = await KeyPair.sr25519.fromMnemonic(mnemonic);
+        _type = KPType.sr25519;
+      } else if (type.value == KPType.ed25519.value) {
+        _keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
+        _type = KPType.ed25519;
+      } else {
+        throw Exception("Wrong KeyPair type !");
+      }
     } catch (e) {
       throw Exception("Failed to create keyPair from mnemonic. Error: $e");
     }
   }
 
-  Future<void> fromSeed(Uint8List seed) async {
+  Future<void> fromSeed(Uint8List seed, KPType type) async {
     try {
-      _keypair = KeyPair.fromSeed(seed);
+      if (type.value == KPType.sr25519) {
+        _keypair = await KeyPair.sr25519.fromSeed(seed);
+        _type = KPType.sr25519;
+      } else if (type.value == KPType.ed25519) {
+        _keypair = await KeyPair.ed25519.fromSeed(seed);
+        _type = KPType.ed25519;
+      } else {
+        throw Exception("Wrong KeyPair type !");
+      }
     } catch (e) {
       throw Exception("Failed to create keyPair from seed. Error: $e");
     }
   }
 
-  Future<void> fromHexSeed(String hexSeed) async {
+  Future<void> fromHexSeed(String hexSeed, KPType type) async {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
-      _keypair = KeyPair.fromSeed(Uint8List.fromList(seed));
+      if (type.value == KPType.sr25519) {
+        _keypair = KeyPair.sr25519.fromSeed(Uint8List.fromList(seed));
+      } else if (type.value == KPType.ed25519) {
+        _keypair = KeyPair.ed25519.fromSeed(Uint8List.fromList(seed));
+      } else {
+        throw Exception("Wrong KeyPair type !");
+      }
     } catch (e) {
       throw Exception("Failed to create keyPair from hex seed. Error: $e");
     }
