@@ -37,7 +37,9 @@ void main() {
 
     test('Test with invalid mnemonic', () async {
       final invalidMnemonic = 'invalid mnemonic phrase';
-      expect(() async => await signer.fromMnemonic(invalidMnemonic, KPType.sr25519),
+      expect(
+          () async =>
+              await signer.fromMnemonic(invalidMnemonic, KPType.sr25519),
           throwsException);
     });
 
@@ -106,12 +108,14 @@ void main() {
         148,
         202,
       ]);
-      expect(() async => await signer.fromSeed(invalidSeed, KPType.sr25519), throwsException);
+      expect(() async => await signer.fromSeed(invalidSeed, KPType.sr25519),
+          throwsException);
     });
 
     test('Test sign and verify with hex seed', () async {
-      await signer.fromHexSeed(
-          '0x6c1d94caa7bf0a0d7ef0983c1823e9ac6abed57221d57d0922654352d85cb1e4', KPType.sr25519);
+      signer.fromHexSeed(
+          '0x6c1d94caa7bf0a0d7ef0983c1823e9ac6abed57221d57d0922654352d85cb1e4',
+          KPType.sr25519);
       final data = 'dummyData';
       final signature = await signer.sign(data);
 
@@ -120,7 +124,8 @@ void main() {
     });
 
     test('Test sign with invalid hex seed', () async {
-      expect(() async => await signer.fromHexSeed('0x6c1', KPType.sr25519), throwsException);
+      expect(() async => signer.fromHexSeed('0x6c1', KPType.sr25519),
+          throwsException);
     });
 
     test('Test verify with empty data', () async {

@@ -13,6 +13,8 @@ dependencies:
   hex: ^0.2.0
   bip39: ^1.0.6
   moment_dart: ^2.0.2
+  signer: 
+    path: ../signer
 
 dev_dependencies:
   lints: ^3.0.0

@@ -13,14 +13,10 @@ class QueryClient {
   late final QueryBridge bridge;
   late final Dao.QueryDao dao;
   late final QueryTFTPrice price;
-  // TODO: handle calling signer pkg
-  // late final signer;
-  late final address;
 
   QueryClient(this.url) {
     provider = Provider.fromUri(Uri.parse(url));
     api = polkadot.Dev(provider);
-
     contracts = QueryContracts(this);
     balances = balance.QueryBalances(this);
     farms = QueryFarms(this);
@@ -38,7 +34,7 @@ class QueryClient {
     }
   }
 
-  void connect() async {
+  void connect() {
     checkInputs();
   }
 
@@ -49,13 +45,18 @@ class QueryClient {
 
 class Client extends QueryClient {
   final String mnemonic;
-  late KeyPair keypair;
+  late String address;
+  final String keypairType;
+  late Signer.Signer signer;
+  KeyPair? keypair;
+
   late final balance.Balances clientBalances;
   late final Contracts clientContracts;
   late final Farms clientFarms;
   late final Dao.Dao clientDao;
+  final SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
-  Client(String url, this.mnemonic) : super(url) {
+  Client(String url, this.mnemonic, this.keypairType) : super(url) {
     if (provider == null) {
       provider = Provider.fromUri(Uri.parse(url));
       api = polkadot.Dev(provider);
@@ -64,9 +65,12 @@ class Client extends QueryClient {
     clientContracts = Contracts(this);
     clientFarms = Farms(this);
     clientDao = Dao.Dao(this);
+    signer = Signer.Signer();
   }
+
   @override
   void checkInputs() {
+    super.checkInputs();
     if (mnemonic.isEmpty) {
       throw FormatException("Mnemonic or secret should be provided");
     } else if (mnemonic != "//Allice" && !validateMnemonic(mnemonic)) {
@@ -79,11 +83,23 @@ class Client extends QueryClient {
             "Invalid secret seed. Secret seed should start with 0x");
       }
     }
+
+    if (!SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
+      throw FormatException(
+          "Keypair type $keypairType is not valid. It Should be either of : ${SUPPORTED_KEYPAIR_TYPES}");
+    }
   }
 
   @override
   void connect() async {
     checkInputs();
+    if (keypairType == "sr25519") {
+      keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
+      address = keypair!.address;
+    } else {
+      keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.ed25519);
+      address = keypair!.address;
+    }
   }
 
   @override
@@ -152,8 +168,9 @@ class Client extends QueryClient {
     final hexExtrinsic = hex.encode(extrinsic);
     print('Extrinsic: $hexExtrinsic');
 
-    final author = AuthorApi(provider);
-    author.submitAndWatchExtrinsic(extrinsic,
+    final submit = await AuthorApi(provider).submitAndWatchExtrinsic(
+        extrinsic as Uint8List,
         (p0) => print("Extrinsic result: ${p0.type} - {${p0.value}}"));
+    print(submit);
   }
 }
