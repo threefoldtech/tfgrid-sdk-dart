@@ -50,15 +50,18 @@ void main() {
 
   group("Full Client Tests", () {
     test('checkInputs with Invalid mnemonic', () {
-      final client = Client("wss://tfchain.dev.grid.tf/ws", "validMnemonic");
+      final client =
+          Client("wss://tfchain.dev.grid.tf/ws", "validMnemonic", "");
       expect(
           () => client.checkInputs(), throwsA(TypeMatcher<FormatException>()));
     });
 
     late Client client;
     setUp(() {
-      client = Client("wss://tfchain.dev.grid.tf/ws",
-          "picnic flip cigar rival risk scatter slide aware trust garlic solution token");
+      client = Client(
+          "wss://tfchain.dev.grid.tf/ws",
+          "picnic flip cigar rival risk scatter slide aware trust garlic solution token",
+          "");
     });
 
     test('Initialization', () {

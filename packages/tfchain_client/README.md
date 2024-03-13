@@ -22,6 +22,16 @@ print(contract!.toJson());
 client.disconnect();
 ```
 
+### Full Client
+
+```dart
+final client = Client("wss://tfchain.dev.grid.tf/ws", "your-mnemonic");
+client.connect();
+final extrinsic = await client.clientFarms.create(CreateFarmOptions(name: "name"));
+await client.apply(extrinsic);
+client.disconnect();
+```
+
 ## Run Tests
 
 To run the tests, run the following command

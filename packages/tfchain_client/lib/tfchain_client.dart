@@ -18,6 +18,7 @@ import 'package:tfchain_client/src/tft_price.dart';
 import 'package:tfchain_client/src/twins.dart';
 import 'package:bip39/bip39.dart';
 import 'package:convert/convert.dart';
+import 'package:signer/signer.dart' as Signer;
 
 part 'src/client.dart';
 
