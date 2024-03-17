@@ -39,7 +39,7 @@ void main() {
       final invalidMnemonic = 'invalid mnemonic phrase';
       expect(
           () async =>
-              await signer.fromMnemonic(invalidMnemonic, KPType.sr25519),
+              await signer.fromMnemonic(invalidMnemonic, KPType.ed25519),
           throwsException);
     });
 
@@ -108,7 +108,7 @@ void main() {
         148,
         202,
       ]);
-      expect(() async => await signer.fromSeed(invalidSeed, KPType.sr25519),
+      expect(() async => await signer.fromSeed(invalidSeed, KPType.ed25519),
           throwsException);
     });
 
@@ -124,7 +124,7 @@ void main() {
     });
 
     test('Test sign with invalid hex seed', () async {
-      expect(() async => signer.fromHexSeed('0x6c1', KPType.sr25519),
+      expect(() async => signer.fromHexSeed('0x6c1', KPType.ed25519),
           throwsException);
     });
 
@@ -157,9 +157,9 @@ void main() {
       final signer = Signer();
       final mnemonic =
           'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic, KPType.sr25519);
+      await signer.fromMnemonic(mnemonic, KPType.ed25519);
 
-      final keypair = await KeyPair.sr25519.fromMnemonic(mnemonic);
+      final keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
       final address = keypair.address;
 
       final pair = await signer.keypairFromAddress(address);

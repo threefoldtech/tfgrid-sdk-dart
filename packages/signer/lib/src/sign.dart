@@ -26,11 +26,11 @@ class Signer {
 
   Future<KeyPair?> fromSeed(Uint8List seed, KPType type) async {
     try {
-      if (type.value == KPType.sr25519) {
+      if (type.value == KPType.sr25519.value) {
         keypair = await KeyPair.sr25519.fromSeed(seed);
         _type = KPType.sr25519;
         return keypair;
-      } else if (type.value == KPType.ed25519) {
+      } else if (type.value == KPType.ed25519.value) {
         keypair = await KeyPair.ed25519.fromSeed(seed);
         _type = KPType.ed25519;
         return keypair;
@@ -45,10 +45,10 @@ class Signer {
   void fromHexSeed(String hexSeed, KPType type) {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
-      if (type.value == KPType.sr25519) {
+      if (type.value == KPType.sr25519.value) {
         keypair = KeyPair.sr25519.fromSeed(Uint8List.fromList(seed));
         _type = KPType.sr25519;
-      } else if (type.value == KPType.ed25519) {
+      } else if (type.value == KPType.ed25519.value) {
         keypair = KeyPair.ed25519.fromSeed(Uint8List.fromList(seed));
         _type = KPType.ed25519;
       } else {
