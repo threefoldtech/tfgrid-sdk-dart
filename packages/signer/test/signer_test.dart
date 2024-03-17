@@ -95,9 +95,9 @@ void main() {
       await signer.fromSeed(seed, KPType.ed25519);
 
       final data = 'dummyData';
-      final signature = await signer.sign(data);
+      final signature = signer.sign(data);
 
-      final isVerified = await signer.verify(signature, data);
+      final isVerified = signer.verify(signature, data);
       expect(isVerified, isTrue);
     });
 
