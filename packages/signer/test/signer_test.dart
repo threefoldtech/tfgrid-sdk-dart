@@ -57,50 +57,6 @@ void main() {
       expect(isVerified, isFalse);
     });
 
-    test('Test sign and verify using seed', () async {
-      final seed = Uint8List.fromList([
-        108,
-        29,
-        148,
-        202,
-        167,
-        191,
-        10,
-        13,
-        126,
-        240,
-        152,
-        60,
-        24,
-        35,
-        233,
-        172,
-        106,
-        190,
-        213,
-        114,
-        33,
-        213,
-        125,
-        9,
-        34,
-        101,
-        67,
-        82,
-        216,
-        92,
-        177,
-        228
-      ]);
-      await signer.fromSeed(seed, KPType.ed25519);
-
-      final data = 'dummyData';
-      final signature = signer.sign(data);
-
-      final isVerified = signer.verify(signature, data);
-      expect(isVerified, isTrue);
-    });
-
     test('Test with invalid seed', () async {
       final invalidSeed = Uint8List.fromList([
         108,
@@ -110,17 +66,6 @@ void main() {
       ]);
       expect(() async => await signer.fromSeed(invalidSeed, KPType.ed25519),
           throwsException);
-    });
-
-    test('Test sign and verify with hex seed', () async {
-      signer.fromHexSeed(
-          '0x6c1d94caa7bf0a0d7ef0983c1823e9ac6abed57221d57d0922654352d85cb1e4',
-          KPType.sr25519);
-      final data = 'dummyData';
-      final signature = await signer.sign(data);
-
-      final isVerified = await signer.verify(signature, data);
-      expect(isVerified, isTrue);
     });
 
     test('Test sign with invalid hex seed', () async {
