@@ -67,6 +67,7 @@ class Client extends QueryClient {
     clientDao = Dao.Dao(this);
     clientTwins = Twins(this);
     signer = Signer.Signer();
+  
   }
 
   @override

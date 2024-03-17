@@ -51,7 +51,7 @@ void main() {
   group("Full Client Tests", () {
     test('checkInputs with Invalid mnemonic', () {
       final client =
-          Client("wss://tfchain.dev.grid.tf/ws", "validMnemonic", "");
+          Client("wss://tfchain.dev.grid.tf/ws", "validMnemonic", "sr25519");
       expect(
           () => client.checkInputs(), throwsA(TypeMatcher<FormatException>()));
     });
@@ -61,7 +61,7 @@ void main() {
       client = Client(
           "wss://tfchain.dev.grid.tf/ws",
           "picnic flip cigar rival risk scatter slide aware trust garlic solution token",
-          "");
+          "sr25519");
     });
 
     test('Initialization', () {
