@@ -34,11 +34,11 @@ class QueryClient {
     }
   }
 
-  void connect() {
+  Future<void> connect() async {
     checkInputs();
   }
 
-  void disconnect() async {
+  Future<void> disconnect() async {
     await api.disconnect();
   }
 }
@@ -49,11 +49,11 @@ class Client extends QueryClient {
   final String keypairType;
   late Signer.Signer signer;
   KeyPair? keypair;
-
   late final balance.Balances clientBalances;
   late final Contracts clientContracts;
   late final Farms clientFarms;
   late final Dao.Dao clientDao;
+  late final Twins clientTwins;
   final SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
   Client(String url, this.mnemonic, this.keypairType) : super(url) {
@@ -65,6 +65,7 @@ class Client extends QueryClient {
     clientContracts = Contracts(this);
     clientFarms = Farms(this);
     clientDao = Dao.Dao(this);
+    clientTwins = Twins(this);
     signer = Signer.Signer();
   }
 
@@ -91,7 +92,7 @@ class Client extends QueryClient {
   }
 
   @override
-  void connect() async {
+  Future<void> connect() async {
     checkInputs();
     if (keypairType == "sr25519") {
       keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
@@ -103,7 +104,7 @@ class Client extends QueryClient {
   }
 
   @override
-  void disconnect() async {
+  Future<void> disconnect() async {
     await api.disconnect();
   }
 

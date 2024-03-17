@@ -1,4 +1,6 @@
 part of '../signer.dart';
+// TODO: should return keypair or not ?
+
 
 class Signer {
   KeyPair? keypair;
@@ -22,14 +24,16 @@ class Signer {
     }
   }
 
-  Future<void> fromSeed(Uint8List seed, KPType type) async {
+  Future<KeyPair?> fromSeed(Uint8List seed, KPType type) async {
     try {
       if (type.value == KPType.sr25519) {
         keypair = await KeyPair.sr25519.fromSeed(seed);
         _type = KPType.sr25519;
+        return keypair;
       } else if (type.value == KPType.ed25519) {
         keypair = await KeyPair.ed25519.fromSeed(seed);
         _type = KPType.ed25519;
+        return keypair;
       } else {
         throw Exception("Wrong KeyPair type !");
       }
@@ -43,8 +47,10 @@ class Signer {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
       if (type.value == KPType.sr25519) {
         keypair = KeyPair.sr25519.fromSeed(Uint8List.fromList(seed));
+        _type = KPType.sr25519;
       } else if (type.value == KPType.ed25519) {
         keypair = KeyPair.ed25519.fromSeed(Uint8List.fromList(seed));
+        _type = KPType.ed25519;
       } else {
         throw Exception("Wrong KeyPair type !");
       }
