@@ -10,19 +10,37 @@ class Client {
 
   Client(this.network) {
     late final tft;
-    if (network.value == 'TESTNET') {
-      sdk = StellarSDK.TESTNET;
-      tft = currency.Currency(
-        assetCode: 'TFT',
-        issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
-      );
-    } else if (network.value == 'PUBLIC') {
-      sdk = StellarSDK.PUBLIC;
-      tft = currency.Currency(
-        assetCode: 'TFT',
-        issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
-      );
+    switch (network) {
+      case NetworkType.TestNet:
+        sdk = StellarSDK.TESTNET;
+        tft = currency.Currency(
+          assetCode: 'TFT',
+          issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
+        );
+        break;
+      case NetworkType.PublicNet:
+        sdk = StellarSDK.PUBLIC;
+        tft = currency.Currency(
+          assetCode: 'TFT',
+          issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
+        );
+        break;
+      default:
+        break;
     }
+    // if (network.value == 'TESTNET') {
+    //   sdk = StellarSDK.TESTNET;
+    //   tft = currency.Currency(
+    //     assetCode: 'TFT',
+    //     issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
+    //   );
+    // } else if (network.value == 'PUBLIC') {
+    //   sdk = StellarSDK.PUBLIC;
+    //   tft = currency.Currency(
+    //     assetCode: 'TFT',
+    //     issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
+    //   );
+    // }
 
     currencies = currency.Currencies({'TFT': tft});
 
@@ -361,7 +379,6 @@ class Client {
   // TODO: get transactions of account
   Future<void> getTransactions() async {
     // AccountResponse response = await sdk.accounts.account(keyPair.accountId);
-
   }
 
   Future<List<Map<String, dynamic>>> getBalance() async {

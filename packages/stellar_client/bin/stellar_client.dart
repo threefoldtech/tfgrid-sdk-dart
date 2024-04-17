@@ -9,12 +9,12 @@ void main() async {
   final newPair = await stellarClient
       .createThreefoldAccount(CreateAccountOptions(mnemonic: mnemonic));
   print(newPair!.accountId);
-  await stellarClient.fundTrustLine("TFT");
+  // await stellarClient.fundTrustLine("TFT");
 
-  final list = await stellarClient.getBalance();
-  print(list);
+  // final list = await stellarClient.getBalance();
+  // print(list);
 
-  await stellarClient.getTransactions();
+  // await stellarClient.getTransactions();
 
   // await stellarClient.fetchFundDetails(FetchFundDetailsOptions(
   //     assetCode: 'TFT',
