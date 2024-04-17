@@ -54,6 +54,7 @@ class Client extends QueryClient {
   late final Farms clientFarms;
   late final Dao.Dao clientDao;
   late final Twins clientTwins;
+  late final KVStore kvStrore;
   final SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
   Client(String url, this.mnemonic, this.keypairType) : super(url) {
@@ -66,8 +67,8 @@ class Client extends QueryClient {
     clientFarms = Farms(this);
     clientDao = Dao.Dao(this);
     clientTwins = Twins(this);
+    kvStrore = KVStore(this);
     signer = Signer.Signer();
-  
   }
 
   @override
@@ -97,6 +98,7 @@ class Client extends QueryClient {
     checkInputs();
     if (keypairType == "sr25519") {
       keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
+      print("ADDRESS ${keypair!.address}");
       address = keypair!.address;
     } else {
       keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.ed25519);

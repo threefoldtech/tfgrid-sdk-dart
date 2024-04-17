@@ -11,6 +11,7 @@ import 'package:tfchain_client/src/contracts.dart';
 import 'package:tfchain_client/generated/dev/dev.dart' as polkadot;
 import 'package:tfchain_client/src/dao.dart' as Dao;
 import 'package:tfchain_client/src/farms.dart';
+import 'package:tfchain_client/src/kvstore.dart';
 import 'package:tfchain_client/src/nodes.dart';
 import 'package:tfchain_client/src/pricing_policies.dart';
 import 'package:tfchain_client/src/tft_bridge.dart';
