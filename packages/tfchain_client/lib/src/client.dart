@@ -98,7 +98,6 @@ class Client extends QueryClient {
     checkInputs();
     if (keypairType == "sr25519") {
       keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
-      print("ADDRESS ${keypair!.address}");
       address = keypair!.address;
     } else {
       keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.ed25519);
@@ -140,6 +139,10 @@ class Client extends QueryClient {
     final encodedCall = runtimeCall.encode();
     final nonce = await api.rpc.system.accountNextIndex(keyring.address);
 
+    // await api.rpc.state.queryStorageAt(keys)
+    // state vs systemApi
+    // different naming between polkadot vs flutter
+    // how to make rpc call on state
     final payloadToSign = SigningPayload(
         method: encodedCall,
         specVersion: specVersion,

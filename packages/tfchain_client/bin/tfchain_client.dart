@@ -24,8 +24,6 @@ void main() async {
       "sr25519");
   await client.connect();
 
-  // final extrinsic =
-  //     client.kvStrore.set(KVStoreSetOptions(key: "mnemonic", value: "value"));
   // await client.apply(extrinsic);
   client.kvStrore.list();
 
