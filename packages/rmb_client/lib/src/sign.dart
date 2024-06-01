@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 
 class KPType {
-  static const sr25519 = "sr25519"; //not supported
+  static const sr25519 = "sr25519";
   static const ed25519 = "ed25519";
 }
 
@@ -14,8 +14,12 @@ Uint8List sign(Uint8List payload, KeyPair signer) {
   final newPayload = Uint8List.fromList(payload.sublist(0, payload.length - 1));
 
   // String resultString = String.fromCharCodes(newPayload);
-
-  String typePrefix = "e";
+  String typePrefix = "";
+  if (signer.keyPairType.toString() == KPType.ed25519) {
+    typePrefix = "e";
+  } else if (signer.keyPairType.toString() == KPType.sr25519) {
+    typePrefix = "s";
+  }
 
   final sig = signer.sign(newPayload);
 

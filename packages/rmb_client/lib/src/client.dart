@@ -1,7 +1,5 @@
 part of "../rmb_client.dart";
 
-// TODO: How to import tfchain_client ??
-
 class Client {
   KeyPair? signer;
   String relayUrl;
@@ -12,6 +10,7 @@ class Client {
   WebSocketChannel? channel;
   int? retries;
   TFClient.QueryClient? client;
+  String keypairType;
   var connections = new Map();
 
   Client(
@@ -20,16 +19,12 @@ class Client {
     this.mnemonic,
     this.session, {
     this.retries = 5,
-    required String keypairType,
+    required this.keypairType,
   }) {
     final key = '${relayUrl}:${mnemonic}:${keypairType}';
     if (connections.containsKey(key)) {
       // TODO: how to return from constructor ??
       // return connections[key] as Client;
-    }
-
-    if (keypairType != "ed25519") {
-      throw ArgumentError("Unsupported Keypair type");
     }
 
     client = TFClient.QueryClient(chainUrl);
@@ -51,9 +46,13 @@ class Client {
       print("connected to relay ");
 
       print(signer!.address);
-      twin = await client?.twins
-          .getTwinIdByAccountId(accountId: signer!.publicKey.bytes);
+      twin = await client?.twins.getTwinIdByAccountId(
+          QueryTwinsGetTwinByAccountIdOptions(
+              accountId: signer!.publicKey.bytes));
       print(twin);
+      if (twin == 0) {
+        throw "Couldn't find a user for the provided mnemonic on this network.";
+      }
 
       await channel!.ready;
     } catch (e) {
@@ -79,7 +78,11 @@ class Client {
     String jwt =
         '${base64Url.encode(utf8.encode(jsonEncode(header)))}.${base64Url.encode(utf8.encode(jsonEncode(claims)))}';
 
-    signer = await KeyPair.fromMnemonic(mnemonic);
+    if (keypairType == KPType.ed25519) {
+      signer = await KeyPair.ed25519.fromMnemonic(mnemonic);
+    } else if (keypairType == KPType.sr25519) {
+      signer = await KeyPair.sr25519.fromMnemonic(mnemonic);
+    }
 
     Uint8List sigPrefixed = sign(Uint8List.fromList(jwt.codeUnits), signer!);
     String token = '$jwt.${base64Url.encode(sigPrefixed)}';
