@@ -4,3 +4,4 @@ coverage/
 .dart_tool/
 *.iml
 .idea/
+package_config.json
