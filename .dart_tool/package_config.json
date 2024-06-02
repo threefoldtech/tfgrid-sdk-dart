@@ -302,6 +302,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "merlin",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/merlin-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "meta",
       "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/meta-1.14.0",
       "packageUri": "lib/",
@@ -398,6 +404,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "protobuf",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/protobuf-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "pub_semver",
       "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/pub_semver-2.1.4",
       "packageUri": "lib/",
@@ -438,6 +450,12 @@
       "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/ristretto255-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "rmb_client",
+      "rootUri": "../packages/rmb_client",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "secp256k1_ecdsa",

@@ -1,6 +1,7 @@
 name: tfgrid_sdk_dart
 description: A sample command-line application.
 version: 1.0.0
+publish_to: none
 
 environment:
   sdk: ^3.2.0
@@ -16,5 +17,6 @@ dependencies:
     path: ./packages/signer
   substrate_bip39: ^0.4.0
   tfchain_client:
-    path: ./packages/tfchain_client 
-
+    path: ./packages/tfchain_client
+  rmb_client:
+    path: ./packages/rmb_client

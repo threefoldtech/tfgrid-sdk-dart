@@ -1,5 +1,6 @@
 name: tfgrid_sdk_dart_monorepo
 packages:
+  - ./packages/rmb_client
   - packages/**
   - ./packages/signer
   - ./packages/tfchain_client
