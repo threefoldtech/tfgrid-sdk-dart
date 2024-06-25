@@ -206,6 +206,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "hashlib",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/hashlib-1.16.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "hashlib_codecs",
       "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/hashlib_codecs-2.2.0",
       "packageUri": "lib/",
@@ -288,12 +294,6 @@
       "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/melos-4.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
-    },
-    {
-      "name": "merlin",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/merlin-1.0.3",
-      "packageUri": "lib/",
-      "languageVersion": "3.1"
     },
     {
       "name": "merlin",
@@ -674,7 +674,8 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-04-18T09:13:15.973441Z",
+  "generated": "2024-06-02T07:16:24.662504Z",
   "generator": "pub",
-  "generatorVersion": "3.3.3"
+  "generatorVersion": "3.4.0",
+  "pubCache": "file:///home/alaa/.pub-cache"
 }
