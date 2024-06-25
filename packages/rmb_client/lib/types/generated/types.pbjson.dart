@@ -109,6 +109,7 @@ const Envelope$json = {
     {'1': 'federation', '3': 11, '4': 1, '5': 9, '9': 5, '10': 'federation', '17': true},
     {'1': 'plain', '3': 13, '4': 1, '5': 12, '9': 1, '10': 'plain'},
     {'1': 'cipher', '3': 14, '4': 1, '5': 12, '9': 1, '10': 'cipher'},
+    {'1': 'relays', '3': 17, '4': 3, '5': 9, '10': 'relays'},
   ],
   '8': [
     {'1': 'message'},
@@ -131,6 +132,6 @@ final $typed_data.Uint8List envelopeDescriptor = $convert.base64Decode(
     'EhsKBHBvbmcYECABKAsyBS5Qb25nSABSBHBvbmcSIQoJc2lnbmF0dXJlGAkgASgMSANSCXNpZ2'
     '5hdHVyZYgBARIbCgZzY2hlbWEYCiABKAlIBFIGc2NoZW1hiAEBEiMKCmZlZGVyYXRpb24YCyAB'
     'KAlIBVIKZmVkZXJhdGlvbogBARIWCgVwbGFpbhgNIAEoDEgBUgVwbGFpbhIYCgZjaXBoZXIYDi'
-    'ABKAxIAVIGY2lwaGVyQgkKB21lc3NhZ2VCCQoHcGF5bG9hZEIHCgVfdGFnc0IMCgpfc2lnbmF0'
-    'dXJlQgkKB19zY2hlbWFCDQoLX2ZlZGVyYXRpb24=');
+    'ABKAxIAVIGY2lwaGVyEhYKBnJlbGF5cxgRIAMoCVIGcmVsYXlzQgkKB21lc3NhZ2VCCQoHcGF5'
+    'bG9hZEIHCgVfdGFnc0IMCgpfc2lnbmF0dXJlQgkKB19zY2hlbWFCDQoLX2ZlZGVyYXRpb24=');
 

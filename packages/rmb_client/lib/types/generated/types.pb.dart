@@ -335,6 +335,7 @@ class Envelope extends $pb.GeneratedMessage {
     $core.List<$core.int>? cipher,
     Ping? ping,
     Pong? pong,
+    $core.Iterable<$core.String>? relays,
   }) {
     final $result = create();
     if (uid != null) {
@@ -385,6 +386,9 @@ class Envelope extends $pb.GeneratedMessage {
     if (pong != null) {
       $result.pong = pong;
     }
+    if (relays != null) {
+      $result.relays.addAll(relays);
+    }
     return $result;
   }
   Envelope._() : super();
@@ -423,6 +427,7 @@ class Envelope extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(14, _omitFieldNames ? '' : 'cipher', $pb.PbFieldType.OY)
     ..aOM<Ping>(15, _omitFieldNames ? '' : 'ping', subBuilder: Ping.create)
     ..aOM<Pong>(16, _omitFieldNames ? '' : 'pong', subBuilder: Pong.create)
+    ..pPS(17, _omitFieldNames ? '' : 'relays')
     ..hasRequiredFields = false
   ;
 
@@ -623,6 +628,9 @@ class Envelope extends $pb.GeneratedMessage {
   void clearPong() => clearField(16);
   @$pb.TagNumber(16)
   Pong ensurePong() => $_ensure(15);
+
+  @$pb.TagNumber(17)
+  $core.List<$core.String> get relays => $_getList(16);
 }
 
 
