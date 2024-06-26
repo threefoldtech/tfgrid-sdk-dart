@@ -49,26 +49,27 @@ class Signer {
     }
   }
 
-  Uint8List sign(String data) {
+  String sign(String data) {
     if (keypair == null) {
       throw Exception("keypair not initialized.");
     }
     try {
       final dataBytes = Uint8List.fromList(utf8.encode(data));
       final signature = keypair!.sign(dataBytes);
-      return signature;
+      return HEX.encode(signature);
     } catch (e) {
       throw Exception("Failed to sign data. Error: $e");
     }
   }
 
-  bool verify(Uint8List signature, String data) {
+  bool verify(String signature, String data) {
     if (keypair == null) {
       throw Exception("keypair not initialized.");
     }
     try {
       final dataBytes = Uint8List.fromList(utf8.encode(data));
-      return keypair!.verify(dataBytes, signature);
+      final signatureBytes = HEX.decode(signature);
+      return keypair!.verify(dataBytes, Uint8List.fromList(signatureBytes));
     } catch (e) {
       throw Exception("Failed to verify signature. Error: $e");
     }
