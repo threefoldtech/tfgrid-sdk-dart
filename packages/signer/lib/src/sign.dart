@@ -40,18 +40,10 @@ class Signer {
     }
   }
 
-  void fromHexSeed(String hexSeed, KPType type) {
+  Future<void> fromHexSeed(String hexSeed, KPType type) async {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
-      if (type.value == KPType.sr25519.value) {
-        keypair = KeyPair.sr25519.fromSeed(Uint8List.fromList(seed));
-        _type = KPType.sr25519;
-      } else if (type.value == KPType.ed25519.value) {
-        keypair = KeyPair.ed25519.fromSeed(Uint8List.fromList(seed));
-        _type = KPType.ed25519;
-      } else {
-        throw Exception("Wrong KeyPair type !");
-      }
+      keypair = await fromSeed(Uint8List.fromList(seed), type);
     } catch (e) {
       throw Exception("Failed to create keyPair from hex seed. Error: $e");
     }
