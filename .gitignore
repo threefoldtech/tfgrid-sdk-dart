@@ -5,3 +5,4 @@ coverage.lcov
 coverage/
 *.iml
 .idea
+packages/signer/build
