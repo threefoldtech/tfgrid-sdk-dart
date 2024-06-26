@@ -1,8 +1,7 @@
-pubspec.lock
-
 coverage/
 coverage.lcov
 
-.dart_tool/
+.dart_tool
 coverage/
 *.iml
+.idea
