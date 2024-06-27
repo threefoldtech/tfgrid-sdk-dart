@@ -1,9 +1,9 @@
 name: Upload Coverage
 
 on:
-  push:
+  pull_request:
     branches:
-      - "*"
+      - main
 
 jobs:
   build:
