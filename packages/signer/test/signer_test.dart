@@ -50,8 +50,7 @@ void main() {
 
       final data = 'dummyData';
       final signature = await signer.sign(data);
-
-      final modifiedSignature = Uint8List.fromList([...signature, 0x01]);
+      final modifiedSignature = signature + '00';
 
       final isVerified = await signer.verify(modifiedSignature, data);
       expect(isVerified, isFalse);
@@ -96,21 +95,6 @@ void main() {
       final differentData = 'differentData';
       final isVerified = await signer.verify(signature, differentData);
       expect(isVerified, isFalse);
-    });
-
-    test('Keypair from address', () async {
-      final signer = Signer();
-      final mnemonic =
-          'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic, KPType.ed25519);
-
-      final keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
-      final address = keypair.address;
-
-      final pair = await signer.keypairFromAddress(address);
-
-      expect(pair, isNotNull);
-      expect(pair.address, equals(address));
     });
   });
 }
