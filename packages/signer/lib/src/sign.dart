@@ -7,38 +7,32 @@ class Signer {
     try {
       if (type == KPType.sr25519) {
         keypair = await KeyPair.sr25519.fromMnemonic(mnemonic);
-        return keypair;
       } else if (type == KPType.ed25519) {
         keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
-        return keypair;
-      } else {
-        throw Exception("Wrong KeyPair type !");
       }
+      return keypair;
     } catch (e) {
       throw Exception("Failed to create keyPair from mnemonic. Error: $e");
     }
   }
 
-  Future<KeyPair?> fromSeed(Uint8List seed, KPType type) async {
+  KeyPair? fromSeed(Uint8List seed, KPType type) {
     try {
       if (type == KPType.sr25519) {
-        keypair = await KeyPair.sr25519.fromSeed(seed);
-        return keypair;
+        keypair = KeyPair.sr25519.fromSeed(seed);
       } else if (type == KPType.ed25519) {
-        keypair = await KeyPair.ed25519.fromSeed(seed);
-        return keypair;
-      } else {
-        throw Exception("Wrong KeyPair type !");
+        keypair = KeyPair.ed25519.fromSeed(seed);
       }
+      return keypair;
     } catch (e) {
       throw Exception("Failed to create keyPair from seed. Error: $e");
     }
   }
 
-  Future<void> fromHexSeed(String hexSeed, KPType type) async {
+  void fromHexSeed(String hexSeed, KPType type) {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
-      keypair = await fromSeed(Uint8List.fromList(seed), type);
+      keypair = fromSeed(Uint8List.fromList(seed), type);
     } catch (e) {
       throw Exception("Failed to create keyPair from hex seed. Error: $e");
     }

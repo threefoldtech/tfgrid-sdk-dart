@@ -2,7 +2,10 @@ coverage/
 coverage.lcov
 
 .dart_tool
+/packages/*/.dart_tool
+/packages/*/build
+/packages/*/idea
+
 coverage/
 *.iml
 .idea
-packages/signer/build
