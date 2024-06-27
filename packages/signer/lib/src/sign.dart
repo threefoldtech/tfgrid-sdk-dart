@@ -2,17 +2,14 @@ part of '../signer.dart';
 
 class Signer {
   KeyPair? keypair;
-  KPType? _type;
 
   Future<KeyPair?> fromMnemonic(String mnemonic, KPType type) async {
     try {
       if (type.value == KPType.sr25519.value) {
         keypair = await KeyPair.sr25519.fromMnemonic(mnemonic);
-        _type = KPType.sr25519;
         return keypair;
       } else if (type.value == KPType.ed25519.value) {
         keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
-        _type = KPType.ed25519;
         return keypair;
       } else {
         throw Exception("Wrong KeyPair type !");
@@ -26,11 +23,9 @@ class Signer {
     try {
       if (type.value == KPType.sr25519.value) {
         keypair = await KeyPair.sr25519.fromSeed(seed);
-        _type = KPType.sr25519;
         return keypair;
       } else if (type.value == KPType.ed25519.value) {
         keypair = await KeyPair.ed25519.fromSeed(seed);
-        _type = KPType.ed25519;
         return keypair;
       } else {
         throw Exception("Wrong KeyPair type !");
