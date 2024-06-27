@@ -1,53 +1,64 @@
 part of '../signer.dart';
 
 class Signer {
-  KeyPair? _keypair;
+  KeyPair? keypair;
 
-  Future<void> fromMnemonic(String mnemonic) async {
+  Future<KeyPair?> fromMnemonic(String mnemonic, KPType type) async {
     try {
-      _keypair = await KeyPair.fromMnemonic(mnemonic);
+      if (type == KPType.sr25519) {
+        keypair = await KeyPair.sr25519.fromMnemonic(mnemonic);
+      } else if (type == KPType.ed25519) {
+        keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
+      }
+      return keypair;
     } catch (e) {
       throw Exception("Failed to create keyPair from mnemonic. Error: $e");
     }
   }
 
-  Future<void> fromSeed(Uint8List seed) async {
+  KeyPair? fromSeed(Uint8List seed, KPType type) {
     try {
-      _keypair = KeyPair.fromSeed(seed);
+      if (type == KPType.sr25519) {
+        keypair = KeyPair.sr25519.fromSeed(seed);
+      } else if (type == KPType.ed25519) {
+        keypair = KeyPair.ed25519.fromSeed(seed);
+      }
+      return keypair;
     } catch (e) {
       throw Exception("Failed to create keyPair from seed. Error: $e");
     }
   }
 
-  Future<void> fromHexSeed(String hexSeed) async {
+  void fromHexSeed(String hexSeed, KPType type) {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
-      _keypair = KeyPair.fromSeed(Uint8List.fromList(seed));
+      keypair = fromSeed(Uint8List.fromList(seed), type);
     } catch (e) {
       throw Exception("Failed to create keyPair from hex seed. Error: $e");
     }
   }
 
-  Future<Uint8List> sign(String data) async {
-    if (_keypair == null) {
+  String sign(String data) {
+    if (keypair == null) {
       throw Exception("keypair not initialized.");
     }
     try {
       final dataBytes = Uint8List.fromList(utf8.encode(data));
-      final signature = _keypair!.sign(dataBytes);
-      return signature;
+      final signature = keypair!.sign(dataBytes);
+      return HEX.encode(signature);
     } catch (e) {
       throw Exception("Failed to sign data. Error: $e");
     }
   }
 
-  Future<bool> verify(Uint8List signature, String data) async {
-    if (_keypair == null) {
+  bool verify(String signature, String data) {
+    if (keypair == null) {
       throw Exception("keypair not initialized.");
     }
     try {
       final dataBytes = Uint8List.fromList(utf8.encode(data));
-      return _keypair!.verify(dataBytes, signature);
+      final signatureBytes = HEX.decode(signature);
+      return keypair!.verify(dataBytes, Uint8List.fromList(signatureBytes));
     } catch (e) {
       throw Exception("Failed to verify signature. Error: $e");
     }
