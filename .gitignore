@@ -5,6 +5,5 @@ coverage/
 /packages/*/build
 /packages/*/idea
 
-coverage/
 *.iml
 .idea
