@@ -11,10 +11,4 @@ dev_dependencies:
 
 dependencies:
   coverage: ^1.7.1
-  melos: ^4.1.0
-  signer: 
-    path: ./packages/signer
-  substrate_bip39: ^0.4.0
-  tfchain_client:
-    path: ./packages/tfchain_client 
-
+  melos: ">=3.2.0 <7.0.0"
