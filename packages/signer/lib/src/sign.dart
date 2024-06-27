@@ -5,10 +5,10 @@ class Signer {
 
   Future<KeyPair?> fromMnemonic(String mnemonic, KPType type) async {
     try {
-      if (type.value == KPType.sr25519.value) {
+      if (type == KPType.sr25519) {
         keypair = await KeyPair.sr25519.fromMnemonic(mnemonic);
         return keypair;
-      } else if (type.value == KPType.ed25519.value) {
+      } else if (type == KPType.ed25519) {
         keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
         return keypair;
       } else {
@@ -21,10 +21,10 @@ class Signer {
 
   Future<KeyPair?> fromSeed(Uint8List seed, KPType type) async {
     try {
-      if (type.value == KPType.sr25519.value) {
+      if (type == KPType.sr25519) {
         keypair = await KeyPair.sr25519.fromSeed(seed);
         return keypair;
-      } else if (type.value == KPType.ed25519.value) {
+      } else if (type == KPType.ed25519) {
         keypair = await KeyPair.ed25519.fromSeed(seed);
         return keypair;
       } else {
