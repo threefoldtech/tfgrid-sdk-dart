@@ -1,7 +1,10 @@
-name: Build
+name: Analyze
 
 on:
   pull_request:
+    branches:
+      - main
+  push:
     branches:
       - main
 
@@ -23,5 +26,5 @@ jobs:
       - name: Install dependencies
         run: dart pub global run melos bootstrap
 
-      - name: Linting
+      - name: Analyze
         run: dart analyze .
