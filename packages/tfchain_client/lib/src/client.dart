@@ -2,7 +2,7 @@ part of '../tfchain_client.dart';
 
 class QueryClient {
   final String url;
-  late final Provider provider;
+  late final Provider? provider;
   late final polkadot.Dev api;
   late final QueryContracts contracts;
   late final balance.QueryBalances balances;
@@ -16,7 +16,7 @@ class QueryClient {
 
   QueryClient(this.url) {
     provider = Provider.fromUri(Uri.parse(url));
-    api = polkadot.Dev(provider);
+    api = polkadot.Dev(provider!);
     contracts = QueryContracts(this);
     balances = balance.QueryBalances(this);
     farms = QueryFarms(this);
@@ -60,7 +60,7 @@ class Client extends QueryClient {
   Client(String url, this.mnemonic, this.keypairType) : super(url) {
     if (provider == null) {
       provider = Provider.fromUri(Uri.parse(url));
-      api = polkadot.Dev(provider);
+      api = polkadot.Dev(provider!);
     }
     clientBalances = balance.Balances(this);
     clientContracts = Contracts(this);
@@ -114,7 +114,7 @@ class Client extends QueryClient {
     if (provider == null) {
       throw Exception("Provider is not initialized");
     }
-    final stateApi = StateApi(provider);
+    final stateApi = StateApi(provider!);
 
     final runtimeVersion = await stateApi.getRuntimeVersion();
 
@@ -122,15 +122,15 @@ class Client extends QueryClient {
 
     final transactionVersion = runtimeVersion.transactionVersion;
 
-    final block = await provider.send('chain_getBlock', []);
+    final block = await provider!.send('chain_getBlock', []);
 
     final blockNumber = int.parse(block.result['block']['header']['number']);
 
-    final blockHash = (await provider.send('chain_getBlockHash', []))
+    final blockHash = (await provider!.send('chain_getBlockHash', []))
         .result
         .replaceAll('0x', '');
 
-    final genesisHash = (await provider.send('chain_getBlockHash', [0]))
+    final genesisHash = (await provider!.send('chain_getBlockHash', [0]))
         .result
         .replaceAll('0x', '');
 
@@ -158,9 +158,9 @@ class Client extends QueryClient {
 
     final signature = keyring.sign(payload);
 
-    final hexSignature = hex.encode(signature);
+    // final hexSignature = hex.encode(signature);
 
-    final publicKey = hex.encode(keyring.publicKey.bytes);
+    // final publicKey = hex.encode(keyring.publicKey.bytes);
 
     final extrinsic = ExtrinsicPayload(
             signer: Uint8List.fromList(keyring.bytes()),
@@ -175,8 +175,8 @@ class Client extends QueryClient {
     final hexExtrinsic = hex.encode(extrinsic);
     print('Extrinsic: $hexExtrinsic');
 
-    final submit = await AuthorApi(provider).submitAndWatchExtrinsic(
-        extrinsic as Uint8List,
+    final submit = await AuthorApi(provider!).submitAndWatchExtrinsic(
+        extrinsic,
         (p0) => print("Extrinsic result: ${p0.type} - {${p0.value}}"));
     print(submit);
   }

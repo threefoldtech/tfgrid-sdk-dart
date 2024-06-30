@@ -106,7 +106,7 @@ void main() {
       final keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
       final address = keypair.address;
 
-      final pair = await signer.keypairFromAddress(address);
+      final pair = signer.keypairFromAddress(address);
 
       expect(pair, isNotNull);
       expect(pair.address, equals(address));
