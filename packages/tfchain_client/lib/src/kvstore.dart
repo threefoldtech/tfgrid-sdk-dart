@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:polkadart/polkadart.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
-import 'package:tfchain_client/models/kvstore.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class KVStore {
@@ -9,19 +8,18 @@ class KVStore {
 
   KVStore(this.client);
 
-  RuntimeCall set(KVStoreSetOptions options) {
-    final extrinsic = client.api.tx.tFKVStore
-        .set(key: options.key.codeUnits, value: options.value.codeUnits);
-    return extrinsic;
-  }
-
-  RuntimeCall delete(KVStoreGetOptions options) {
+  RuntimeCall set({required String key, required String value}) {
     final extrinsic =
-        client.api.tx.tFKVStore.delete(key: options.key.codeUnits);
+        client.api.tx.tFKVStore.set(key: key.codeUnits, value: value.codeUnits);
     return extrinsic;
   }
 
-  Future<String> get(KVStoreGetOptions options) async {
+  RuntimeCall delete({required String key}) {
+    final extrinsic = client.api.tx.tFKVStore.delete(key: key.codeUnits);
+    return extrinsic;
+  }
+
+  Future<String> get({required String key}) async {
     final res = await client.api.query.tFKVStore
         .tFKVStore(client.keypair!.publicKey.bytes, []);
     print(res);
@@ -68,7 +66,7 @@ class KVStore {
     Map<String, String> keys = await list();
 
     for (String key in keys.keys) {
-      final extrinsic = delete(KVStoreGetOptions(key: key));
+      final extrinsic = delete(key: key);
       await client.apply(extrinsic);
     }
   }

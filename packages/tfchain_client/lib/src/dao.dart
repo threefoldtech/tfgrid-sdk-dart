@@ -19,9 +19,9 @@ class QueryDao {
     List<Proposal> inactiveProposals = [];
 
     for (int i = 0; i < hashes.length; i++) {
-      final daoProposal = await getDaoProposal(hashes[i]);
-      final proposal = await getProposal(hashes[i]);
-      final proposalVotes = await getProposalVotes(hashes[i]);
+      final daoProposal = await getDaoProposal(hash: hashes[i]);
+      final proposal = await getProposal(hash: hashes[i]);
+      final proposalVotes = await getProposalVotes(hash: hashes[i]);
       final nowBlock = await client.api.query.system.number();
       final timeUntilEnd = (proposalVotes.end - nowBlock) * 6;
       if (proposal.remark != "Error fetching proposal") {
@@ -65,7 +65,7 @@ class QueryDao {
     };
   }
 
-  Future<DaoProposal> getDaoProposal(String hash) async {
+  Future<DaoProposal> getDaoProposal({required String hash}) async {
     try {
       final proposalJson =
           await this.client.api.query.dao.proposals(hash.codeUnits);
@@ -79,7 +79,7 @@ class QueryDao {
     }
   }
 
-  Future<ProposalRemark> getProposal(String hash) async {
+  Future<ProposalRemark> getProposal({required String hash}) async {
     try {
       final proposalJson =
           await client.api.query.dao.proposalOf(hash.codeUnits);
@@ -92,7 +92,7 @@ class QueryDao {
     }
   }
 
-  Future<DaoVotes> getProposalVotes(String hash) async {
+  Future<DaoVotes> getProposalVotes({required String hash}) async {
     final votesJson = await client.api.query.dao.voting(hash.codeUnits);
     DaoVotes proposalVotes = DaoVotes(
         index: votesJson!.index,
@@ -104,13 +104,15 @@ class QueryDao {
     return proposalVotes;
   }
 
-  int getVotesWithWeight(List<VoteWeight> votes) {
+  int getVotesWithWeight({required List<VoteWeight> votes}) {
     return votes.fold<int>(0, (int total, vote) => total + vote.weight.toInt());
   }
 
   int getProgress(List<VoteWeight> ayes, List<VoteWeight> nayes, bool typeAye) {
-    final totalAyeWeight = ayes.isNotEmpty ? getVotesWithWeight(ayes) : 0;
-    final totalNayeWeight = nayes.isNotEmpty ? getVotesWithWeight(nayes) : 0;
+    final totalAyeWeight =
+        ayes.isNotEmpty ? getVotesWithWeight(votes: ayes) : 0;
+    final totalNayeWeight =
+        nayes.isNotEmpty ? getVotesWithWeight(votes: nayes) : 0;
     final total = totalAyeWeight + totalNayeWeight;
     if (total > 0) {
       if (typeAye) {
@@ -126,11 +128,13 @@ class QueryDao {
 class Dao extends QueryDao {
   Dao(Client client) : super(client);
 
-  RuntimeCall vote(DaoVoteOptions options) {
-    final extrinsic = client.api.tx.dao.vote(
-        farmId: options.farmId,
-        proposalHash: options.hash.codeUnits,
-        approve: options.approve);
+  RuntimeCall vote(
+      {required String address,
+      required int farmId,
+      required String hash,
+      required bool approve}) {
+    final extrinsic = client.api.tx.dao
+        .vote(farmId: farmId, proposalHash: hash.codeUnits, approve: approve);
     return extrinsic;
   }
 }

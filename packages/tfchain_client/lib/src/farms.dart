@@ -1,14 +1,14 @@
 import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
-import 'package:tfchain_client/models/farms.dart';
 import 'package:tfchain_client/tfchain_client.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/ip4.dart';
 
 class QueryFarms {
   final QueryClient client;
   QueryFarms(this.client);
 
-  Future<Farm?> get(QueryFarmsGetOptions options) async {
-    final res = await client.api.query.tfgridModule.farms(options.id);
+  Future<Farm?> get({required int id}) async {
+    final res = await client.api.query.tfgridModule.farms(id);
     return res as Farm;
   }
 }
@@ -16,18 +16,18 @@ class QueryFarms {
 class Farms extends QueryFarms {
   Farms(Client client) : super(client);
 
-  Future<RuntimeCall> create(CreateFarmOptions options) async {
+  Future<RuntimeCall> create(
+      {required String name, required List<Ip4>? publicIps}) async {
     final extrinsic = client.api.tx.tfgridModule
-        .createFarm(name: options.name.codeUnits, publicIps: options.publicIps);
+        .createFarm(name: name.codeUnits, publicIps: publicIps);
     return extrinsic;
   }
 
 // TODO: Bug
-  Future<RuntimeCall> addFarmIp(AddFarmIPOptions options) async {
-    final extrinsic = client.api.tx.tfgridModule.addFarmIp(
-        farmId: options.farmId,
-        ip: options.ip.codeUnits,
-        gw: options.gw.codeUnits);
+  Future<RuntimeCall> addFarmIp(
+      {required int farmId, required String ip, required String gw}) async {
+    final extrinsic = client.api.tx.tfgridModule
+        .addFarmIp(farmId: farmId, ip: ip.codeUnits, gw: gw.codeUnits);
     return extrinsic;
   }
 
