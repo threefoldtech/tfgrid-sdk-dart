@@ -9,7 +9,7 @@ void main() async {
   final signer = Signer();
   await signer.fromMnemonic(mnemonic, KPType.ed25519);
   final data = "anydata123";
-  final signatureFromMnemonic = await signer.sign(data);
+  final signatureFromMnemonic = signer.sign(data);
 
   print("Signature from mnemonic: $signatureFromMnemonic");
 
@@ -50,7 +50,7 @@ void main() async {
 
   final signer2 = Signer();
   await signer2.fromSeed(seedUint8List, KPType.ed25519);
-  final signatureFromSeed = await signer2.sign(data);
+  final signatureFromSeed = signer2.sign(data);
   print("Signature from Seed: $signatureFromSeed");
 
   final signer3 = Signer();

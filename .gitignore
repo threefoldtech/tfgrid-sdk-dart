@@ -1,7 +1,9 @@
-pubspec.lock
 coverage/
 
-.dart_tool/
+.dart_tool
+/packages/*/.dart_tool
+/packages/*/build
+/packages/*/idea
+
 *.iml
-.idea/
-package_config.json
+.idea
