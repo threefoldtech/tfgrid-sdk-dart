@@ -1,6 +1,4 @@
 import 'dart:typed_data';
-
-import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:signer/signer.dart';
 import 'package:test/test.dart';
 

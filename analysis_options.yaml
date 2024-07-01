@@ -1,3 +1,4 @@
 analyzer:
   exclude:
     - packages/tfchain_client/lib/generated/**
+    - packages/tfchain_client/pubspec.yaml
