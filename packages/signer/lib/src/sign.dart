@@ -65,12 +65,4 @@ class Signer {
       throw Exception("Failed to verify signature. Error: $e");
     }
   }
-
-  KeyPair keypairFromAddress(String address) {
-    final keyring = Keyring();
-
-    keyring.add(keypair!);
-    final pair = keyring.getByAddress(address);
-    return pair;
-  }
 }

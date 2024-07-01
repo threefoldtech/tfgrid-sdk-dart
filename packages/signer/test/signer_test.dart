@@ -96,20 +96,5 @@ void main() {
       final isVerified = signer.verify(signature, differentData);
       expect(isVerified, isFalse);
     });
-
-    test('Keypair from address', () async {
-      final signer = Signer();
-      final mnemonic =
-          'picnic flip cigar rival risk scatter slide aware trust garlic solution token';
-      await signer.fromMnemonic(mnemonic, KPType.ed25519);
-
-      final keypair = await KeyPair.ed25519.fromMnemonic(mnemonic);
-      final address = keypair.address;
-
-      final pair = signer.keypairFromAddress(address);
-
-      expect(pair, isNotNull);
-      expect(pair.address, equals(address));
-    });
   });
 }
