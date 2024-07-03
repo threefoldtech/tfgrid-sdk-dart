@@ -1,3 +1,4 @@
+import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/twin.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
@@ -11,7 +12,9 @@ class QueryTwins {
     return res;
   }
 
-  Future<int?> getTwinIdByAccountId({required List<int> accountId}) async {
+  Future<int?> getTwinIdByAccountId({required String address}) async {
+    final keyring = Keyring();
+    final accountId = keyring.decodeAddress(address);
     final res =
         await client.api.query.tfgridModule.twinIdByAccountID(accountId);
     return res;

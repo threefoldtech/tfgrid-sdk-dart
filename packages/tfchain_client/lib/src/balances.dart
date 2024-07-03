@@ -1,4 +1,5 @@
 import 'package:polkadart/scale_codec.dart';
+import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dart';
 import 'package:tfchain_client/generated/dev/types/sp_runtime/multiaddress/multi_address.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
@@ -9,9 +10,9 @@ class QueryBalances {
   QueryBalances(this.client);
 
   Future<AccountInfo?> get({required String address}) async {
-    // TODO: should get pair.publicKey.bytes, How to get keypair if i don't have mnemonic
-    final res = await client.api.query.system
-        .account(Address32(address.codeUnits).value0);
+    final keyring = Keyring();
+    final publicKey = keyring.decodeAddress(address);
+    final res = await client.api.query.system.account(publicKey);
     return res;
   }
 }

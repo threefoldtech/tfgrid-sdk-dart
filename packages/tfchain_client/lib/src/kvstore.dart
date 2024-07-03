@@ -43,7 +43,25 @@ class KVStore {
       ...client.keypair!.publicKey.bytes
     ]);
 
-    final keys = await client.api.rpc.state.getKeys(key: partialKey);
+    List<Uint8List> keys = [];
+    int count = 2;
+    Uint8List? startKey;
+    bool hasMore = true;
+
+    while (hasMore) {
+      final keysPage = await client.api.rpc.state.getKeysPaged(
+        key: partialKey,
+        count: count,
+        startKey: startKey,
+      );
+
+      if (keysPage.isEmpty) {
+        hasMore = false;
+      } else {
+        keys.addAll(keysPage);
+        startKey = keysPage.last;
+      }
+    }
 
     final keysValues = await client.api.rpc.state.queryStorageAt(keys);
 
@@ -59,6 +77,7 @@ class KVStore {
       keyValueMap[String.fromCharCodes(added)] = String.fromCharCodes(value);
     }
 
+    print(keyValueMap);
     return keyValueMap;
   }
 

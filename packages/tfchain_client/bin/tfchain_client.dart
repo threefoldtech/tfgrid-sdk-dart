@@ -17,9 +17,11 @@ void main() async {
       "secret add bag cluster deposit beach illness letter crouch position rain arctic",
       "sr25519");
   await client.connect();
+  final extrinsic = await client.clientBalances.transfer(
+      address: "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC", amount: 10);
 
-  // await client.apply(extrinsic);
-  client.kvStrore.list();
+  await client.apply(extrinsic);
+  // await client.kvStrore.list();
 
   // await client.disconnect();
 }
