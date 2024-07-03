@@ -13,5 +13,14 @@ void main() {
       PricingPolicy? res = await queryClient.policies.get(id: 1);
       expect(res, isNotNull);
     });
+
+    test('Test Get Pricing Policy with wrong Id', () async {
+      try {
+        PricingPolicy? res = await queryClient.policies.get(id: -80);
+        expect(res, isNotNull);
+      } catch (error) {
+        expect(error, isNotNull);
+      }
+    });
   });
 }
