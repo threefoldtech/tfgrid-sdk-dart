@@ -14,7 +14,7 @@ class QueryContracts {
   Future<Contract?> get({required BigInt contractId}) async {
     final res =
         await client.api.query.smartContractModule.contracts(contractId);
-    return res as Contract;
+    return res;
   }
 
   Future<BigInt?> getContractIdByActiveRentForNode(
