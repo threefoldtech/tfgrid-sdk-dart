@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 void main() {
@@ -25,6 +26,22 @@ void main() {
       final twin =
           await queryClient.twins.getTwinIdByAccountId(address: address);
       expect(twin, 7845);
+    });
+  });
+
+  // TODO:
+  group("Twins Test", () {
+    late Client client;
+    setUp(() {
+      client = Client(
+          "wss://tfchain.dev.grid.tf/ws",
+          "secret add bag cluster deposit beach illness letter crouch position rain arctic",
+          "sr25519");
+    });
+
+    test('Test Create Twin', () async {
+      RuntimeCall call = await client.clientTwins.create(relay: [], pk: []);
+      expect(call, isNotNull);
     });
   });
 }

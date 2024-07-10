@@ -609,7 +609,7 @@ packages:
     source: hosted
     version: "0.4.0"
   substrate_metadata:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: substrate_metadata
       sha256: "4557950c7dcea17cdf7e1224ac7822ab38dd9658f000be6d58b4a41b0a8126d4"

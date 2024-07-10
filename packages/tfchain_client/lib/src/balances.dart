@@ -1,4 +1,3 @@
-import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dart';
 import 'package:tfchain_client/generated/dev/types/sp_runtime/multiaddress/multi_address.dart';
@@ -6,7 +5,7 @@ import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryBalances {
-  final QueryClient client;
+  QueryClient client;
   QueryBalances(this.client);
 
   Future<AccountInfo?> get({required String address}) async {
@@ -18,21 +17,25 @@ class QueryBalances {
 }
 
 class Balances extends QueryBalances {
-  Balances(Client client) : super(client);
+  Balances(Client client) : super(client) {
+    this.client = client;
+  }
 
   Future<RuntimeCall> transfer(
       {required String address, required int amount}) async {
     if (amount.isNaN || amount <= 0) {
       throw Exception("Amount must be a positive numeric value");
     }
-    MultiAddress multiAddress =
-        MultiAddress.decode(Input.fromBytes(address.codeUnits));
+    final keyring = Keyring();
+    final publicKey = keyring.decodeAddress(address);
+    MultiAddress multiAddress = Address32(publicKey);
+
     final extrinsic =
-        client.api.tx.balances.transfer(dest: multiAddress, value: amount);
+        client.api.tx.balances.transfer(dest: multiAddress, value: BigInt.from(amount));
     return extrinsic;
   }
 
-  // Future<void> getMyBalance() async {
-  //   return this.get(QueryBalancesGetOptions(address: client.))
+  // Future<AccountInfo?> getMyBalance() async {
+  //   return await this
   // }
 }

@@ -95,6 +95,7 @@ class Client extends QueryClient {
 
   @override
   Future<void> connect() async {
+    await super.connect();
     checkInputs();
     if (keypairType == "sr25519") {
       keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
@@ -108,6 +109,24 @@ class Client extends QueryClient {
   @override
   Future<void> disconnect() async {
     await api.disconnect();
+  }
+
+  Uint8List hexToBytes(String hexString) {
+    if (hexString.startsWith('0x')) {
+      hexString = hexString.substring(2);
+    }
+    return Uint8List.fromList(hex.decode(hexString));
+  }
+
+  dynamic replaceMapEntry(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return value
+          .map((key, innerValue) => MapEntry(key, replaceMapEntry(innerValue)));
+    } else if (value is List) {
+      return value.map((innerValue) => replaceMapEntry(innerValue)).toList();
+    } else {
+      return value;
+    }
   }
 
   Future<void> apply(RuntimeCall runtimeCall) async {
@@ -138,6 +157,7 @@ class Client extends QueryClient {
 
     final encodedCall = runtimeCall.encode();
     final nonce = await api.rpc.system.accountNextIndex(keyring.address);
+    final metadata = await api.rpc.state.getMetadata();
 
     // await api.rpc.state.queryStorageAt(keys)
     // state vs systemApi
@@ -173,11 +193,76 @@ class Client extends QueryClient {
         .encode(api.registry, SignatureType.sr25519);
 
     final hexExtrinsic = hex.encode(extrinsic);
-    print('Extrinsic: $hexExtrinsic');
+    final input = Input.fromHex(hexExtrinsic);
+    final dynamic extrinsicDecoded =
+        ExtrinsicsCodec(chainInfo: metadata.chainInfo).decode(input);
+    print(extrinsicDecoded);
 
     final submit = await AuthorApi(provider!).submitAndWatchExtrinsic(
-        extrinsic,
-        (p0) => print("Extrinsic result: ${p0.type} - {${p0.value}}"));
-    print(submit);
+      extrinsic,
+      (p0) async {
+        print("Extrinsic result: ${p0.type} - ${p0.value}");
+        if (p0.type == 'inBlock') {
+          try {
+            final finalizedBlockHash = p0.value;
+            print(finalizedBlockHash.runtimeType);
+            final moduleHash =
+                Hasher.twoxx128.hash(Uint8List.fromList('System'.codeUnits));
+            final storageHash =
+                Hasher.twoxx128.hash(Uint8List.fromList('Events'.codeUnits));
+            Uint8List storageKey = Uint8List.fromList([
+              ...moduleHash,
+              ...storageHash,
+            ]);
+            final finalizedBlockHashBytes = hexToBytes(finalizedBlockHash);
+            final changes = await stateApi
+                .queryStorageAt([storageKey], at: finalizedBlockHashBytes);
+            if (changes != Null && changes.isNotEmpty) {
+              for (var changeSet in changes) {
+                print("Change Set:");
+                for (var change in changeSet.changes) {
+                  Uint8List key = change.key;
+                  Uint8List value = change.value!;
+
+                  final input = Input.fromBytes(value);
+                  final List<dynamic> decodedEvents =
+                      metadata.chainInfo.scaleCodec.decode('EventCodec', input);
+                  // try {
+                  //   List<Map<String, dynamic>> jsonEvents =
+                  //       decodedEvents.map((dynamic entry) {
+                  //     Map<String, dynamic> convertedEntry = {};
+
+                  //     entry.forEach((key, value) {
+                  //       if (value is MapEntry) {
+                  //         // Replace MapEntry with {}
+                  //         convertedEntry[key] = value.value;
+                  //       } else {
+                  //         convertedEntry[key] = value;
+                  //       }
+                  //     });
+
+                  //     return convertedEntry;
+                  //   }).toList();
+
+                  //   String jsonOutput = jsonEncode(jsonEvents);
+
+                  //   print("Converted JSON:");
+                  //   print(jsonOutput);
+                  // } catch (e) {
+                  //   print("Error converting events: $e");
+                  // }
+                }
+              }
+            } else {
+              print("No events found in the block");
+            }
+          } catch (e) {
+            print('Error decoding events: $e');
+          }
+        }
+      },
+    );
+
+    // print(submit);
   }
 }

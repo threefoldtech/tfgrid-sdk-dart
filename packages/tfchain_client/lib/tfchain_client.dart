@@ -2,9 +2,12 @@ library client;
 
 import 'dart:typed_data';
 
+
 import 'package:polkadart/polkadart.dart'
-    show AuthorApi, ExtrinsicPayload, Provider, SigningPayload, StateApi, SignatureType;
+    show AuthorApi, ExtrinsicPayload, Hasher, Provider, SignatureType, SigningPayload, StateApi;
+import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
+import 'package:substrate_metadata/types/metadata_types.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/src/balances.dart' as balance;
 import 'package:tfchain_client/src/contracts.dart';
