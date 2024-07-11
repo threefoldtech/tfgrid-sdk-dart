@@ -129,6 +129,30 @@ class Client extends QueryClient {
     }
   }
 
+  List<int> _getMyEventsPhaseId(List<dynamic> events) {
+    final Set<int> phaseIds = Set();
+    for (final event in events) {
+      if (event["event"] != null &&
+          event["event"].key == "TransactionPayment" &&
+          ListEquality().equals(
+              event["event"].value.value[0], keypair!.publicKey.bytes)) {
+        phaseIds.add(event['phase'].value);
+      }
+    }
+    return phaseIds.toList();
+  }
+
+  List<dynamic> _filterMyEvents(List<dynamic> events) {
+    final List<dynamic> myEvents = [];
+    final phaseIds = _getMyEventsPhaseId(events);
+    for (final event in events) {
+      if (phaseIds.contains(event["phase"].value)) {
+        myEvents.add(event["event"]);
+      }
+    }
+    return myEvents;
+  }
+
   Future<void> apply(RuntimeCall runtimeCall) async {
     if (provider == null) {
       throw Exception("Provider is not initialized");
@@ -227,6 +251,9 @@ class Client extends QueryClient {
                   final input = Input.fromBytes(value);
                   final List<dynamic> decodedEvents =
                       metadata.chainInfo.scaleCodec.decode('EventCodec', input);
+                  final myEvents = _filterMyEvents(decodedEvents);
+                  print(myEvents);
+
                   // try {
                   //   List<Map<String, dynamic>> jsonEvents =
                   //       decodedEvents.map((dynamic entry) {
