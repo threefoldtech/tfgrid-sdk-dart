@@ -177,10 +177,8 @@ class Client extends QueryClient {
         .result
         .replaceAll('0x', '');
 
-    final keyring = await KeyPair.sr25519.fromMnemonic(mnemonic);
-
     final encodedCall = runtimeCall.encode();
-    final nonce = await api.rpc.system.accountNextIndex(keyring.address);
+    final nonce = await api.rpc.system.accountNextIndex(address);
     final metadata = await api.rpc.state.getMetadata();
 
     // await api.rpc.state.queryStorageAt(keys)
@@ -200,21 +198,24 @@ class Client extends QueryClient {
 
     final payload = payloadToSign.encode(api.registry);
 
-    final signature = keyring.sign(payload);
+    final signature = keypair!.sign(payload);
 
     // final hexSignature = hex.encode(signature);
 
     // final publicKey = hex.encode(keyring.publicKey.bytes);
-
+    final signatureType = keypairType == "sr25519"
+        ? SignatureType.sr25519
+        : SignatureType.ed25519;
+    print(signatureType);
     final extrinsic = ExtrinsicPayload(
-            signer: Uint8List.fromList(keyring.bytes()),
+            signer: Uint8List.fromList(keypair!.bytes()),
             method: encodedCall,
             signature: signature,
             eraPeriod: 64,
             blockNumber: blockNumber,
             nonce: nonce,
             tip: 0)
-        .encode(api.registry, SignatureType.sr25519);
+        .encode(api.registry, signatureType);
 
     final hexExtrinsic = hex.encode(extrinsic);
     final input = Input.fromHex(hexExtrinsic);
@@ -227,64 +228,43 @@ class Client extends QueryClient {
       (p0) async {
         print("Extrinsic result: ${p0.type} - ${p0.value}");
         if (p0.type == 'inBlock') {
-          try {
-            final finalizedBlockHash = p0.value;
-            print(finalizedBlockHash.runtimeType);
-            final moduleHash =
-                Hasher.twoxx128.hash(Uint8List.fromList('System'.codeUnits));
-            final storageHash =
-                Hasher.twoxx128.hash(Uint8List.fromList('Events'.codeUnits));
-            Uint8List storageKey = Uint8List.fromList([
-              ...moduleHash,
-              ...storageHash,
-            ]);
-            final finalizedBlockHashBytes = hexToBytes(finalizedBlockHash);
-            final changes = await stateApi
-                .queryStorageAt([storageKey], at: finalizedBlockHashBytes);
-            if (changes != Null && changes.isNotEmpty) {
-              for (var changeSet in changes) {
-                print("Change Set:");
-                for (var change in changeSet.changes) {
-                  Uint8List key = change.key;
-                  Uint8List value = change.value!;
+          final finalizedBlockHash = p0.value;
+          final moduleHash =
+              Hasher.twoxx128.hash(Uint8List.fromList('System'.codeUnits));
+          final storageHash =
+              Hasher.twoxx128.hash(Uint8List.fromList('Events'.codeUnits));
+          Uint8List storageKey = Uint8List.fromList([
+            ...moduleHash,
+            ...storageHash,
+          ]);
+          final finalizedBlockHashBytes = hexToBytes(finalizedBlockHash);
+          final changes = await stateApi
+              .queryStorageAt([storageKey], at: finalizedBlockHashBytes);
+          if (changes != Null && changes.isNotEmpty) {
+            for (var changeSet in changes) {
+              for (var change in changeSet.changes) {
+                Uint8List key = change.key;
+                Uint8List value = change.value!;
 
-                  final input = Input.fromBytes(value);
-                  final List<dynamic> decodedEvents =
-                      metadata.chainInfo.scaleCodec.decode('EventCodec', input);
-                  final myEvents = _filterMyEvents(decodedEvents);
-                  print(myEvents);
-
-                  // try {
-                  //   List<Map<String, dynamic>> jsonEvents =
-                  //       decodedEvents.map((dynamic entry) {
-                  //     Map<String, dynamic> convertedEntry = {};
-
-                  //     entry.forEach((key, value) {
-                  //       if (value is MapEntry) {
-                  //         // Replace MapEntry with {}
-                  //         convertedEntry[key] = value.value;
-                  //       } else {
-                  //         convertedEntry[key] = value;
-                  //       }
-                  //     });
-
-                  //     return convertedEntry;
-                  //   }).toList();
-
-                  //   String jsonOutput = jsonEncode(jsonEvents);
-
-                  //   print("Converted JSON:");
-                  //   print(jsonOutput);
-                  // } catch (e) {
-                  //   print("Error converting events: $e");
-                  // }
+                final input = Input.fromBytes(value);
+                final List<dynamic> decodedEvents =
+                    metadata.chainInfo.scaleCodec.decode('EventCodec', input);
+                final myEvents = _filterMyEvents(decodedEvents);
+                print(myEvents);
+                for (final event in myEvents) {
+                  if (event.key == "System" &&
+                      event.value.key == "ExtrinsicFailed") {
+                    // TODO: get the error name and type
+                    final error = event.value.value["DispatchError"].value;
+                    final errorType = event.value.value["DispatchError"].key;
+                    throw Exception(
+                        "Failed to apply extrinsic: ${errorType}${error}");
+                  }
                 }
               }
-            } else {
-              print("No events found in the block");
             }
-          } catch (e) {
-            print('Error decoding events: $e');
+          } else {
+            print("No events found in the block");
           }
         }
       },
