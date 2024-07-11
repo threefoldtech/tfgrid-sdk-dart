@@ -206,7 +206,6 @@ class Client extends QueryClient {
     final signatureType = keypairType == "sr25519"
         ? SignatureType.sr25519
         : SignatureType.ed25519;
-    print(signatureType);
     final extrinsic = ExtrinsicPayload(
             signer: Uint8List.fromList(keypair!.bytes()),
             method: encodedCall,
@@ -217,17 +216,17 @@ class Client extends QueryClient {
             tip: 0)
         .encode(api.registry, signatureType);
 
-    final hexExtrinsic = hex.encode(extrinsic);
-    final input = Input.fromHex(hexExtrinsic);
-    final dynamic extrinsicDecoded =
-        ExtrinsicsCodec(chainInfo: metadata.chainInfo).decode(input);
-    print(extrinsicDecoded);
+    // final hexExtrinsic = hex.encode(extrinsic);
+    // final input = Input.fromHex(hexExtrinsic);
+    // final dynamic extrinsicDecoded =
+    //     ExtrinsicsCodec(chainInfo: metadata.chainInfo).decode(input);
+    // print(extrinsicDecoded);
 
     final submit = await AuthorApi(provider!).submitAndWatchExtrinsic(
       extrinsic,
       (p0) async {
-        print("Extrinsic result: ${p0.type} - ${p0.value}");
         if (p0.type == 'inBlock') {
+          print("Extrinsic result: ${p0.type} - ${p0.value}");
           final finalizedBlockHash = p0.value;
           final moduleHash =
               Hasher.twoxx128.hash(Uint8List.fromList('System'.codeUnits));
@@ -250,7 +249,7 @@ class Client extends QueryClient {
                 final List<dynamic> decodedEvents =
                     metadata.chainInfo.scaleCodec.decode('EventCodec', input);
                 final myEvents = _filterMyEvents(decodedEvents);
-                print(myEvents);
+                bool targetModuleEventOccur = false;
                 for (final event in myEvents) {
                   if (event.key == "System" &&
                       event.value.key == "ExtrinsicFailed") {
@@ -259,6 +258,13 @@ class Client extends QueryClient {
                     final errorType = event.value.value["DispatchError"].key;
                     throw Exception(
                         "Failed to apply extrinsic: ${errorType}${error}");
+                  } else if (event.key == runtimeCall.runtimeType.toString()) {
+                    targetModuleEventOccur = true;
+                  } else if (targetModuleEventOccur &&
+                      event.key == "System" &&
+                      event.value.key == "ExtrinsicSuccess") {
+                    print("Extrinsic is applied successfully");
+                    return;
                   }
                 }
               }
