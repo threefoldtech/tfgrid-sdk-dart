@@ -277,11 +277,7 @@ class Client extends QueryClient {
         }
       },
     );
-    Future<void> _myFuture() async {
-      return _complete.future;
-    }
-
-    await _myFuture();
+    await _complete.future;
     subscription.cancel();
   }
 }
