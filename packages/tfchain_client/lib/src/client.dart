@@ -4,38 +4,73 @@ class QueryClient {
   final String url;
   late final Provider? provider;
   late final polkadot.Dev api;
-  late final QueryContracts contracts;
-  late final balance.QueryBalances balances;
-  late final QueryFarms farms;
-  late final QueryNodes nodes;
-  late final QueryPricingPolicies policies;
-  late final QueryTwins twins;
-  late final QueryBridge bridge;
-  late final Dao.QueryDao dao;
-  late final QueryTFTPrice price;
+  QueryTwins? _twins;
+  QueryContracts? _contracts;
+  balance.QueryBalances? _balances;
+  QueryFarms? _farms;
+  QueryNodes? _nodes;
+  QueryPricingPolicies? _policies;
+  QueryBridge? _bridge;
+  QueryTFTPrice? _price;
+  Dao.QueryDao? _dao;
 
-  QueryClient(this.url) {
-    provider = Provider.fromUri(Uri.parse(url));
-    api = polkadot.Dev(provider!);
-    contracts = QueryContracts(this);
-    balances = balance.QueryBalances(this);
-    farms = QueryFarms(this);
-    nodes = QueryNodes(this);
-    policies = QueryPricingPolicies(this);
-    twins = QueryTwins(this);
-    bridge = QueryBridge(this);
-    price = QueryTFTPrice(this);
-    dao = Dao.QueryDao(this);
+  QueryClient(this.url) {}
+
+  QueryTwins get twins {
+    if (_twins == null) _twins = QueryTwins(this);
+    return _twins!;
   }
 
-  void checkInputs() {
+  QueryContracts get contracts {
+    if (_twins == null) _contracts = QueryContracts(this);
+    return _contracts!;
+  }
+
+  balance.QueryBalances get balances {
+    if (_balances == null) _balances = balance.QueryBalances(this);
+    return _balances!;
+  }
+
+  QueryFarms get farms {
+    if (_farms == null) _farms = QueryFarms(this);
+    return _farms!;
+  }
+
+  QueryNodes get nodes {
+    if (_nodes == null) _nodes = QueryNodes(this);
+    return _nodes!;
+  }
+
+  QueryPricingPolicies get policies {
+    if (_policies == null) _policies = QueryPricingPolicies(this);
+    return _policies!;
+  }
+
+  QueryBridge get bridge {
+    if (_bridge == null) _bridge = QueryBridge(this);
+    return _bridge!;
+  }
+
+  QueryTFTPrice get price {
+    if (_price == null) _price = QueryTFTPrice(this);
+    return _price!;
+  }
+
+  Dao.QueryDao get dao {
+    if (_dao == null) _dao = Dao.QueryDao(this);
+    return _dao!;
+  }
+
+  void _checkInputs() {
     if (url.isEmpty) {
       throw FormatException("URL should be provided");
     }
   }
 
   Future<void> connect() async {
-    checkInputs();
+    _checkInputs();
+    provider = Provider.fromUri(Uri.parse(url));
+    api = polkadot.Dev(provider!);
   }
 
   Future<void> disconnect() async {
@@ -47,35 +82,62 @@ class Client extends QueryClient {
   final String mnemonic;
   late String address;
   final String keypairType;
-  late Signer.Signer signer;
   KeyPair? keypair;
-  late final balance.Balances clientBalances;
-  late final Contracts clientContracts;
-  late final Farms clientFarms;
-  late final Dao.Dao clientDao;
-  late final Twins clientTwins;
-  late final KVStore kvStrore;
-  late final Nodes clientNodes;
+  KVStore? _kvStore;
   final SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
-  Client(String url, this.mnemonic, this.keypairType) : super(url) {
-    if (provider == null) {
-      provider = Provider.fromUri(Uri.parse(url));
-      api = polkadot.Dev(provider!);
-    }
-    clientBalances = balance.Balances(this);
-    clientContracts = Contracts(this);
-    clientFarms = Farms(this);
-    clientDao = Dao.Dao(this);
-    clientTwins = Twins(this);
-    clientNodes = Nodes(this);
-    kvStrore = KVStore(this);
-    signer = Signer.Signer();
+  Client(String url, this.mnemonic, this.keypairType) : super(url) {}
+
+  @override
+  Twins get twins {
+    if (_twins == null) _twins = Twins(this);
+    return _twins as Twins;
   }
 
   @override
-  void checkInputs() {
-    super.checkInputs();
+  Contracts get contracts {
+    if (_contracts == null) _contracts = Contracts(this);
+    return _contracts as Contracts;
+  }
+
+  @override
+  balance.Balances get balances {
+    if (_balances == null) _balances = balance.Balances(this);
+    return _balances as balance.Balances;
+  }
+
+  @override
+  Farms get farms {
+    if (_farms == null) _farms = Farms(this);
+    return _farms as Farms;
+  }
+
+  @override
+  Nodes get nodes {
+    if (_nodes == null) _nodes = Nodes(this);
+    return _nodes as Nodes;
+  }
+
+  @override
+  Bridge get bridge {
+    if (_bridge == null) _bridge = Bridge(this);
+    return _bridge as Bridge;
+  }
+
+  @override
+  Dao.Dao get dao {
+    if (_dao == null) _dao = Dao.Dao(this);
+    return _dao as Dao.Dao;
+  }
+
+  KVStore get kvStore {
+    if (_kvStore == null) _kvStore = KVStore(this);
+    return _kvStore as KVStore;
+  }
+
+  @override
+  void _checkInputs() {
+    super._checkInputs();
     if (mnemonic.isEmpty) {
       throw FormatException("Mnemonic or secret should be provided");
     } else if (mnemonic != "//Allice" && !validateMnemonic(mnemonic)) {
@@ -98,7 +160,8 @@ class Client extends QueryClient {
   @override
   Future<void> connect() async {
     await super.connect();
-    checkInputs();
+    _checkInputs();
+    final Signer.Signer signer = Signer.Signer();
     if (keypairType == "sr25519") {
       keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
       address = keypair!.address;
