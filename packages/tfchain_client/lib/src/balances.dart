@@ -17,9 +17,9 @@ class QueryBalances {
 }
 
 class Balances extends QueryBalances {
-  Balances(Client client) : super(client) {
-    this.client = client;
-  }
+  Balances(Client this.client) : super(client);
+
+  final Client client;
 
   Future<RuntimeCall> transfer(
       {required String address, required int amount}) async {
@@ -30,12 +30,12 @@ class Balances extends QueryBalances {
     final publicKey = keyring.decodeAddress(address);
     MultiAddress multiAddress = Address32(publicKey);
 
-    final extrinsic =
-        client.api.tx.balances.transfer(dest: multiAddress, value: BigInt.from(amount));
+    final extrinsic = client.api.tx.balances
+        .transfer(dest: multiAddress, value: BigInt.from(amount));
     return extrinsic;
   }
 
-  // Future<AccountInfo?> getMyBalance() async {
-  //   return await this
-  // }
+  Future<AccountInfo?> getMyBalance() async {
+    return await this.get(address: client.address);
+  }
 }
