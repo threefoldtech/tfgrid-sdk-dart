@@ -1,6 +1,5 @@
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/twin.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryTwins {

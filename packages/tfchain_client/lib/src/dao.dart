@@ -2,7 +2,6 @@ import 'package:moment_dart/moment_dart.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_dao/proposal/dao_proposal.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_dao/proposal/dao_votes.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_dao/proposal/vote_weight.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/models/dao.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 

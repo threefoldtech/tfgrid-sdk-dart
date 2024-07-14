@@ -1,8 +1,7 @@
-import 'package:polkadart/polkadart.dart';
 import 'package:test/test.dart';
-import 'package:tfchain_client/generated/dev/dev.dart';
 import 'package:tfchain_client/src/balances.dart';
 import 'package:tfchain_client/src/contracts.dart';
+import 'package:tfchain_client/src/dao.dart';
 import 'package:tfchain_client/src/farms.dart';
 import 'package:tfchain_client/src/nodes.dart';
 import 'package:tfchain_client/src/pricing_policies.dart';
@@ -20,8 +19,6 @@ void main() {
 
     test('Initialization', () {
       expect(queryClient.url, equals("wss://tfchain.dev.grid.tf/ws"));
-      expect(queryClient.provider, isA<WsProvider>());
-      expect(queryClient.api, isA<Dev>());
       expect(queryClient.contracts, isA<QueryContracts>());
       expect(queryClient.balances, isA<QueryBalances>());
       expect(queryClient.farms, isA<QueryFarms>());
@@ -32,57 +29,50 @@ void main() {
       expect(queryClient.price, isA<QueryTFTPrice>());
     });
 
-    test('Check Input', () {
-      queryClient.checkInputs();
-      expect(true, true);
+    test('Connect', () async {
+      await queryClient.connect();
+      expect(queryClient.provider, isNotNull);
+      expect(queryClient.api, isNotNull);
     });
 
-    test('Connect', () {
-      queryClient.connect();
-      expect(true, true);
-    });
-
-    test('Disconnect', () {
-      queryClient.disconnect();
-      expect(true, true);
+    // TODO: fails
+    test('Disconnect', () async {
+      await queryClient.connect();
+      await queryClient.disconnect();
+      expect(queryClient.provider, isNull);
     });
   });
 
   group("Full Client Tests", () {
-    test('checkInputs with Invalid mnemonic', () {
-      final client =
-          Client("wss://tfchain.dev.grid.tf/ws", "validMnemonic", "sr25519");
-      expect(
-          () => client.checkInputs(), throwsA(TypeMatcher<FormatException>()));
-    });
-
     late Client client;
     setUp(() {
       client = Client(
-          "wss://tfchain.dev.grid.tf/ws",
-          "picnic flip cigar rival risk scatter slide aware trust garlic solution token",
-          "sr25519");
+        "wss://tfchain.dev.grid.tf/ws",
+        "secret add bag cluster deposit beach illness letter crouch position rain arctic",
+        "sr25519",
+      );
     });
 
     test('Initialization', () {
       expect(client.url, equals("wss://tfchain.dev.grid.tf/ws"));
-      expect(client.clientContracts, isA<Contracts>());
-      expect(client.clientFarms, isA<Farms>());
+      expect(client.contracts, isA<Contracts>());
+      expect(client.farms, isA<Farms>());
+      expect(client.balances, isA<Balances>());
+      expect(client.bridge, isA<Bridge>());
+      expect(client.dao, isA<Dao>());
+    });
+    test('Connect', () async {
+      await client.connect();
+      expect(client.keypair, isNotNull);
+      expect(client.address, isNotEmpty);
     });
 
-    test('Check Input', () {
-      client.checkInputs();
-      expect(true, true);
-    });
-
-    test('Connect', () {
-      client.connect();
-      expect(true, true);
-    });
-
-    test('Disconnect', () {
-      client.disconnect();
-      expect(true, true);
+  // TODO: same here
+    test('Disconnect', () async {
+      await client.connect(); 
+      await client.disconnect();
+      expect(client.keypair, isNull);
+      expect(client.address, isEmpty);
     });
   });
 }

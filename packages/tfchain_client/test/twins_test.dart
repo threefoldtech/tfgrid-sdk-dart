@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
+import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/twin.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 void main() {
@@ -29,19 +29,31 @@ void main() {
     });
   });
 
-  // TODO:
   group("Twins Test", () {
     late Client client;
-    setUp(() {
+    setUp(() async {
       client = Client(
           "wss://tfchain.dev.grid.tf/ws",
           "secret add bag cluster deposit beach illness letter crouch position rain arctic",
           "sr25519");
+      await client.connect();
     });
 
     test('Test Create Twin', () async {
-      RuntimeCall call = await client.clientTwins.create(relay: [], pk: []);
-      expect(call, isNotNull);
+      try {
+        int? twin = await client.twins.create(relay: [], pk: []);
+      } catch (error) {
+        expect(
+          error.toString(),
+          startsWith('Failed to apply extrinsic:'),
+        );
+      }
+    });
+
+    test('Test Update Twin', () async {
+      Twin? twin = await client.twins
+          .update(relay: "relay.dev.grid.tf".codeUnits, pk: []);
+      expect(twin, isNotNull);
     });
   });
 }

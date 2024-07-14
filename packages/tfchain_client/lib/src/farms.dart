@@ -1,4 +1,3 @@
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/ip4.dart';
@@ -30,7 +29,6 @@ class Farms extends QueryFarms {
     return await getFarmIdByName(name: name);
   }
 
-// TODO: Bug
   Future<Farm?> addFarmIp(
       {required int farmId, required String ip, required String gw}) async {
     final extrinsic = client.api.tx.tfgridModule
@@ -40,18 +38,16 @@ class Farms extends QueryFarms {
     return await get(id: farmId);
   }
 
-  Future<Farm?> removeFarmIp({required int farmId, required String ip}) async {
+  Future<void> removeFarmIp({required int farmId, required String ip}) async {
     final extrinsic =
-        client.api.tx.tfgridModule.removeFarmIp(farmId: farmId, ip: ip);
+        client.api.tx.tfgridModule.removeFarmIp(farmId: farmId, ip: ip.codeUnits);
     await client.apply(extrinsic);
-
-    return await get(id: farmId);
   }
 
   Future<void> addStellarAddress(
       {required int farmId, required String stellarAddress}) async {
     final extrinsic = client.api.tx.tfgridModule.addStellarPayoutV2address(
-        farmId: farmId, stellarAddress: stellarAddress);
+        farmId: farmId, stellarAddress: stellarAddress.codeUnits);
     await client.apply(extrinsic);
   }
 }

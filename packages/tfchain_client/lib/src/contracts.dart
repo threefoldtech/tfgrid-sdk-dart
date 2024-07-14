@@ -2,7 +2,6 @@ import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/grid_co
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/service_contract.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 const twoWeeks = 1209600000;

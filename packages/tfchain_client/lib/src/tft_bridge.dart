@@ -1,4 +1,5 @@
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
+import 'dart:math';
+
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryBridge {
@@ -22,8 +23,9 @@ class Bridge extends QueryBridge {
 
   Future<void> swapToStellar(
       {required String target, required int amount}) async {
-    final extrinsic = client.api.tx.tFTBridgeModule
-        .swapToStellar(targetStellarAddress: target, amount: amount);
+    final extrinsic = client.api.tx.tFTBridgeModule.swapToStellar(
+        targetStellarAddress: target.codeUnits,
+        amount: BigInt.from(amount * pow(10, 7).toInt()));
     await client.apply(extrinsic);
   }
 }

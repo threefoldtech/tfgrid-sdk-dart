@@ -1,5 +1,8 @@
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/ip4.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/ip6.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/node.dart';
-import 'package:tfchain_client/models/nodes.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/power.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/public_config.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryNodes {
@@ -20,17 +23,14 @@ class Nodes extends QueryNodes {
   final Client client;
 
   Future<void> setPower({required int nodeId, required bool power}) async {
-    Map<String, bool?> powerTarget = {
-      'up': null,
-      'down': null,
-    };
+    Power _power;
     if (power) {
-      powerTarget['up'] = true;
+      _power = Power.up;
     } else {
-      powerTarget['down'] = true;
+      _power = Power.down;
     }
     final extrinsic = client.api.tx.tfgridModule
-        .changePowerTarget(nodeId: nodeId, powerTarget: powerTarget);
+        .changePowerTarget(nodeId: nodeId, powerTarget: _power);
     await client.apply(extrinsic);
   }
 
@@ -43,27 +43,21 @@ class Nodes extends QueryNodes {
     String? ip6Gw,
     String? domain,
   }) async {
-    IPConfig ip4Config = IPConfig(ip: ip4Ip, gw: ip4Gw);
-    IPConfig? ip6Config;
+    Ip4 ip4Config = Ip4(ip: ip4Ip.codeUnits, gw: ip4Gw.codeUnits);
+    Ip6? ip6Config;
 
     if (ip6Ip != null && ip6Gw != null) {
-      ip6Config = IPConfig(ip: ip6Ip, gw: ip6Gw);
+      ip6Config = Ip6(ip: ip6Ip.codeUnits, gw: ip6Gw.codeUnits);
     }
 
     PublicConfig publicConfig = PublicConfig(
       ip4: ip4Config,
       ip6: ip6Config,
-      domain: domain,
-    );
-
-    NodePublicConfigOptions options = NodePublicConfigOptions(
-      farmId: farmId,
-      nodeId: nodeId,
-      publicConfig: publicConfig,
+      domain: domain!.codeUnits,
     );
 
     final extrinsic = client.api.tx.tfgridModule.addNodePublicConfig(
-        farmId: farmId, nodeId: nodeId, publicConfig: options);
+        farmId: farmId, nodeId: nodeId, publicConfig: publicConfig);
     await client.apply(extrinsic);
   }
 }

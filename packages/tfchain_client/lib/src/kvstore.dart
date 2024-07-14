@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:polkadart/polkadart.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class KVStore {
