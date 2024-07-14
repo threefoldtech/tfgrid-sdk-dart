@@ -55,6 +55,7 @@ class Client extends QueryClient {
   late final Dao.Dao clientDao;
   late final Twins clientTwins;
   late final KVStore kvStrore;
+  late final Nodes clientNodes;
   final SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
   Client(String url, this.mnemonic, this.keypairType) : super(url) {
@@ -67,6 +68,7 @@ class Client extends QueryClient {
     clientFarms = Farms(this);
     clientDao = Dao.Dao(this);
     clientTwins = Twins(this);
+    clientNodes = Nodes(this);
     kvStrore = KVStore(this);
     signer = Signer.Signer();
   }

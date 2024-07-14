@@ -126,15 +126,18 @@ class QueryDao {
 }
 
 class Dao extends QueryDao {
-  Dao(Client client) : super(client);
+  Dao(Client this.client) : super(client);
+  final Client client;
 
-  RuntimeCall vote(
+  Future<DaoVotes> vote(
       {required String address,
       required int farmId,
       required String hash,
-      required bool approve}) {
+      required bool approve}) async {
     final extrinsic = client.api.tx.dao
         .vote(farmId: farmId, proposalHash: hash.codeUnits, approve: approve);
-    return extrinsic;
+    await client.apply(extrinsic);
+
+    return getProposalVotes(hash: hash);
   }
 }
