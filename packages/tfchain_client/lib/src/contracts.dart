@@ -111,8 +111,8 @@ class Contracts extends QueryContracts {
   }
 
   Future<RuntimeCall> createName({required String name}) async {
-    final extrinsic =
-        client.api.tx.smartContractModule.createNameContract(name: name);
+    final extrinsic = client.api.tx.smartContractModule
+        .createNameContract(name: name.codeUnits);
     return extrinsic;
   }
 
