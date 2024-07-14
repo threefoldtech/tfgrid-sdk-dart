@@ -221,12 +221,13 @@ class Client extends QueryClient {
     // final dynamic extrinsicDecoded =
     //     ExtrinsicsCodec(chainInfo: metadata.chainInfo).decode(input);
     // print(extrinsicDecoded);
-
-    final submit = await AuthorApi(provider!).submitAndWatchExtrinsic(
+    Completer<void> _complete = Completer();
+    final StreamSubscription subscription =
+        await AuthorApi(provider!).submitAndWatchExtrinsic(
       extrinsic,
       (p0) async {
+        print("Extrinsic result: ${p0.type} - ${p0.value}");
         if (p0.type == 'inBlock') {
-          print("Extrinsic result: ${p0.type} - ${p0.value}");
           final finalizedBlockHash = p0.value;
           final moduleHash =
               Hasher.twoxx128.hash(Uint8List.fromList('System'.codeUnits));
@@ -256,7 +257,7 @@ class Client extends QueryClient {
                     // TODO: get the error name and type
                     final error = event.value.value["DispatchError"].value;
                     final errorType = event.value.value["DispatchError"].key;
-                    throw Exception(
+                    _complete.completeError(
                         "Failed to apply extrinsic: ${errorType}${error}");
                   } else if (event.key == runtimeCall.runtimeType.toString()) {
                     targetModuleEventOccur = true;
@@ -264,18 +265,23 @@ class Client extends QueryClient {
                       event.key == "System" &&
                       event.value.key == "ExtrinsicSuccess") {
                     print("Extrinsic is applied successfully");
+                    _complete.complete();
                     return;
                   }
                 }
               }
             }
           } else {
-            print("No events found in the block");
+            _complete.completeError("No events found in the block");
           }
         }
       },
     );
+    Future<void> _myFuture() async {
+      return _complete.future;
+    }
 
-    // print(submit);
+    await _myFuture();
+    subscription.cancel();
   }
 }
