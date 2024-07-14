@@ -21,7 +21,7 @@ class Balances extends QueryBalances {
 
   final Client client;
 
-  Future<RuntimeCall> transfer(
+  Future<AccountInfo?> transfer(
       {required String address, required int amount}) async {
     if (amount.isNaN || amount <= 0) {
       throw Exception("Amount must be a positive numeric value");
@@ -32,7 +32,8 @@ class Balances extends QueryBalances {
 
     final extrinsic = client.api.tx.balances
         .transfer(dest: multiAddress, value: BigInt.from(amount));
-    return extrinsic;
+
+    return await this.get(address: client.address);
   }
 
   Future<AccountInfo?> getMyBalance() async {

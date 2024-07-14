@@ -17,12 +17,13 @@ class QueryBridge {
 }
 
 class Bridge extends QueryBridge {
-  Bridge(Client client) : super(client);
+  Bridge(Client this.client) : super(client);
+  final Client client;
 
-  Future<RuntimeCall> swapToStellar(
+  Future<void> swapToStellar(
       {required String target, required int amount}) async {
     final extrinsic = client.api.tx.tFTBridgeModule
         .swapToStellar(targetStellarAddress: target, amount: amount);
-    return extrinsic;
+    await client.apply(extrinsic);
   }
 }

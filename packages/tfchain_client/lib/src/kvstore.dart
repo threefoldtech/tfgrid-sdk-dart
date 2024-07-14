@@ -8,21 +8,20 @@ class KVStore {
 
   KVStore(this.client);
 
-  RuntimeCall set({required String key, required String value}) {
+  Future<void> set({required String key, required String value}) async {
     final extrinsic =
         client.api.tx.tFKVStore.set(key: key.codeUnits, value: value.codeUnits);
-    return extrinsic;
+    await client.apply(extrinsic);
   }
 
-  RuntimeCall delete({required String key}) {
+  Future<void> delete({required String key}) async {
     final extrinsic = client.api.tx.tFKVStore.delete(key: key.codeUnits);
-    return extrinsic;
+    await client.apply(extrinsic);
   }
 
   Future<String> get({required String key}) async {
     final res = await client.api.query.tFKVStore
         .tFKVStore(client.keypair!.publicKey.bytes, []);
-    print(res);
     return String.fromCharCodes(res);
   }
 
@@ -77,16 +76,14 @@ class KVStore {
       keyValueMap[String.fromCharCodes(added)] = String.fromCharCodes(value);
     }
 
-    print(keyValueMap);
     return keyValueMap;
   }
 
-  void deleteAll() async {
+  Future<void> deleteAll() async {
     Map<String, String> keys = await list();
 
     for (String key in keys.keys) {
-      final extrinsic = delete(key: key);
-      await client.apply(extrinsic);
+      await (key: key);
     }
   }
 }

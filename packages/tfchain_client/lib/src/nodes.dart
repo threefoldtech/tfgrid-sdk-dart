@@ -1,5 +1,5 @@
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/node.dart';
+import 'package:tfchain_client/models/nodes.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryNodes {
@@ -16,10 +16,10 @@ class QueryNodes {
 }
 
 class Nodes extends QueryNodes {
-  Nodes(Client client) : super(client);
+  Nodes(Client this.client) : super(client);
+  final Client client;
 
-  Future<RuntimeCall> setPower(
-      {required int nodeId, required bool power}) async {
+  Future<void> setPower({required int nodeId, required bool power}) async {
     Map<String, bool?> powerTarget = {
       'up': null,
       'down': null,
@@ -31,23 +31,39 @@ class Nodes extends QueryNodes {
     }
     final extrinsic = client.api.tx.tfgridModule
         .changePowerTarget(nodeId: nodeId, powerTarget: powerTarget);
-    return extrinsic;
+    await client.apply(extrinsic);
+  }
+
+  Future<void> addNodePublicConfig({
+    required int farmId,
+    required int nodeId,
+    required String ip4Ip,
+    required String ip4Gw,
+    String? ip6Ip,
+    String? ip6Gw,
+    String? domain,
+  }) async {
+    IPConfig ip4Config = IPConfig(ip: ip4Ip, gw: ip4Gw);
+    IPConfig? ip6Config;
+
+    if (ip6Ip != null && ip6Gw != null) {
+      ip6Config = IPConfig(ip: ip6Ip, gw: ip6Gw);
+    }
+
+    PublicConfig publicConfig = PublicConfig(
+      ip4: ip4Config,
+      ip6: ip6Config,
+      domain: domain,
+    );
+
+    NodePublicConfigOptions options = NodePublicConfigOptions(
+      farmId: farmId,
+      nodeId: nodeId,
+      publicConfig: publicConfig,
+    );
+
+    final extrinsic = client.api.tx.tfgridModule.addNodePublicConfig(
+        farmId: farmId, nodeId: nodeId, publicConfig: options);
+    await client.apply(extrinsic);
   }
 }
-
-// TODO: what to do with this for addNodePublicConfig function
-// interface NodePublicConfigOptions {
-//   farmId: number;
-//   nodeId: number;
-//   publicConfig?: {
-//     ip4: {
-//       ip: string;
-//       gw: string;
-//     };
-//     ip6?: {
-//       ip: string;
-//       gw: string;
-//     } | null;
-//     domain?: string | null;
-//   } | null;
-// }

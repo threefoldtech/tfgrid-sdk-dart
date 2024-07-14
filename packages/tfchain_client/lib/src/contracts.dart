@@ -83,9 +83,10 @@ class QueryContracts {
 }
 
 class Contracts extends QueryContracts {
-  Contracts(Client client) : super(client);
+  Contracts(Client this.client) : super(client);
+  final Client client;
 
-  Future<RuntimeCall> createNode(
+  Future<BigInt?> createNode(
       {required int nodeId,
       required List<int> deploymentHash,
       required List<int> deploymentData,
@@ -95,11 +96,13 @@ class Contracts extends QueryContracts {
         deploymentHash: deploymentHash,
         deploymentData: deploymentData,
         publicIps: publicIps);
+    await client.apply(extrinsic);
 
-    return extrinsic;
+    return await getContractIdByNodeIdAndHash(
+        hash: deploymentHash, nodeId: nodeId);
   }
 
-  Future<RuntimeCall> updateNode(
+  Future<Contract?> updateNode(
       {required int contractId,
       required List<int> deploymentHash,
       required List<int> deploymentData}) async {
@@ -107,23 +110,29 @@ class Contracts extends QueryContracts {
         contractId: contractId,
         deploymentHash: deploymentHash,
         deploymentData: deploymentData);
-    return extrinsic;
+    await client.apply(extrinsic);
+
+    return await get(contractId: BigInt.from(contractId));
   }
 
-  Future<RuntimeCall> createName({required String name}) async {
+  Future<BigInt?> createName({required String name}) async {
     final extrinsic = client.api.tx.smartContractModule
         .createNameContract(name: name.codeUnits);
-    return extrinsic;
+    await client.apply(extrinsic);
+
+    return await getContractIdByName(name: name);
   }
 
-  Future<RuntimeCall> createRent(
+  Future<BigInt?> createRent(
       {required int nodeId, required int solutionProviderId}) async {
     final extrinsic = client.api.tx.smartContractModule.createRentContract(
         nodeId: nodeId, solutionProviderId: solutionProviderId);
-    return extrinsic;
+    await client.apply(extrinsic);
+
+    return await getContractIdByActiveRentForNode(nodeId: nodeId);
   }
 
-  Future<RuntimeCall> cancel({required BigInt contractId}) async {
+  Future<Contract?> cancel({required BigInt contractId}) async {
     final contract = await get(contractId: contractId);
     if (contract == null) {
       throw Exception("Contract not found");
@@ -131,13 +140,17 @@ class Contracts extends QueryContracts {
 
     final extrinsic = client.api.tx.smartContractModule
         .cancelContract(contractId: contractId);
-    return extrinsic;
+    await client.apply(extrinsic);
+    // IF not found it means its cancelled successfully
+    return await get(contractId: contractId);
   }
 
-  Future<RuntimeCall> setDedicatedNodeExtraFee(
+  Future<BigInt?> setDedicatedNodeExtraFee(
       {required int nodeId, required int extraFee}) async {
     final extrinsic = client.api.tx.smartContractModule
         .setDedicatedNodeExtraFee(nodeId: nodeId, extraFee: extraFee);
-    return extrinsic;
+    await client.apply(extrinsic);
+
+    return await getDedicatedNodeExtraFee(nodeId: nodeId);
   }
 }
