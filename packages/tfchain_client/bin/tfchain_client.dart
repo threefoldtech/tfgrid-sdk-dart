@@ -19,9 +19,9 @@ void main() async {
   await client.connect();
   // final extrinsic = await client.clientBalances.transfer(
   //     address: "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC", amount: 10);
-  final extrinsic = await client.clientTwins.create(relay: [], pk: []);
+  final twinId = await client.clientTwins.create(relay: [], pk: []);
 
-  await client.apply(extrinsic);
+  print(twinId);
   // await client.kvStrore.list();
 
   // await client.disconnect();
