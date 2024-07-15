@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dart';
 import 'package:tfchain_client/generated/dev/types/sp_runtime/multiaddress/multi_address.dart';
@@ -20,8 +22,7 @@ class Balances extends QueryBalances {
 
   final Client client;
 
-  Future<AccountInfo?> transfer(
-      {required String address, required int amount}) async {
+  Future<void> transfer({required String address, required int amount}) async {
     if (amount.isNaN || amount <= 0) {
       throw Exception("Amount must be a positive numeric value");
     }
@@ -29,10 +30,9 @@ class Balances extends QueryBalances {
     final publicKey = keyring.decodeAddress(address);
     MultiAddress multiAddress = Id(publicKey);
 
-    final extrinsic = client.api.tx.balances
-        .transfer(dest: multiAddress, value: BigInt.from(amount));
+    final extrinsic = client.api.tx.balances.transfer(
+        dest: multiAddress, value: BigInt.from(amount * pow(10, 7).toInt()));
     await client.apply(extrinsic);
-    return await this.get(address: client.address);
   }
 
   Future<AccountInfo?> getMyBalance() async {

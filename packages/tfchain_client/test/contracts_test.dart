@@ -6,8 +6,9 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Query Contracts Test", () {
     late QueryClient queryClient;
-    setUp(() {
+    setUp(() async {
       queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      await queryClient.connect();
     });
 
     test('Test Get Deleted Contract by Id', () async {
@@ -83,11 +84,67 @@ void main() {
       }
     });
 
-    test('Test Get ADedicated Node extra fee', () async {
+    test('Test Get a Dedicated Node extra fee', () async {
       BigInt? fee =
           await queryClient.contracts.getDedicatedNodeExtraFee(nodeId: 206);
       print(fee);
       expect(fee, BigInt.from(0));
+    });
+  });
+
+  group("Test Contracts", () {
+    late Client client;
+    setUp(() async {
+      client = Client(
+          "wss://tfchain.dev.grid.tf/ws",
+          "secret add bag cluster deposit beach illness letter crouch position rain arctic",
+          "sr25519");
+      await client.connect();
+    });
+
+    test('Test Create Node Contract with empty data', () async {
+      try {
+        BigInt? contractId = await client.contracts.createNode(
+            nodeId: 11, deploymentData: [], deploymentHash: [], publicIps: 0);
+      } catch (error) {
+        expect(error, isNotNull);
+      }
+    });
+
+    test('Test Update Node Contract with wrong data', () async {
+      try {
+        Contract? contract = await client.contracts
+            .updateNode(contractId: 11, deploymentData: [], deploymentHash: []);
+      } catch (error) {
+        expect(error, isNotNull);
+      }
+    });
+
+    test('Test Create Name Contract then cancel it', () async {
+      BigInt? contractId =
+          await client.contracts.createName(name: "contractname");
+      expect(contractId, isNotNull);
+      print(contractId);
+      try {
+        await client.contracts.cancel(contractId: contractId!);
+      } catch (error) {
+        expect(error, isNull);
+      }
+    });
+
+    test('Test Create Rent Contract with no solution provider', () async {
+      try {
+        BigInt? contractId = await client.contracts
+            .createRent(nodeId: 72, solutionProviderId: 0);
+      } catch (error) {
+        expect(error.toString(), contains('NoSuchSolutionProvider'));
+      }
+    });
+
+    test('Test set dedicated node extra fee', () async {
+      BigInt? extraFee = await client.contracts
+          .setDedicatedNodeExtraFee(nodeId: 140, extraFee: 2);
+      expect(extraFee, BigInt.from(2));
     });
   });
 }
