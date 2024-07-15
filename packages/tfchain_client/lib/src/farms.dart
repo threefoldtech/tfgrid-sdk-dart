@@ -29,13 +29,11 @@ class Farms extends QueryFarms {
     return await getFarmIdByName(name: name);
   }
 
-  Future<Farm?> addFarmIp(
+  Future<void> addFarmIp(
       {required int farmId, required String ip, required String gw}) async {
     final extrinsic = client.api.tx.tfgridModule
         .addFarmIp(farmId: farmId, ip: ip.codeUnits, gw: gw.codeUnits);
     await client.apply(extrinsic);
-
-    return await get(id: farmId);
   }
 
   Future<void> removeFarmIp({required int farmId, required String ip}) async {

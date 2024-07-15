@@ -5,8 +5,9 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Test Query Nodes", () {
     late QueryClient queryClient;
-    setUp(() {
+    setUp(() async {
       queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      await queryClient.connect();
     });
 
     test('Test get Node by Id', () async {

@@ -5,8 +5,9 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Query Balances Test", () {
     late QueryClient queryClient;
-    setUp(() {
+    setUp(() async {
       queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      await queryClient.connect();
     });
 
     test('Test Get Balance', () async {
@@ -49,7 +50,6 @@ void main() {
       }
     });
 
-    // TODO:
     test('Test Transfer TFTs', () async {
       try {
         await client.balances.transfer(

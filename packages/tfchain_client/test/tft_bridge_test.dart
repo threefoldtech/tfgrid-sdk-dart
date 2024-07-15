@@ -4,8 +4,9 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Query Bridge Test", () {
     late QueryClient queryClient;
-    setUp(() {
+    setUp(() async {
       queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      await queryClient.connect();
     });
 
     test('Test Get Withdraw fee', () async {

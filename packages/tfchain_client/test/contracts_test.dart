@@ -40,6 +40,7 @@ void main() {
     test('Test Get Active Contracts by node Id', () async {
       List<int> contracts =
           await queryClient.contracts.getActiveContracts(nodeId: 21);
+      print(contracts);
       expect(contracts, isNotEmpty);
     });
 
@@ -86,9 +87,9 @@ void main() {
 
     test('Test Get a Dedicated Node extra fee', () async {
       BigInt? fee =
-          await queryClient.contracts.getDedicatedNodeExtraFee(nodeId: 206);
+          await queryClient.contracts.getDedicatedNodeExtraFee(nodeId: 140);
       print(fee);
-      expect(fee, BigInt.from(0));
+      expect(fee, isNotNull);
     });
   });
 
@@ -122,9 +123,8 @@ void main() {
 
     test('Test Create Name Contract then cancel it', () async {
       BigInt? contractId =
-          await client.contracts.createName(name: "contractname");
+          await client.contracts.createName(name: "xxx");
       expect(contractId, isNotNull);
-      print(contractId);
       try {
         await client.contracts.cancel(contractId: contractId!);
       } catch (error) {

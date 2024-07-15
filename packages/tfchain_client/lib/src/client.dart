@@ -174,6 +174,7 @@ class Client extends QueryClient {
   @override
   Future<void> disconnect() async {
     await api.disconnect();
+    provider = null;
   }
 
   Uint8List hexToBytes(String hexString) {

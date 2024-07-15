@@ -7,8 +7,9 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Query Farms Test", () {
     late QueryClient queryClient;
-    setUp(() {
+    setUp(() async {
       queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      await queryClient.connect();
     });
 
     test('Test Get Farm by Id', () async {
@@ -19,7 +20,6 @@ void main() {
     test('Test Get Farm by wrong Id', () async {
       try {
         Farm? farm = await queryClient.farms.get(id: -50);
-        expect(farm, isNotNull);
       } catch (e) {
         expect(e, isNotNull);
       }
@@ -40,7 +40,6 @@ void main() {
       final random = Random();
       final farmName = 'farm_${random.nextInt(999)}';
       final farmId = await client.farms.create(name: farmName, publicIps: []);
-      print(farmId);
       expect(farmId, isNotNull);
     });
 
@@ -55,9 +54,8 @@ void main() {
 
     test('Test adding farm ip', () async {
       try {
-        Farm? farm = await client.farms.addFarmIp(
+        await client.farms.addFarmIp(
             farmId: 4588, ip: "198.165.15.25/16", gw: "198.165.15.26");
-        expect(farm, isNotNull);
       } catch (error) {
         // will fail as the ip already exists
         expect(error, isNotNull);
@@ -66,7 +64,7 @@ void main() {
 
     test('Test adding farm ip with same ip and gateway', () async {
       try {
-        Farm? farm = await client.farms.addFarmIp(
+        await client.farms.addFarmIp(
             farmId: 4588, ip: "198.165.15.25/16", gw: "198.165.15.25");
       } catch (error) {
         expect(error, isNotNull);
