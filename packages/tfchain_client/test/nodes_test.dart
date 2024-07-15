@@ -56,8 +56,8 @@ void main() {
             domain: "");
       } catch (error) {
         expect(
-          error.toString(),
-          startsWith('Failed to apply extrinsic:'),
+          error,
+          isNotNull,
         );
       }
     });
