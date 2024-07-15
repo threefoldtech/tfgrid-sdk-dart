@@ -291,8 +291,8 @@ class Client extends QueryClient {
         await AuthorApi(provider!).submitAndWatchExtrinsic(
       extrinsic,
       (p0) async {
-        print("Extrinsic result: ${p0.type} - ${p0.value}");
         if (p0.type == 'inBlock') {
+          print("Extrinsic result: ${p0.type} - ${p0.value}");
           final finalizedBlockHash = p0.value;
           final moduleHash =
               Hasher.twoxx128.hash(Uint8List.fromList('System'.codeUnits));
@@ -322,8 +322,20 @@ class Client extends QueryClient {
                     // TODO: get the error name and type
                     final error = event.value.value["DispatchError"].value;
                     final errorType = event.value.value["DispatchError"].key;
-                    _complete.completeError(
-                        "Failed to apply extrinsic: ${errorType}${error}");
+                    String? errorName;
+                    try {
+                      if (errorType == "Module")
+                        errorName = Errors(
+                                moduleIndex: error["index"],
+                                errorIndex:
+                                    dynamicListToUint8List(error["error"]))
+                            .decode();
+                    } catch (e) {
+                      _complete.completeError("Failed to apply extrinsic: $e");
+                    }
+                    if (errorName != null)
+                      _complete.completeError(
+                          "Failed to apply extrinsic: $errorName");
                   } else if (event.key == runtimeCall.runtimeType.toString()) {
                     targetModuleEventOccur = true;
                   } else if (targetModuleEventOccur &&
