@@ -6,7 +6,7 @@ on:
       - main
   push:
     branches:
-      - main    
+      - main
 
 jobs:
   build:
@@ -41,6 +41,8 @@ jobs:
         run: mkdir -p coverage
 
       - name: Run unit tests
+        env:
+          MNEMONIC: ${{ secrets.MNEMONIC }}
         run: |
           melos exec rm -rf coverage
           melos run unit_test
@@ -50,10 +52,10 @@ jobs:
         run: |
           melos exec --dir-exists="coverage" -- bash -c 'dart pub global run coverde filter --input coverage/lcov.info --output coverage/filtered.lcov.info --filters .g.dart'
           melos exec --dir-exists="coverage" -- bash -c 'dart pub global run coverde value -i coverage/filtered.lcov.info > coverage/result.txt'
- 
+
       - name: Upload coverage to Codecov
-        if: success() 
+        if: success()
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/filtered.lcov.info 
+          files: coverage/filtered.lcov.info

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:test/test.dart';
@@ -28,11 +29,13 @@ void main() {
 
   group("Test Farms", () {
     late Client client;
+    final mnemonic = Platform.environment['MNEMONIC']!;
+    final String link =
+        Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+
     setUp(() async {
-      client = Client(
-          "wss://tfchain.dev.grid.tf/ws",
-          "secret add bag cluster deposit beach illness letter crouch position rain arctic",
-          "sr25519");
+      client = Client(link, mnemonic, type);
       await client.connect();
     });
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/twin.dart';
 import 'package:tfchain_client/tfchain_client.dart';
@@ -32,11 +34,13 @@ void main() {
 
   group("Twins Test", () {
     late Client client;
+    final mnemonic = Platform.environment['MNEMONIC']!;
+    final String link =
+        Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+
     setUp(() async {
-      client = Client(
-          "wss://tfchain.dev.grid.tf/ws",
-          "secret add bag cluster deposit beach illness letter crouch position rain arctic",
-          "sr25519");
+      client = Client(link, mnemonic, type);
       await client.connect();
     });
 

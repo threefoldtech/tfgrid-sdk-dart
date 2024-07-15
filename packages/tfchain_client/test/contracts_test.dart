@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
@@ -95,11 +97,13 @@ void main() {
 
   group("Test Contracts", () {
     late Client client;
+    final mnemonic = Platform.environment['MNEMONIC']!;
+    final String link =
+        Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+
     setUp(() async {
-      client = Client(
-          "wss://tfchain.dev.grid.tf/ws",
-          "secret add bag cluster deposit beach illness letter crouch position rain arctic",
-          "sr25519");
+      client = Client(link, mnemonic, type);
       await client.connect();
     });
 
@@ -122,8 +126,7 @@ void main() {
     });
 
     test('Test Create Name Contract then cancel it', () async {
-      BigInt? contractId =
-          await client.contracts.createName(name: "xxx");
+      BigInt? contractId = await client.contracts.createName(name: "xxx");
       expect(contractId, isNotNull);
       try {
         await client.contracts.cancel(contractId: contractId!);
