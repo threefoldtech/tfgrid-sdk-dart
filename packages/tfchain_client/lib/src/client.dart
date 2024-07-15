@@ -336,6 +336,9 @@ class Client extends QueryClient {
                     if (errorName != null)
                       _complete.completeError(
                           "Failed to apply extrinsic: $errorName");
+                    else
+                      _complete.completeError(
+                          "Failed to apply extrinsic: ${errorType}${error}");
                   } else if (event.key == runtimeCall.runtimeType.toString()) {
                     targetModuleEventOccur = true;
                   } else if (targetModuleEventOccur &&
