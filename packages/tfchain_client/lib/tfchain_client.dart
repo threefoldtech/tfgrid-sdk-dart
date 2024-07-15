@@ -15,11 +15,11 @@ import 'package:polkadart/polkadart.dart'
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
+import 'package:tfchain_client/src/error_mapper.dart';
 import 'package:tfchain_client/src/balances.dart' as balance;
 import 'package:tfchain_client/src/contracts.dart';
 import 'package:tfchain_client/generated/dev/dev.dart' as polkadot;
 import 'package:tfchain_client/src/dao.dart' as Dao;
-import 'package:tfchain_client/src/error_mapper.dart';
 import 'package:tfchain_client/src/farms.dart';
 import 'package:tfchain_client/src/kvstore.dart';
 import 'package:tfchain_client/src/nodes.dart';

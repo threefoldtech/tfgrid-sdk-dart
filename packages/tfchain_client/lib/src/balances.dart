@@ -28,7 +28,7 @@ class Balances extends QueryBalances {
     }
     final keyring = Keyring();
     final publicKey = keyring.decodeAddress(address);
-    MultiAddress multiAddress = Address32(publicKey);
+    MultiAddress multiAddress = Id(publicKey);
 
     final extrinsic = client.api.tx.balances.transfer(
         dest: multiAddress, value: BigInt.from(amount * pow(10, 7).toInt()));

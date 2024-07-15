@@ -67,9 +67,9 @@ void main() {
       expect(client.address, isNotEmpty);
     });
 
-  // TODO: same here
+    // TODO: same here
     test('Disconnect', () async {
-      await client.connect(); 
+      await client.connect();
       await client.disconnect();
       expect(client.keypair, isNull);
       expect(client.address, isEmpty);
