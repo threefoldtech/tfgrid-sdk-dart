@@ -39,6 +39,12 @@ jobs:
 
       - name: Create coverage directory
         run: mkdir -p coverage
+      - name: Debug Environment Variables
+        run: |
+          echo "MNEMONIC: $MNEMONIC"
+          echo "LINK: $LINK"
+          echo "SIGN_TYPE: $SIGN_TYPE"
+  
 
       - name: Run unit tests
         env:
