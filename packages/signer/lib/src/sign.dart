@@ -1,7 +1,6 @@
 part of '../signer.dart';
 // TODO: should return keypair or not ?
 
-
 class Signer {
   KeyPair? keypair;
 

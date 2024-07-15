@@ -39,8 +39,8 @@ class Farms extends QueryFarms {
   }
 
   Future<void> removeFarmIp({required int farmId, required String ip}) async {
-    final extrinsic =
-        client.api.tx.tfgridModule.removeFarmIp(farmId: farmId, ip: ip.codeUnits);
+    final extrinsic = client.api.tx.tfgridModule
+        .removeFarmIp(farmId: farmId, ip: ip.codeUnits);
     await client.apply(extrinsic);
   }
 
