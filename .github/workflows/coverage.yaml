@@ -34,31 +34,18 @@ jobs:
       - name: Install dependencies
         run: melos bootstrap
 
-      - name: Run unit tests
+      - name: Run unit tests and generate coverage
         env:
           MNEMONIC: ${{ secrets.MNEMONIC }}
           LINK: ${{ secrets.LINK }}
           SIGN_TYPE: ${{ secrets.SIGN_TYPE}}
-        run: melos run unit_test
-
-      - name: Create coverage directory
-        run: mkdir -p coverage
-        
-      - name: Debug Environment Variables
         run: |
           echo "MNEMONIC: $MNEMONIC"
           echo "LINK: $LINK"
           echo "SIGN_TYPE: $SIGN_TYPE"
-  
 
-      - name: Run unit tests
-        env:
-          MNEMONIC: ${{ secrets.MNEMONIC }}
-          LINK: ${{ secrets.LINK }}
-          SIGN_TYPE: ${{ secrets.SIGN_TYPE}}
-        run: |
-          melos exec rm -rf coverage
-          melos run unit_test
+      - name: Create coverage directory
+        run: mkdir -p coverage
 
       - name: Calculate and merge coverage
         if: success()
