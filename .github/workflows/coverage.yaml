@@ -35,6 +35,10 @@ jobs:
         run: melos bootstrap
 
       - name: Run unit tests
+        env:
+          MNEMONIC: ${{ secrets.MNEMONIC }}
+          LINK: ${{ secrets.LINK }}
+          SIGN_TYPE: ${{ secrets.SIGN_TYPE}}
         run: melos run unit_test
 
       - name: Create coverage directory
