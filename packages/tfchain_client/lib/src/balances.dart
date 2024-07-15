@@ -27,11 +27,11 @@ class Balances extends QueryBalances {
     }
     final keyring = Keyring();
     final publicKey = keyring.decodeAddress(address);
-    MultiAddress multiAddress = Address32(publicKey);
+    MultiAddress multiAddress = Id(publicKey);
 
     final extrinsic = client.api.tx.balances
         .transfer(dest: multiAddress, value: BigInt.from(amount));
-
+    await client.apply(extrinsic);
     return await this.get(address: client.address);
   }
 
