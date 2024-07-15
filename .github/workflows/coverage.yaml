@@ -43,6 +43,7 @@ jobs:
 
       - name: Create coverage directory
         run: mkdir -p coverage
+        
       - name: Debug Environment Variables
         run: |
           echo "MNEMONIC: $MNEMONIC"
