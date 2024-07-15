@@ -1,4 +1,3 @@
-import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/grid_contract/name_contract_name.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/service_contract.dart';
@@ -31,7 +30,7 @@ class QueryContracts {
 
   Future<BigInt?> getContractIdByName({required String name}) async {
     final res = await client.api.query.smartContractModule
-        .contractIDByNameRegistration(name as NameContractName);
+        .contractIDByNameRegistration(name.codeUnits);
     return res;
   }
 
@@ -85,6 +84,7 @@ class Contracts extends QueryContracts {
   Contracts(Client this.client) : super(client);
   final Client client;
 
+  // TODO: should i return bigint or convert it to int ??
   Future<BigInt?> createNode(
       {required int nodeId,
       required List<int> deploymentHash,
@@ -125,13 +125,13 @@ class Contracts extends QueryContracts {
   Future<BigInt?> createRent(
       {required int nodeId, required int solutionProviderId}) async {
     final extrinsic = client.api.tx.smartContractModule.createRentContract(
-        nodeId: nodeId, solutionProviderId: solutionProviderId);
+        nodeId: nodeId, solutionProviderId: BigInt.from(solutionProviderId));
     await client.apply(extrinsic);
 
     return await getContractIdByActiveRentForNode(nodeId: nodeId);
   }
 
-  Future<Contract?> cancel({required BigInt contractId}) async {
+  Future<void> cancel({required BigInt contractId}) async {
     final contract = await get(contractId: contractId);
     if (contract == null) {
       throw Exception("Contract not found");
@@ -140,14 +140,12 @@ class Contracts extends QueryContracts {
     final extrinsic = client.api.tx.smartContractModule
         .cancelContract(contractId: contractId);
     await client.apply(extrinsic);
-    // IF not found it means its cancelled successfully
-    return await get(contractId: contractId);
   }
 
   Future<BigInt?> setDedicatedNodeExtraFee(
       {required int nodeId, required int extraFee}) async {
     final extrinsic = client.api.tx.smartContractModule
-        .setDedicatedNodeExtraFee(nodeId: nodeId, extraFee: extraFee);
+        .setDedicatedNodeExtraFee(nodeId: nodeId, extraFee: BigInt.from(extraFee));
     await client.apply(extrinsic);
 
     return await getDedicatedNodeExtraFee(nodeId: nodeId);
