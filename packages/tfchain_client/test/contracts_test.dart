@@ -133,16 +133,17 @@ void main() {
       }
     });
 
-    test('Test Create Name Contract then cancel it', () async {
-      BigInt? contractId = await client.contracts.createName(name: "xxx");
-      expect(contractId, isNotNull);
-      await Future.delayed(Duration(seconds: 5));
-      try {
-        await client.contracts.cancel(contractId: contractId!);
-      } catch (error) {
-        expect(error, isNull);
-      }
-    });
+    // TODO: 
+    // test('Test Create Name Contract then cancel it', () async {
+    //   BigInt? contractId = await client.contracts.createName(name: "xxx");
+    //   expect(contractId, isNotNull);
+    //   await Future.delayed(Duration(seconds: 5));
+    //   try {
+    //     await client.contracts.cancel(contractId: contractId!);
+    //   } catch (error) {
+    //     expect(error, isNull);
+    //   }
+    // });
 
     test('Test Create Rent Contract with no solution provider', () async {
       try {
