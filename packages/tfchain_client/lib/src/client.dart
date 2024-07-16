@@ -293,7 +293,7 @@ class Client extends QueryClient {
         await AuthorApi(provider!).submitAndWatchExtrinsic(
       extrinsic,
       (p0) async {
-        if (p0.type == 'inBlock') {
+        if (p0.type == 'finalized') {
           print("Extrinsic result: ${p0.type} - ${p0.value}");
           final finalizedBlockHash = p0.value;
           final moduleHash =
