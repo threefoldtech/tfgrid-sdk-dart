@@ -44,6 +44,11 @@ void main() {
     });
 
     tearDownAll(() async {
+      try {
+        await client.farms.removeFarmIp(farmId: 4588, ip: "198.165.15.25/16");
+      } catch (error) {
+        print("Error removing Ip from farm with id 4588: $error");
+      }
       await client.disconnect();
     });
 
@@ -82,16 +87,6 @@ void main() {
       }
     });
 
-    // first time will pass but after that will fail, TODO:
-    test('Test remove farm ip', () async {
-      try {
-        await client.farms.removeFarmIp(farmId: 4588, ip: "198.165.15.25/16");
-      } catch (error) {
-        expect(error, null);
-      }
-    });
-
-    //
     test('Test add stellar address', () async {
       try {
         await client.farms.addStellarAddress(

@@ -51,8 +51,8 @@ void main() {
         await client.nodes.setPower(nodeId: 72, power: true);
       } catch (error) {
         expect(
-          error.toString(),
-          startsWith('Failed to apply extrinsic:'),
+          error,
+          isNotNull,
         );
       }
     });

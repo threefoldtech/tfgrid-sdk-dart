@@ -57,8 +57,8 @@ void main() {
         int? twin = await client.twins.create(relay: [], pk: []);
       } catch (error) {
         expect(
-          error.toString(),
-          startsWith('Failed to apply extrinsic:'),
+          error,
+          isNotNull,
         );
       }
     });

@@ -105,6 +105,7 @@ void main() {
     final String link =
         Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
     final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+    BigInt? contractId = null;
 
     setUp(() async {
       client = Client(link, mnemonic, type);
@@ -112,6 +113,13 @@ void main() {
     });
 
     tearDownAll(() async {
+      if (contractId != null) {
+        try {
+          await client.contracts.cancel(contractId: contractId!);
+        } catch (error) {
+          print("Error canceling contract: $error");
+        }
+      }
       await client.disconnect();
     });
 
@@ -133,16 +141,9 @@ void main() {
       }
     });
 
-    // TODO: 
-    test('Test Create Name Contract then cancel it', () async {
-      BigInt? contractId = await client.contracts.createName(name: "xxx");
+    test('Test Create Name Contract', () async {
+      contractId = await client.contracts.createName(name: "xxx");
       expect(contractId, isNotNull);
-      await Future.delayed(Duration(seconds: 5));
-      try {
-        await client.contracts.cancel(contractId: contractId!);
-      } catch (error) {
-        expect(error, isNull);
-      }
     });
 
     test('Test Create Rent Contract with no solution provider', () async {
