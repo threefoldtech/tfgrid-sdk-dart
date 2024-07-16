@@ -7,8 +7,10 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Test Query Nodes", () {
     late QueryClient queryClient;
+    final String url =
+        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     setUp(() async {
-      queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      queryClient = QueryClient(url);
       await queryClient.connect();
     });
 

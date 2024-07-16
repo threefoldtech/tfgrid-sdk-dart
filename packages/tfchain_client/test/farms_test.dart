@@ -8,8 +8,10 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Query Farms Test", () {
     late QueryClient queryClient;
+    final String url =
+        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     setUp(() async {
-      queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      queryClient = QueryClient(url);
       await queryClient.connect();
     });
 
@@ -54,7 +56,8 @@ void main() {
 
     test('Test create farm', () async {
       final random = Random();
-      final farmName = 'farm_${random.nextInt(999)}';
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final farmName = 'farm_${random.nextInt(999)}_${timestamp}';
       final farmId = await client.farms.create(name: farmName, publicIps: []);
       expect(farmId, isNotNull);
     });

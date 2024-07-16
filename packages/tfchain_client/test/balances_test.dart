@@ -7,8 +7,10 @@ import 'package:tfchain_client/tfchain_client.dart';
 void main() {
   group("Query Balances Test", () {
     late QueryClient queryClient;
+    final String url =
+        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     setUp(() async {
-      queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
+      queryClient = QueryClient(url);
       await queryClient.connect();
     });
 
@@ -54,8 +56,7 @@ void main() {
     test('Test Transfer TFTs with invalid amount', () async {
       try {
         await client.balances.transfer(
-            address:
-                "oven strong mention shoulder night ghost correct exercise surge lady jungle hundred",
+            address: "5EcSXeEH35LriE2aWxX6v4yZSMq47vdJ1GgHEXDdhJxg9XjG",
             amount: BigInt.zero);
       } catch (error) {
         expect(error, isNotNull);

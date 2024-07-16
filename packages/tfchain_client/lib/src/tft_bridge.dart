@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryBridge {

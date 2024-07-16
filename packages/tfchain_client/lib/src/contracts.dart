@@ -1,7 +1,6 @@
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/service_contract.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/origin_caller.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 const twoWeeks = 1209600000;
@@ -56,7 +55,7 @@ class QueryContracts {
     }
 
     //TODO: double check that GracePeriod typed like that.
-    final blockNumber = contract!.state.toJson()["GracePeriod"];
+    final blockNumber = contract.state.toJson()["GracePeriod"];
     try {
       final currentBlockNumber = await client.api.query.system.number();
 
