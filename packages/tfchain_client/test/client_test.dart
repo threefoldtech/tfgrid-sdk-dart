@@ -42,7 +42,10 @@ void main() {
       expect(queryClient.api, isNotNull);
     });
 
-    // TODO: How to test disconnect ??
+    test('Disconnect', () async {
+      await queryClient.disconnect();
+      expect(false, queryClient.provider!.isConnected());
+    });
   });
 
   group("Full Client Tests", () {
@@ -77,6 +80,11 @@ void main() {
       expect(client.address, isNotEmpty);
       expect(client.provider, isA<WsProvider>());
       expect(client.api, isNotNull);
+    });
+
+    test('Disconnect', () async {
+      await client.disconnect();
+      expect(false, client.provider!.isConnected());
     });
   });
 }

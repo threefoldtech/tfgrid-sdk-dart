@@ -74,7 +74,9 @@ class QueryClient {
   }
 
   Future<void> disconnect() async {
-    await api.disconnect();
+    if (provider!.isConnected()) {
+      await api.disconnect();
+    }
   }
 }
 
