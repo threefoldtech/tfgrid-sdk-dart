@@ -40,9 +40,8 @@ jobs:
           LINK: ${{ secrets.LINK }}
           SIGN_TYPE: ${{ secrets.SIGN_TYPE}}
         run: |
-          echo "MNEMONIC: $MNEMONIC"
-          echo "LINK: $LINK"
-          echo "SIGN_TYPE: $SIGN_TYPE"
+          melos exec rm -rf coverage
+          melos run unit_test
 
       - name: Create coverage directory
         run: mkdir -p coverage
