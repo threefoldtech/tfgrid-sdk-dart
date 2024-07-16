@@ -9,6 +9,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test Get TFT price', () async {
       final price = await queryClient.price.get();
       expect(price, isNotNull);

@@ -12,6 +12,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test Get Balance', () async {
       String address = "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC";
       AccountInfo? accountInfo =
@@ -41,6 +45,10 @@ void main() {
     setUp(() async {
       client = Client(link, mnemonic, type);
       await client.connect();
+    });
+
+    tearDown(() async {
+      await client.disconnect();
     });
 
     test('Test Transfer TFTs with invalid amount', () async {

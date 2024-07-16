@@ -13,6 +13,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test Get Farm by Id', () async {
       Farm? farm = await queryClient.farms.get(id: 1);
       expect(farm, isNotNull);
@@ -37,6 +41,10 @@ void main() {
     setUp(() async {
       client = Client(link, mnemonic, type);
       await client.connect();
+    });
+    
+    tearDown(() async {
+      await client.disconnect();
     });
 
     test('Test create farm', () async {

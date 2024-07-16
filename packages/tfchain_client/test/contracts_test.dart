@@ -13,6 +13,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test Get Deleted Contract by Id', () async {
       Contract? contract =
           await queryClient.contracts.get(contractId: BigInt.from(97897));
@@ -107,6 +111,10 @@ void main() {
       await client.connect();
     });
 
+    tearDown(() async {
+      await client.disconnect();
+    });
+
     test('Test Create Node Contract with empty data', () async {
       try {
         BigInt? contractId = await client.contracts.createNode(
@@ -128,6 +136,7 @@ void main() {
     test('Test Create Name Contract then cancel it', () async {
       BigInt? contractId = await client.contracts.createName(name: "xxx");
       expect(contractId, isNotNull);
+      await Future.delayed(Duration(seconds: 5));
       try {
         await client.contracts.cancel(contractId: contractId!);
       } catch (error) {

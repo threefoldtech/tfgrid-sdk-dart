@@ -10,6 +10,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test Get Pricing Policy', () async {
       PricingPolicy? res = await queryClient.policies.get(id: 1);
       expect(res, isNotNull);

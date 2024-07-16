@@ -12,6 +12,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test Get Twin with id', () async {
       int id = 214;
       final twin = await queryClient.twins.get(id: id);
@@ -42,6 +46,10 @@ void main() {
     setUp(() async {
       client = Client(link, mnemonic, type);
       await client.connect();
+    });
+
+    tearDown(() async {
+      await client.disconnect();
     });
 
     test('Test Create Twin', () async {

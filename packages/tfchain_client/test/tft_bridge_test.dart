@@ -11,6 +11,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test Get Withdraw fee', () async {
       BigInt? fee = await queryClient.bridge.getWithdrawFee();
       expect(fee, isNotNull);
@@ -32,6 +36,10 @@ void main() {
     setUp(() async {
       client = Client(link, mnemonic, type);
       await client.connect();
+    });
+
+    tearDown(() async {
+      await client.disconnect();
     });
 
     test('Test swap to stellar zero TFTs', () async {

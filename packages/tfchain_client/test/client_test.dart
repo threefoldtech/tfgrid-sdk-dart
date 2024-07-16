@@ -21,6 +21,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Initialization', () {
       expect(queryClient.url, equals("wss://tfchain.dev.grid.tf/ws"));
       expect(queryClient.contracts, isA<QueryContracts>());
@@ -54,6 +58,10 @@ void main() {
         type,
       );
       await client.connect();
+    });
+
+    tearDown(() async {
+      await client.disconnect();
     });
 
     test('Initialization', () {

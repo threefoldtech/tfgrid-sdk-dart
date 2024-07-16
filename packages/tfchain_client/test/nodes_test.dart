@@ -12,6 +12,10 @@ void main() {
       await queryClient.connect();
     });
 
+    tearDown(() async {
+      await queryClient.disconnect();
+    });
+
     test('Test get Node by Id', () async {
       Node? node = await queryClient.nodes.get(id: 11);
       expect(node, isNotNull);
@@ -36,6 +40,10 @@ void main() {
     setUp(() async {
       client = Client(link, mnemonic, type);
       await client.connect();
+    });
+
+    tearDown(() async {
+      await client.disconnect();
     });
 
     test('Test Set Power to node not owned by me', () async {
