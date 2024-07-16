@@ -129,8 +129,7 @@ class Dao extends QueryDao {
   final Client client;
 
   Future<DaoVotes> vote(
-      {required String address,
-      required int farmId,
+      {required int farmId,
       required String hash,
       required bool approve}) async {
     final extrinsic = client.api.tx.dao

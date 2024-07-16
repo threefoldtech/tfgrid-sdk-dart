@@ -1,6 +1,7 @@
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/service_contract.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_runtime/origin_caller.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 const twoWeeks = 1209600000;
@@ -50,6 +51,8 @@ class QueryContracts {
     final contract = await get(contractId: id);
     if (contract != null && contract.state.toJson()["Created"] == null) {
       return 0;
+    } else if (contract == null) {
+      return 0;
     }
 
     //TODO: double check that GracePeriod typed like that.
@@ -89,19 +92,21 @@ class Contracts extends QueryContracts {
       {required int nodeId,
       required List<int> deploymentHash,
       required List<int> deploymentData,
-      required int publicIps}) async {
+      required int publicIps,
+      BigInt? solutionProviderId}) async {
     final extrinsic = client.api.tx.smartContractModule.createNodeContract(
         nodeId: nodeId,
         deploymentHash: deploymentHash,
         deploymentData: deploymentData,
-        publicIps: publicIps);
+        publicIps: publicIps,
+        solutionProviderId: solutionProviderId!);
     await client.apply(extrinsic);
 
     return await getContractIdByNodeIdAndHash(
         hash: deploymentHash, nodeId: nodeId);
   }
 
-  Future<Contract?> updateNode(
+  Future<void> updateNode(
       {required int contractId,
       required List<int> deploymentHash,
       required List<int> deploymentData}) async {
@@ -110,8 +115,6 @@ class Contracts extends QueryContracts {
         deploymentHash: deploymentHash,
         deploymentData: deploymentData);
     await client.apply(extrinsic);
-
-    return await get(contractId: BigInt.from(contractId));
   }
 
   Future<BigInt?> createName({required String name}) async {
@@ -123,9 +126,9 @@ class Contracts extends QueryContracts {
   }
 
   Future<BigInt?> createRent(
-      {required int nodeId, required int solutionProviderId}) async {
+      {required int nodeId, required BigInt solutionProviderId}) async {
     final extrinsic = client.api.tx.smartContractModule.createRentContract(
-        nodeId: nodeId, solutionProviderId: BigInt.from(solutionProviderId));
+        nodeId: nodeId, solutionProviderId: solutionProviderId);
     await client.apply(extrinsic);
 
     return await getContractIdByActiveRentForNode(nodeId: nodeId);
@@ -142,12 +145,10 @@ class Contracts extends QueryContracts {
     await client.apply(extrinsic);
   }
 
-  Future<BigInt?> setDedicatedNodeExtraFee(
-      {required int nodeId, required int extraFee}) async {
+  Future<void> setDedicatedNodeExtraFee(
+      {required int nodeId, required BigInt extraFee}) async {
     final extrinsic = client.api.tx.smartContractModule
-        .setDedicatedNodeExtraFee(nodeId: nodeId, extraFee: BigInt.from(extraFee));
+        .setDedicatedNodeExtraFee(nodeId: nodeId, extraFee: extraFee);
     await client.apply(extrinsic);
-
-    return await getDedicatedNodeExtraFee(nodeId: nodeId);
   }
 }

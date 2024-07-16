@@ -33,14 +33,9 @@ class Twins extends QueryTwins {
     return await getTwinIdByAccountId(address: client.address);
   }
 
-  Future<Twin?> update(
-      {required List<int> relay, required List<int> pk}) async {
+  Future<void> update({required List<int> relay, required List<int> pk}) async {
     final extrinsic =
         client.api.tx.tfgridModule.updateTwin(relay: relay, pk: pk);
     await client.apply(extrinsic);
-    final twinId = await getTwinIdByAccountId(address: client.address);
-    final twin = await get(id: twinId!);
-
-    return twin;
   }
 }

@@ -7,6 +7,6 @@ class QueryPricingPolicies {
 
   Future<PricingPolicy?> get({required int id}) async {
     final res = await client.api.query.tfgridModule.pricingPolicies(id);
-    return res as PricingPolicy;
+    return res;
   }
 }

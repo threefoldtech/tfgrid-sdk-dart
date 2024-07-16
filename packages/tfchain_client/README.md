@@ -42,10 +42,10 @@ export MNEMONIC="your-mnemonic"
 2- provide chain url and the signing type.
 By default the chain url is set to `wss://tfchain.dev.grid.tf/ws` and the signing type is `sr25519`. Note that signing type can be either `sr25519` or `ed25519`.
 ```bash
-export LINK="chain_url"
+export URL="chain_url"
 ```
 ```bash
-export SIGN_TYPE="sr25519"
+export KEYPAIR_TYPE="sr25519"
 ```
 
 

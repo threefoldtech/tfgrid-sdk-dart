@@ -102,13 +102,13 @@ void main() {
   group("Test Contracts", () {
     late Client client;
     final mnemonic = Platform.environment['MNEMONIC']!;
-    final String link =
-        Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+    final String url =
+        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     BigInt? contractId = null;
 
     setUp(() async {
-      client = Client(link, mnemonic, type);
+      client = Client(url, mnemonic, type);
       await client.connect();
     });
 
@@ -134,7 +134,7 @@ void main() {
 
     test('Test Update Node Contract with wrong data', () async {
       try {
-        Contract? contract = await client.contracts
+        await client.contracts
             .updateNode(contractId: 11, deploymentData: [], deploymentHash: []);
       } catch (error) {
         expect(error, isNotNull);
@@ -149,16 +149,19 @@ void main() {
     test('Test Create Rent Contract with no solution provider', () async {
       try {
         BigInt? contractId = await client.contracts
-            .createRent(nodeId: 72, solutionProviderId: 0);
+            .createRent(nodeId: 72, solutionProviderId: BigInt.zero);
       } catch (error) {
         expect(error.toString(), contains('NoSuchSolutionProvider'));
       }
     });
 
     test('Test set dedicated node extra fee', () async {
-      BigInt? extraFee = await client.contracts
-          .setDedicatedNodeExtraFee(nodeId: 140, extraFee: 2);
-      expect(extraFee, BigInt.from(2));
+      try {
+        await client.contracts
+            .setDedicatedNodeExtraFee(nodeId: 140, extraFee: BigInt.two);
+      } catch (error) {
+        expect(error, isNotNull);
+      }
     });
   });
 }

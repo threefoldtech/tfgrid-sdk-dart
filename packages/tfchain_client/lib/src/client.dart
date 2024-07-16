@@ -74,21 +74,23 @@ class QueryClient {
   }
 
   Future<void> disconnect() async {
-    if (provider!.isConnected()) {
+    if (provider != null && provider!.isConnected()) {
       await api.disconnect();
     }
   }
 }
 
 class Client extends QueryClient {
-  final String mnemonic;
+  final String mnemonicOrSecretSeed;
   late String address;
   final String keypairType;
   KeyPair? keypair;
   KVStore? _kvStore;
-  final SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
+  TermsAndConditions? _termsAndConditions;
+  static const List<String> SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
-  Client(String url, this.mnemonic, this.keypairType) : super(url) {}
+  Client(String url, this.mnemonicOrSecretSeed, this.keypairType)
+      : super(url) {}
 
   @override
   Twins get twins {
@@ -137,17 +139,24 @@ class Client extends QueryClient {
     return _kvStore as KVStore;
   }
 
+  TermsAndConditions get termsAndConditions {
+    if (_termsAndConditions == null)
+      _termsAndConditions = TermsAndConditions(this);
+    return _termsAndConditions as TermsAndConditions;
+  }
+
   @override
   void _checkInputs() {
     super._checkInputs();
-    if (mnemonic.isEmpty) {
+    if (mnemonicOrSecretSeed.isEmpty) {
       throw FormatException("Mnemonic or secret should be provided");
-    } else if (mnemonic != "//Allice" && !validateMnemonic(mnemonic)) {
-      if (mnemonic.contains(" ")) {
+    } else if (mnemonicOrSecretSeed != "//Alice" &&
+        !validateMnemonic(mnemonicOrSecretSeed)) {
+      if (mnemonicOrSecretSeed.contains(" ")) {
         throw FormatException("Invalid mnemonic! Must be bip39 compliant");
       }
 
-      if (!mnemonic.startsWith("0x")) {
+      if (!mnemonicOrSecretSeed.startsWith("0x")) {
         throw FormatException(
             "Invalid secret seed. Secret seed should start with 0x");
       }
@@ -165,34 +174,19 @@ class Client extends QueryClient {
     _checkInputs();
     final Signer.Signer signer = Signer.Signer();
     if (keypairType == "sr25519") {
-      keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
+      keypair = await signer.fromMnemonic(
+          mnemonicOrSecretSeed, Signer.KPType.sr25519);
       address = keypair!.address;
     } else {
-      keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.ed25519);
+      keypair = await signer.fromMnemonic(
+          mnemonicOrSecretSeed, Signer.KPType.ed25519);
       address = keypair!.address;
     }
   }
 
-  @override
   Future<void> disconnect() async {
-    await api.disconnect();
-  }
-
-  Uint8List hexToBytes(String hexString) {
-    if (hexString.startsWith('0x')) {
-      hexString = hexString.substring(2);
-    }
-    return Uint8List.fromList(hex.decode(hexString));
-  }
-
-  dynamic replaceMapEntry(dynamic value) {
-    if (value is Map<String, dynamic>) {
-      return value
-          .map((key, innerValue) => MapEntry(key, replaceMapEntry(innerValue)));
-    } else if (value is List) {
-      return value.map((innerValue) => replaceMapEntry(innerValue)).toList();
-    } else {
-      return value;
+    if (provider != null && provider!.isConnected()) {
+      await api.disconnect();
     }
   }
 

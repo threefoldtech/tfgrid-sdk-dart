@@ -39,12 +39,12 @@ void main() {
   group("Twins Test", () {
     late Client client;
     final mnemonic = Platform.environment['MNEMONIC']!;
-    final String link =
-        Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+    final String url =
+        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
 
     setUp(() async {
-      client = Client(link, mnemonic, type);
+      client = Client(url, mnemonic, type);
       await client.connect();
     });
 
@@ -64,9 +64,11 @@ void main() {
     });
 
     test('Test Update Twin', () async {
-      Twin? twin = await client.twins
-          .update(relay: "relay.dev.grid.tf".codeUnits, pk: []);
-      expect(twin, isNotNull);
+      try {
+        await client.twins.update(relay: "relay.dev.grid.tf".codeUnits, pk: []);
+      } catch (error) {
+        expect(error, null);
+      }
     });
   });
 }

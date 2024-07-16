@@ -37,8 +37,8 @@ jobs:
       - name: Run unit tests and generate coverage
         env:
           MNEMONIC: ${{ secrets.MNEMONIC }}
-          LINK: ${{ secrets.LINK }}
-          SIGN_TYPE: ${{ secrets.SIGN_TYPE}}
+          URL: ${{ secrets.URL }}
+          KEYPAIR_TYPE: ${{ secrets.KEYPAIR_TYPE}}
         run: |
           melos exec rm -rf coverage
           melos run unit_test

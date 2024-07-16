@@ -20,7 +20,7 @@ class KVStore {
 
   Future<String> get({required String key}) async {
     final res = await client.api.query.tFKVStore
-        .tFKVStore(client.keypair!.publicKey.bytes, []);
+        .tFKVStore(client.keypair!.publicKey.bytes, key.codeUnits);
     return String.fromCharCodes(res);
   }
 
@@ -82,7 +82,7 @@ class KVStore {
     Map<String, String> keys = await list();
 
     for (String key in keys.keys) {
-      await (key: key);
+      await delete(key: key);
     }
   }
 }

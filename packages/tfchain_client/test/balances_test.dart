@@ -38,12 +38,12 @@ void main() {
   group("Test Balances", () {
     late Client client;
     final mnemonic = Platform.environment['MNEMONIC']!;
-    final String link =
-        Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+    final String url =
+        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
 
     setUp(() async {
-      client = Client(link, mnemonic, type);
+      client = Client(url, mnemonic, type);
       await client.connect();
     });
 
@@ -56,7 +56,7 @@ void main() {
         await client.balances.transfer(
             address:
                 "oven strong mention shoulder night ghost correct exercise surge lady jungle hundred",
-            amount: 0);
+            amount: BigInt.zero);
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -66,7 +66,7 @@ void main() {
       try {
         await client.balances.transfer(
             address: "5EcSXeEH35LriE2aWxX6v4yZSMq47vdJ1GgHEXDdhJxg9XjG",
-            amount: 10);
+            amount: BigInt.from(10));
       } catch (error) {
         print(error);
         expect(error, isNull);

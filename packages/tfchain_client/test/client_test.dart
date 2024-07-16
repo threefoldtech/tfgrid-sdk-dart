@@ -51,12 +51,12 @@ void main() {
   group("Full Client Tests", () {
     late Client client;
     final mnemonic = Platform.environment['MNEMONIC']!;
-    final String link =
-        Platform.environment['LINK'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['SIGN_TYPE'] ?? 'sr25519';
+    final String url =
+        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     setUp(() async {
       client = Client(
-        link,
+        url,
         mnemonic,
         type,
       );

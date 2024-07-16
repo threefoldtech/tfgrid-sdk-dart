@@ -22,10 +22,10 @@ class Bridge extends QueryBridge {
   final Client client;
 
   Future<void> swapToStellar(
-      {required String target, required int amount}) async {
+      {required String target, required BigInt amount}) async {
     final extrinsic = client.api.tx.tFTBridgeModule.swapToStellar(
         targetStellarAddress: target.codeUnits,
-        amount: BigInt.from(amount * pow(10, 7).toInt()));
+        amount: amount * BigInt.from(10).pow(7));
     await client.apply(extrinsic);
   }
 }

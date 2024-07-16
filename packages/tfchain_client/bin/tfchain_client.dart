@@ -14,7 +14,7 @@ void main() async {
 
   final client = Client(
       "wss://tfchain.dev.grid.tf/ws",
-      "secret add bag cluster deposit beach illness letter crouch position rain arctic",
+      "your-mnemonic",
       "sr25519");
   await client.connect();
   // final extrinsic = await client.clientBalances.transfer(
