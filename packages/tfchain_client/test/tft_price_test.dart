@@ -9,7 +9,7 @@ void main() {
       await queryClient.connect();
     });
 
-    tearDown(() async {
+    tearDownAll(() async {
       await queryClient.disconnect();
     });
 

@@ -12,7 +12,7 @@ void main() {
       await queryClient.connect();
     });
 
-    tearDown(() async {
+    tearDownAll(() async {
       await queryClient.disconnect();
     });
 
@@ -47,7 +47,7 @@ void main() {
       await client.connect();
     });
 
-    tearDown(() async {
+    tearDownAll(() async {
       await client.disconnect();
     });
 

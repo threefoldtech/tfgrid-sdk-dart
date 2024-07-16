@@ -13,7 +13,7 @@ void main() {
       await queryClient.connect();
     });
 
-    tearDown(() async {
+    tearDownAll(() async {
       await queryClient.disconnect();
     });
 
@@ -42,8 +42,8 @@ void main() {
       client = Client(link, mnemonic, type);
       await client.connect();
     });
-    
-    tearDown(() async {
+
+    tearDownAll(() async {
       await client.disconnect();
     });
 
