@@ -69,10 +69,8 @@ class QueryClient {
 
   Future<void> connect() async {
     _checkInputs();
-    if (!provider!.isConnected()) {
-      provider = Provider.fromUri(Uri.parse(url));
-      api = polkadot.Dev(provider!);
-    }
+    provider = Provider.fromUri(Uri.parse(url));
+    api = polkadot.Dev(provider!);
   }
 
   Future<void> disconnect() async {

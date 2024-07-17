@@ -130,7 +130,7 @@ void main() {
 
     test('Test Create Name Contract', () async {
       contractId =
-          await client.contracts.createName(name: generateRandomString(5));
+          await client.contracts.createName(name: generateRandomString(4));
       expect(contractId, isNotNull);
     });
 

@@ -4,8 +4,10 @@ import 'package:tfchain_client/src/balances.dart';
 import 'package:tfchain_client/src/contracts.dart';
 import 'package:tfchain_client/src/dao.dart';
 import 'package:tfchain_client/src/farms.dart';
+import 'package:tfchain_client/src/kvstore.dart';
 import 'package:tfchain_client/src/nodes.dart';
 import 'package:tfchain_client/src/pricing_policies.dart';
+import 'package:tfchain_client/src/terms_and_conditions.dart';
 import 'package:tfchain_client/src/tft_bridge.dart';
 import 'package:tfchain_client/src/tft_price.dart';
 import 'package:tfchain_client/src/twins.dart';
@@ -72,6 +74,9 @@ void main() {
       expect(client.balances, isA<Balances>());
       expect(client.bridge, isA<Bridge>());
       expect(client.dao, isA<Dao>());
+      expect(client.kvStore, isA<KVStore>());
+      expect(client.nodes, isA<Nodes>());
+      expect(client.termsAndConditions, isA<TermsAndConditions>());
     });
     test('Connect', () async {
       if (client.provider!.isConnected()) {
