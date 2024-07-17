@@ -1,9 +1,10 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
 import 'package:tfchain_client/tfchain_client.dart';
+
+import 'shared_setup.dart';
 
 void main() {
   group("Query Farms Test", () {
@@ -11,25 +12,26 @@ void main() {
     final String url =
         Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     setUp(() async {
+      sharedSetup();
       queryClient = QueryClient(url);
       await queryClient.connect();
     });
 
-    tearDownAll(() async {
-      await queryClient.disconnect();
-    });
-
     test('Test Get Farm by Id', () async {
-      Farm? farm = await queryClient.farms.get(id: 1);
+      Farm? farm = await queryClient.farms.get(id: farmId);
       expect(farm, isNotNull);
     });
 
-    test('Test Get Farm by wrong Id', () async {
+    test('Test Get Farm by invalid Id', () async {
       try {
-        Farm? farm = await queryClient.farms.get(id: -50);
+        Farm? farm = await queryClient.farms.get(id: -invalidFarmId);
       } catch (e) {
         expect(e, isNotNull);
       }
+    });
+
+    tearDownAll(() async {
+      await queryClient.disconnect();
     });
   });
 
@@ -39,52 +41,50 @@ void main() {
     final String url =
         Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
+    sharedSetup();
 
     setUp(() async {
       client = Client(url, mnemonic, type);
       await client.connect();
     });
 
-    tearDownAll(() async {
-      try {
-        await client.farms.removeFarmIp(farmId: 4588, ip: "198.165.15.25/16");
-      } catch (error) {
-        print("Error removing Ip from farm with id 4588: $error");
-      }
-      await client.disconnect();
-    });
-
     test('Test create farm', () async {
-      final random = Random();
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final farmName = 'farm_${random.nextInt(999)}_${timestamp}';
-      final farmId = await client.farms.create(name: farmName, publicIps: []);
+      final farmId = await client.farms
+          .create(name: generateRandomString(6), publicIps: []);
       expect(farmId, isNotNull);
     });
 
     test('Test create farm with existing name', () async {
       try {
         final farmId =
-            await client.farms.create(name: "hellofarm", publicIps: []);
+            await client.farms.create(name: existingFarmName, publicIps: []);
       } catch (error) {
         expect(error, isNotNull);
       }
     });
 
-    test('Test adding farm ip', () async {
+    test('Test adding existing ips to farm', () async {
       try {
-        await client.farms.addFarmIp(
-            farmId: 4588, ip: "198.165.15.25/16", gw: "198.165.15.26");
+        await client.farms
+            .addFarmIp(farmId: myFarmId, ip: existingIPv4, gw: gw4);
       } catch (error) {
         // will fail as the ip already exists
         expect(error, isNotNull);
       }
     });
 
-    test('Test adding farm ip with same ip and gateway', () async {
+    test('Test adding farm ip with equal ip and gateway', () async {
       try {
-        await client.farms.addFarmIp(
-            farmId: 4588, ip: "198.165.15.25/16", gw: "198.165.15.25");
+        await client.farms
+            .addFarmIp(farmId: myFarmId, ip: validIPv4, gw: InvalidGateway);
+      } catch (error) {
+        expect(error, isNotNull);
+      }
+    });
+
+    test('Test adding valid IPs to far,', () async {
+      try {
+        await client.farms.addFarmIp(farmId: myFarmId, ip: validIPv4, gw: gw4);
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -92,13 +92,20 @@ void main() {
 
     test('Test add stellar address', () async {
       try {
-        await client.farms.addStellarAddress(
-            farmId: 4588,
-            stellarAddress:
-                "GDHJP6TF3UXYXTNEZ2P36J5FH7W4BJJQ4AYYAXC66I2Q2AH5B6O6BCFG");
+        await client.farms
+            .addStellarAddress(farmId: 4588, stellarAddress: stellarAddress);
       } catch (error) {
         expect(error, null);
       }
+    });
+
+    tearDownAll(() async {
+      try {
+        await client.farms.removeFarmIp(farmId: myFarmId, ip: validIPv4);
+      } catch (error) {
+        print("Error removing Ip from farm with id ${myFarmId}: $error");
+      }
+      await client.disconnect();
     });
   });
 }

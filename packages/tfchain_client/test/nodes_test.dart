@@ -4,32 +4,35 @@ import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/node.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
+import 'shared_setup.dart';
+
 void main() {
   group("Test Query Nodes", () {
     late QueryClient queryClient;
     final String url =
         Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    sharedSetup();
+
     setUp(() async {
       queryClient = QueryClient(url);
       await queryClient.connect();
     });
 
-    tearDownAll(() async {
-      await queryClient.disconnect();
-    });
-
     test('Test get Node by Id', () async {
-      Node? node = await queryClient.nodes.get(id: 11);
+      Node? node = await queryClient.nodes.get(id: nodeId);
       expect(node, isNotNull);
     });
 
     test('Test get Node by wrong Id', () async {
       try {
-        Node? node = await queryClient.nodes.get(id: 11);
-        expect(node, isNotNull);
+        Node? node = await queryClient.nodes.get(id: invalidNodeId);
       } catch (error) {
         expect(error, isNotNull);
       }
+    });
+
+    tearDownAll(() async {
+      await queryClient.disconnect();
     });
   });
 
@@ -39,18 +42,16 @@ void main() {
     final String url =
         Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
+    sharedSetup();
+
     setUp(() async {
       client = Client(url, mnemonic, type);
       await client.connect();
     });
 
-    tearDownAll(() async {
-      await client.disconnect();
-    });
-
     test('Test Set Power to node not owned by me', () async {
       try {
-        await client.nodes.setPower(nodeId: 72, power: true);
+        await client.nodes.setPower(nodeId: nodeId, power: true);
       } catch (error) {
         expect(
           error,
@@ -62,10 +63,10 @@ void main() {
     test('Test Add public config to node not owned by me', () async {
       try {
         await client.nodes.addNodePublicConfig(
-            farmId: 1528,
-            nodeId: 72,
-            ip4Ip: "198.165.15.25/16",
-            ip4Gw: "198.165.15.26",
+            farmId: farmId,
+            nodeId: nodeId,
+            ip4Ip: validIPv4,
+            ip4Gw: gw4,
             domain: "");
       } catch (error) {
         expect(
@@ -73,6 +74,11 @@ void main() {
           isNotNull,
         );
       }
+    });
+
+    // TODO:
+    tearDownAll(() async {
+      await client.disconnect();
     });
   });
 }

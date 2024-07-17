@@ -4,36 +4,38 @@ import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
+import 'shared_setup.dart';
+
 void main() {
   group("Query Balances Test", () {
     late QueryClient queryClient;
     final String url =
         Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    sharedSetup();
+
     setUp(() async {
       queryClient = QueryClient(url);
       await queryClient.connect();
     });
 
-    tearDownAll(() async {
-      await queryClient.disconnect();
-    });
-
     test('Test Get Balance', () async {
-      String address = "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC";
       AccountInfo? accountInfo =
-          await queryClient.balances.get(address: address);
+          await queryClient.balances.get(address: myAddress);
       expect(accountInfo, isNotNull);
     });
 
     test('Test Get Balance with Invalid address', () async {
-      String address = "address";
       try {
         AccountInfo? accountInfo =
-            await queryClient.balances.get(address: address);
+            await queryClient.balances.get(address: invalidAddress);
         expect(accountInfo, isNull);
       } catch (error) {
         expect(error, isNotNull);
       }
+    });
+
+    tearDownAll(() async {
+      await queryClient.disconnect();
     });
   });
 
@@ -43,21 +45,17 @@ void main() {
     final String url =
         Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
+    sharedSetup();
 
     setUp(() async {
       client = Client(url, mnemonic, type);
       await client.connect();
     });
 
-    tearDownAll(() async {
-      await client.disconnect();
-    });
-
     test('Test Transfer TFTs with invalid amount', () async {
       try {
-        await client.balances.transfer(
-            address: "5EcSXeEH35LriE2aWxX6v4yZSMq47vdJ1GgHEXDdhJxg9XjG",
-            amount: BigInt.zero);
+        await client.balances
+            .transfer(address: recipientAddress, amount: BigInt.zero);
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -65,9 +63,8 @@ void main() {
 
     test('Test Transfer TFTs', () async {
       try {
-        await client.balances.transfer(
-            address: "5EcSXeEH35LriE2aWxX6v4yZSMq47vdJ1GgHEXDdhJxg9XjG",
-            amount: BigInt.from(10));
+        await client.balances
+            .transfer(address: recipientAddress, amount: BigInt.from(10));
       } catch (error) {
         print(error);
         expect(error, isNull);
@@ -77,6 +74,10 @@ void main() {
     test('Test get my balance', () async {
       AccountInfo? info = await client.balances.getMyBalance();
       expect(info, isNotNull);
+    });
+
+    tearDownAll(() async {
+      await client.disconnect();
     });
   });
 }

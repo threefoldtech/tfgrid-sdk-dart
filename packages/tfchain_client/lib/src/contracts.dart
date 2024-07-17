@@ -106,7 +106,7 @@ class Contracts extends QueryContracts {
   }
 
   Future<void> updateNode(
-      {required int contractId,
+      {required BigInt contractId,
       required List<int> deploymentHash,
       required List<int> deploymentData}) async {
     final extrinsic = client.api.tx.smartContractModule.updateNodeContract(

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
+import 'shared_setup.dart';
+
 void main() {
   group("Query Bridge Test", () {
     late QueryClient queryClient;
@@ -11,10 +13,6 @@ void main() {
     setUp(() async {
       queryClient = QueryClient(url);
       await queryClient.connect();
-    });
-
-    tearDownAll(() async {
-      await queryClient.disconnect();
     });
 
     test('Test Get Withdraw fee', () async {
@@ -26,6 +24,10 @@ void main() {
       BigInt? fee = await queryClient.bridge.getDepositFee();
       expect(fee, isNotNull);
     });
+
+    tearDownAll(() async {
+      await queryClient.disconnect();
+    });
   });
 
   group("Bridge Test", () {
@@ -34,21 +36,17 @@ void main() {
     final String url =
         Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
+    sharedSetup();
 
     setUp(() async {
       client = Client(url, mnemonic, type);
       await client.connect();
     });
 
-    tearDownAll(() async {
-      await client.disconnect();
-    });
-
     test('Test swap to stellar zero TFTs', () async {
       try {
-        await client.bridge.swapToStellar(
-            target: "GDHJP6TF3UXYXTNEZ2P36J5FH7W4BJJQ4AYYAXC66I2Q2AH5B6O6BCFG",
-            amount: BigInt.zero);
+        await client.bridge
+            .swapToStellar(target: stellarAddress, amount: BigInt.zero);
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -56,15 +54,18 @@ void main() {
 
     test('Test swap to stellar', () async {
       try {
-        await client.bridge.swapToStellar(
-            target: "GDHJP6TF3UXYXTNEZ2P36J5FH7W4BJJQ4AYYAXC66I2Q2AH5B6O6BCFG",
-            amount: BigInt.from(5));
+        await client.bridge
+            .swapToStellar(target: stellarAddress, amount: BigInt.from(5));
       } catch (error) {
         expect(
           error,
           Null,
         );
       }
+    });
+
+    tearDownAll(() async {
+      await client.disconnect();
     });
   });
 }
