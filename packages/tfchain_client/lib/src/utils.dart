@@ -1,6 +1,10 @@
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
 
+bool isValidSeed(String seed) {
+  final RegExp hexRegex = RegExp(r'^[0-9a-fA-F]+$');
+  return hexRegex.hasMatch(seed);
+}
 
 Uint8List dynamicListToUint8List(dynamicList) {
   List<int> intList = dynamicList.cast<int>().toList();

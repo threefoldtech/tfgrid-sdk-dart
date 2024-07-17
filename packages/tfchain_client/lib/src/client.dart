@@ -161,6 +161,10 @@ class Client extends QueryClient {
         throw FormatException(
             "Invalid secret seed. Secret seed should start with 0x");
       }
+
+      if (!isValidSeed(mnemonicOrSecretSeed)) {
+        throw FormatException("Invalid secret seed");
+      }
     }
 
     if (!SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
