@@ -30,10 +30,11 @@ class Signer {
     }
   }
 
-  void fromHexSeed(String hexSeed, KPType type) {
+  KeyPair? fromHexSeed(String hexSeed, KPType type) {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
       keypair = fromSeed(Uint8List.fromList(seed), type);
+      return keypair;
     } catch (e) {
       throw Exception("Failed to create keyPair from hex seed. Error: $e");
     }

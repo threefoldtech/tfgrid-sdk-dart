@@ -174,12 +174,22 @@ class Client extends QueryClient {
     _checkInputs();
     final Signer.Signer signer = Signer.Signer();
     if (keypairType == "sr25519") {
-      keypair = await signer.fromMnemonic(
-          mnemonicOrSecretSeed, Signer.KPType.sr25519);
+      if (validateMnemonic(mnemonicOrSecretSeed)) {
+        keypair = await signer.fromMnemonic(
+            mnemonicOrSecretSeed, Signer.KPType.sr25519);
+      } else {
+        keypair = await signer.fromHexSeed(
+            mnemonicOrSecretSeed, Signer.KPType.sr25519);
+      }
       address = keypair!.address;
     } else {
-      keypair = await signer.fromMnemonic(
-          mnemonicOrSecretSeed, Signer.KPType.ed25519);
+      if (validateMnemonic(mnemonicOrSecretSeed)) {
+        keypair = await signer.fromMnemonic(
+            mnemonicOrSecretSeed, Signer.KPType.ed25519);
+      } else {
+        keypair = await signer.fromHexSeed(
+            mnemonicOrSecretSeed, Signer.KPType.ed25519);
+      }
       address = keypair!.address;
     }
   }
