@@ -86,6 +86,7 @@ class Client extends QueryClient {
   final String keypairType;
   KeyPair? keypair;
   KVStore? _kvStore;
+  Signer.KPType? type;
   TermsAndConditions? _termsAndConditions;
   static const List<String> SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
@@ -166,6 +167,12 @@ class Client extends QueryClient {
       throw FormatException(
           "Keypair type $keypairType is not valid. It Should be either of : ${SUPPORTED_KEYPAIR_TYPES}");
     }
+
+    if (keypairType == "sr25519") {
+      type = Signer.KPType.sr25519;
+    } else {
+      type = Signer.KPType.ed25519;
+    }
   }
 
   @override
@@ -173,25 +180,12 @@ class Client extends QueryClient {
     await super.connect();
     _checkInputs();
     final Signer.Signer signer = Signer.Signer();
-    if (keypairType == "sr25519") {
-      if (validateMnemonic(mnemonicOrSecretSeed)) {
-        keypair = await signer.fromMnemonic(
-            mnemonicOrSecretSeed, Signer.KPType.sr25519);
-      } else {
-        keypair = await signer.fromHexSeed(
-            mnemonicOrSecretSeed, Signer.KPType.sr25519);
-      }
-      address = keypair!.address;
+    if (validateMnemonic(mnemonicOrSecretSeed)) {
+      keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, type!);
     } else {
-      if (validateMnemonic(mnemonicOrSecretSeed)) {
-        keypair = await signer.fromMnemonic(
-            mnemonicOrSecretSeed, Signer.KPType.ed25519);
-      } else {
-        keypair = await signer.fromHexSeed(
-            mnemonicOrSecretSeed, Signer.KPType.ed25519);
-      }
-      address = keypair!.address;
+      keypair = await signer.fromHexSeed(mnemonicOrSecretSeed, type!);
     }
+    address = keypair!.address;
   }
 
   Future<void> disconnect() async {
