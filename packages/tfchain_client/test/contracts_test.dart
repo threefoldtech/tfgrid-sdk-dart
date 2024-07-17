@@ -129,8 +129,9 @@ void main() {
     });
 
     test('Test Create Name Contract', () async {
-      contractId =
-          await client.contracts.createName(name: generateRandomString(4));
+      final name = generateRandomString(6);
+      print(name);
+      contractId = await client.contracts.createName(name: name);
       expect(contractId, isNotNull);
     });
 

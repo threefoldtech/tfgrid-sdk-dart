@@ -36,8 +36,7 @@ late int twinId;
 late String relay;
 
 String generateRandomString(int length) {
-  const characters =
-      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const characters = 'abcdefghijklmnopqrstuvwxyz';
   final random = Random();
   return String.fromCharCodes(
     Iterable.generate(
@@ -49,7 +48,8 @@ String generateRandomString(int length) {
 
 void sharedSetup() {
   setUp(() {
-    mnemonic = Platform.environment['MNEMONIC'] !;
+    mnemonic = Platform.environment['MNEMONIC'] ??
+        "secret add bag cluster deposit beach illness letter crouch position rain arctic";
     url = Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
 
