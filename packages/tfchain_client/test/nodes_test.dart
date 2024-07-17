@@ -9,8 +9,6 @@ import 'shared_setup.dart';
 void main() {
   group("Test Query Nodes", () {
     late QueryClient queryClient;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     sharedSetup();
 
     setUp(() async {
@@ -38,10 +36,6 @@ void main() {
 
   group("Test Nodes", () {
     late Client client;
-    final mnemonic = Platform.environment['MNEMONIC']!;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     sharedSetup();
 
     setUp(() async {

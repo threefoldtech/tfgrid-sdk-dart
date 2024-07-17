@@ -10,8 +10,6 @@ import 'shared_setup.dart';
 void main() {
   group("Query Contracts Test", () {
     late QueryClient queryClient;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     sharedSetup();
 
     setUp(() async {
@@ -104,10 +102,6 @@ void main() {
 
   group("Test Contracts", () {
     late Client client;
-    final mnemonic = Platform.environment['MNEMONIC']!;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     BigInt? contractId = null;
     sharedSetup();
 

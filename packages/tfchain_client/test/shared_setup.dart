@@ -1,6 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:test/test.dart';
+
+late String mnemonic;
+late String url;
+late String type;
 
 late String myAddress;
 late String invalidAddress;
@@ -44,6 +49,10 @@ String generateRandomString(int length) {
 
 void sharedSetup() {
   setUp(() {
+    mnemonic = Platform.environment['MNEMONIC']!;
+    url = Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
+
     myAddress = "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC";
     invalidAddress = "address";
     recipientAddress = "5EcSXeEH35LriE2aWxX6v4yZSMq47vdJ1GgHEXDdhJxg9XjG";

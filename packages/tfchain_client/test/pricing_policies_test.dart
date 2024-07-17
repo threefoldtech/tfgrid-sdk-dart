@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/pricing_policy.dart';
 import 'package:tfchain_client/tfchain_client.dart';
@@ -9,8 +7,6 @@ import 'shared_setup.dart';
 void main() {
   group("Query Pricing Policies", () {
     late QueryClient queryClient;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
     sharedSetup();
 
     setUp(() async {

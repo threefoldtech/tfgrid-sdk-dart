@@ -13,11 +13,13 @@ import 'package:tfchain_client/src/tft_price.dart';
 import 'package:tfchain_client/src/twins.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
+import 'shared_setup.dart';
+
 void main() {
   group('Query Client Tests', () {
     late QueryClient queryClient;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    sharedSetup();
+
     setUp(() async {
       queryClient = QueryClient(url);
       await queryClient.connect();
@@ -52,10 +54,8 @@ void main() {
 
   group("Full Client Tests", () {
     late Client client;
-    final mnemonic = Platform.environment['MNEMONIC']!;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
+    sharedSetup();
+
     setUp(() async {
       client = Client(
         url,

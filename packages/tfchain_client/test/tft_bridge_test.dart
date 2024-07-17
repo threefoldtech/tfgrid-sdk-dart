@@ -8,8 +8,8 @@ import 'shared_setup.dart';
 void main() {
   group("Query Bridge Test", () {
     late QueryClient queryClient;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
+    sharedSetup();
+
     setUp(() async {
       queryClient = QueryClient(url);
       await queryClient.connect();
@@ -32,10 +32,6 @@ void main() {
 
   group("Bridge Test", () {
     late Client client;
-    final mnemonic = Platform.environment['MNEMONIC']!;
-    final String url =
-        Platform.environment['URL'] ?? 'wss://tfchain.dev.grid.tf/ws';
-    final String type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     sharedSetup();
 
     setUp(() async {
