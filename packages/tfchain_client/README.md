@@ -27,7 +27,7 @@ await client.disconnect();
 ```dart
 final client = Client("wss://tfchain.dev.grid.tf/ws", "your-mnemonic", "sr25519");
 client.connect();
-final farmId = await client.farma.create(CreateFarmOptions(name: "name"));
+final farmId = await client.farms.create(CreateFarmOptions(name: "name"));
 print(farmId);
 await client.disconnect();
 ```
@@ -50,26 +50,21 @@ dart run polkadart_cli:generate -v
 ```
 
 ## Run Tests
-
 ### Prerequisites
 
 1- Provide your mnemonic as environment variable.
-
 ```bash
 export MNEMONIC="your-mnemonic"
 ```
-
 2- provide chain url and the signing type.
 By default the chain url is set to `wss://tfchain.dev.grid.tf/ws` and the signing type is `sr25519`. Note that signing type can be either `sr25519` or `ed25519`.
 
 ```bash
 export URL="chain_url"
 ```
-
 ```bash
 export KEYPAIR_TYPE="sr25519"
 ```
-
 To run the tests, run the following command
 
 ```bash

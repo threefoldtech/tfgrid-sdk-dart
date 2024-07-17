@@ -84,9 +84,9 @@ class Client extends QueryClient {
   final String mnemonicOrSecretSeed;
   late String address;
   final String keypairType;
-  KeyPair? keypair;
+  KeyPair? _keypair;
   KVStore? _kvStore;
-  Signer.KPType? type;
+  Signer.KPType? _type;
   TermsAndConditions? _termsAndConditions;
   static const List<String> SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
@@ -169,9 +169,9 @@ class Client extends QueryClient {
     }
 
     if (keypairType == "sr25519") {
-      type = Signer.KPType.sr25519;
+      _type = Signer.KPType.sr25519;
     } else {
-      type = Signer.KPType.ed25519;
+      _type = Signer.KPType.ed25519;
     }
   }
 
@@ -181,11 +181,11 @@ class Client extends QueryClient {
     _checkInputs();
     final Signer.Signer signer = Signer.Signer();
     if (validateMnemonic(mnemonicOrSecretSeed)) {
-      keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, type!);
+      _keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, _type!);
     } else {
-      keypair = await signer.fromHexSeed(mnemonicOrSecretSeed, type!);
+      _keypair = await signer.fromHexSeed(mnemonicOrSecretSeed, _type!);
     }
-    address = keypair!.address;
+    address = _keypair!.address;
   }
 
   Future<void> disconnect() async {
@@ -200,7 +200,7 @@ class Client extends QueryClient {
       if (event["event"] != null &&
           event["event"].key == "TransactionPayment" &&
           ListEquality().equals(
-              event["event"].value.value[0], keypair!.publicKey.bytes)) {
+              event["event"].value.value[0], _keypair!.publicKey.bytes)) {
         phaseIds.add(event['phase'].value);
       }
     }
@@ -263,7 +263,7 @@ class Client extends QueryClient {
 
     final payload = payloadToSign.encode(api.registry);
 
-    final signature = keypair!.sign(payload);
+    final signature = _keypair!.sign(payload);
 
     // final hexSignature = hex.encode(signature);
 
@@ -272,7 +272,7 @@ class Client extends QueryClient {
         ? SignatureType.sr25519
         : SignatureType.ed25519;
     final extrinsic = ExtrinsicPayload(
-            signer: Uint8List.fromList(keypair!.bytes()),
+            signer: Uint8List.fromList(_keypair!.bytes()),
             method: encodedCall,
             signature: signature,
             eraPeriod: 64,

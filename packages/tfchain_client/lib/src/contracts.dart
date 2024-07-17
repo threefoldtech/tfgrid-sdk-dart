@@ -48,9 +48,8 @@ class QueryContracts {
 
   Future<num> getDeletionTime({required BigInt id}) async {
     final contract = await get(contractId: id);
-    if (contract != null && contract.state.toJson()["Created"] == null) {
-      return 0;
-    } else if (contract == null) {
+    if (contract == null ||
+        contract != Null && contract.state.toJson()["Created"] == null) {
       return 0;
     }
 
