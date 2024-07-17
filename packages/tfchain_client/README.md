@@ -32,25 +32,43 @@ print(farmId);
 await client.disconnect();
 ```
 
+## Generating Functions
+
+To generate functions for the chain, add the following configuration in `pubspec.yaml`:
+
+```bash
+polkadart:
+  output_dir: lib/generated
+  chains:
+    dev: chain-url
+```
+
+Then run the following command:
+
+```bash
+dart run polkadart_cli:generate -v
+```
+
 ## Run Tests
+
 ### Prerequisites
 
 1- Provide your mnemonic as environment variable.
+
 ```bash
 export MNEMONIC="your-mnemonic"
 ```
+
 2- provide chain url and the signing type.
 By default the chain url is set to `wss://tfchain.dev.grid.tf/ws` and the signing type is `sr25519`. Note that signing type can be either `sr25519` or `ed25519`.
+
 ```bash
 export URL="chain_url"
 ```
+
 ```bash
 export KEYPAIR_TYPE="sr25519"
 ```
-
-
-
-
 
 To run the tests, run the following command
 
