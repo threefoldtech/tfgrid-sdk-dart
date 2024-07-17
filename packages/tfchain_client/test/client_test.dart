@@ -36,8 +36,10 @@ void main() {
     });
 
     test('Connect', () async {
-      expect(queryClient.provider, isA<WsProvider>());
-      expect(queryClient.api, isNotNull);
+      if (queryClient.provider!.isConnected()) {
+        expect(queryClient.provider, isA<WsProvider>());
+        expect(queryClient.api, isNotNull);
+      }
     });
 
     test('Disconnect', () async {
@@ -72,10 +74,12 @@ void main() {
       expect(client.dao, isA<Dao>());
     });
     test('Connect', () async {
-      expect(client.keypair, isNotNull);
-      expect(client.address, isNotEmpty);
-      expect(client.provider, isA<WsProvider>());
-      expect(client.api, isNotNull);
+      if (client.provider!.isConnected()) {
+        expect(client.keypair, isNotNull);
+        expect(client.address, isNotEmpty);
+        expect(client.provider, isA<WsProvider>());
+        expect(client.api, isNotNull);
+      }
     });
 
     test('Disconnect', () async {

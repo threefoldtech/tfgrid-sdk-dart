@@ -55,8 +55,18 @@ void main() {
 
     test('Test Transfer TFTs', () async {
       try {
+        AccountInfo? before =
+            await client.balances.get(address: recipientAddress);
         await client.balances
             .transfer(address: recipientAddress, amount: BigInt.from(10));
+
+        AccountInfo? after =
+            await client.balances.get(address: recipientAddress);
+        final diff = after!.data.free / BigInt.from(10).pow(7) -
+            before!.data.free / BigInt.from(10).pow(7);
+        print(diff);
+
+        expect(diff, closeTo(10.0, 0.0001));
       } catch (error) {
         print(error);
         expect(error, isNull);
