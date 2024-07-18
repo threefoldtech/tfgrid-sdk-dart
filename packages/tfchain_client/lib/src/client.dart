@@ -88,7 +88,7 @@ class Client extends QueryClient {
   KVStore? _kvStore;
   Signer.KPType? _type;
   TermsAndConditions? _termsAndConditions;
-  static const List<String> SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
+  static const List<String> _SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
   Client(String url, this.mnemonicOrSecretSeed, this.keypairType)
       : super(url) {}
@@ -167,7 +167,7 @@ class Client extends QueryClient {
       }
     }
 
-    if (!SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
+    if (!_SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
       throw FormatException(
           "Keypair type $keypairType is not valid. It Should be either of : ${SUPPORTED_KEYPAIR_TYPES}");
     }
