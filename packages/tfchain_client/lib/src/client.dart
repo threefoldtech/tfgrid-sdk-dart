@@ -84,7 +84,7 @@ class Client extends QueryClient {
   final String mnemonicOrSecretSeed;
   late String address;
   final String keypairType;
-  KeyPair? _keypair;
+  KeyPair? keypair;
   KVStore? _kvStore;
   Signer.KPType? _type;
   TermsAndConditions? _termsAndConditions;
@@ -185,11 +185,11 @@ class Client extends QueryClient {
     _checkInputs();
     final Signer.Signer signer = Signer.Signer();
     if (validateMnemonic(mnemonicOrSecretSeed)) {
-      _keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, _type!);
+      keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, _type!);
     } else {
-      _keypair = await signer.fromHexSeed(mnemonicOrSecretSeed, _type!);
+      keypair = await signer.fromHexSeed(mnemonicOrSecretSeed, _type!);
     }
-    address = _keypair!.address;
+    address = keypair!.address;
   }
 
   Future<void> disconnect() async {
@@ -204,7 +204,7 @@ class Client extends QueryClient {
       if (event["event"] != null &&
           event["event"].key == "TransactionPayment" &&
           ListEquality().equals(
-              event["event"].value.value[0], _keypair!.publicKey.bytes)) {
+              event["event"].value.value[0], keypair!.publicKey.bytes)) {
         phaseIds.add(event['phase'].value);
       }
     }
@@ -267,7 +267,7 @@ class Client extends QueryClient {
 
     final payload = payloadToSign.encode(api.registry);
 
-    final signature = _keypair!.sign(payload);
+    final signature = keypair!.sign(payload);
 
     // final hexSignature = hex.encode(signature);
 
@@ -276,7 +276,7 @@ class Client extends QueryClient {
         ? SignatureType.sr25519
         : SignatureType.ed25519;
     final extrinsic = ExtrinsicPayload(
-            signer: Uint8List.fromList(_keypair!.bytes()),
+            signer: Uint8List.fromList(keypair!.bytes()),
             method: encodedCall,
             signature: signature,
             eraPeriod: 64,
