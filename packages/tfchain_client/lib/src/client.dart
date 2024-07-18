@@ -169,7 +169,7 @@ class Client extends QueryClient {
 
     if (!_SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
       throw FormatException(
-          "Keypair type $keypairType is not valid. It Should be either of : ${SUPPORTED_KEYPAIR_TYPES}");
+          "Keypair type $keypairType is not valid. It Should be either of : ${_SUPPORTED_KEYPAIR_TYPES}");
     }
 
     if (keypairType == "sr25519") {
