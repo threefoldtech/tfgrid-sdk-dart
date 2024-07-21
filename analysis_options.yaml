@@ -1,4 +1,7 @@
-include: package:lints/recommended.yaml
-
 analyzer:
-  - exclude: packages/tfchain_client/lib/generated/**
+  errors:
+    unused_local_variable: ignore
+  exclude:
+    - packages/tfchain_client/lib/generated/**
+    - packages/tfchain_client/pubspec.yaml
+    - pubspec.yaml

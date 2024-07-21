@@ -1,37 +1,40 @@
-import 'package:polkadart/scale_codec.dart';
+import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dart';
 import 'package:tfchain_client/generated/dev/types/sp_runtime/multiaddress/multi_address.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
-import 'package:tfchain_client/models/balances.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryBalances {
-  final QueryClient client;
+  QueryClient client;
   QueryBalances(this.client);
 
-  Future<AccountInfo?> get(QueryBalancesGetOptions options) async {
-    // TODO: should get pair.publicKey.bytes
-    final res =
-        await client.api.query.system.account(options.address.codeUnits);
+  Future<AccountInfo?> get({required String address}) async {
+    final keyring = Keyring();
+    final publicKey = keyring.decodeAddress(address);
+    final res = await client.api.query.system.account(publicKey);
     return res;
   }
 }
 
 class Balances extends QueryBalances {
-  Balances(Client client) : super(client);
+  Balances(Client this.client) : super(client);
 
-  Future<RuntimeCall> transfer(BalanceTransferOptions options) async {
-    if (options.amount.isNaN || options.amount <= 0) {
+  final Client client;
+
+  Future<void> transfer(
+      {required String address, required BigInt amount}) async {
+    if (amount <= BigInt.zero) {
       throw Exception("Amount must be a positive numeric value");
     }
-    MultiAddress multiAddress =
-        MultiAddress.decode(Input.fromBytes(options.address));
+    final keyring = Keyring();
+    final publicKey = keyring.decodeAddress(address);
+    MultiAddress multiAddress = Id(publicKey);
+
     final extrinsic = client.api.tx.balances
-        .transfer(dest: multiAddress, value: options.amount);
-    return extrinsic;
+        .transfer(dest: multiAddress, value: amount * BigInt.from(10).pow(7));
+    await client.apply(extrinsic);
   }
 
-  // Future<void> getMyBalance() async {
-  //   return this.get(QueryBalancesGetOptions(address: client.))
-  // }
+  Future<AccountInfo?> getMyBalance() async {
+    return await this.get(address: client.address);
+  }
 }

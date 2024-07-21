@@ -34,17 +34,3 @@ class ProposalRemark {
 
   ProposalRemark({required this.remark});
 }
-
-class DaoVoteOptions {
-  String address;
-  int farmId;
-  String hash;
-  bool approve;
-
-  DaoVoteOptions(
-      {required this.address,
-      required this.farmId,
-      required this.hash,
-      required this.approve,
-      s});
-}

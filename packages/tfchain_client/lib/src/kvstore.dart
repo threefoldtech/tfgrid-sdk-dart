@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 import 'package:polkadart/polkadart.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
-import 'package:tfchain_client/models/kvstore.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class KVStore {
@@ -9,22 +7,20 @@ class KVStore {
 
   KVStore(this.client);
 
-  RuntimeCall set(KVStoreSetOptions options) {
-    final extrinsic = client.api.tx.tFKVStore
-        .set(key: options.key.codeUnits, value: options.value.codeUnits);
-    return extrinsic;
-  }
-
-  RuntimeCall delete(KVStoreGetOptions options) {
+  Future<void> set({required String key, required String value}) async {
     final extrinsic =
-        client.api.tx.tFKVStore.delete(key: options.key.codeUnits);
-    return extrinsic;
+        client.api.tx.tFKVStore.set(key: key.codeUnits, value: value.codeUnits);
+    await client.apply(extrinsic);
   }
 
-  Future<String> get(KVStoreGetOptions options) async {
+  Future<void> delete({required String key}) async {
+    final extrinsic = client.api.tx.tFKVStore.delete(key: key.codeUnits);
+    await client.apply(extrinsic);
+  }
+
+  Future<String> get({required String key}) async {
     final res = await client.api.query.tFKVStore
-        .tFKVStore(client.keypair!.publicKey.bytes, []);
-    print(res);
+        .tFKVStore(client.keypair!.publicKey.bytes, key.codeUnits);
     return String.fromCharCodes(res);
   }
 
@@ -45,7 +41,25 @@ class KVStore {
       ...client.keypair!.publicKey.bytes
     ]);
 
-    final keys = await client.api.rpc.state.getKeys(key: partialKey);
+    List<Uint8List> keys = [];
+    int count = 2;
+    Uint8List? startKey;
+    bool hasMore = true;
+
+    while (hasMore) {
+      final keysPage = await client.api.rpc.state.getKeysPaged(
+        key: partialKey,
+        count: count,
+        startKey: startKey,
+      );
+
+      if (keysPage.isEmpty) {
+        hasMore = false;
+      } else {
+        keys.addAll(keysPage);
+        startKey = keysPage.last;
+      }
+    }
 
     final keysValues = await client.api.rpc.state.queryStorageAt(keys);
 
@@ -64,12 +78,11 @@ class KVStore {
     return keyValueMap;
   }
 
-  void deleteAll() async {
+  Future<void> deleteAll() async {
     Map<String, String> keys = await list();
 
     for (String key in keys.keys) {
-      final extrinsic = delete(KVStoreGetOptions(key: key));
-      await client.apply(extrinsic);
+      await delete(key: key);
     }
   }
 }

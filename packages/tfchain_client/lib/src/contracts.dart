@@ -1,8 +1,6 @@
-import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/grid_contract/name_contract_name.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/service_contract.dart';
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 const twoWeeks = 1209600000;
@@ -14,7 +12,7 @@ class QueryContracts {
   Future<Contract?> get({required BigInt contractId}) async {
     final res =
         await client.api.query.smartContractModule.contracts(contractId);
-    return res as Contract;
+    return res;
   }
 
   Future<BigInt?> getContractIdByActiveRentForNode(
@@ -32,7 +30,7 @@ class QueryContracts {
 
   Future<BigInt?> getContractIdByName({required String name}) async {
     final res = await client.api.query.smartContractModule
-        .contractIDByNameRegistration(name as NameContractName);
+        .contractIDByNameRegistration(name.codeUnits);
     return res;
   }
 
@@ -50,12 +48,13 @@ class QueryContracts {
 
   Future<num> getDeletionTime({required BigInt id}) async {
     final contract = await get(contractId: id);
-    if (contract != null && contract.state.toJson()["Created"] == null) {
+    if (contract == null ||
+        contract != Null && contract.state.toJson()["Created"] == null) {
       return 0;
     }
 
     //TODO: double check that GracePeriod typed like that.
-    final blockNumber = contract!.state.toJson()["GracePeriod"];
+    final blockNumber = contract.state.toJson()["GracePeriod"];
     try {
       final currentBlockNumber = await client.api.query.system.number();
 
@@ -83,47 +82,57 @@ class QueryContracts {
 }
 
 class Contracts extends QueryContracts {
-  Contracts(Client client) : super(client);
+  Contracts(Client this.client) : super(client);
+  final Client client;
 
-  Future<RuntimeCall> createNode(
+  // TODO: should i return bigint or convert it to int ??
+  Future<BigInt?> createNode(
       {required int nodeId,
       required List<int> deploymentHash,
       required List<int> deploymentData,
-      required int publicIps}) async {
+      required int publicIps,
+      BigInt? solutionProviderId}) async {
     final extrinsic = client.api.tx.smartContractModule.createNodeContract(
         nodeId: nodeId,
         deploymentHash: deploymentHash,
         deploymentData: deploymentData,
-        publicIps: publicIps);
+        publicIps: publicIps,
+        solutionProviderId: solutionProviderId!);
+    await client.apply(extrinsic);
 
-    return extrinsic;
+    return await getContractIdByNodeIdAndHash(
+        hash: deploymentHash, nodeId: nodeId);
   }
 
-  Future<RuntimeCall> updateNode(
-      {required int contractId,
+  Future<void> updateNode(
+      {required BigInt contractId,
       required List<int> deploymentHash,
       required List<int> deploymentData}) async {
     final extrinsic = client.api.tx.smartContractModule.updateNodeContract(
         contractId: contractId,
         deploymentHash: deploymentHash,
         deploymentData: deploymentData);
-    return extrinsic;
+    await client.apply(extrinsic);
   }
 
-  Future<RuntimeCall> createName({required String name}) async {
-    final extrinsic =
-        client.api.tx.smartContractModule.createNameContract(name: name);
-    return extrinsic;
+  Future<BigInt?> createName({required String name}) async {
+    final extrinsic = client.api.tx.smartContractModule
+        .createNameContract(name: name.codeUnits);
+    await client.apply(extrinsic);
+
+    return await getContractIdByName(name: name);
   }
 
-  Future<RuntimeCall> createRent(
-      {required int nodeId, required int solutionProviderId}) async {
+  Future<BigInt?> createRent(
+      {required int nodeId, required BigInt solutionProviderId}) async {
     final extrinsic = client.api.tx.smartContractModule.createRentContract(
         nodeId: nodeId, solutionProviderId: solutionProviderId);
-    return extrinsic;
+    await client.apply(extrinsic);
+
+    return await getContractIdByActiveRentForNode(nodeId: nodeId);
   }
 
-  Future<RuntimeCall> cancel({required BigInt contractId}) async {
+  Future<void> cancel({required BigInt contractId}) async {
     final contract = await get(contractId: contractId);
     if (contract == null) {
       throw Exception("Contract not found");
@@ -131,13 +140,13 @@ class Contracts extends QueryContracts {
 
     final extrinsic = client.api.tx.smartContractModule
         .cancelContract(contractId: contractId);
-    return extrinsic;
+    await client.apply(extrinsic);
   }
 
-  Future<RuntimeCall> setDedicatedNodeExtraFee(
-      {required int nodeId, required int extraFee}) async {
+  Future<void> setDedicatedNodeExtraFee(
+      {required int nodeId, required BigInt extraFee}) async {
     final extrinsic = client.api.tx.smartContractModule
         .setDedicatedNodeExtraFee(nodeId: nodeId, extraFee: extraFee);
-    return extrinsic;
+    await client.apply(extrinsic);
   }
 }

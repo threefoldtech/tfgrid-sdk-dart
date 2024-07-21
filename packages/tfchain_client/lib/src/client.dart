@@ -2,119 +2,231 @@ part of '../tfchain_client.dart';
 
 class QueryClient {
   final String url;
-  late final Provider provider;
+  late final Provider? provider;
   late final polkadot.Dev api;
-  late final QueryContracts contracts;
-  late final balance.QueryBalances balances;
-  late final QueryFarms farms;
-  late final QueryNodes nodes;
-  late final QueryPricingPolicies policies;
-  late final QueryTwins twins;
-  late final QueryBridge bridge;
-  late final Dao.QueryDao dao;
-  late final QueryTFTPrice price;
+  QueryTwins? _twins;
+  QueryContracts? _contracts;
+  balance.QueryBalances? _balances;
+  QueryFarms? _farms;
+  QueryNodes? _nodes;
+  QueryPricingPolicies? _policies;
+  QueryBridge? _bridge;
+  QueryTFTPrice? _price;
+  Dao.QueryDao? _dao;
 
-  QueryClient(this.url) {
-    provider = Provider.fromUri(Uri.parse(url));
-    api = polkadot.Dev(provider);
-    contracts = QueryContracts(this);
-    balances = balance.QueryBalances(this);
-    farms = QueryFarms(this);
-    nodes = QueryNodes(this);
-    policies = QueryPricingPolicies(this);
-    twins = QueryTwins(this);
-    bridge = QueryBridge(this);
-    price = QueryTFTPrice(this);
-    dao = Dao.QueryDao(this);
+  QueryClient(this.url) {}
+
+  QueryTwins get twins {
+    if (_twins == null) _twins = QueryTwins(this);
+    return _twins!;
   }
 
-  void checkInputs() {
+  QueryContracts get contracts {
+    if (_twins == null) _contracts = QueryContracts(this);
+    return _contracts!;
+  }
+
+  balance.QueryBalances get balances {
+    if (_balances == null) _balances = balance.QueryBalances(this);
+    return _balances!;
+  }
+
+  QueryFarms get farms {
+    if (_farms == null) _farms = QueryFarms(this);
+    return _farms!;
+  }
+
+  QueryNodes get nodes {
+    if (_nodes == null) _nodes = QueryNodes(this);
+    return _nodes!;
+  }
+
+  QueryPricingPolicies get policies {
+    if (_policies == null) _policies = QueryPricingPolicies(this);
+    return _policies!;
+  }
+
+  QueryBridge get bridge {
+    if (_bridge == null) _bridge = QueryBridge(this);
+    return _bridge!;
+  }
+
+  QueryTFTPrice get price {
+    if (_price == null) _price = QueryTFTPrice(this);
+    return _price!;
+  }
+
+  Dao.QueryDao get dao {
+    if (_dao == null) _dao = Dao.QueryDao(this);
+    return _dao!;
+  }
+
+  void _checkInputs() {
     if (url.isEmpty) {
       throw FormatException("URL should be provided");
     }
   }
 
   Future<void> connect() async {
-    checkInputs();
+    _checkInputs();
+    provider = Provider.fromUri(Uri.parse(url));
+    api = polkadot.Dev(provider!);
   }
 
   Future<void> disconnect() async {
-    await api.disconnect();
+    if (provider != null && provider!.isConnected()) {
+      await api.disconnect();
+    }
   }
 }
 
 class Client extends QueryClient {
-  final String mnemonic;
+  final String mnemonicOrSecretSeed;
   late String address;
   final String keypairType;
-  late Signer.Signer signer;
   KeyPair? keypair;
-  late final balance.Balances clientBalances;
-  late final Contracts clientContracts;
-  late final Farms clientFarms;
-  late final Dao.Dao clientDao;
-  late final Twins clientTwins;
-  late final KVStore kvStrore;
-  final SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
+  KVStore? _kvStore;
+  Signer.KPType? _type;
+  TermsAndConditions? _termsAndConditions;
+  static const List<String> _SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
-  Client(String url, this.mnemonic, this.keypairType) : super(url) {
-    if (provider == null) {
-      provider = Provider.fromUri(Uri.parse(url));
-      api = polkadot.Dev(provider);
-    }
-    clientBalances = balance.Balances(this);
-    clientContracts = Contracts(this);
-    clientFarms = Farms(this);
-    clientDao = Dao.Dao(this);
-    clientTwins = Twins(this);
-    kvStrore = KVStore(this);
-    signer = Signer.Signer();
+  Client(String url, this.mnemonicOrSecretSeed, this.keypairType)
+      : super(url) {}
+
+  @override
+  Twins get twins {
+    if (_twins == null) _twins = Twins(this);
+    return _twins as Twins;
   }
 
   @override
-  void checkInputs() {
-    super.checkInputs();
-    if (mnemonic.isEmpty) {
+  Contracts get contracts {
+    if (_contracts == null) _contracts = Contracts(this);
+    return _contracts as Contracts;
+  }
+
+  @override
+  balance.Balances get balances {
+    if (_balances == null) _balances = balance.Balances(this);
+    return _balances as balance.Balances;
+  }
+
+  @override
+  Farms get farms {
+    if (_farms == null) _farms = Farms(this);
+    return _farms as Farms;
+  }
+
+  @override
+  Nodes get nodes {
+    if (_nodes == null) _nodes = Nodes(this);
+    return _nodes as Nodes;
+  }
+
+  @override
+  Bridge get bridge {
+    if (_bridge == null) _bridge = Bridge(this);
+    return _bridge as Bridge;
+  }
+
+  @override
+  Dao.Dao get dao {
+    if (_dao == null) _dao = Dao.Dao(this);
+    return _dao as Dao.Dao;
+  }
+
+  KVStore get kvStore {
+    if (_kvStore == null) _kvStore = KVStore(this);
+    return _kvStore as KVStore;
+  }
+
+  TermsAndConditions get termsAndConditions {
+    if (_termsAndConditions == null)
+      _termsAndConditions = TermsAndConditions(this);
+    return _termsAndConditions as TermsAndConditions;
+  }
+
+  @override
+  void _checkInputs() {
+    super._checkInputs();
+    if (mnemonicOrSecretSeed.isEmpty) {
       throw FormatException("Mnemonic or secret should be provided");
-    } else if (mnemonic != "//Allice" && !validateMnemonic(mnemonic)) {
-      if (mnemonic.contains(" ")) {
+    } else if (mnemonicOrSecretSeed != "//Alice" &&
+        !validateMnemonic(mnemonicOrSecretSeed)) {
+      if (mnemonicOrSecretSeed.contains(" ")) {
         throw FormatException("Invalid mnemonic! Must be bip39 compliant");
       }
 
-      if (!mnemonic.startsWith("0x")) {
+      if (!mnemonicOrSecretSeed.startsWith("0x")) {
         throw FormatException(
             "Invalid secret seed. Secret seed should start with 0x");
       }
+
+      if (!isValidSeed(mnemonicOrSecretSeed)) {
+        throw FormatException("Invalid secret seed");
+      }
     }
 
-    if (!SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
+    if (!_SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
       throw FormatException(
-          "Keypair type $keypairType is not valid. It Should be either of : ${SUPPORTED_KEYPAIR_TYPES}");
+          "Keypair type $keypairType is not valid. It Should be either of : ${_SUPPORTED_KEYPAIR_TYPES}");
+    }
+
+    if (keypairType == "sr25519") {
+      _type = Signer.KPType.sr25519;
+    } else {
+      _type = Signer.KPType.ed25519;
     }
   }
 
   @override
   Future<void> connect() async {
-    checkInputs();
-    if (keypairType == "sr25519") {
-      keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.sr25519);
-      address = keypair!.address;
+    await super.connect();
+    _checkInputs();
+    final Signer.Signer signer = Signer.Signer();
+    if (validateMnemonic(mnemonicOrSecretSeed)) {
+      keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, _type!);
     } else {
-      keypair = await signer.fromMnemonic(mnemonic, Signer.KPType.ed25519);
-      address = keypair!.address;
+      keypair = await signer.fromHexSeed(mnemonicOrSecretSeed, _type!);
+    }
+    address = keypair!.address;
+  }
+
+  Future<void> disconnect() async {
+    if (provider != null && provider!.isConnected()) {
+      await api.disconnect();
     }
   }
 
-  @override
-  Future<void> disconnect() async {
-    await api.disconnect();
+  List<int> _getMyEventsPhaseId(List<dynamic> events) {
+    final Set<int> phaseIds = Set();
+    for (final event in events) {
+      if (event["event"] != null &&
+          event["event"].key == "TransactionPayment" &&
+          ListEquality().equals(
+              event["event"].value.value[0], keypair!.publicKey.bytes)) {
+        phaseIds.add(event['phase'].value);
+      }
+    }
+    return phaseIds.toList();
+  }
+
+  List<dynamic> _filterMyEvents(List<dynamic> events) {
+    final List<dynamic> myEvents = [];
+    final phaseIds = _getMyEventsPhaseId(events);
+    for (final event in events) {
+      if (phaseIds.contains(event["phase"].value)) {
+        myEvents.add(event["event"]);
+      }
+    }
+    return myEvents;
   }
 
   Future<void> apply(RuntimeCall runtimeCall) async {
     if (provider == null) {
       throw Exception("Provider is not initialized");
     }
-    final stateApi = StateApi(provider);
+    final stateApi = StateApi(provider!);
 
     final runtimeVersion = await stateApi.getRuntimeVersion();
 
@@ -122,22 +234,21 @@ class Client extends QueryClient {
 
     final transactionVersion = runtimeVersion.transactionVersion;
 
-    final block = await provider.send('chain_getBlock', []);
+    final block = await provider!.send('chain_getBlock', []);
 
     final blockNumber = int.parse(block.result['block']['header']['number']);
 
-    final blockHash = (await provider.send('chain_getBlockHash', []))
+    final blockHash = (await provider!.send('chain_getBlockHash', []))
         .result
         .replaceAll('0x', '');
 
-    final genesisHash = (await provider.send('chain_getBlockHash', [0]))
+    final genesisHash = (await provider!.send('chain_getBlockHash', [0]))
         .result
         .replaceAll('0x', '');
-
-    final keyring = await KeyPair.sr25519.fromMnemonic(mnemonic);
 
     final encodedCall = runtimeCall.encode();
-    final nonce = await api.rpc.system.accountNextIndex(keyring.address);
+    final nonce = await api.rpc.system.accountNextIndex(address);
+    final metadata = await api.rpc.state.getMetadata();
 
     // await api.rpc.state.queryStorageAt(keys)
     // state vs systemApi
@@ -156,28 +267,101 @@ class Client extends QueryClient {
 
     final payload = payloadToSign.encode(api.registry);
 
-    final signature = keyring.sign(payload);
+    final signature = keypair!.sign(payload);
 
-    final hexSignature = hex.encode(signature);
+    // final hexSignature = hex.encode(signature);
 
-    final publicKey = hex.encode(keyring.publicKey.bytes);
-
+    // final publicKey = hex.encode(keyring.publicKey.bytes);
+    final signatureType = keypairType == "sr25519"
+        ? SignatureType.sr25519
+        : SignatureType.ed25519;
     final extrinsic = ExtrinsicPayload(
-            signer: Uint8List.fromList(keyring.bytes()),
+            signer: Uint8List.fromList(keypair!.bytes()),
             method: encodedCall,
             signature: signature,
             eraPeriod: 64,
             blockNumber: blockNumber,
             nonce: nonce,
             tip: 0)
-        .encode(api.registry, SignatureType.sr25519);
+        .encode(api.registry, signatureType);
 
-    final hexExtrinsic = hex.encode(extrinsic);
-    print('Extrinsic: $hexExtrinsic');
+    // final hexExtrinsic = hex.encode(extrinsic);
+    // final input = Input.fromHex(hexExtrinsic);
+    // final dynamic extrinsicDecoded =
+    //     ExtrinsicsCodec(chainInfo: metadata.chainInfo).decode(input);
+    // print(extrinsicDecoded);
+    Completer<void> _complete = Completer();
+    final StreamSubscription subscription =
+        await AuthorApi(provider!).submitAndWatchExtrinsic(
+      extrinsic,
+      (p0) async {
+        if (p0.type == 'finalized') {
+          print("Extrinsic result: ${p0.type} - ${p0.value}");
+          final finalizedBlockHash = p0.value;
+          final moduleHash =
+              Hasher.twoxx128.hash(Uint8List.fromList('System'.codeUnits));
+          final storageHash =
+              Hasher.twoxx128.hash(Uint8List.fromList('Events'.codeUnits));
+          Uint8List storageKey = Uint8List.fromList([
+            ...moduleHash,
+            ...storageHash,
+          ]);
+          final finalizedBlockHashBytes = hexToBytes(finalizedBlockHash);
+          final changes = await stateApi
+              .queryStorageAt([storageKey], at: finalizedBlockHashBytes);
+          if (changes != Null && changes.isNotEmpty) {
+            for (var changeSet in changes) {
+              for (var change in changeSet.changes) {
+                Uint8List key = change.key;
+                Uint8List value = change.value!;
 
-    final submit = await AuthorApi(provider).submitAndWatchExtrinsic(
-        extrinsic as Uint8List,
-        (p0) => print("Extrinsic result: ${p0.type} - {${p0.value}}"));
-    print(submit);
+                final input = Input.fromBytes(value);
+                final List<dynamic> decodedEvents =
+                    metadata.chainInfo.scaleCodec.decode('EventCodec', input);
+                final myEvents = _filterMyEvents(decodedEvents);
+                bool targetModuleEventOccur = false;
+                for (final event in myEvents) {
+                  if (event.key == "System" &&
+                      event.value.key == "ExtrinsicFailed") {
+                    // TODO: get the error name and type
+                    final error = event.value.value["DispatchError"].value;
+                    final errorType = event.value.value["DispatchError"].key;
+                    String? errorName;
+                    try {
+                      if (errorType == "Module")
+                        errorName = Errors(
+                                moduleIndex: error["index"],
+                                errorIndex:
+                                    dynamicListToUint8List(error["error"]))
+                            .decode();
+                    } catch (e) {
+                      _complete.completeError("Failed to apply extrinsic: $e");
+                    }
+                    if (errorName != null)
+                      _complete.completeError(
+                          "Failed to apply extrinsic: $errorName");
+                    else
+                      _complete.completeError(
+                          "Failed to apply extrinsic: ${errorType}${error}");
+                  } else if (event.key == runtimeCall.runtimeType.toString()) {
+                    targetModuleEventOccur = true;
+                  } else if (targetModuleEventOccur &&
+                      event.key == "System" &&
+                      event.value.key == "ExtrinsicSuccess") {
+                    print("Extrinsic is applied successfully");
+                    _complete.complete();
+                    return;
+                  }
+                }
+              }
+            }
+          } else {
+            _complete.completeError("No events found in the block");
+          }
+        }
+      },
+    );
+    await _complete.future;
+    subscription.cancel();
   }
 }

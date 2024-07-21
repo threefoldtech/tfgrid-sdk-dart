@@ -1,9 +1,3 @@
-import 'dart:io';
-
-import 'package:signer/signer.dart';
-import 'package:tfchain_client/models/balances.dart';
-import 'package:tfchain_client/models/kvstore.dart';
-import 'package:tfchain_client/models/twins.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 void main() async {
@@ -20,12 +14,15 @@ void main() async {
 
   final client = Client(
       "wss://tfchain.dev.grid.tf/ws",
-      "secret add bag cluster deposit beach illness letter crouch position rain arctic",
+      "your-mnemonic",
       "sr25519");
   await client.connect();
+  // final extrinsic = await client.clientBalances.transfer(
+  //     address: "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC", amount: 10);
+  final twinId = await client.twins.create(relay: [], pk: []);
 
-  // await client.apply(extrinsic);
-  client.kvStrore.list();
+  print(twinId);
+  // await client.kvStrore.list();
 
   // await client.disconnect();
 }

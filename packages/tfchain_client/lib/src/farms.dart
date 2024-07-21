@@ -1,47 +1,51 @@
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
-import 'package:tfchain_client/models/farms.dart';
 import 'package:tfchain_client/tfchain_client.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/ip4.dart';
 
 class QueryFarms {
   final QueryClient client;
   QueryFarms(this.client);
 
-  Future<Farm?> get(QueryFarmsGetOptions options) async {
-    final res = await client.api.query.tfgridModule.farms(options.id);
-    return res as Farm;
+  Future<Farm?> get({required int id}) async {
+    final res = await client.api.query.tfgridModule.farms(id);
+    return res;
+  }
+
+  Future<int?> getFarmIdByName({required String name}) async {
+    return await client.api.query.tfgridModule.farmIdByName(name.codeUnits);
   }
 }
 
 class Farms extends QueryFarms {
-  Farms(Client client) : super(client);
+  Farms(Client this.client) : super(client);
+  final Client client;
 
-  Future<RuntimeCall> create(CreateFarmOptions options) async {
+  Future<int?> create(
+      {required String name, required List<Ip4>? publicIps}) async {
     final extrinsic = client.api.tx.tfgridModule
-        .createFarm(name: options.name.codeUnits, publicIps: options.publicIps);
-    return extrinsic;
+        .createFarm(name: name.codeUnits, publicIps: publicIps);
+    await client.apply(extrinsic);
+
+    return await getFarmIdByName(name: name);
   }
 
-// TODO: Bug
-  Future<RuntimeCall> addFarmIp(AddFarmIPOptions options) async {
-    final extrinsic = client.api.tx.tfgridModule.addFarmIp(
-        farmId: options.farmId,
-        ip: options.ip.codeUnits,
-        gw: options.gw.codeUnits);
-    return extrinsic;
+  Future<void> addFarmIp(
+      {required int farmId, required String ip, required String gw}) async {
+    final extrinsic = client.api.tx.tfgridModule
+        .addFarmIp(farmId: farmId, ip: ip.codeUnits, gw: gw.codeUnits);
+    await client.apply(extrinsic);
   }
 
-  Future<RuntimeCall> removeFarmIp(
-      {required int farmId, required String ip}) async {
-    final extrinsic =
-        client.api.tx.tfgridModule.removeFarmIp(farmId: farmId, ip: ip);
-    return extrinsic;
+  Future<void> removeFarmIp({required int farmId, required String ip}) async {
+    final extrinsic = client.api.tx.tfgridModule
+        .removeFarmIp(farmId: farmId, ip: ip.codeUnits);
+    await client.apply(extrinsic);
   }
 
-  Future<RuntimeCall> addStellarAddress(
+  Future<void> addStellarAddress(
       {required int farmId, required String stellarAddress}) async {
     final extrinsic = client.api.tx.tfgridModule.addStellarPayoutV2address(
-        farmId: farmId, stellarAddress: stellarAddress);
-    return extrinsic;
+        farmId: farmId, stellarAddress: stellarAddress.codeUnits);
+    await client.apply(extrinsic);
   }
 }

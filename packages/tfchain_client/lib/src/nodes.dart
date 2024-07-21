@@ -1,5 +1,8 @@
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/ip4.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/ip6.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/node.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/power.dart';
+import 'package:tfchain_client/generated/dev/types/tfchain_support/types/public_config.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryNodes {
@@ -16,38 +19,45 @@ class QueryNodes {
 }
 
 class Nodes extends QueryNodes {
-  Nodes(Client client) : super(client);
+  Nodes(Client this.client) : super(client);
+  final Client client;
 
-  Future<RuntimeCall> setPower(
-      {required int nodeId, required bool power}) async {
-    Map<String, bool?> powerTarget = {
-      'up': null,
-      'down': null,
-    };
+  Future<void> setPower({required int nodeId, required bool power}) async {
+    Power _power;
     if (power) {
-      powerTarget['up'] = true;
+      _power = Power.up;
     } else {
-      powerTarget['down'] = true;
+      _power = Power.down;
     }
     final extrinsic = client.api.tx.tfgridModule
-        .changePowerTarget(nodeId: nodeId, powerTarget: powerTarget);
-    return extrinsic;
+        .changePowerTarget(nodeId: nodeId, powerTarget: _power);
+    await client.apply(extrinsic);
+  }
+
+  Future<void> addNodePublicConfig({
+    required int farmId,
+    required int nodeId,
+    required String ip4Ip,
+    required String ip4Gw,
+    String? ip6Ip,
+    String? ip6Gw,
+    String? domain,
+  }) async {
+    Ip4 ip4Config = Ip4(ip: ip4Ip.codeUnits, gw: ip4Gw.codeUnits);
+    Ip6? ip6Config;
+
+    if (ip6Ip != null && ip6Gw != null) {
+      ip6Config = Ip6(ip: ip6Ip.codeUnits, gw: ip6Gw.codeUnits);
+    }
+
+    PublicConfig publicConfig = PublicConfig(
+      ip4: ip4Config,
+      ip6: ip6Config,
+      domain: domain!.codeUnits,
+    );
+
+    final extrinsic = client.api.tx.tfgridModule.addNodePublicConfig(
+        farmId: farmId, nodeId: nodeId, publicConfig: publicConfig);
+    await client.apply(extrinsic);
   }
 }
-
-// TODO: what to do with this for addNodePublicConfig function
-// interface NodePublicConfigOptions {
-//   farmId: number;
-//   nodeId: number;
-//   publicConfig?: {
-//     ip4: {
-//       ip: string;
-//       gw: string;
-//     };
-//     ip6?: {
-//       ip: string;
-//       gw: string;
-//     } | null;
-//     domain?: string | null;
-//   } | null;
-// }

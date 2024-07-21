@@ -1,4 +1,3 @@
-import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryBridge {
@@ -17,12 +16,14 @@ class QueryBridge {
 }
 
 class Bridge extends QueryBridge {
-  Bridge(Client client) : super(client);
+  Bridge(Client this.client) : super(client);
+  final Client client;
 
-  Future<RuntimeCall> swapToStellar(
-      {required String target, required int amount}) async {
-    final extrinsic = client.api.tx.tFTBridgeModule
-        .swapToStellar(targetStellarAddress: target, amount: amount);
-    return extrinsic;
+  Future<void> swapToStellar(
+      {required String target, required BigInt amount}) async {
+    final extrinsic = client.api.tx.tFTBridgeModule.swapToStellar(
+        targetStellarAddress: target.codeUnits,
+        amount: amount * BigInt.from(10).pow(7));
+    await client.apply(extrinsic);
   }
 }
