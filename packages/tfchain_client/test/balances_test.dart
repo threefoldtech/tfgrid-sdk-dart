@@ -9,10 +9,21 @@ void main() {
   group("Balances Tests", () {
     sharedSetup();
     late final String recipientAddress;
+    
+    setUpAll(() async {
+      final mnemonic = bip39.generateMnemonic();
+      final recipientClient = Client(url, mnemonic, type);
+      await recipientClient.connect();
+
+      recipientAddress = recipientClient.address;
+      Client alice = Client(url, "//Alice", type);
+      await alice.connect();
+
+      await alice.balances.transfer(address: client.address, amount: myBalance);
+    });
 
     test('Test Get Balance', () async {
-      AccountInfo? accountInfo =
-          await client.balances.get(address: myAddress);
+      AccountInfo? accountInfo = await client.balances.get(address: myAddress);
       expect(accountInfo, isNotNull);
     });
 
@@ -24,18 +35,6 @@ void main() {
       } catch (error) {
         expect(error, isNotNull);
       }
-    });
-
-    setUpAll(() async {
-      final mnemonic = bip39.generateMnemonic();
-      final recipientClient = Client(url, mnemonic, type);
-      await recipientClient.connect();
-
-      recipientAddress = recipientClient.address;
-      Client alice = Client(url, "//Alice", type);
-      await alice.connect();
-
-      await alice.balances.transfer(address: client.address, amount: myBalance);
     });
 
     test('Test Transfer TFTs with invalid amount', () async {
