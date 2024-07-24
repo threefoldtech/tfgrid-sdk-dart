@@ -12,13 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      tfchain:
-        image: ghcr.io/threefoldtech/tfchain:2.8.1
-        options: --dev --rpc-cors all --rpc-external --rpc-methods=safe
-        ports:
-          - 9944:9944
-
     steps:
       - name: Set up Repository
         uses: actions/checkout@v2
@@ -75,3 +68,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage/filtered.lcov.info
+          
+      - name: Stop and remove TFChain Docker Container
+        run: sudo docker stop tfchain && sudo docker rm tfchain    
