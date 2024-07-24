@@ -2,8 +2,8 @@ part of '../tfchain_client.dart';
 
 class QueryClient {
   final String url;
-  late final Provider? provider;
-  late final polkadot.Dev api;
+  late Provider? provider;
+  late polkadot.Dev api;
   QueryTwins? _twins;
   QueryContracts? _contracts;
   balance.QueryBalances? _balances;
@@ -83,14 +83,14 @@ class QueryClient {
 class Client extends QueryClient {
   final String mnemonicOrSecretSeed;
   late String address;
-  final String keypairType;
-  KeyPair? keypair;
+  final String _keypairType;
+  late final KeyPair? keypair;
   KVStore? _kvStore;
   Signer.KPType? _type;
   TermsAndConditions? _termsAndConditions;
   static const List<String> _SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
 
-  Client(String url, this.mnemonicOrSecretSeed, this.keypairType)
+  Client(String url, this.mnemonicOrSecretSeed, this._keypairType)
       : super(url) {}
 
   @override
@@ -149,10 +149,22 @@ class Client extends QueryClient {
   @override
   void _checkInputs() {
     super._checkInputs();
+    if (!_SUPPORTED_KEYPAIR_TYPES.contains(_keypairType)) {
+      throw FormatException(
+          "Keypair type $_keypairType is not valid. It Should be either of : ${_SUPPORTED_KEYPAIR_TYPES}");
+    }
+
+    if (_keypairType == "sr25519") {
+      _type = Signer.KPType.sr25519;
+    } else {
+      _type = Signer.KPType.ed25519;
+    }
+
     if (mnemonicOrSecretSeed.isEmpty) {
       throw FormatException("Mnemonic or secret should be provided");
-    } else if (mnemonicOrSecretSeed != "//Alice" &&
-        !validateMnemonic(mnemonicOrSecretSeed)) {
+    } else if (mnemonicOrSecretSeed == "//Alice") {
+      return;
+    } else if (!validateMnemonic(mnemonicOrSecretSeed)) {
       if (mnemonicOrSecretSeed.contains(" ")) {
         throw FormatException("Invalid mnemonic! Must be bip39 compliant");
       }
@@ -166,17 +178,6 @@ class Client extends QueryClient {
         throw FormatException("Invalid secret seed");
       }
     }
-
-    if (!_SUPPORTED_KEYPAIR_TYPES.contains(keypairType)) {
-      throw FormatException(
-          "Keypair type $keypairType is not valid. It Should be either of : ${_SUPPORTED_KEYPAIR_TYPES}");
-    }
-
-    if (keypairType == "sr25519") {
-      _type = Signer.KPType.sr25519;
-    } else {
-      _type = Signer.KPType.ed25519;
-    }
   }
 
   @override
@@ -184,7 +185,9 @@ class Client extends QueryClient {
     await super.connect();
     _checkInputs();
     final Signer.Signer signer = Signer.Signer();
-    if (validateMnemonic(mnemonicOrSecretSeed)) {
+    if (mnemonicOrSecretSeed == "//Alice") {
+      keypair = await signer.fromUri("//Alice", _type!);
+    } else if (validateMnemonic(mnemonicOrSecretSeed)) {
       keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, _type!);
     } else {
       keypair = await signer.fromHexSeed(mnemonicOrSecretSeed, _type!);
@@ -272,7 +275,7 @@ class Client extends QueryClient {
     // final hexSignature = hex.encode(signature);
 
     // final publicKey = hex.encode(keyring.publicKey.bytes);
-    final signatureType = keypairType == "sr25519"
+    final signatureType = _keypairType == "sr25519"
         ? SignatureType.sr25519
         : SignatureType.ed25519;
     final extrinsic = ExtrinsicPayload(
@@ -345,8 +348,7 @@ class Client extends QueryClient {
                           "Failed to apply extrinsic: ${errorType}${error}");
                   } else if (event.key == runtimeCall.runtimeType.toString()) {
                     targetModuleEventOccur = true;
-                  } else if (targetModuleEventOccur &&
-                      event.key == "System" &&
+                  } else if (event.key == "System" &&
                       event.value.key == "ExtrinsicSuccess") {
                     print("Extrinsic is applied successfully");
                     _complete.complete();

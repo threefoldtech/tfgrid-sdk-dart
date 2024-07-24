@@ -1,52 +1,30 @@
 import 'package:test/test.dart';
-import 'package:tfchain_client/tfchain_client.dart';
 
 import 'shared_setup.dart';
 
 void main() {
-  group("Query Twins Test", () {
-    late QueryClient queryClient;
+  group("Twins Test", () {
     sharedSetup();
 
-    setUp(() async {
-      queryClient = QueryClient(url);
-      await queryClient.connect();
-    });
-
     test('Test Get Twin with id', () async {
-      final twin = await queryClient.twins.get(id: twinId);
-      expect(twin, isNotNull);
+      final twin = await client.twins.get(id: twinId!);
+      expect(twin!.id, twinId);
     });
 
     test('Test Get Twin with zero id', () async {
-      final twin = await queryClient.twins.get(id: 0);
+      final twin = await client.twins.get(id: 0);
       expect(twin, null);
     });
 
     test('Test Get Twin Id with account Id', () async {
       String address = myAddress;
-      final twin =
-          await queryClient.twins.getTwinIdByAccountId(address: address);
-      expect(twin, 7845);
+      final twin = await client.twins.getTwinIdByAccountId(address: address);
+      expect(twin, twinId);
     });
 
-    tearDownAll(() async {
-      await queryClient.disconnect();
-    });
-  });
-
-  group("Twins Test", () {
-    late Client client;
-    sharedSetup();
-
-    setUp(() async {
-      client = Client(url, mnemonic, type);
-      await client.connect();
-    });
-
-    test('Test Create Twin', () async {
+    test('Test Create Twin for existing account', () async {
       try {
-        int? twin = await client.twins.create(relay: [], pk: []);
+        int? twin = await client.twins.create(relay: "", pk: []);
       } catch (error) {
         expect(
           error,
@@ -54,17 +32,12 @@ void main() {
         );
       }
     });
-
     test('Test Update Twin', () async {
       try {
-        await client.twins.update(relay: relay.codeUnits, pk: []);
+        await client.twins.update(relay: "relay.qa.grid.tf".codeUnits, pk: []);
       } catch (error) {
         expect(error, null);
       }
-    });
-
-    tearDownAll(() async {
-      await client.disconnect();
     });
   });
 }

@@ -40,6 +40,19 @@ class Signer {
     }
   }
 
+  Future<KeyPair?> fromUri(String uri, KPType type) async {
+    try {
+      if (type == KPType.sr25519) {
+        keypair = await KeyPair.sr25519.fromUri(uri);
+      } else if (type == KPType.ed25519) {
+        keypair = await KeyPair.ed25519.fromUri(uri);
+      }
+      return keypair;
+    } catch (e) {
+      throw Exception("Failed to create keyPair from mnemonic. Error: $e");
+    }
+  }
+
   String sign(String data) {
     if (keypair == null) {
       throw Exception("keypair not initialized.");
