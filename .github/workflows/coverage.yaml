@@ -36,7 +36,7 @@ jobs:
 
       - name: Start TFChain Docker Container
         run: |
-          sudo docker run --network host ghcr.io/threefoldtech/tfchain:2.8.1  --dev --rpc-cors all --rpc-external --rpc-methods=safe
+          sudo docker run -d --network host ghcr.io/threefoldtech/tfchain:2.8.1  --dev --rpc-cors all --rpc-external --rpc-methods=safe
       
       - name: Wait for TFChain to be ready
         run: |
@@ -68,6 +68,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage/filtered.lcov.info
-          
+
       - name: Stop and remove TFChain Docker Container
         run: sudo docker stop tfchain && sudo docker rm tfchain    
