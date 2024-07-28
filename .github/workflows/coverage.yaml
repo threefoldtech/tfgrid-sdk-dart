@@ -46,9 +46,6 @@ jobs:
           done    
 
       - name: Run unit tests and generate coverage
-        env:
-          URL: ${{ secrets.URL }}
-          KEYPAIR_TYPE: ${{ secrets.KEYPAIR_TYPE}}
         run: |
           melos exec rm -rf coverage
           melos run unit_test
