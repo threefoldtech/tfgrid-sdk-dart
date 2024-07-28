@@ -50,10 +50,12 @@ void main() {
 
     test('Test adding farm ip with equal ip and gateway', () async {
       try {
+        final randomIp = generateRandomCIDRIPv4();
+        final gatewayIp = randomIp.split('/')[0];
         final farmId = await client.farms
             .create(name: generateRandomString(6), publicIps: []);
-        await client.farms.addFarmIp(
-            farmId: farmId!, ip: "198.165.15.29/16", gw: "198.165.15.29");
+        await client.farms
+            .addFarmIp(farmId: farmId!, ip: randomIp, gw: gatewayIp);
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -61,11 +63,13 @@ void main() {
 
     test('Test adding valid IPs to farm,', () async {
       try {
+        final randomIp = generateRandomCIDRIPv4();
+        final ip = randomIp.split('/')[0];
+        final gatewayIp = generateRandomGatewayIPv4(ip);
         int? farmId = await client.farms
             .create(name: generateRandomString(5), publicIps: []);
-        await client.farms.addFarmIp(
-            farmId: farmId!, ip: "198.165.15.29/16", gw: "198.165.15.26");
-        farmsIps[farmId] = "198.165.15.29/16";
+        await client.farms.addFarmIp(farmId: farmId!, ip: ip, gw: gatewayIp);
+        farmsIps[farmId] = ip;
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -75,14 +79,15 @@ void main() {
       try {
         int? farmId1 = await client.farms
             .create(name: generateRandomString(5), publicIps: []);
-        await client.farms.addFarmIp(
-            farmId: farmId1!, ip: "198.165.15.29/16", gw: "198.165.15.26");
-        farmsIps[farmId1] = "198.165.15.29/16";
+        final randomIp = generateRandomCIDRIPv4();
+        final ip = randomIp.split('/')[0];
+        final gatewayIp = generateRandomGatewayIPv4(ip);
+        await client.farms.addFarmIp(farmId: farmId1!, ip: ip, gw: gatewayIp);
+        farmsIps[farmId1] = ip;
 
         int? farmId2 = await client.farms
             .create(name: generateRandomString(5), publicIps: []);
-        await client.farms.addFarmIp(
-            farmId: farmId2!, ip: "198.165.15.29/16", gw: "198.165.15.26");
+        await client.farms.addFarmIp(farmId: farmId2!, ip: ip, gw: gatewayIp);
       } catch (error) {
         print(error);
         // will fail as the ip already exists
@@ -92,12 +97,14 @@ void main() {
 
     test('Test removing farm IP', () async {
       try {
+        final randomIp = generateRandomCIDRIPv4();
+        final ip = randomIp.split('/')[0];
+        final gatewayIp = generateRandomGatewayIPv4(ip);
         final farmId = await client.farms
             .create(name: generateRandomString(6), publicIps: []);
-        await client.farms.addFarmIp(
-            farmId: farmId!, ip: "198.165.15.28/16", gw: "198.165.15.29");
+        await client.farms.addFarmIp(farmId: farmId!, ip: ip, gw: gatewayIp);
 
-        await client.farms.removeFarmIp(farmId: farmId, ip: "198.165.15.28/16");
+        await client.farms.removeFarmIp(farmId: farmId, ip: ip);
       } catch (error) {
         expect(error, isNull);
       }

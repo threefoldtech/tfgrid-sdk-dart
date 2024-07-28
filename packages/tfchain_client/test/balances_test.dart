@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dart';
 import 'package:tfchain_client/tfchain_client.dart';
@@ -9,7 +11,7 @@ void main() {
   group("Balances Tests", () {
     sharedSetup();
     late final String recipientAddress;
-    
+
     setUpAll(() async {
       final mnemonic = bip39.generateMnemonic();
       final recipientClient = Client(url, mnemonic, type);
@@ -48,18 +50,19 @@ void main() {
 
     test('Test Transfer TFTs', () async {
       try {
+        var random = Random();
+        var randomNumber = random.nextInt(1000) + 1;
         AccountInfo? before =
             await client.balances.get(address: recipientAddress);
-        await client.balances
-            .transfer(address: recipientAddress, amount: BigInt.from(10));
+        await client.balances.transfer(
+            address: recipientAddress, amount: BigInt.from(randomNumber));
 
         AccountInfo? after =
             await client.balances.get(address: recipientAddress);
         final diff = after!.data.free / BigInt.from(10).pow(7) -
             before!.data.free / BigInt.from(10).pow(7);
-        print(diff);
 
-        expect(diff, closeTo(10.0, 0.0001));
+        expect(diff, closeTo(randomNumber.toDouble(), 0.0001));
       } catch (error) {
         expect(error, isNull);
       }

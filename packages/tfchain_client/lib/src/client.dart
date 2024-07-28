@@ -346,8 +346,6 @@ class Client extends QueryClient {
                     else
                       _complete.completeError(
                           "Failed to apply extrinsic: ${errorType}${error}");
-                  } else if (event.key == runtimeCall.runtimeType.toString()) {
-                    targetModuleEventOccur = true;
                   } else if (event.key == "System" &&
                       event.value.key == "ExtrinsicSuccess") {
                     print("Extrinsic is applied successfully");
