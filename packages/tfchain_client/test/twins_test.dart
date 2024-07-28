@@ -37,7 +37,7 @@ void main() {
       try {
         await client.twins.update(relay: "relay.qa.grid.tf".codeUnits, pk: []);
         Twin? twin = await client.twins.get(id: twinId!);
-        expect(twin.relay, "relay.qa.grid.tf".codeUnits);
+        expect(twin!.relay, "relay.qa.grid.tf".codeUnits);
       } catch (error) {
         expect(error, null);
       }
