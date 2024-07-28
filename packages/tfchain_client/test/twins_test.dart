@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/twin.dart';
 
 import 'shared_setup.dart';
 
@@ -35,6 +36,8 @@ void main() {
     test('Test Update Twin', () async {
       try {
         await client.twins.update(relay: "relay.qa.grid.tf".codeUnits, pk: []);
+        Twin? twin = await client.twins.get(id: twinId!);
+        expect(twin.relay, "relay.qa.grid.tf".codeUnits);
       } catch (error) {
         expect(error, null);
       }

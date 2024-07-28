@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 
 import 'package:bip39/bip39.dart' as bip39;
@@ -25,6 +26,32 @@ String generateRandomString(int length) {
       (_) => characters.codeUnitAt(random.nextInt(characters.length)),
     ),
   );
+}
+
+String getIpFromInt32Value(int value) {
+  return InternetAddress.fromRawAddress(
+          (ByteData(4)..setInt32(0, value, Endian.host)).buffer.asUint8List())
+      .address;
+}
+
+String generateRandomIPv4() {
+  final random = Random();
+  final value = random.nextInt(0xFFFFFFFF);
+  return getIpFromInt32Value(value);
+}
+
+String generateRandomCIDRIPv4() {
+  final ip = generateRandomIPv4();
+  final subnet = Random().nextInt(16) + 16;
+  return '$ip/$subnet';
+}
+
+String generateRandomGatewayIPv4(String ip) {
+  String gateway;
+  do {
+    gateway = generateRandomIPv4();
+  } while (gateway == ip);
+  return gateway;
 }
 
 void sharedSetup() {
