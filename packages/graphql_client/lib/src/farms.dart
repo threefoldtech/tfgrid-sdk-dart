@@ -9,25 +9,30 @@ class TFFarms {
   Future<List<FarmInfo>> listFarmsByTwinId(
       ListFarmsByTwinIdOptions options) async {
     print(options.twinId);
-    final body = '''
-query getFarms(\$twinId: Int!) {
-  farms(where: {twinID_eq: \$twinId}) {
-    farmID
-    name
-    certification
-    dedicatedFarm
-    pricingPolicyID
-    stellarAddress
-    twinID
-  }
-}''';
+    var body = '''
+''';
+
+//     final body = '''
+// query getFarms(\$twinId: Int!) {
+//   farms(where: {twinID_eq: \$twinId}) {
+//     farmID
+//     name
+//     certification
+//     dedicatedFarm
+//     pricingPolicyID
+//     stellarAddress
+//     twinID
+//   }
+// }''';
 
     try {
       final response =
           await gqlClient.query(body, variables: {'twinId': options.twinId});
+      print(response['data']);
       List<FarmInfo> farms =
           (response['data']['farms'] as List<dynamic>).map((farmsData) {
         return FarmInfo(
+          id: farmsData['id'],
           farmID: farmsData['farmID'] ?? 0,
           certification: farmsData['certification'] ?? '',
           dedicatedFarm: farmsData['dedicatedFarm'] ?? false,
@@ -37,10 +42,11 @@ query getFarms(\$twinId: Int!) {
           twinID: farmsData['twinID'] ?? 0,
         );
       }).toList();
-
       return farms;
     } catch (err) {
       throw err;
     }
   }
+
+  // Future<List<FarmInfo>> listFarmByUniqueInput()
 }

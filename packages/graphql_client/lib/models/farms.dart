@@ -6,26 +6,43 @@ class ListFarmsByTwinIdOptions {
   });
 }
 
+class FarmsReturnOptions {}
+
+class FarmsQueryOptions {
+  String? id_eq;
+  String? id_gt;
+  String? id_gte;
+
+  FarmsQueryOptions({
+    this.id_eq,
+    this.id_gt,
+    this.id_gte,
+  });
+}
+
+FarmsQueryOptions queryOptionss = FarmsQueryOptions(id_eq: "10");
+//queryOptionss.id_eq ?? string.append : nothing
+
 class FarmInfo {
-  String? id;
+  String id;
   String? gridVersion;
-  int farmID;
-  String name;
-  String certification;
-  bool dedicatedFarm;
-  int pricingPolicyID;
-  String stellarAddress;
-  int twinID;
+  int? farmID;
+  String? name;
+  String? certification;
+  bool? dedicatedFarm;
+  int? pricingPolicyID;
+  String? stellarAddress;
+  int? twinID;
 
   FarmInfo({
-    this.id,
+    required this.id,
     this.gridVersion,
-    required this.farmID,
-    required this.name,
-    required this.certification,
-    required this.dedicatedFarm,
-    required this.pricingPolicyID,
-    required this.stellarAddress,
-    required this.twinID,
+    this.farmID,
+    this.name,
+    this.certification,
+    this.dedicatedFarm,
+    this.pricingPolicyID,
+    this.stellarAddress,
+    this.twinID,
   });
 }

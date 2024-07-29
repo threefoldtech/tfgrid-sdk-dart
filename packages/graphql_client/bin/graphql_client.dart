@@ -6,7 +6,7 @@ import 'package:graphql_client/src/contracts.dart';
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  await graphQLClient.farms
+  Future<List<FarmInfo>> Farms = graphQLClient.farms
       .listFarmsByTwinId(ListFarmsByTwinIdOptions(twinId: 214));
 
   // final contracts = await graphQLClient.contracts
