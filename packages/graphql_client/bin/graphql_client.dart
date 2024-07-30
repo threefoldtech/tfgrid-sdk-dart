@@ -8,33 +8,24 @@ import 'package:graphql_client/src/twins.dart';
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
+
     await graphQLClient.twins
       .Twins(TwinReturnOptions(accountID: true , relay:true , twinID: true),
-      TwinQueryOption(idEq: "0010961887-000002-f81a4"),
+      TwinQueryOption(orderby: OrderBy.id_ASC , limit: 10),
 );
   
   
   /*
-     await graphQLClient.twins
-      .Twins(null,
-      null);
     
     await graphQLClient.twins
       .Twins(TwinReturnOptions(accountID: true , relay:true , twinID: true),
       TwinQueryOption(id_eq: "0010961887-000002-f81a4"));
   
 
-  print(TwinQueryOption(id_eq: "lolo"));
-  print(TwinQueryOption(id_not_eq: "lolo"));
-  print(TwinQueryOption(id_eq: "lolo" , id_not_eq: "lolo2"));
-  print(TwinReturnOptions(id: true , accountID: true , relay:true));
-  print(TwinReturnOptions());
-  print(TwinReturnOptions(accountID: true , relay:true , twinID: true));
-
   await graphQLClient.farms
       .listFarmsByTwinId(ListFarmsByTwinIdOptions(twinId: 214));
   */
-  
+
   // final contracts = await graphQLClient.contracts
   //     .listContractsByTwinId(ListContractByTwinIdOptions(twinId: 5110));
   // var res = 0.0;
