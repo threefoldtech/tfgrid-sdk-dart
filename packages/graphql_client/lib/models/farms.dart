@@ -24,7 +24,7 @@ enum OrderByOptions {
   dedicatedFarm_DESC,
 }
 
-enum FarmCertification {
+enum Certification {
   NotCertified,
   Gold,
 }
@@ -144,10 +144,10 @@ class FarmsQueryOptions {
   List<int>? pricingPolicyIDIn;
   List<int>? pricingPolicyIDNotIn;
   bool? certificationIsNull;
-  FarmCertification? certificationEq;
-  FarmCertification? certificationNotEq;
-  List<FarmCertification>? certificationIn;
-  List<FarmCertification>? certificationNotIn;
+  Certification? certificationEq;
+  Certification? certificationNotEq;
+  List<Certification>? certificationIn;
+  List<Certification>? certificationNotIn;
   bool? stellarAddressIsNull;
   String? stellarAddressEq;
   String? stellarAddressNotEq;
