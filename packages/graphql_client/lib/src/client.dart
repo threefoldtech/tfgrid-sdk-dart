@@ -4,10 +4,12 @@ class GraphQLClient {
   final String url;
   late final TFContracts contracts;
   late final TFFarms farms;
+  late final TFTwins twins;
 
   GraphQLClient(this.url) {
     contracts = TFContracts(this);
     farms = TFFarms(this);
+    twins = TFTwins(this);
   }
 
   Future<int> getItemTotalCount(String itemName, [String options = ""]) async {
