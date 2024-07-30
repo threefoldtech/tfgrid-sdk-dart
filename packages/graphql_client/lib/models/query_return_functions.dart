@@ -1,0 +1,17 @@
+void addToQueryList(List<String> list, String key , dynamic value ) {
+  if (value is String) {
+    list.add('$key: "$value"');
+  }
+  else if (value!=null) {
+    list.add('$key: $value');
+  }
+}
+
+//TO-DO: check how to send value by referance in dart
+String addToReturnList(String returnOptions, String key ,bool value) {
+  if (value!=false) {
+    returnOptions+= key;
+    returnOptions+= '\n';
+  }
+  return returnOptions;
+}
