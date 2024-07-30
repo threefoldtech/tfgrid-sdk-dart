@@ -1,33 +1,28 @@
 import 'package:graphql_client/graphql_client.dart';
 import 'package:graphql_client/models/farms.dart';
+import 'package:graphql_client/models/public_ips.dart';
 
 class TFFarms {
   final GraphQLClient gqlClient;
 
   TFFarms(this.gqlClient);
 
-  Future<List<FarmInfo>> listFarmsByTwinId(
-      ListFarmsByTwinIdOptions options) async {
-    print(options.twinId);
-    var body = '''
-''';
+  Future<List<FarmInfo>> listFarms(FarmsQueryOptions? queryOptions,
+      FarmsReturnOptions? returnOptions) async {
+    final queryString = queryOptions?.toString() ?? "";
+    final returnString = returnOptions?.toString() ?? "id \n";
 
-//     final body = '''
-// query getFarms(\$twinId: Int!) {
-//   farms(where: {twinID_eq: \$twinId}) {
-//     farmID
-//     name
-//     certification
-//     dedicatedFarm
-//     pricingPolicyID
-//     stellarAddress
-//     twinID
-//   }
-// }''';
+    final body = '''
+            query Farms{
+              farms $queryString {
+                $returnString
+              }
+            }''';
+
+    print(body);
 
     try {
-      final response =
-          await gqlClient.query(body, variables: {'twinId': options.twinId});
+      final response = await gqlClient.query(body);
       print(response['data']);
       List<FarmInfo> farms =
           (response['data']['farms'] as List<dynamic>).map((farmsData) {
@@ -40,6 +35,9 @@ class TFFarms {
           pricingPolicyID: farmsData['pricingPolicyID'] ?? 0,
           stellarAddress: farmsData['stellarAddress'] ?? '',
           twinID: farmsData['twinID'] ?? 0,
+          publicIps: farmsData['publicIps'] != null
+              ? PublicIpsInfo.fromJson(farmsData['publicIps'])
+              : null,
         );
       }).toList();
       return farms;
@@ -47,6 +45,4 @@ class TFFarms {
       throw err;
     }
   }
-
-  // Future<List<FarmInfo>> listFarmByUniqueInput()
 }
