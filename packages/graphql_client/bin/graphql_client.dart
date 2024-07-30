@@ -2,6 +2,8 @@ import 'package:graphql_client/graphql_client.dart';
 import 'package:graphql_client/models/contracts.dart';
 import 'package:graphql_client/models/farms.dart';
 import 'package:graphql_client/src/contracts.dart';
+import 'package:graphql_client/models/twins.dart';
+import 'package:graphql_client/src/twins.dart';
 
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
