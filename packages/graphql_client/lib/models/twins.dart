@@ -22,11 +22,7 @@ String? parseToString(OrderBy orderby) {
   return orderby.toString().split('.').last;
 }
 
-class TwinQueryOption {
-  OrderBy orderby;
-  int? limit;
-  int? offset;
-
+class TwinWhereOptions {
   //ids options
   bool? idIsNull;
   String? idEq;
@@ -126,12 +122,7 @@ class TwinQueryOption {
   String? publicKeyNotEndsWith;
 
 
-  TwinQueryOption({
-    //order by 
-    this.orderby=OrderBy.None,
-    this.limit=null,
-    this.offset=null,
-
+  TwinWhereOptions({
     //ids
     this.idIsNull,
     this.idEq,
@@ -333,11 +324,62 @@ class TwinQueryOption {
     addToQueryList(queryOptions, "publicKey_not_endsWith", publicKeyNotEndsWith);
 
 
-    return QueryString(queryOptions.isNotEmpty ? queryOptions.join(', ') : " ",  parseToString(orderby) , limit , offset );
+    return queryOptions.isNotEmpty ? queryOptions.join(', ') : " ";
+  }
+}
+
+class TwinQueryOptions{
+  OrderBy orderby;
+  int? limit;
+  int? offset;
+  TwinWhereOptions? whereOptions;
+
+    TwinQueryOptions({
+    this.orderby=OrderBy.None,
+    this.limit=null,
+    this.offset=null,
+    this.whereOptions,
+    });
+  @override
+  String toString() {
+  String? order= parseToString(orderby);
+  if((whereOptions!=null && whereOptions.toString()==" " ) && order==null && limit==null && offset==null) return "";
+  List<String> queryString = [];
+  if(whereOptions!=null && whereOptions.toString()==" ")queryString.add("where: {$whereOptions.toString()}");
+  if (order!= null) queryString.add("orderBy: $order");
+  if (limit!= null) queryString.add("limit: $limit");
+  if (offset!= null) queryString.add("offset: $offset");
+  return "(${queryString.join(', ')})";
+  }
+}
+
+class TwinConnectionsQueryOptions{
+  OrderBy orderby;
+  int? first;
+  int? after;
+  TwinWhereOptions? whereOptions;
+
+    TwinConnectionsQueryOptions({
+    this.orderby=OrderBy.id_ASC,
+    this.first,
+    this.after,
+    this.whereOptions,
+    });
+  @override
+  String toString() {
+      String? order= parseToString(orderby);
+ if((whereOptions!=null && whereOptions.toString()==" " ) && order==null && first==null && after==null) return "";
+  List<String> queryString = [];
+  if(whereOptions!=null && whereOptions.toString()==" ")queryString.add("where: {$whereOptions.toString()}");
+  if (order!= null) queryString.add("orderBy: $order");
+  if (first!= null) queryString.add("first: $first");
+  if (after!= null) queryString.add('after: "$after"');
+  return "(${queryString.join(', ')})";
   }
 }
 
 class TwinReturnOptions {
+  bool id;
   bool accountID;
   bool gridVersion;
   bool publicKey;
@@ -345,6 +387,7 @@ class TwinReturnOptions {
   bool twinID;
 
   TwinReturnOptions({
+    this.id=false,
     this.accountID = false,
     this.gridVersion = false,
     this.publicKey = false,
@@ -354,12 +397,97 @@ class TwinReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "id \n";
+    String returnOptions = "";
+    returnOptions =addToReturnList(returnOptions ,"id" , id );
     returnOptions =addToReturnList(returnOptions ,"accountID" , accountID );
     returnOptions= addToReturnList(returnOptions ,"gridVersion" , gridVersion );
     returnOptions= addToReturnList(returnOptions ,"publicKey" , publicKey );
     returnOptions= addToReturnList(returnOptions ,"relay" , relay );
     returnOptions=addToReturnList(returnOptions ,"twinID" , twinID );
+    if (returnOptions=="") returnOptions="id \n";
+    return returnOptions;
+  }
+
+}
+
+class TwinConnectionsEdgeReturnOptions {
+  bool cursor;
+  TwinReturnOptions? node;
+ 
+  TwinConnectionsEdgeReturnOptions({
+      this.cursor = false,
+      this.node=null,
+    });
+
+  @override
+  String toString() {
+    String returnOptions = "";
+    if (!cursor && node==null) 
+      node= TwinReturnOptions(id: true);
+
+    returnOptions =addToReturnList(returnOptions ,"cursor" , cursor );
+    returnOptions= addToReturnList(returnOptions ,"node {" , node!=null);
+    returnOptions= addToReturnList(returnOptions , node.toString(), node!=null);
+    returnOptions= addToReturnList(returnOptions ,"} " , node!=null);
+    if (returnOptions!="") returnOptions= "edges { \n $returnOptions } \n";
+    return returnOptions;
+  }
+
+}
+
+class TwinConnectionsPageReturnOptions {
+  bool endCursor;
+  bool hasNextPage;
+  bool hasPreviousPage;
+  bool startCursor;
+ 
+  TwinConnectionsPageReturnOptions({
+    this.endCursor=false,
+    this.hasNextPage=false,
+    this.hasPreviousPage=false,
+    this.startCursor=false,
+  });
+
+  @override
+  String toString() {
+    String returnOptions = "";
+    returnOptions =addToReturnList(returnOptions ,"endCursor" , endCursor );
+    returnOptions= addToReturnList(returnOptions ,"hasNextPage" , hasNextPage);
+    returnOptions= addToReturnList(returnOptions , "hasPreviousPage", hasPreviousPage);
+    returnOptions= addToReturnList(returnOptions ,"startCursor" , startCursor);
+    if (returnOptions!="") returnOptions= "pageInfo { \n $returnOptions } \n";
+    return returnOptions;
+  }
+
+}
+
+class TwinConnectionsReturnOptions {
+  TwinConnectionsEdgeReturnOptions? edges;
+  TwinConnectionsPageReturnOptions? pageInfo;
+  bool totalCount;
+
+
+  TwinConnectionsReturnOptions({
+    this.edges,
+    this.pageInfo,
+    this.totalCount = false,
+  });
+
+  @override
+  String toString() {
+    String returnOptions = "";
+    if (edges!=null )returnOptions+=edges.toString();
+    if (pageInfo!=null )returnOptions+=pageInfo.toString();
+    returnOptions =addToReturnList(returnOptions ,"totalCount" , totalCount);
+    if(returnOptions=="") {
+      returnOptions+=''' 
+      edges {
+      node {
+        id
+      }
+    }
+''';
+    }
     return returnOptions;
   }
 
@@ -375,60 +503,111 @@ class TwinInfo {
 
   TwinInfo({
     required this.id,
-    this.gridVersion,
     this.accountID,
+    this.gridVersion,
     this.publicKey,
     this.relay,
     this.twinID,
   });
 
-    @override
+  factory TwinInfo.fromJson(Map<String, dynamic> json) {
+    return TwinInfo(
+     id: json['id'] ?? '',
+     accountID: json['accountID'] ?? '',
+     gridVersion: json['gridVersion'] ?? 0,
+     publicKey: json['publicKey'] ?? '',
+     relay: json['relay'] ?? '',
+     twinID: json['twinID'] ?? 0,
+    );
+  }
+
+  @override
   String toString() {
     return 'TwinInfo(id: $id, accountID: $accountID, gridVersion: $gridVersion, publicKey: $publicKey, relay: $relay, twinID: $twinID)';
   }
-
 }
 
-
-
-/*
-class TwinConnectionEdgeInfo {
+class TwinConnectionsEdgeInfo {
   String? cursor;
-  TwinInfo node;   
+  TwinInfo node;
 
-  TwinConnectionEdgeInfo({
+  TwinConnectionsEdgeInfo({
     this.cursor,
     required this.node,
   });
+
+  factory TwinConnectionsEdgeInfo.fromJson(Map<String, dynamic> json) {
+    return TwinConnectionsEdgeInfo(
+      cursor: json['cursor'] ?? '',
+      node: TwinInfo.fromJson(json['node']),
+    );
+  }
+
+  @override
+  String toString() {
+    return 'TwinConnectionEdgeInfo(cursor: $cursor, node: $node)';
+  }
 }
 
-
-class TwinConnection {
-  TwinConnectionEdgeInfo edges;
-  TwinConnectionPageInfo? pageInfo;
-  int? totalCount;
-
-  TwinConnectionEdgeInfo({
-    required this.edges,
-    this.pageInfo,
-    this.totalCount,
-  });
-}
-
-class TwinConnectionPageInfo {
+class TwinConnectionsPageInfo {
   String? endCursor;
   bool? hasNextPage;
   bool? hasPreviousPage;
   String? startCursor;
 
-  TwinConnectionPageInfo({
+  TwinConnectionsPageInfo({
     this.endCursor,
     this.hasNextPage,
     this.hasPreviousPage,
     this.startCursor,
   });
+
+  factory TwinConnectionsPageInfo.fromJson(Map<String, dynamic> json) {
+    return TwinConnectionsPageInfo(
+      endCursor: json['endCursor'] ?? "",
+      hasNextPage: json['hasNextPage'] ?? false,
+      hasPreviousPage: json['hasPreviousPage'] ?? false,
+      startCursor: json['startCursor'] ?? "",
+    );
+  }
+
+  @override
+  String toString() {
+    return 'TwinConnectionsPageInfo(endCursor: $endCursor, hasNextPage: $hasNextPage, '
+           'hasPreviousPage: $hasPreviousPage, startCursor: $startCursor)';
+  }
 }
-*/
+
+class TwinConnectionsInfo {
+  List<TwinConnectionsEdgeInfo>? edges;
+  TwinConnectionsPageInfo? pageInfo;
+  int? totalCount;
+
+  TwinConnectionsInfo({
+    this.edges,
+    this.pageInfo,
+    this.totalCount,
+  });
+
+  factory TwinConnectionsInfo.fromJson(Map<String, dynamic> json) {
+    return TwinConnectionsInfo(
+      edges: json['edges'] != null
+          ? (json['edges'] as List)
+              .map((i) => TwinConnectionsEdgeInfo.fromJson(i as Map<String, dynamic>))
+              .toList()
+          : null,
+      pageInfo: json['pageInfo'] != null
+          ? TwinConnectionsPageInfo.fromJson(json['pageInfo'] as Map<String, dynamic>)
+          : null,
+      totalCount: json['totalCount'] ?? 0,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'TwinConnectionsInfo(edges: $edges, pageInfo: $pageInfo, totalCount: $totalCount)';
+  }
+}
 
 
 
