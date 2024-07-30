@@ -30,28 +30,55 @@ String generateRandomString(int length) {
 
 String getIpFromInt32Value(int value) {
   return InternetAddress.fromRawAddress(
-          (ByteData(4)..setInt32(0, value, Endian.host)).buffer.asUint8List())
-      .address;
+    (ByteData(4)..setInt32(0, value, Endian.host)).buffer.asUint8List(),
+  ).address;
 }
 
-String generateRandomIPv4() {
+int getInt32FromIp(String ip) {
+  final segments = ip.split('.').map(int.parse).toList();
+  return (segments[0] << 24) |
+      (segments[1] << 16) |
+      (segments[2] << 8) |
+      segments[3];
+}
+
+bool isPublicIp(String ip) {
+  final segments = ip.split('.').map(int.parse).toList();
+  if (segments[0] == 10 ||
+      (segments[0] == 172 && segments[1] >= 16 && segments[1] <= 31) ||
+      (segments[0] == 192 && segments[1] == 168) ||
+      segments[0] == 127 ||
+      (segments[0] == 169 && segments[1] == 254)) {
+    return false;
+  }
+  return true;
+}
+
+String generateRandomPublicIPv4() {
   final random = Random();
-  final value = random.nextInt(0xFFFFFFFF);
-  return getIpFromInt32Value(value);
+  String ip;
+  do {
+    final value = random.nextInt(0xFFFFFFFF);
+    ip = getIpFromInt32Value(value);
+  } while (!isPublicIp(ip));
+  return ip;
 }
 
 String generateRandomCIDRIPv4() {
-  final ip = generateRandomIPv4();
+  final ip = generateRandomPublicIPv4();
   final subnet = Random().nextInt(16) + 16;
   return '$ip/$subnet';
 }
 
-String generateRandomGatewayIPv4(String ip) {
-  String gateway;
+String generateGatewayIPv4FromIp(String ip) {
+  final segments = ip.split('.').map(int.parse).toList();
+  final random = Random();
+  int newLastOctet;
   do {
-    gateway = generateRandomIPv4();
-  } while (gateway == ip);
-  return gateway;
+    newLastOctet = random.nextInt(255);
+  } while (newLastOctet == segments[3]);
+  segments[3] = newLastOctet;
+  return segments.join('.');
 }
 
 void sharedSetup() {

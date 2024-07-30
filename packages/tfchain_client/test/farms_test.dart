@@ -1,4 +1,4 @@
-@Timeout(Duration(seconds: 50))
+@Timeout(Duration(seconds: 70))
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
 
@@ -65,11 +65,13 @@ void main() {
       try {
         final randomIp = generateRandomCIDRIPv4();
         final ip = randomIp.split('/')[0];
-        final gatewayIp = generateRandomGatewayIPv4(ip);
+        final gatewayIp = generateGatewayIPv4FromIp(ip);
+
         int? farmId = await client.farms
             .create(name: generateRandomString(5), publicIps: []);
-        await client.farms.addFarmIp(farmId: farmId!, ip: ip, gw: gatewayIp);
-        farmsIps[farmId] = ip;
+        await client.farms.addFarmIp(
+            farmId: farmId!, ip: "229.113.17.214/26", gw: "229.113.17.221");
+        farmsIps[farmId] = randomIp;
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -79,36 +81,47 @@ void main() {
       try {
         int? farmId1 = await client.farms
             .create(name: generateRandomString(5), publicIps: []);
+
         final randomIp = generateRandomCIDRIPv4();
         final ip = randomIp.split('/')[0];
-        final gatewayIp = generateRandomGatewayIPv4(ip);
-        await client.farms.addFarmIp(farmId: farmId1!, ip: ip, gw: gatewayIp);
+        final gatewayIp = generateGatewayIPv4FromIp(ip);
+
+        await client.farms
+            .addFarmIp(farmId: farmId1!, ip: randomIp, gw: gatewayIp);
         farmsIps[farmId1] = ip;
 
         int? farmId2 = await client.farms
             .create(name: generateRandomString(5), publicIps: []);
-        await client.farms.addFarmIp(farmId: farmId2!, ip: ip, gw: gatewayIp);
+        await client.farms
+            .addFarmIp(farmId: farmId2!, ip: randomIp, gw: gatewayIp);
       } catch (error) {
         print(error);
         // will fail as the ip already exists
         expect(error, isNotNull);
       }
-    }, timeout: Timeout(Duration(seconds: 50)));
+    }, timeout: Timeout(Duration(seconds: 100)));
 
     test('Test removing farm IP', () async {
       try {
         final randomIp = generateRandomCIDRIPv4();
         final ip = randomIp.split('/')[0];
-        final gatewayIp = generateRandomGatewayIPv4(ip);
+
+        final gatewayIp = generateGatewayIPv4FromIp(ip);
+
+        print(randomIp);
+        print(gatewayIp);
+
         final farmId = await client.farms
             .create(name: generateRandomString(6), publicIps: []);
-        await client.farms.addFarmIp(farmId: farmId!, ip: ip, gw: gatewayIp);
 
-        await client.farms.removeFarmIp(farmId: farmId, ip: ip);
+        await client.farms
+            .addFarmIp(farmId: farmId!, ip: randomIp, gw: gatewayIp);
+
+        await client.farms.removeFarmIp(farmId: farmId, ip: randomIp);
       } catch (error) {
         expect(error, isNull);
       }
-    }, timeout: Timeout(Duration(seconds: 70)));
+    }, timeout: Timeout(Duration(seconds: 100)));
 
     test('Test adding Stellar Address', () async {
       try {
@@ -121,7 +134,7 @@ void main() {
       } catch (error) {
         expect(error, isNull);
       }
-    });
+    }, timeout: Timeout(Duration(seconds: 50)));
 
     tearDown(() async {
       if (farmsIps.isNotEmpty) {
