@@ -1,12 +1,12 @@
-import 'package:graphql_client/graphql_client.dart';
-import 'package:graphql_client/models/twins.dart';
+import '../graphql_client.dart';
+import '../models.dart';
 
 class TFTwins {
   final GraphQLClient gqlClient;
 
   TFTwins(this.gqlClient);
 
-  Future<List<TwinInfo>> Twins(
+  Future<List<TwinInfo>> twins(
       TwinReturnOptions? returnOptions, TwinQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
     final returnString = returnOptions?.toString() ?? "id \n";
@@ -19,6 +19,10 @@ query Twins {
     print(body);
     try {
       final response = await gqlClient.query(body);
+
+      if (response['data'] == null) throw Exception('Missing "data" field');
+      if (response['data']['twins'] == null)
+        throw Exception('Missing "twins" field');
       List<TwinInfo> twins =
           (response['data']['twins'] as List<dynamic>).map((twinsData) {
         return TwinInfo.fromJson(twinsData as Map<String, dynamic>);
@@ -27,11 +31,12 @@ query Twins {
       print(twins);
       return twins;
     } catch (err) {
-      throw err;
+      print(err.toString());
+      rethrow;
     }
   }
 
-  Future<TwinConnectionsInfo> TwinsConnections(
+  Future<TwinConnectionsInfo> twinsConnections(
       TwinConnectionsReturnOptions? returnOptions,
       TwinConnectionsQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
@@ -45,12 +50,15 @@ query Twins {
     try {
       print(body);
       final response = await gqlClient.query(body);
+      if (response['data'] == null) throw Exception('Missing "data" field');
+      if (response['data']['twinsConnection'] == null)
+        throw Exception('Missing "twinsConnection" field');
       TwinConnectionsInfo twinsConnection = TwinConnectionsInfo.fromJson(
           response['data']['twinsConnection'] as Map<String, dynamic>);
       print(twinsConnection);
       return twinsConnection;
     } catch (err) {
-      throw err;
+      rethrow;
     }
   }
 }

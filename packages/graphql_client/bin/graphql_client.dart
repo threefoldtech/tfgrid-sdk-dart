@@ -1,16 +1,9 @@
-import 'dart:ffi';
-
 import 'package:graphql_client/graphql_client.dart';
-import 'package:graphql_client/models/contracts.dart';
-import 'package:graphql_client/models/farms.dart';
-import 'package:graphql_client/src/contracts.dart';
-import 'package:graphql_client/models/twins.dart';
-import 'package:graphql_client/src/twins.dart';
+import 'package:graphql_client/models.dart';
 
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
-
-  await graphQLClient.twins.TwinsConnections(
+  await graphQLClient.twins.twinsConnections(
       TwinConnectionsReturnOptions(
           totalCount: true,
           edges: TwinConnectionsEdgeReturnOptions(
@@ -18,11 +11,13 @@ void main() async {
               node: TwinReturnOptions(accountID: true, gridVersion: true))),
       TwinConnectionsQueryOptions(
           whereOptions: TwinWhereOptions(gridVersionEq: 1),
-          orderby: OrderBy.gridVersion_ASC));
+          orderby: OrderBy.gridVersionAsc,
+          after: 3,
+          first: 3));
 
-  await graphQLClient.twins.Twins(
+  await graphQLClient.twins.twins(
     TwinReturnOptions(accountID: true, relay: true, twinID: true),
-    TwinQueryOptions(orderby: OrderBy.id_ASC, limit: 10),
+    TwinQueryOptions(orderby: OrderBy.idAsc, limit: 10),
   );
 
   //await graphQLClient.farms
