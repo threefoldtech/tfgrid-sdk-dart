@@ -10,7 +10,6 @@ void main() {
     });
     test('Test Get TFT price', () async {
       final price = await setupManager.client.price.get();
-      print(price);
       expect(price, isNotNull);
     });
   });

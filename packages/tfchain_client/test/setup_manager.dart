@@ -130,7 +130,7 @@ class SetupManager {
     print(_twinId);
   }
 
-  Future<void> teardown() async {
+  Future<void> teardownAll() async {
     await client.disconnect();
   }
 }
