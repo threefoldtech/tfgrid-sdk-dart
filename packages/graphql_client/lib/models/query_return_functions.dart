@@ -17,16 +17,3 @@ String addToReturnList(String returnOptions, String key, bool value) {
   }
   return returnOptions;
 }
-
-String QueryString(
-    String queryOptions, String? orderby, int? limit, int? offset) {
-  if (queryOptions == " " && orderby == null && limit == null && offset == null)
-    return "";
-  List<String> queryString = [];
-  print(queryOptions);
-  if (queryOptions != " ") queryString.add("where: {$queryOptions}");
-  if (orderby != null) queryString.add("orderBy: $orderby");
-  if (limit != null) queryString.add("limit: $limit");
-  if (offset != null) queryString.add("offset: $offset");
-  return "(${queryString.join(', ')})";
-}
