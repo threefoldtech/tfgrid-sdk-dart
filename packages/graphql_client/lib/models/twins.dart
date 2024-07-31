@@ -1,5 +1,6 @@
 import './query_return_functions.dart';
-enum  OrderBy {
+
+enum OrderBy {
   None,
   id_ASC,
   id_DESC,
@@ -121,7 +122,6 @@ class TwinWhereOptions {
   String? publicKeyEndsWith;
   String? publicKeyNotEndsWith;
 
-
   TwinWhereOptions({
     //ids
     this.idIsNull,
@@ -164,7 +164,7 @@ class TwinWhereOptions {
     this.twinIDIn,
     this.twinIDNotIn,
 
-    //account 
+    //account
     this.accountIDIsNull,
     this.accountIDEq,
     this.accountIDNotEq,
@@ -183,7 +183,7 @@ class TwinWhereOptions {
     this.accountIDEndsWith,
     this.accountIDNotEndsWith,
 
-    //relay 
+    //relay
     this.relayIsNull,
     this.relayEq,
     this.relayNotEq,
@@ -237,8 +237,10 @@ class TwinWhereOptions {
     addToQueryList(queryOptions, "id_not_in", idNotIn);
     addToQueryList(queryOptions, "id_contains", idContains);
     addToQueryList(queryOptions, "id_not_contains", idNotContains);
-    addToQueryList(queryOptions, "id_containsInsensitive", idContainsInsensitive);
-    addToQueryList(queryOptions, "id_not_containsInsensitive", idNotContainsInsensitive);
+    addToQueryList(
+        queryOptions, "id_containsInsensitive", idContainsInsensitive);
+    addToQueryList(
+        queryOptions, "id_not_containsInsensitive", idNotContainsInsensitive);
     addToQueryList(queryOptions, "id_startsWith", idStartsWith);
     addToQueryList(queryOptions, "id_not_startsWith", idNotStartsWith);
     addToQueryList(queryOptions, "id_endsWith", idEndsWith);
@@ -277,15 +279,20 @@ class TwinWhereOptions {
     addToQueryList(queryOptions, "accountID_in", accountIDIn);
     addToQueryList(queryOptions, "accountID_not_in", accountIDNotIn);
     addToQueryList(queryOptions, "accountID_contains", accountIDContains);
-    addToQueryList(queryOptions, "accountID_not_contains", accountIDNotContains);
-    addToQueryList(queryOptions, "accountID_containsInsensitive", accountIDContainsInsensitive);
-    addToQueryList(queryOptions, "accountID_not_containsInsensitive", accountIDNotContainsInsensitive);
+    addToQueryList(
+        queryOptions, "accountID_not_contains", accountIDNotContains);
+    addToQueryList(queryOptions, "accountID_containsInsensitive",
+        accountIDContainsInsensitive);
+    addToQueryList(queryOptions, "accountID_not_containsInsensitive",
+        accountIDNotContainsInsensitive);
     addToQueryList(queryOptions, "accountID_startsWith", accountIDStartsWith);
-    addToQueryList(queryOptions, "accountID_not_startsWith", accountIDNotStartsWith);
+    addToQueryList(
+        queryOptions, "accountID_not_startsWith", accountIDNotStartsWith);
     addToQueryList(queryOptions, "accountID_endsWith", accountIDEndsWith);
-    addToQueryList(queryOptions, "accountID_not_endsWith", accountIDNotEndsWith);
+    addToQueryList(
+        queryOptions, "accountID_not_endsWith", accountIDNotEndsWith);
 
-    //relay 
+    //relay
     addToQueryList(queryOptions, "relay_isNull", relayIsNull);
     addToQueryList(queryOptions, "relay_eq", relayEq);
     addToQueryList(queryOptions, "relay_not_eq", relayNotEq);
@@ -297,14 +304,16 @@ class TwinWhereOptions {
     addToQueryList(queryOptions, "relay_not_in", relayNotIn);
     addToQueryList(queryOptions, "relay_contains", relayContains);
     addToQueryList(queryOptions, "relay_not_contains", relayNotContains);
-    addToQueryList(queryOptions, "relay_containsInsensitive", relayContainsInsensitive);
-    addToQueryList(queryOptions, "relay_not_containsInsensitive", relayNotContainsInsensitive);
+    addToQueryList(
+        queryOptions, "relay_containsInsensitive", relayContainsInsensitive);
+    addToQueryList(queryOptions, "relay_not_containsInsensitive",
+        relayNotContainsInsensitive);
     addToQueryList(queryOptions, "relay_startsWith", relayStartsWith);
     addToQueryList(queryOptions, "relay_not_startsWith", relayNotStartsWith);
     addToQueryList(queryOptions, "relay_endsWith", relayEndsWith);
     addToQueryList(queryOptions, "relay_not_endsWith", relayNotEndsWith);
 
-    // public key 
+    // public key
     addToQueryList(queryOptions, "publicKey_isNull", publicKeyIsNull);
     addToQueryList(queryOptions, "publicKey_eq", publicKeyEq);
     addToQueryList(queryOptions, "publicKey_not_eq", publicKeyNotEq);
@@ -315,66 +324,78 @@ class TwinWhereOptions {
     addToQueryList(queryOptions, "publicKey_in", publicKeyIn);
     addToQueryList(queryOptions, "publicKey_not_in", publicKeyNotIn);
     addToQueryList(queryOptions, "publicKey_contains", publicKeyContains);
-    addToQueryList(queryOptions, "publicKey_not_contains", publicKeyNotContains);
-    addToQueryList(queryOptions, "publicKey_containsInsensitive", publicKeyContainsInsensitive);
-    addToQueryList(queryOptions, "publicKey_not_containsInsensitive", publicKeyNotContainsInsensitive);
+    addToQueryList(
+        queryOptions, "publicKey_not_contains", publicKeyNotContains);
+    addToQueryList(queryOptions, "publicKey_containsInsensitive",
+        publicKeyContainsInsensitive);
+    addToQueryList(queryOptions, "publicKey_not_containsInsensitive",
+        publicKeyNotContainsInsensitive);
     addToQueryList(queryOptions, "publicKey_startsWith", publicKeyStartsWith);
-    addToQueryList(queryOptions, "publicKey_not_startsWith", publicKeyNotStartsWith);
+    addToQueryList(
+        queryOptions, "publicKey_not_startsWith", publicKeyNotStartsWith);
     addToQueryList(queryOptions, "publicKey_endsWith", publicKeyEndsWith);
-    addToQueryList(queryOptions, "publicKey_not_endsWith", publicKeyNotEndsWith);
-
+    addToQueryList(
+        queryOptions, "publicKey_not_endsWith", publicKeyNotEndsWith);
 
     return queryOptions.isNotEmpty ? queryOptions.join(', ') : " ";
   }
 }
 
-class TwinQueryOptions{
+class TwinQueryOptions {
   OrderBy orderby;
   int? limit;
   int? offset;
   TwinWhereOptions? whereOptions;
 
-    TwinQueryOptions({
-    this.orderby=OrderBy.None,
-    this.limit=null,
-    this.offset=null,
+  TwinQueryOptions({
+    this.orderby = OrderBy.None,
+    this.limit = null,
+    this.offset = null,
     this.whereOptions,
-    });
+  });
   @override
   String toString() {
-  String? order= parseToString(orderby);
-  if((whereOptions!=null && whereOptions.toString()==" " ) && order==null && limit==null && offset==null) return "";
-  List<String> queryString = [];
-  if(whereOptions!=null && whereOptions.toString()==" ")queryString.add("where: {$whereOptions.toString()}");
-  if (order!= null) queryString.add("orderBy: $order");
-  if (limit!= null) queryString.add("limit: $limit");
-  if (offset!= null) queryString.add("offset: $offset");
-  return "(${queryString.join(', ')})";
+    String? order = parseToString(orderby);
+    if ((whereOptions != null && whereOptions.toString() == " ") &&
+        order == null &&
+        limit == null &&
+        offset == null) return "";
+    List<String> queryString = [];
+    if (whereOptions != null && whereOptions.toString() == " ")
+      queryString.add("where: {$whereOptions.toString()}");
+    if (order != null) queryString.add("orderBy: $order");
+    if (limit != null) queryString.add("limit: $limit");
+    if (offset != null) queryString.add("offset: $offset");
+    return "(${queryString.join(', ')})";
   }
 }
 
-class TwinConnectionsQueryOptions{
+class TwinConnectionsQueryOptions {
   OrderBy orderby;
   int? first;
   int? after;
   TwinWhereOptions? whereOptions;
 
-    TwinConnectionsQueryOptions({
-    this.orderby=OrderBy.id_ASC,
+  TwinConnectionsQueryOptions({
+    this.orderby = OrderBy.id_ASC,
     this.first,
     this.after,
     this.whereOptions,
-    });
+  });
   @override
   String toString() {
-      String? order= parseToString(orderby);
- if((whereOptions!=null && whereOptions.toString()==" " ) && order==null && first==null && after==null) return "";
-  List<String> queryString = [];
-  if(whereOptions!=null && whereOptions.toString()==" ")queryString.add("where: {$whereOptions.toString()}");
-  if (order!= null) queryString.add("orderBy: $order");
-  if (first!= null) queryString.add("first: $first");
-  if (after!= null) queryString.add('after: "$after"');
-  return "(${queryString.join(', ')})";
+    String? order = parseToString(orderby);
+    if ((whereOptions != null && whereOptions.toString() == " ") &&
+        order == null &&
+        first == null &&
+        after == null) return "";
+    List<String> queryString = [];
+    if (whereOptions != null && whereOptions.toString() == " ")
+      queryString.add("where: {$whereOptions.toString()}");
+    if (order != null) queryString.add("orderBy: $order");
+    if (first != null) queryString.add("first: $first");
+    if (after != null) queryString.add('after: "$after"');
+    return "(${queryString.join(', ')})";
   }
 }
 
@@ -387,7 +408,7 @@ class TwinReturnOptions {
   bool twinID;
 
   TwinReturnOptions({
-    this.id=false,
+    this.id = false,
     this.accountID = false,
     this.gridVersion = false,
     this.publicKey = false,
@@ -398,41 +419,39 @@ class TwinReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    returnOptions =addToReturnList(returnOptions ,"id" , id );
-    returnOptions =addToReturnList(returnOptions ,"accountID" , accountID );
-    returnOptions= addToReturnList(returnOptions ,"gridVersion" , gridVersion );
-    returnOptions= addToReturnList(returnOptions ,"publicKey" , publicKey );
-    returnOptions= addToReturnList(returnOptions ,"relay" , relay );
-    returnOptions=addToReturnList(returnOptions ,"twinID" , twinID );
-    if (returnOptions=="") returnOptions="id \n";
+    returnOptions = addToReturnList(returnOptions, "id", id);
+    returnOptions = addToReturnList(returnOptions, "accountID", accountID);
+    returnOptions = addToReturnList(returnOptions, "gridVersion", gridVersion);
+    returnOptions = addToReturnList(returnOptions, "publicKey", publicKey);
+    returnOptions = addToReturnList(returnOptions, "relay", relay);
+    returnOptions = addToReturnList(returnOptions, "twinID", twinID);
+    if (returnOptions == "") returnOptions = "id \n";
     return returnOptions;
   }
-
 }
 
 class TwinConnectionsEdgeReturnOptions {
   bool cursor;
   TwinReturnOptions? node;
- 
+
   TwinConnectionsEdgeReturnOptions({
-      this.cursor = false,
-      this.node=null,
-    });
+    this.cursor = false,
+    this.node = null,
+  });
 
   @override
   String toString() {
     String returnOptions = "";
-    if (!cursor && node==null) 
-      node= TwinReturnOptions(id: true);
+    if (!cursor && node == null) node = TwinReturnOptions(id: true);
 
-    returnOptions =addToReturnList(returnOptions ,"cursor" , cursor );
-    returnOptions= addToReturnList(returnOptions ,"node {" , node!=null);
-    returnOptions= addToReturnList(returnOptions , node.toString(), node!=null);
-    returnOptions= addToReturnList(returnOptions ,"} " , node!=null);
-    if (returnOptions!="") returnOptions= "edges { \n $returnOptions } \n";
+    returnOptions = addToReturnList(returnOptions, "cursor", cursor);
+    returnOptions = addToReturnList(returnOptions, "node {", node != null);
+    returnOptions =
+        addToReturnList(returnOptions, node.toString(), node != null);
+    returnOptions = addToReturnList(returnOptions, "} ", node != null);
+    if (returnOptions != "") returnOptions = "edges { \n $returnOptions } \n";
     return returnOptions;
   }
-
 }
 
 class TwinConnectionsPageReturnOptions {
@@ -440,32 +459,32 @@ class TwinConnectionsPageReturnOptions {
   bool hasNextPage;
   bool hasPreviousPage;
   bool startCursor;
- 
+
   TwinConnectionsPageReturnOptions({
-    this.endCursor=false,
-    this.hasNextPage=false,
-    this.hasPreviousPage=false,
-    this.startCursor=false,
+    this.endCursor = false,
+    this.hasNextPage = false,
+    this.hasPreviousPage = false,
+    this.startCursor = false,
   });
 
   @override
   String toString() {
     String returnOptions = "";
-    returnOptions =addToReturnList(returnOptions ,"endCursor" , endCursor );
-    returnOptions= addToReturnList(returnOptions ,"hasNextPage" , hasNextPage);
-    returnOptions= addToReturnList(returnOptions , "hasPreviousPage", hasPreviousPage);
-    returnOptions= addToReturnList(returnOptions ,"startCursor" , startCursor);
-    if (returnOptions!="") returnOptions= "pageInfo { \n $returnOptions } \n";
+    returnOptions = addToReturnList(returnOptions, "endCursor", endCursor);
+    returnOptions = addToReturnList(returnOptions, "hasNextPage", hasNextPage);
+    returnOptions =
+        addToReturnList(returnOptions, "hasPreviousPage", hasPreviousPage);
+    returnOptions = addToReturnList(returnOptions, "startCursor", startCursor);
+    if (returnOptions != "")
+      returnOptions = "pageInfo { \n $returnOptions } \n";
     return returnOptions;
   }
-
 }
 
 class TwinConnectionsReturnOptions {
   TwinConnectionsEdgeReturnOptions? edges;
   TwinConnectionsPageReturnOptions? pageInfo;
   bool totalCount;
-
 
   TwinConnectionsReturnOptions({
     this.edges,
@@ -476,11 +495,11 @@ class TwinConnectionsReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    if (edges!=null )returnOptions+=edges.toString();
-    if (pageInfo!=null )returnOptions+=pageInfo.toString();
-    returnOptions =addToReturnList(returnOptions ,"totalCount" , totalCount);
-    if(returnOptions=="") {
-      returnOptions+=''' 
+    if (edges != null) returnOptions += edges.toString();
+    if (pageInfo != null) returnOptions += pageInfo.toString();
+    returnOptions = addToReturnList(returnOptions, "totalCount", totalCount);
+    if (returnOptions == "") {
+      returnOptions += '''
       edges {
       node {
         id
@@ -490,7 +509,6 @@ class TwinConnectionsReturnOptions {
     }
     return returnOptions;
   }
-
 }
 
 class TwinInfo {
@@ -512,12 +530,12 @@ class TwinInfo {
 
   factory TwinInfo.fromJson(Map<String, dynamic> json) {
     return TwinInfo(
-     id: json['id'] ?? '',
-     accountID: json['accountID'] ?? '',
-     gridVersion: json['gridVersion'] ?? 0,
-     publicKey: json['publicKey'] ?? '',
-     relay: json['relay'] ?? '',
-     twinID: json['twinID'] ?? 0,
+      id: json['id'] ?? '',
+      accountID: json['accountID'] ?? '',
+      gridVersion: json['gridVersion'] ?? 0,
+      publicKey: json['publicKey'] ?? '',
+      relay: json['relay'] ?? '',
+      twinID: json['twinID'] ?? 0,
     );
   }
 
@@ -574,7 +592,7 @@ class TwinConnectionsPageInfo {
   @override
   String toString() {
     return 'TwinConnectionsPageInfo(endCursor: $endCursor, hasNextPage: $hasNextPage, '
-           'hasPreviousPage: $hasPreviousPage, startCursor: $startCursor)';
+        'hasPreviousPage: $hasPreviousPage, startCursor: $startCursor)';
   }
 }
 
@@ -593,11 +611,13 @@ class TwinConnectionsInfo {
     return TwinConnectionsInfo(
       edges: json['edges'] != null
           ? (json['edges'] as List)
-              .map((i) => TwinConnectionsEdgeInfo.fromJson(i as Map<String, dynamic>))
+              .map((i) =>
+                  TwinConnectionsEdgeInfo.fromJson(i as Map<String, dynamic>))
               .toList()
           : null,
       pageInfo: json['pageInfo'] != null
-          ? TwinConnectionsPageInfo.fromJson(json['pageInfo'] as Map<String, dynamic>)
+          ? TwinConnectionsPageInfo.fromJson(
+              json['pageInfo'] as Map<String, dynamic>)
           : null,
       totalCount: json['totalCount'] ?? 0,
     );
@@ -608,6 +628,3 @@ class TwinConnectionsInfo {
     return 'TwinConnectionsInfo(edges: $edges, pageInfo: $pageInfo, totalCount: $totalCount)';
   }
 }
-
-
-
