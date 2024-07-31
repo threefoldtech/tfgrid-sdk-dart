@@ -1,26 +1,52 @@
-import './query_return_functions.dart';
+part of '../models.dart';
 
 enum OrderBy {
-  None,
-  id_ASC,
-  id_DESC,
-  gridVersion_ASC,
-  gridVersion_DESC,
-  twinID_ASC,
-  twinID_DESC,
-  accountID_ASC,
-  accountID_DESC,
-  relay_ASC,
-  relay_DESC,
-  publicKey_ASC,
-  publicKey_DESC,
+  none,
+  idAsc,
+  idDesc,
+  gridVersionAsc,
+  gridVersionDesc,
+  twinIdAsc,
+  twinIdDesc,
+  accountIdAsc,
+  accountIdDesc,
+  relayAsc,
+  relayDesc,
+  publicKeyAsc,
+  publicKeyDesc,
 }
 
 String? parseToString(OrderBy orderby) {
-  if (orderby == OrderBy.None) {
-    return null;
+  switch (orderby) {
+    case OrderBy.none:
+      return null;
+    case OrderBy.idAsc:
+      return 'id_ASC';
+    case OrderBy.idDesc:
+      return 'id_DESC';
+    case OrderBy.gridVersionAsc:
+      return 'gridVersion_ASC';
+    case OrderBy.gridVersionDesc:
+      return 'gridVersion_DESC';
+    case OrderBy.twinIdAsc:
+      return 'twinID_ASC';
+    case OrderBy.twinIdDesc:
+      return 'twinID_DESC';
+    case OrderBy.accountIdAsc:
+      return 'accountID_ASC';
+    case OrderBy.accountIdDesc:
+      return 'accountID_DESC';
+    case OrderBy.relayAsc:
+      return 'relay_ASC';
+    case OrderBy.relayDesc:
+      return 'relay_DESC';
+    case OrderBy.publicKeyAsc:
+      return 'publicKey_ASC';
+    case OrderBy.publicKeyDesc:
+      return 'publicKey_DESC';
+    default:
+      return null;
   }
-  return orderby.toString().split('.').last;
 }
 
 class TwinWhereOptions {
@@ -226,115 +252,115 @@ class TwinWhereOptions {
   String toString() {
     List<String> queryOptions = [];
     //ids
-    addToQueryList(queryOptions, "id_isNull", idIsNull);
-    addToQueryList(queryOptions, "id_eq", idEq);
-    addToQueryList(queryOptions, "id_not_eq", idNotEq);
-    addToQueryList(queryOptions, "id_gt", idGt);
-    addToQueryList(queryOptions, "id_gte", idGte);
-    addToQueryList(queryOptions, "id_lt", idLt);
-    addToQueryList(queryOptions, "id_lte", idLte);
-    addToQueryList(queryOptions, "id_in", idIn);
-    addToQueryList(queryOptions, "id_not_in", idNotIn);
-    addToQueryList(queryOptions, "id_contains", idContains);
-    addToQueryList(queryOptions, "id_not_contains", idNotContains);
-    addToQueryList(
+    _addToQueryList(queryOptions, "id_isNull", idIsNull);
+    _addToQueryList(queryOptions, "id_eq", idEq);
+    _addToQueryList(queryOptions, "id_not_eq", idNotEq);
+    _addToQueryList(queryOptions, "id_gt", idGt);
+    _addToQueryList(queryOptions, "id_gte", idGte);
+    _addToQueryList(queryOptions, "id_lt", idLt);
+    _addToQueryList(queryOptions, "id_lte", idLte);
+    _addToQueryList(queryOptions, "id_in", idIn);
+    _addToQueryList(queryOptions, "id_not_in", idNotIn);
+    _addToQueryList(queryOptions, "id_contains", idContains);
+    _addToQueryList(queryOptions, "id_not_contains", idNotContains);
+    _addToQueryList(
         queryOptions, "id_containsInsensitive", idContainsInsensitive);
-    addToQueryList(
+    _addToQueryList(
         queryOptions, "id_not_containsInsensitive", idNotContainsInsensitive);
-    addToQueryList(queryOptions, "id_startsWith", idStartsWith);
-    addToQueryList(queryOptions, "id_not_startsWith", idNotStartsWith);
-    addToQueryList(queryOptions, "id_endsWith", idEndsWith);
-    addToQueryList(queryOptions, "id_not_endsWith", idNotEndsWith);
+    _addToQueryList(queryOptions, "id_startsWith", idStartsWith);
+    _addToQueryList(queryOptions, "id_not_startsWith", idNotStartsWith);
+    _addToQueryList(queryOptions, "id_endsWith", idEndsWith);
+    _addToQueryList(queryOptions, "id_not_endsWith", idNotEndsWith);
 
     //grid
-    addToQueryList(queryOptions, "gridVersion_isNull", gridVersionisNull);
-    addToQueryList(queryOptions, "gridVersion_eq", gridVersionEq);
-    addToQueryList(queryOptions, "gridVersion_not_eq", gridVersionNotEq);
-    addToQueryList(queryOptions, "gridVersion_gt", gridVersionGt);
-    addToQueryList(queryOptions, "gridVersion_gte", gridVersionGte);
-    addToQueryList(queryOptions, "gridVersion_lt", gridVersionLt);
-    addToQueryList(queryOptions, "gridVersion_lte", gridVersionLte);
-    addToQueryList(queryOptions, "gridVersion_in", gridVersionIn);
-    addToQueryList(queryOptions, "gridVersion_not_in", gridVersionNotIn);
+    _addToQueryList(queryOptions, "gridVersion_isNull", gridVersionisNull);
+    _addToQueryList(queryOptions, "gridVersion_eq", gridVersionEq);
+    _addToQueryList(queryOptions, "gridVersion_not_eq", gridVersionNotEq);
+    _addToQueryList(queryOptions, "gridVersion_gt", gridVersionGt);
+    _addToQueryList(queryOptions, "gridVersion_gte", gridVersionGte);
+    _addToQueryList(queryOptions, "gridVersion_lt", gridVersionLt);
+    _addToQueryList(queryOptions, "gridVersion_lte", gridVersionLte);
+    _addToQueryList(queryOptions, "gridVersion_in", gridVersionIn);
+    _addToQueryList(queryOptions, "gridVersion_not_in", gridVersionNotIn);
 
     //twins
-    addToQueryList(queryOptions, "twinID_isNull", twinIDIsNull);
-    addToQueryList(queryOptions, "twinID_eq", twinIDEq);
-    addToQueryList(queryOptions, "twinID_not_eq", twinIDNotEq);
-    addToQueryList(queryOptions, "twinID_gt", twinIDGt);
-    addToQueryList(queryOptions, "twinID_gte", twinIDGte);
-    addToQueryList(queryOptions, "twinID_lt", twinIDLt);
-    addToQueryList(queryOptions, "twinID_lte", twinIDLte);
-    addToQueryList(queryOptions, "twinID_in", twinIDIn);
-    addToQueryList(queryOptions, "twinID_not_in", twinIDNotIn);
+    _addToQueryList(queryOptions, "twinID_isNull", twinIDIsNull);
+    _addToQueryList(queryOptions, "twinID_eq", twinIDEq);
+    _addToQueryList(queryOptions, "twinID_not_eq", twinIDNotEq);
+    _addToQueryList(queryOptions, "twinID_gt", twinIDGt);
+    _addToQueryList(queryOptions, "twinID_gte", twinIDGte);
+    _addToQueryList(queryOptions, "twinID_lt", twinIDLt);
+    _addToQueryList(queryOptions, "twinID_lte", twinIDLte);
+    _addToQueryList(queryOptions, "twinID_in", twinIDIn);
+    _addToQueryList(queryOptions, "twinID_not_in", twinIDNotIn);
 
     //accounts
-    addToQueryList(queryOptions, "accountID_isNull", accountIDIsNull);
-    addToQueryList(queryOptions, "accountID_eq", accountIDEq);
-    addToQueryList(queryOptions, "accountID_not_eq", accountIDNotEq);
-    addToQueryList(queryOptions, "accountID_gt", accountIDGt);
-    addToQueryList(queryOptions, "accountID_gte", accountIDGte);
-    addToQueryList(queryOptions, "accountID_lt", accountIDLt);
-    addToQueryList(queryOptions, "accountID_lte", accountIDLte);
-    addToQueryList(queryOptions, "accountID_in", accountIDIn);
-    addToQueryList(queryOptions, "accountID_not_in", accountIDNotIn);
-    addToQueryList(queryOptions, "accountID_contains", accountIDContains);
-    addToQueryList(
+    _addToQueryList(queryOptions, "accountID_isNull", accountIDIsNull);
+    _addToQueryList(queryOptions, "accountID_eq", accountIDEq);
+    _addToQueryList(queryOptions, "accountID_not_eq", accountIDNotEq);
+    _addToQueryList(queryOptions, "accountID_gt", accountIDGt);
+    _addToQueryList(queryOptions, "accountID_gte", accountIDGte);
+    _addToQueryList(queryOptions, "accountID_lt", accountIDLt);
+    _addToQueryList(queryOptions, "accountID_lte", accountIDLte);
+    _addToQueryList(queryOptions, "accountID_in", accountIDIn);
+    _addToQueryList(queryOptions, "accountID_not_in", accountIDNotIn);
+    _addToQueryList(queryOptions, "accountID_contains", accountIDContains);
+    _addToQueryList(
         queryOptions, "accountID_not_contains", accountIDNotContains);
-    addToQueryList(queryOptions, "accountID_containsInsensitive",
+    _addToQueryList(queryOptions, "accountID_containsInsensitive",
         accountIDContainsInsensitive);
-    addToQueryList(queryOptions, "accountID_not_containsInsensitive",
+    _addToQueryList(queryOptions, "accountID_not_containsInsensitive",
         accountIDNotContainsInsensitive);
-    addToQueryList(queryOptions, "accountID_startsWith", accountIDStartsWith);
-    addToQueryList(
+    _addToQueryList(queryOptions, "accountID_startsWith", accountIDStartsWith);
+    _addToQueryList(
         queryOptions, "accountID_not_startsWith", accountIDNotStartsWith);
-    addToQueryList(queryOptions, "accountID_endsWith", accountIDEndsWith);
-    addToQueryList(
+    _addToQueryList(queryOptions, "accountID_endsWith", accountIDEndsWith);
+    _addToQueryList(
         queryOptions, "accountID_not_endsWith", accountIDNotEndsWith);
 
     //relay
-    addToQueryList(queryOptions, "relay_isNull", relayIsNull);
-    addToQueryList(queryOptions, "relay_eq", relayEq);
-    addToQueryList(queryOptions, "relay_not_eq", relayNotEq);
-    addToQueryList(queryOptions, "relay_gt", relayGt);
-    addToQueryList(queryOptions, "relay_gte", relayGte);
-    addToQueryList(queryOptions, "relay_lt", relayLt);
-    addToQueryList(queryOptions, "relay_lte", relayLte);
-    addToQueryList(queryOptions, "relay_in", relayIn);
-    addToQueryList(queryOptions, "relay_not_in", relayNotIn);
-    addToQueryList(queryOptions, "relay_contains", relayContains);
-    addToQueryList(queryOptions, "relay_not_contains", relayNotContains);
-    addToQueryList(
+    _addToQueryList(queryOptions, "relay_isNull", relayIsNull);
+    _addToQueryList(queryOptions, "relay_eq", relayEq);
+    _addToQueryList(queryOptions, "relay_not_eq", relayNotEq);
+    _addToQueryList(queryOptions, "relay_gt", relayGt);
+    _addToQueryList(queryOptions, "relay_gte", relayGte);
+    _addToQueryList(queryOptions, "relay_lt", relayLt);
+    _addToQueryList(queryOptions, "relay_lte", relayLte);
+    _addToQueryList(queryOptions, "relay_in", relayIn);
+    _addToQueryList(queryOptions, "relay_not_in", relayNotIn);
+    _addToQueryList(queryOptions, "relay_contains", relayContains);
+    _addToQueryList(queryOptions, "relay_not_contains", relayNotContains);
+    _addToQueryList(
         queryOptions, "relay_containsInsensitive", relayContainsInsensitive);
-    addToQueryList(queryOptions, "relay_not_containsInsensitive",
+    _addToQueryList(queryOptions, "relay_not_containsInsensitive",
         relayNotContainsInsensitive);
-    addToQueryList(queryOptions, "relay_startsWith", relayStartsWith);
-    addToQueryList(queryOptions, "relay_not_startsWith", relayNotStartsWith);
-    addToQueryList(queryOptions, "relay_endsWith", relayEndsWith);
-    addToQueryList(queryOptions, "relay_not_endsWith", relayNotEndsWith);
+    _addToQueryList(queryOptions, "relay_startsWith", relayStartsWith);
+    _addToQueryList(queryOptions, "relay_not_startsWith", relayNotStartsWith);
+    _addToQueryList(queryOptions, "relay_endsWith", relayEndsWith);
+    _addToQueryList(queryOptions, "relay_not_endsWith", relayNotEndsWith);
 
     // public key
-    addToQueryList(queryOptions, "publicKey_isNull", publicKeyIsNull);
-    addToQueryList(queryOptions, "publicKey_eq", publicKeyEq);
-    addToQueryList(queryOptions, "publicKey_not_eq", publicKeyNotEq);
-    addToQueryList(queryOptions, "publicKey_gt", publicKeyGt);
-    addToQueryList(queryOptions, "publicKey_gte", publicKeyGte);
-    addToQueryList(queryOptions, "publicKey_lt", publicKeyLt);
-    addToQueryList(queryOptions, "publicKey_lte", publicKeyLte);
-    addToQueryList(queryOptions, "publicKey_in", publicKeyIn);
-    addToQueryList(queryOptions, "publicKey_not_in", publicKeyNotIn);
-    addToQueryList(queryOptions, "publicKey_contains", publicKeyContains);
-    addToQueryList(
+    _addToQueryList(queryOptions, "publicKey_isNull", publicKeyIsNull);
+    _addToQueryList(queryOptions, "publicKey_eq", publicKeyEq);
+    _addToQueryList(queryOptions, "publicKey_not_eq", publicKeyNotEq);
+    _addToQueryList(queryOptions, "publicKey_gt", publicKeyGt);
+    _addToQueryList(queryOptions, "publicKey_gte", publicKeyGte);
+    _addToQueryList(queryOptions, "publicKey_lt", publicKeyLt);
+    _addToQueryList(queryOptions, "publicKey_lte", publicKeyLte);
+    _addToQueryList(queryOptions, "publicKey_in", publicKeyIn);
+    _addToQueryList(queryOptions, "publicKey_not_in", publicKeyNotIn);
+    _addToQueryList(queryOptions, "publicKey_contains", publicKeyContains);
+    _addToQueryList(
         queryOptions, "publicKey_not_contains", publicKeyNotContains);
-    addToQueryList(queryOptions, "publicKey_containsInsensitive",
+    _addToQueryList(queryOptions, "publicKey_containsInsensitive",
         publicKeyContainsInsensitive);
-    addToQueryList(queryOptions, "publicKey_not_containsInsensitive",
+    _addToQueryList(queryOptions, "publicKey_not_containsInsensitive",
         publicKeyNotContainsInsensitive);
-    addToQueryList(queryOptions, "publicKey_startsWith", publicKeyStartsWith);
-    addToQueryList(
+    _addToQueryList(queryOptions, "publicKey_startsWith", publicKeyStartsWith);
+    _addToQueryList(
         queryOptions, "publicKey_not_startsWith", publicKeyNotStartsWith);
-    addToQueryList(queryOptions, "publicKey_endsWith", publicKeyEndsWith);
-    addToQueryList(
+    _addToQueryList(queryOptions, "publicKey_endsWith", publicKeyEndsWith);
+    _addToQueryList(
         queryOptions, "publicKey_not_endsWith", publicKeyNotEndsWith);
 
     return queryOptions.isNotEmpty ? queryOptions.join(', ') : " ";
@@ -348,9 +374,9 @@ class TwinQueryOptions {
   TwinWhereOptions? whereOptions;
 
   TwinQueryOptions({
-    this.orderby = OrderBy.None,
-    this.limit = null,
-    this.offset = null,
+    this.orderby = OrderBy.none,
+    this.limit,
+    this.offset,
     this.whereOptions,
   });
   @override
@@ -361,8 +387,9 @@ class TwinQueryOptions {
         limit == null &&
         offset == null) return "";
     List<String> queryString = [];
-    if (whereOptions != null && whereOptions.toString() == " ")
+    if (whereOptions != null && whereOptions.toString() == " ") {
       queryString.add("where: {$whereOptions.toString()}");
+    }
     if (order != null) queryString.add("orderBy: $order");
     if (limit != null) queryString.add("limit: $limit");
     if (offset != null) queryString.add("offset: $offset");
@@ -377,7 +404,7 @@ class TwinConnectionsQueryOptions {
   TwinWhereOptions? whereOptions;
 
   TwinConnectionsQueryOptions({
-    this.orderby = OrderBy.id_ASC,
+    this.orderby = OrderBy.idAsc,
     this.first,
     this.after,
     this.whereOptions,
@@ -390,8 +417,9 @@ class TwinConnectionsQueryOptions {
         first == null &&
         after == null) return "";
     List<String> queryString = [];
-    if (whereOptions != null && whereOptions.toString() == " ")
+    if (whereOptions != null && whereOptions.toString() == " ") {
       queryString.add("where: {$whereOptions.toString()}");
+    }
     if (order != null) queryString.add("orderBy: $order");
     if (first != null) queryString.add("first: $first");
     if (after != null) queryString.add('after: "$after"');
@@ -419,12 +447,12 @@ class TwinReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    returnOptions = addToReturnList(returnOptions, "id", id);
-    returnOptions = addToReturnList(returnOptions, "accountID", accountID);
-    returnOptions = addToReturnList(returnOptions, "gridVersion", gridVersion);
-    returnOptions = addToReturnList(returnOptions, "publicKey", publicKey);
-    returnOptions = addToReturnList(returnOptions, "relay", relay);
-    returnOptions = addToReturnList(returnOptions, "twinID", twinID);
+    returnOptions = _addToReturnList(returnOptions, "id", id);
+    returnOptions = _addToReturnList(returnOptions, "accountID", accountID);
+    returnOptions = _addToReturnList(returnOptions, "gridVersion", gridVersion);
+    returnOptions = _addToReturnList(returnOptions, "publicKey", publicKey);
+    returnOptions = _addToReturnList(returnOptions, "relay", relay);
+    returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
     if (returnOptions == "") returnOptions = "id \n";
     return returnOptions;
   }
@@ -436,7 +464,7 @@ class TwinConnectionsEdgeReturnOptions {
 
   TwinConnectionsEdgeReturnOptions({
     this.cursor = false,
-    this.node = null,
+    this.node,
   });
 
   @override
@@ -444,11 +472,11 @@ class TwinConnectionsEdgeReturnOptions {
     String returnOptions = "";
     if (!cursor && node == null) node = TwinReturnOptions(id: true);
 
-    returnOptions = addToReturnList(returnOptions, "cursor", cursor);
-    returnOptions = addToReturnList(returnOptions, "node {", node != null);
+    returnOptions = _addToReturnList(returnOptions, "cursor", cursor);
+    returnOptions = _addToReturnList(returnOptions, "node {", node != null);
     returnOptions =
-        addToReturnList(returnOptions, node.toString(), node != null);
-    returnOptions = addToReturnList(returnOptions, "} ", node != null);
+        _addToReturnList(returnOptions, node.toString(), node != null);
+    returnOptions = _addToReturnList(returnOptions, "} ", node != null);
     if (returnOptions != "") returnOptions = "edges { \n $returnOptions } \n";
     return returnOptions;
   }
@@ -470,13 +498,14 @@ class TwinConnectionsPageReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    returnOptions = addToReturnList(returnOptions, "endCursor", endCursor);
-    returnOptions = addToReturnList(returnOptions, "hasNextPage", hasNextPage);
+    returnOptions = _addToReturnList(returnOptions, "endCursor", endCursor);
+    returnOptions = _addToReturnList(returnOptions, "hasNextPage", hasNextPage);
     returnOptions =
-        addToReturnList(returnOptions, "hasPreviousPage", hasPreviousPage);
-    returnOptions = addToReturnList(returnOptions, "startCursor", startCursor);
-    if (returnOptions != "")
+        _addToReturnList(returnOptions, "hasPreviousPage", hasPreviousPage);
+    returnOptions = _addToReturnList(returnOptions, "startCursor", startCursor);
+    if (returnOptions != "") {
       returnOptions = "pageInfo { \n $returnOptions } \n";
+    }
     return returnOptions;
   }
 }
@@ -497,7 +526,7 @@ class TwinConnectionsReturnOptions {
     String returnOptions = "";
     if (edges != null) returnOptions += edges.toString();
     if (pageInfo != null) returnOptions += pageInfo.toString();
-    returnOptions = addToReturnList(returnOptions, "totalCount", totalCount);
+    returnOptions = _addToReturnList(returnOptions, "totalCount", totalCount);
     if (returnOptions == "") {
       returnOptions += '''
       edges {
