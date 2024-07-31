@@ -46,24 +46,4 @@ void main() {
       }
     });
   });
-
-  // group("Bridge Test", () {
-  //   sharedSetup();
-
-  //   // test('Test swap to stellar', () async {
-  //   //   try {
-  //   //     await client.bridge
-  //   //         .swapToStellar(target: stellarAddress, amount: BigInt.from(5));
-  //   //   } catch (error) {
-  //   //     expect(
-  //   //       error,
-  //   //       Null,
-  //   //     );
-  //   //   }
-  //   // });
-
-  //   // tearDownAll(() async {
-  //   //   await client.disconnect();
-  //   // });
-  // });
 }
