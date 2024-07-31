@@ -7,7 +7,6 @@ import 'setup_manager.dart';
 
 void main() {
   group("Contracts Tests", () {
-    // sharedSetup();
     final setupManager = SetupManager();
     setUpAll(() async {
       await setupManager.setup();

@@ -4,7 +4,6 @@ import 'setup_manager.dart';
 
 void main() {
   group("Price Tests", () {
-    // sharedSetup();
     final setupManager = SetupManager();
     setUpAll(() async {
       await setupManager.setup();

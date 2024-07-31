@@ -5,7 +5,6 @@ import 'setup_manager.dart';
 
 void main() {
   group("Query Pricing Policies", () {
-    // sharedSetup();
     final setupManager = SetupManager();
     setUpAll(() async {
       await setupManager.setup();

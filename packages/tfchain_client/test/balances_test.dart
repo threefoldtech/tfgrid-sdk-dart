@@ -9,7 +9,6 @@ import 'setup_manager.dart';
 
 void main() {
   group("Balances Tests", () {
-    // sharedSetup();
     final setupManager = SetupManager();
     setUpAll(() async {
       await setupManager.setup();

@@ -6,7 +6,6 @@ import 'setup_manager.dart';
 
 void main() {
   group("Bridge Tests", () {
-    // sharedSetup();
     final setupManager = SetupManager();
     setUpAll(() async {
       await setupManager.setup();
