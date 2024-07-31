@@ -15,6 +15,7 @@ void main() {
       await setupManager.setup();
     });
     late final String recipientAddress;
+    late final Client alice;
 
     setUpAll(() async {
       final mnemonic = bip39.generateMnemonic();
@@ -23,7 +24,7 @@ void main() {
       await recipientClient.connect();
 
       recipientAddress = recipientClient.address;
-      Client alice = Client(setupManager.url, "//Alice", setupManager.type);
+      alice = Client(setupManager.url, "//Alice", setupManager.type);
       await alice.connect();
 
       await alice.balances.transfer(
