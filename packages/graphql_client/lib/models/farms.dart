@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 import 'package:graphql_client/models/public_ips.dart';
 import 'package:graphql_client/models/query_return_functions.dart';
 
