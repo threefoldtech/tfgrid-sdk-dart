@@ -5,6 +5,7 @@ import 'package:graphql_client/models/public_ips.dart';
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
+
   final FarmsReturnOptions farmsReturnOptions = FarmsReturnOptions(
     farmID: true,
     publicIps: PublicIpsReturnOptions(contractId: true),
@@ -17,9 +18,5 @@ void main() async {
   Future<List<FarmInfo>> listFarms =
       graphQLClient.farms.listFarms(farmsQueryOptions, farmsReturnOptions);
 
-  listFarms.then((farms) {
-    for (var farm in farms) {
-      print(farm);
-    }
-  });
+
 }
