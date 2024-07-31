@@ -6,7 +6,6 @@ import 'setup_manager.dart';
 
 void main() {
   group("Farms Test", () {
-    // sharedSetup();
     Map<int, String> farmsIps = {};
     final setupManager = SetupManager();
     setUpAll(() async {

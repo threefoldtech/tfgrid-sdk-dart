@@ -18,7 +18,6 @@ import 'setup_manager.dart';
 void main() {
   group('Query Client Tests', () {
     late QueryClient queryClient;
-    // sharedSetup();
     final setupManager = SetupManager();
     setUpAll(() async {
       await setupManager.setup();
@@ -55,7 +54,6 @@ void main() {
   });
 
   group("Full Client Tests", () {
-    // sharedSetup();
     final setupManager = SetupManager();
     setUpAll(() async {
       await setupManager.setup();
