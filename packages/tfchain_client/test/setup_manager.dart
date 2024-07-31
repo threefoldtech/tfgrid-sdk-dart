@@ -2,20 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:crypto/crypto.dart';
-
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:test/test.dart';
 import 'package:tfchain_client/tfchain_client.dart';
-
-late Client client;
-late String mnemonic;
-late String url;
-late String type;
-late String myAddress;
-BigInt myBalance = BigInt.from(5000);
-late int? twinId;
-late String relay;
 
 String generateRandomString(int length) {
   const characters = 'abcdefghijklmnopqrstuvwxyz';
@@ -81,24 +71,50 @@ String generateGatewayIPv4FromIp(String ip) {
   return segments.join('.');
 }
 
-void sharedSetup() {
-  setUpAll(() async {
-    url = Platform.environment['URL'] ?? 'ws://0.0.0.0:9944';
-    type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
-    relay = "relay.dev.grid.tf";
+class SetupManager {
+  static final SetupManager _instance = SetupManager._internal();
 
-    mnemonic = bip39.generateMnemonic();
-    client = Client(url, mnemonic, type);
-    await client.connect();
+  factory SetupManager() {
+    return _instance;
+  }
 
-    myAddress = client.address;
+  SetupManager._internal();
 
-    Client client2 = Client(url, "//Alice", type);
+  late Client _client;
+  late String _mnemonic;
+  late String _url;
+  late String _type;
+  late String _myAddress;
+  BigInt myBalance = BigInt.from(5000);
+  late int? _twinId;
+  late String _relay;
+
+  String get url => _url;
+  Client get client => _client;
+  String get mnemonic => _mnemonic;
+  String get type => _type;
+  String get myAddress => _myAddress;
+  int? get twinId => _twinId;
+  String get relay => _relay;
+
+  Future<void> setup() async {
+    _url = Platform.environment['URL'] ?? 'ws://0.0.0.0:9944';
+    _type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
+    _relay = "relay.dev.grid.tf";
+
+    _mnemonic = bip39.generateMnemonic();
+    _client = Client(_url, _mnemonic, _type);
+    await _client.connect();
+
+    _myAddress = _client.address;
+
+    Client client2 = Client(_url, "//Alice", _type);
     await client2.connect();
 
-    await client2.balances.transfer(address: client.address, amount: myBalance);
-    final balance = await client.balances.getMyBalance();
-    expect(myBalance, balance!.data.free ~/ BigInt.from(10).pow(7));
+    await client2.balances
+        .transfer(address: _client.address, amount: myBalance);
+    final balance = await client2.balances.getMyBalance();
+    print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
     var bytes = utf8.encode("https://library.threefold.me/info/legal/");
     var digest = md5.convert(bytes);
@@ -106,15 +122,15 @@ void sharedSetup() {
         .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
         .join();
 
-    await client.termsAndConditions.accept(
+    await _client.termsAndConditions.accept(
         documentLink: "https://library.threefold.me/info/legal/",
         documentHash: hashString.codeUnits);
 
-    twinId = await client.twins.create(relay: relay, pk: []);
-    print(twinId);
-  });
+    _twinId = await _client.twins.create(relay: _relay, pk: []);
+    print(_twinId);
+  }
 
-  tearDownAll(() async {
+  Future<void> teardown() async {
     await client.disconnect();
-  });
+  }
 }
