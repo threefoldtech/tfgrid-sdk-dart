@@ -10,20 +10,23 @@ import 'package:graphql_client/src/twins.dart';
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  
-    await graphQLClient.twins
-      .TwinsConnections(TwinConnectionsReturnOptions(totalCount: true,
-      edges:TwinConnectionsEdgeReturnOptions(cursor: true, node: TwinReturnOptions(accountID: true, gridVersion: true))), 
-      TwinConnectionsQueryOptions(whereOptions: TwinWhereOptions(gridVersionEq: 1), orderby: OrderBy.gridVersion_ASC));
+  await graphQLClient.twins.TwinsConnections(
+      TwinConnectionsReturnOptions(
+          totalCount: true,
+          edges: TwinConnectionsEdgeReturnOptions(
+              cursor: true,
+              node: TwinReturnOptions(accountID: true, gridVersion: true))),
+      TwinConnectionsQueryOptions(
+          whereOptions: TwinWhereOptions(gridVersionEq: 1),
+          orderby: OrderBy.gridVersion_ASC));
 
-    await graphQLClient.twins
-      .Twins(TwinReturnOptions(accountID: true , relay:true , twinID: true),
-      TwinQueryOptions(orderby: OrderBy.id_ASC , limit: 10),);
-  
+  await graphQLClient.twins.Twins(
+    TwinReturnOptions(accountID: true, relay: true, twinID: true),
+    TwinQueryOptions(orderby: OrderBy.id_ASC, limit: 10),
+  );
 
   //await graphQLClient.farms
-      //.listFarmsByTwinId(ListFarmsByTwinIdOptions(twinId: 214));
-  
+  //.listFarmsByTwinId(ListFarmsByTwinIdOptions(twinId: 214));
 
   // final contracts = await graphQLClient.contracts
   //     .listContractsByTwinId(ListContractByTwinIdOptions(twinId: 5110));
