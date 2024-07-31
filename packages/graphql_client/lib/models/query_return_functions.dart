@@ -2,7 +2,7 @@ part of '../models.dart';
 
 void _addToQueryList(List<String> list, String key, dynamic value) {
   switch (value.runtimeType) {
-    case String:
+    case const (String):
       list.add('$key: "$value"');
       break;
     case const (List<String>):
