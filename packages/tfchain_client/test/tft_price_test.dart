@@ -1,13 +1,16 @@
 import 'package:test/test.dart';
 
-import 'shared_setup.dart';
+import 'setup_manager.dart';
 
 void main() {
   group("Price Tests", () {
-    sharedSetup();
-
+    // sharedSetup();
+    final setupManager = SetupManager();
+    setUpAll(() async {
+      await setupManager.setup();
+    });
     test('Test Get TFT price', () async {
-      final price = await client.price.get();
+      final price = await setupManager.client.price.get();
       print(price);
       expect(price, isNotNull);
     });

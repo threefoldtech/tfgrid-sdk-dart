@@ -5,34 +5,41 @@ import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dar
 import 'package:tfchain_client/tfchain_client.dart';
 import 'package:bip39/bip39.dart' as bip39;
 
-import 'shared_setup.dart';
+import 'setup_manager.dart';
 
 void main() {
   group("Balances Tests", () {
-    sharedSetup();
+    // sharedSetup();
+    final setupManager = SetupManager();
+    setUpAll(() async {
+      await setupManager.setup();
+    });
     late final String recipientAddress;
 
     setUpAll(() async {
       final mnemonic = bip39.generateMnemonic();
-      final recipientClient = Client(url, mnemonic, type);
+      final recipientClient =
+          Client(setupManager.url, mnemonic, setupManager.type);
       await recipientClient.connect();
 
       recipientAddress = recipientClient.address;
-      Client alice = Client(url, "//Alice", type);
+      Client alice = Client(setupManager.url, "//Alice", setupManager.type);
       await alice.connect();
 
-      await alice.balances.transfer(address: client.address, amount: myBalance);
+      await alice.balances.transfer(
+          address: setupManager.client.address, amount: setupManager.myBalance);
     });
 
     test('Test Get Balance', () async {
-      AccountInfo? accountInfo = await client.balances.get(address: myAddress);
+      AccountInfo? accountInfo = await setupManager.client.balances
+          .get(address: setupManager.myAddress);
       expect(accountInfo, isNotNull);
     });
 
     test('Test Get Balance with Invalid address', () async {
       try {
         AccountInfo? accountInfo =
-            await client.balances.get(address: "invalidAddress");
+            await setupManager.client.balances.get(address: "invalidAddress");
         expect(accountInfo, isNull);
       } catch (error) {
         expect(error, isNotNull);
@@ -41,7 +48,7 @@ void main() {
 
     test('Test Transfer TFTs with invalid amount', () async {
       try {
-        await client.balances
+        await setupManager.client.balances
             .transfer(address: recipientAddress, amount: BigInt.zero);
       } catch (error) {
         expect(error, isNotNull);
@@ -53,12 +60,12 @@ void main() {
         var random = Random();
         var randomNumber = random.nextInt(1000) + 1;
         AccountInfo? before =
-            await client.balances.get(address: recipientAddress);
-        await client.balances.transfer(
+            await setupManager.client.balances.get(address: recipientAddress);
+        await setupManager.client.balances.transfer(
             address: recipientAddress, amount: BigInt.from(randomNumber));
 
         AccountInfo? after =
-            await client.balances.get(address: recipientAddress);
+            await setupManager.client.balances.get(address: recipientAddress);
         final diff = after!.data.free / BigInt.from(10).pow(7) -
             before!.data.free / BigInt.from(10).pow(7);
 
@@ -69,7 +76,7 @@ void main() {
     });
 
     test('Test get my balance', () async {
-      AccountInfo? info = await client.balances.getMyBalance();
+      AccountInfo? info = await setupManager.client.balances.getMyBalance();
       expect(info, isNotNull);
     });
   });
