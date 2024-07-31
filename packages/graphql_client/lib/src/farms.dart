@@ -1,6 +1,5 @@
 import 'package:graphql_client/graphql_client.dart';
-import 'package:graphql_client/models/farms.dart';
-import 'package:graphql_client/models/public_ips.dart';
+import '../models.dart';
 
 class TFFarms {
   final GraphQLClient gqlClient;

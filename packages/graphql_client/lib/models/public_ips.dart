@@ -1,4 +1,4 @@
-import 'package:graphql_client/models/query_return_functions.dart';
+part of '../models.dart';
 
 class PublicIpsInfo {
   String id;
@@ -37,9 +37,9 @@ class PublicIpsReturnOptions {
   @override
   String toString() {
     String returnOptions = "id \n";
-    returnOptions = addToReturnList(returnOptions, "contractId", contractId);
-    returnOptions = addToReturnList(returnOptions, "ip", ip);
-    returnOptions = addToReturnList(returnOptions, "gateway", gateway);
+    returnOptions = _addToReturnList(returnOptions, "contractId", contractId);
+    returnOptions = _addToReturnList(returnOptions, "ip", ip);
+    returnOptions = _addToReturnList(returnOptions, "gateway", gateway);
     return returnOptions;
   }
 }

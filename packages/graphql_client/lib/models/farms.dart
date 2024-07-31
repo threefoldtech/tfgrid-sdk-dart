@@ -1,5 +1,6 @@
-import 'package:graphql_client/models/public_ips.dart';
-import 'package:graphql_client/models/query_return_functions.dart';
+// ignore_for_file: constant_identifier_names
+
+part of '../models.dart';
 
 enum OrderByOptions {
   id_ASC,
@@ -51,22 +52,22 @@ class FarmsReturnOptions {
   @override
   String toString() {
     String returnOptions = "id \n";
-    returnOptions = addToReturnList(returnOptions, "farmID", farmID);
-    returnOptions = addToReturnList(returnOptions, "name", name);
+    returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
+    returnOptions = _addToReturnList(returnOptions, "name", name);
     returnOptions =
-        addToReturnList(returnOptions, "certification", certification);
+        _addToReturnList(returnOptions, "certification", certification);
     returnOptions =
-        addToReturnList(returnOptions, "dedicatedFarm", dedicatedFarm);
+        _addToReturnList(returnOptions, "dedicatedFarm", dedicatedFarm);
     returnOptions =
-        addToReturnList(returnOptions, "pricingPolicyID", pricingPolicyID);
+        _addToReturnList(returnOptions, "pricingPolicyID", pricingPolicyID);
     returnOptions =
-        addToReturnList(returnOptions, "stellarAddress", stellarAddress);
-    returnOptions = addToReturnList(returnOptions, "twinID", twinID);
+        _addToReturnList(returnOptions, "stellarAddress", stellarAddress);
+    returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
     returnOptions =
-        addToReturnList(returnOptions, "publicIPs {", publicIps != null);
-    returnOptions =
-        addToReturnList(returnOptions, publicIps.toString(), publicIps != null);
-    returnOptions = addToReturnList(returnOptions, "}", publicIps != null);
+        _addToReturnList(returnOptions, "publicIPs {", publicIps != null);
+    returnOptions = _addToReturnList(
+        returnOptions, publicIps.toString(), publicIps != null);
+    returnOptions = _addToReturnList(returnOptions, "}", publicIps != null);
     return returnOptions;
   }
 }
@@ -270,115 +271,116 @@ class FarmsQueryOptions {
   String toString() {
     List<String> queryOptions = [];
 
-    addToQueryList(queryOptions, "id_eq", idEq);
-    addToQueryList(queryOptions, "id_gt", idGt);
-    addToQueryList(queryOptions, "id_gte", idGte);
-    addToQueryList(queryOptions, "id_not_eq", idNotEq);
-    addToQueryList(queryOptions, "id_lt", idLt);
-    addToQueryList(queryOptions, "id_lte", idLte);
-    addToQueryList(queryOptions, "id_contains", idContains);
-    addToQueryList(queryOptions, "id_not_contains", idNotContains);
-    addToQueryList(
+    _addToQueryList(queryOptions, "id_eq", idEq);
+    _addToQueryList(queryOptions, "id_gt", idGt);
+    _addToQueryList(queryOptions, "id_gte", idGte);
+    _addToQueryList(queryOptions, "id_not_eq", idNotEq);
+    _addToQueryList(queryOptions, "id_lt", idLt);
+    _addToQueryList(queryOptions, "id_lte", idLte);
+    _addToQueryList(queryOptions, "id_contains", idContains);
+    _addToQueryList(queryOptions, "id_not_contains", idNotContains);
+    _addToQueryList(
         queryOptions, "id_containsInsensitive", idContainsInsensitive);
-    addToQueryList(
+    _addToQueryList(
         queryOptions, "id_not_containsInsensitive", idNotContainsInsensitive);
-    addToQueryList(queryOptions, "id_startsWith", idStartsWith);
-    addToQueryList(queryOptions, "id_not_startsWith", idNotStartsWith);
-    addToQueryList(queryOptions, "id_endsWith", idEndsWith);
-    addToQueryList(queryOptions, "id_not_endsWith", idNotEndsWith);
-    addToQueryList(queryOptions, "id_in", idIn);
-    addToQueryList(queryOptions, "id_not_in", idNotIn);
-    addToQueryList(queryOptions, "gridVersion_is_null", gridVersionIsNull);
-    addToQueryList(queryOptions, "gridVersion_eq", gridVersionEq);
-    addToQueryList(queryOptions, "gridVersion_not_eq", gridVersionNotEq);
-    addToQueryList(queryOptions, "gridVersion_gt", gridVersionGt);
-    addToQueryList(queryOptions, "gridVersion_gte", gridVersionGte);
-    addToQueryList(queryOptions, "gridVersion_lt", gridVersionLt);
-    addToQueryList(queryOptions, "gridVersion_lte", gridVersionLte);
-    addToQueryList(queryOptions, "gridVersion_in", gridVersionIn);
-    addToQueryList(queryOptions, "gridVersion_not_in", gridVersionNotIn);
-    addToQueryList(queryOptions, "farmID_is_null", farmIDIsNull);
-    addToQueryList(queryOptions, "farmID_eq", farmIDEq);
-    addToQueryList(queryOptions, "farmID_not_eq", farmIDNotEq);
-    addToQueryList(queryOptions, "farmID_gt", farmIDGt);
-    addToQueryList(queryOptions, "farmID_gte", farmIDGte);
-    addToQueryList(queryOptions, "farmID_lt", farmIDLt);
-    addToQueryList(queryOptions, "farmID_lte", farmIDLte);
-    addToQueryList(queryOptions, "farmID_in", farmIDIn);
-    addToQueryList(queryOptions, "farmID_not_in", farmIDNotIn);
-    addToQueryList(queryOptions, "name_isNull", nameIsNull);
-    addToQueryList(queryOptions, "name_eq", nameEq);
-    addToQueryList(queryOptions, "name_not_eq", nameNotEq);
-    addToQueryList(queryOptions, "name_gt", nameGt);
-    addToQueryList(queryOptions, "name_gte", nameGte);
-    addToQueryList(queryOptions, "name_lt", nameLt);
-    addToQueryList(queryOptions, "name_lte", nameLte);
-    addToQueryList(queryOptions, "name_in", nameIn);
-    addToQueryList(queryOptions, "name_not_in", nameNotIn);
-    addToQueryList(queryOptions, "name_contains", nameContains);
-    addToQueryList(queryOptions, "name_not_contains", nameNotContains);
-    addToQueryList(
+    _addToQueryList(queryOptions, "id_startsWith", idStartsWith);
+    _addToQueryList(queryOptions, "id_not_startsWith", idNotStartsWith);
+    _addToQueryList(queryOptions, "id_endsWith", idEndsWith);
+    _addToQueryList(queryOptions, "id_not_endsWith", idNotEndsWith);
+    _addToQueryList(queryOptions, "id_in", idIn);
+    _addToQueryList(queryOptions, "id_not_in", idNotIn);
+    _addToQueryList(queryOptions, "gridVersion_is_null", gridVersionIsNull);
+    _addToQueryList(queryOptions, "gridVersion_eq", gridVersionEq);
+    _addToQueryList(queryOptions, "gridVersion_not_eq", gridVersionNotEq);
+    _addToQueryList(queryOptions, "gridVersion_gt", gridVersionGt);
+    _addToQueryList(queryOptions, "gridVersion_gte", gridVersionGte);
+    _addToQueryList(queryOptions, "gridVersion_lt", gridVersionLt);
+    _addToQueryList(queryOptions, "gridVersion_lte", gridVersionLte);
+    _addToQueryList(queryOptions, "gridVersion_in", gridVersionIn);
+    _addToQueryList(queryOptions, "gridVersion_not_in", gridVersionNotIn);
+    _addToQueryList(queryOptions, "farmID_is_null", farmIDIsNull);
+    _addToQueryList(queryOptions, "farmID_eq", farmIDEq);
+    _addToQueryList(queryOptions, "farmID_not_eq", farmIDNotEq);
+    _addToQueryList(queryOptions, "farmID_gt", farmIDGt);
+    _addToQueryList(queryOptions, "farmID_gte", farmIDGte);
+    _addToQueryList(queryOptions, "farmID_lt", farmIDLt);
+    _addToQueryList(queryOptions, "farmID_lte", farmIDLte);
+    _addToQueryList(queryOptions, "farmID_in", farmIDIn);
+    _addToQueryList(queryOptions, "farmID_not_in", farmIDNotIn);
+    _addToQueryList(queryOptions, "name_isNull", nameIsNull);
+    _addToQueryList(queryOptions, "name_eq", nameEq);
+    _addToQueryList(queryOptions, "name_not_eq", nameNotEq);
+    _addToQueryList(queryOptions, "name_gt", nameGt);
+    _addToQueryList(queryOptions, "name_gte", nameGte);
+    _addToQueryList(queryOptions, "name_lt", nameLt);
+    _addToQueryList(queryOptions, "name_lte", nameLte);
+    _addToQueryList(queryOptions, "name_in", nameIn);
+    _addToQueryList(queryOptions, "name_not_in", nameNotIn);
+    _addToQueryList(queryOptions, "name_contains", nameContains);
+    _addToQueryList(queryOptions, "name_not_contains", nameNotContains);
+    _addToQueryList(
         queryOptions, "name_containsInsensitive", nameContainsInsensitive);
-    addToQueryList(queryOptions, "name_not_containsInsensitive",
+    _addToQueryList(queryOptions, "name_not_containsInsensitive",
         nameNotContainsInsensitive);
-    addToQueryList(queryOptions, "name_startsWith", nameStartsWith);
-    addToQueryList(queryOptions, "name_not_startsWith", nameNotStartsWith);
-    addToQueryList(queryOptions, "name_endsWith", nameEndsWith);
-    addToQueryList(queryOptions, "name_not_endsWith", nameNotEndsWith);
-    addToQueryList(queryOptions, "twinID_isNull", twinIDIsNull);
-    addToQueryList(queryOptions, "twinID_eq", twinIDEq);
-    addToQueryList(queryOptions, "twinID_not_eq", twinIDNotEq);
-    addToQueryList(queryOptions, "twinID_gt", twinIDGt);
-    addToQueryList(queryOptions, "twinID_gte", twinIDGte);
-    addToQueryList(queryOptions, "twinID_lt", twinIDLt);
-    addToQueryList(queryOptions, "twinID_lte", twinIDLte);
-    addToQueryList(queryOptions, "twinID_in", twinIDIn);
-    addToQueryList(queryOptions, "twinID_not_in", twinIDNotIn);
-    addToQueryList(
+    _addToQueryList(queryOptions, "name_startsWith", nameStartsWith);
+    _addToQueryList(queryOptions, "name_not_startsWith", nameNotStartsWith);
+    _addToQueryList(queryOptions, "name_endsWith", nameEndsWith);
+    _addToQueryList(queryOptions, "name_not_endsWith", nameNotEndsWith);
+    _addToQueryList(queryOptions, "twinID_isNull", twinIDIsNull);
+    _addToQueryList(queryOptions, "twinID_eq", twinIDEq);
+    _addToQueryList(queryOptions, "twinID_not_eq", twinIDNotEq);
+    _addToQueryList(queryOptions, "twinID_gt", twinIDGt);
+    _addToQueryList(queryOptions, "twinID_gte", twinIDGte);
+    _addToQueryList(queryOptions, "twinID_lt", twinIDLt);
+    _addToQueryList(queryOptions, "twinID_lte", twinIDLte);
+    _addToQueryList(queryOptions, "twinID_in", twinIDIn);
+    _addToQueryList(queryOptions, "twinID_not_in", twinIDNotIn);
+    _addToQueryList(
         queryOptions, "pricingPolicyID_isNull", pricingPolicyIDIsNull);
-    addToQueryList(queryOptions, "pricingPolicyID_eq", pricingPolicyIDEq);
-    addToQueryList(
+    _addToQueryList(queryOptions, "pricingPolicyID_eq", pricingPolicyIDEq);
+    _addToQueryList(
         queryOptions, "pricingPolicyID_not_eq", pricingPolicyIDNotEq);
-    addToQueryList(queryOptions, "pricingPolicyID_gt", pricingPolicyIDGt);
-    addToQueryList(queryOptions, "pricingPolicyID_gte", pricingPolicyIDGte);
-    addToQueryList(queryOptions, "pricingPolicyID_lt", pricingPolicyIDLt);
-    addToQueryList(queryOptions, "pricingPolicyID_lte", pricingPolicyIDLte);
-    addToQueryList(queryOptions, "pricingPolicyID_in", pricingPolicyIDIn);
-    addToQueryList(
+    _addToQueryList(queryOptions, "pricingPolicyID_gt", pricingPolicyIDGt);
+    _addToQueryList(queryOptions, "pricingPolicyID_gte", pricingPolicyIDGte);
+    _addToQueryList(queryOptions, "pricingPolicyID_lt", pricingPolicyIDLt);
+    _addToQueryList(queryOptions, "pricingPolicyID_lte", pricingPolicyIDLte);
+    _addToQueryList(queryOptions, "pricingPolicyID_in", pricingPolicyIDIn);
+    _addToQueryList(
         queryOptions, "pricingPolicyID_not_in", pricingPolicyIDNotIn);
-    addToQueryList(queryOptions, "certification_isNull", certificationIsNull);
-    addToQueryList(queryOptions, "certification_eq", certificationEq);
-    addToQueryList(queryOptions, "certification_not_eq", certificationNotEq);
-    addToQueryList(queryOptions, "certification_in", certificationIn);
-    addToQueryList(queryOptions, "certification_not_in", certificationNotIn);
-    addToQueryList(queryOptions, "stellarAddress_isNull", stellarAddressIsNull);
-    addToQueryList(queryOptions, "stellarAddress_eq", stellarAddressEq);
-    addToQueryList(queryOptions, "stellarAddress_not_eq", stellarAddressNotEq);
-    addToQueryList(queryOptions, "stellarAddress_gt", stellarAddressGt);
-    addToQueryList(queryOptions, "stellarAddress_gte", stellarAddressGte);
-    addToQueryList(queryOptions, "stellarAddress_lt", stellarAddressLt);
-    addToQueryList(queryOptions, "stellarAddress_lte", stellarAddressLte);
-    addToQueryList(queryOptions, "stellarAddress_in", stellarAddressIn);
-    addToQueryList(queryOptions, "stellarAddress_not_in", stellarAddressNotIn);
-    addToQueryList(
+    _addToQueryList(queryOptions, "certification_isNull", certificationIsNull);
+    _addToQueryList(queryOptions, "certification_eq", certificationEq);
+    _addToQueryList(queryOptions, "certification_not_eq", certificationNotEq);
+    _addToQueryList(queryOptions, "certification_in", certificationIn);
+    _addToQueryList(queryOptions, "certification_not_in", certificationNotIn);
+    _addToQueryList(
+        queryOptions, "stellarAddress_isNull", stellarAddressIsNull);
+    _addToQueryList(queryOptions, "stellarAddress_eq", stellarAddressEq);
+    _addToQueryList(queryOptions, "stellarAddress_not_eq", stellarAddressNotEq);
+    _addToQueryList(queryOptions, "stellarAddress_gt", stellarAddressGt);
+    _addToQueryList(queryOptions, "stellarAddress_gte", stellarAddressGte);
+    _addToQueryList(queryOptions, "stellarAddress_lt", stellarAddressLt);
+    _addToQueryList(queryOptions, "stellarAddress_lte", stellarAddressLte);
+    _addToQueryList(queryOptions, "stellarAddress_in", stellarAddressIn);
+    _addToQueryList(queryOptions, "stellarAddress_not_in", stellarAddressNotIn);
+    _addToQueryList(
         queryOptions, "stellarAddress_contains", stellarAddressContains);
-    addToQueryList(
+    _addToQueryList(
         queryOptions, "stellarAddress_not_contains", stellarAddressNotContains);
-    addToQueryList(queryOptions, "stellarAddress_containsInsensitive",
+    _addToQueryList(queryOptions, "stellarAddress_containsInsensitive",
         stellarAddressContainsInsensitive);
-    addToQueryList(queryOptions, "stellarAddress_not_containsInsensitive",
+    _addToQueryList(queryOptions, "stellarAddress_not_containsInsensitive",
         stellarAddressNotContainsInsensitive);
-    addToQueryList(
+    _addToQueryList(
         queryOptions, "stellarAddress_startsWith", stellarAddressStartsWith);
-    addToQueryList(queryOptions, "stellarAddress_not_startsWith",
+    _addToQueryList(queryOptions, "stellarAddress_not_startsWith",
         stellarAddressNotStartsWith);
-    addToQueryList(
+    _addToQueryList(
         queryOptions, "stellarAddress_endsWith", stellarAddressEndsWith);
-    addToQueryList(
+    _addToQueryList(
         queryOptions, "stellarAddress_not_endsWith", stellarAddressNotEndsWith);
-    addToQueryList(queryOptions, "dedicatedFarm_isNull", dedicatedFarmIsNull);
-    addToQueryList(queryOptions, "dedicatedFarm_eq", dedicatedFarmEq);
-    addToQueryList(queryOptions, "dedicatedFarm_not_eq", dedicatedFarmNotEq);
+    _addToQueryList(queryOptions, "dedicatedFarm_isNull", dedicatedFarmIsNull);
+    _addToQueryList(queryOptions, "dedicatedFarm_eq", dedicatedFarmEq);
+    _addToQueryList(queryOptions, "dedicatedFarm_not_eq", dedicatedFarmNotEq);
 
     String queryString = '';
 

@@ -1,6 +1,4 @@
-
 part of '../models.dart';
-
 
 void _addToQueryList(List<String> list, String key, dynamic value) {
   switch (value.runtimeType) {
@@ -19,7 +17,6 @@ void _addToQueryList(List<String> list, String key, dynamic value) {
       break;
   }
 }
-
 
 String _addToReturnList(String returnOptions, String key, bool value) {
   if (value != false) {
