@@ -2,7 +2,7 @@
 
 part of '../models.dart';
 
-enum OrderByOptions {
+enum FarmsOrderByOptions {
   id_ASC,
   id_DESC,
   gridVersion_ASC,
@@ -169,7 +169,7 @@ class FarmsQueryOptions {
   bool? dedicatedFarmNotEq;
   int? limit;
   int? offset;
-  OrderByOptions? orderBy;
+  FarmsOrderByOptions? orderBy;
 
   FarmsQueryOptions({
     this.idEq,
@@ -427,7 +427,7 @@ class FarmInfo {
   int? pricingPolicyID;
   String? stellarAddress;
   int? twinID;
-  PublicIpsInfo? publicIps;
+  List<PublicIpsInfo>? publicIPs;
 
   FarmInfo({
     required this.id,
@@ -439,6 +439,78 @@ class FarmInfo {
     this.pricingPolicyID,
     this.stellarAddress,
     this.twinID,
-    this.publicIps,
+    this.publicIPs,
   });
+
+  @override
+  String toString() {
+    return 'FarmInfo(id: $id, gridVersion: $gridVersion, farmID: $farmID, name: $name, certification: $certification, dedicatedFarm: $dedicatedFarm, pricingPolicyID: $pricingPolicyID, stellarAddress: $stellarAddress, twinID: $twinID, publicIps: $publicIPs})';
+  }
+}
+
+//pageinfo returns all 4 parameters
+class FarmsConnectionReturnOptions {
+  bool pageInfo;
+  EdgesReturnOptions? edges;
+
+  FarmsConnectionReturnOptions({
+    this.pageInfo = false,
+    this.edges,
+  });
+
+  @override
+  String toString() {
+    String returnOptions = 'totalCount \n';
+    returnOptions = _addToReturnList(
+        returnOptions,
+        "pageInfo{\n startCursor \n endCursor \n hasNextPage \n hasPreviousPage \n }",
+        pageInfo);
+    returnOptions = _addToReturnList(returnOptions, "edges {", edges != null);
+    returnOptions =
+        _addToReturnList(returnOptions, edges.toString(), edges != null);
+    returnOptions = _addToReturnList(returnOptions, "}", edges != null);
+
+    return returnOptions;
+  }
+}
+
+class FarmsConnectionQueryOptions {
+  FarmsOrderByOptions orderBy;
+
+  FarmsConnectionQueryOptions({
+    required this.orderBy,
+  });
+
+  @override
+  String toString() {
+    List<String> queryOptions = [];
+
+    String queryString = '';
+    if (queryOptions.isNotEmpty) {
+      queryString += 'where: {${queryOptions.join(', ')} }';
+    }
+    if (queryString.isNotEmpty) {
+      queryString += ', ';
+    }
+    queryString += 'orderBy: ${orderBy.toString().split('.').last}';
+    queryString = '($queryString)';
+    return queryString;
+  }
+}
+
+class FarmsConnectionInfo {
+  int totalCount;
+  PageInfo? pageInfo;
+  List<EdgesInfo>? edges;
+
+  FarmsConnectionInfo({
+    required this.totalCount,
+    this.pageInfo,
+    this.edges,
+  });
+
+  @override
+  String toString() {
+    return 'FarmsConnectionInfo{totalCount: $totalCount, pageInfo: $pageInfo, edges: $edges}';
+  }
 }

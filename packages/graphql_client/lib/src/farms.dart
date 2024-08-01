@@ -19,6 +19,7 @@ class TFFarms {
             }''';
 
     final response = await gqlClient.query(body);
+    //print(response);
     if (response['data'] == null || response['data']['farms'] == null) {
       throw Exception('Invalid response structure: $response');
     }
@@ -38,11 +39,49 @@ class TFFarms {
         pricingPolicyID: farmsData['pricingPolicyID'] ?? 0,
         stellarAddress: farmsData['stellarAddress'] ?? '',
         twinID: farmsData['twinID'] ?? 0,
-        publicIps: farmsData['publicIps'] != null
-            ? PublicIpsInfo.fromJson(farmsData['publicIps'])
+        publicIPs: farmsData['publicIPs'] != null
+            ? (farmsData['publicIPs'] as List<dynamic>)
+                .map((item) => PublicIpsInfo.fromJson(item))
+                .toList()
             : null,
       );
     }).toList();
     return farms;
+  }
+
+  //sorts by id_ASC by default
+  //return total count by default
+  Future<FarmsConnectionInfo> getFarmsConnection(
+      FarmsConnectionQueryOptions? queryOptions,
+      FarmsConnectionReturnOptions? returnOptions) async {
+    final queryString = queryOptions?.toString() ?? "(orderBy: id_ASC)";
+    final returnString = returnOptions?.toString() ?? "totalCount \n";
+
+    final body = '''
+            query FarmsConnection{
+              farmsConnection $queryString {
+                $returnString
+              }
+            }''';
+    //debug
+    print(body);
+
+    final response = await gqlClient.query(body);
+    print(response);
+    if (response['data'] == null ||
+        response['data']['farmsConnection'] == null) {
+      throw Exception('Invalid response structure: $response');
+    }
+
+    final farmsConnectionData = response['data']['farmsConnection'];
+
+    if (farmsConnectionData is! Map<String, dynamic>) {
+      throw Exception('Invalid data format: Expected a map: $response');
+    }
+
+    FarmsConnectionInfo farmsConnection = FarmsConnectionInfo(
+      totalCount: farmsConnectionData['totalCount'],
+    );
+    return farmsConnection;
   }
 }

@@ -21,6 +21,11 @@ class PublicIpsInfo {
       gateway: json['gateway'] ?? "",
     );
   }
+
+  @override
+  String toString() {
+    return 'PublicIpsInfo{id: $id, contractId: $contractId, ip: $ip, gateway: $gateway}';
+  }
 }
 
 class PublicIpsReturnOptions {
