@@ -9,6 +9,7 @@ void main() {
     Map<int, String> farmsIps = {};
     final setupManager = SetupManager();
     setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
       await setupManager.setup();
     });
     test('Test Get Farm by Id', () async {

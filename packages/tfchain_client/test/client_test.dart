@@ -11,51 +11,46 @@ import 'package:tfchain_client/src/terms_and_conditions.dart';
 import 'package:tfchain_client/src/tft_bridge.dart';
 import 'package:tfchain_client/src/tft_price.dart';
 import 'package:tfchain_client/src/twins.dart';
-import 'package:tfchain_client/tfchain_client.dart';
 
 import 'setup_manager.dart';
 
 void main() {
   group('Query Client Tests', () {
-    late QueryClient queryClient;
     final setupManager = SetupManager();
     setUpAll(() async {
+      setupManager.setInitializationFlags(queryClient: true);
       await setupManager.setup();
     });
 
-    setUp(() async {
-      queryClient = QueryClient(setupManager.url);
-      await queryClient.connect();
-    });
-
     test('Initialization', () {
-      expect(queryClient.url, equals(setupManager.url));
-      expect(queryClient.contracts, isA<QueryContracts>());
-      expect(queryClient.balances, isA<QueryBalances>());
-      expect(queryClient.farms, isA<QueryFarms>());
-      expect(queryClient.nodes, isA<QueryNodes>());
-      expect(queryClient.policies, isA<QueryPricingPolicies>());
-      expect(queryClient.twins, isA<QueryTwins>());
-      expect(queryClient.bridge, isA<QueryBridge>());
-      expect(queryClient.price, isA<QueryTFTPrice>());
+      expect(setupManager.queryClient.url, equals(setupManager.url));
+      expect(setupManager.queryClient.contracts, isA<QueryContracts>());
+      expect(setupManager.queryClient.balances, isA<QueryBalances>());
+      expect(setupManager.queryClient.farms, isA<QueryFarms>());
+      expect(setupManager.queryClient.nodes, isA<QueryNodes>());
+      expect(setupManager.queryClient.policies, isA<QueryPricingPolicies>());
+      expect(setupManager.queryClient.twins, isA<QueryTwins>());
+      expect(setupManager.queryClient.bridge, isA<QueryBridge>());
+      expect(setupManager.queryClient.price, isA<QueryTFTPrice>());
     });
 
     test('Connect', () async {
-      if (queryClient.provider!.isConnected()) {
-        expect(queryClient.provider, isA<WsProvider>());
-        expect(queryClient.api, isNotNull);
+      if (setupManager.queryClient.provider!.isConnected()) {
+        expect(setupManager.queryClient.provider, isA<WsProvider>());
+        expect(setupManager.queryClient.api, isNotNull);
       }
     });
 
     test('Disconnect', () async {
-      await queryClient.disconnect();
-      expect(false, queryClient.provider!.isConnected());
+      await setupManager.queryClient.disconnect();
+      expect(false, setupManager.queryClient.provider!.isConnected());
     });
   });
 
   group("Full Client Tests", () {
     final setupManager = SetupManager();
     setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
       await setupManager.setup();
     });
 

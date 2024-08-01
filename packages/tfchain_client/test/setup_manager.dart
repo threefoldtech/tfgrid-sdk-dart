@@ -81,6 +81,7 @@ class SetupManager {
   SetupManager._internal();
 
   late Client _client;
+  late QueryClient _queryClient;
   late String _mnemonic;
   late String _url;
   late String _type;
@@ -89,48 +90,70 @@ class SetupManager {
   late int? _twinId;
   late String _relay;
 
+  bool _initializeClient = false;
+  bool _initializeQueryClient = false;
+
   String get url => _url;
   Client get client => _client;
+  QueryClient get queryClient => _queryClient;
   String get mnemonic => _mnemonic;
   String get type => _type;
   String get myAddress => _myAddress;
   int? get twinId => _twinId;
   String get relay => _relay;
 
+  void setInitializationFlags({bool client = false, bool queryClient = false}) {
+    _initializeClient = client;
+    _initializeQueryClient = queryClient;
+  }
+
   Future<void> setup() async {
     _url = Platform.environment['URL'] ?? 'ws://0.0.0.0:9944';
     _type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     _relay = "relay.dev.grid.tf";
 
-    _mnemonic = bip39.generateMnemonic();
-    _client = Client(_url, _mnemonic, _type);
-    await _client.connect();
+    if (_initializeClient) {
+      _mnemonic = bip39.generateMnemonic();
+      _client = Client(_url, _mnemonic, _type);
+      await _client.connect();
 
-    _myAddress = _client.address;
+      _myAddress = _client.address;
 
-    Client client2 = Client(_url, "//Alice", _type);
-    await client2.connect();
+      Client client2 = Client(_url, "//Alice", _type);
+      await client2.connect();
 
-    await client2.balances
-        .transfer(address: _client.address, amount: myBalance);
-    final balance = await client2.balances.getMyBalance();
-    print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
+      await client2.balances
+          .transfer(address: _client.address, amount: myBalance);
+      final balance = await client2.balances.getMyBalance();
+      print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
-    var bytes = utf8.encode("https://library.threefold.me/info/legal/");
-    var digest = md5.convert(bytes);
-    var hashString = digest.bytes
-        .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
-        .join();
+      var bytes = utf8.encode("https://library.threefold.me/info/legal/");
+      var digest = md5.convert(bytes);
+      var hashString = digest.bytes
+          .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
+          .join();
 
-    await _client.termsAndConditions.accept(
-        documentLink: "https://library.threefold.me/info/legal/",
-        documentHash: hashString.codeUnits);
+      await _client.termsAndConditions.accept(
+          documentLink: "https://library.threefold.me/info/legal/",
+          documentHash: hashString.codeUnits);
 
-    _twinId = await _client.twins.create(relay: _relay, pk: []);
-    print(_twinId);
+      _twinId = await _client.twins.create(relay: _relay, pk: []);
+      print(_twinId);
+    }
+
+    if (_initializeQueryClient) {
+      _queryClient = QueryClient(_url);
+      await _queryClient.connect();
+    }
   }
 
   Future<void> teardownAll() async {
-    await client.disconnect();
+    if (_initializeClient && _client != Null) {
+      await _client.disconnect();
+    }
+
+    if (_initializeQueryClient && _queryClient != Null) {
+      await _queryClient.disconnect();
+    }
   }
 }

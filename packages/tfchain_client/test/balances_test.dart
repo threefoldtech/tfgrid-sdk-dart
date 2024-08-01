@@ -11,6 +11,7 @@ void main() {
   group("Balances Tests", () {
     final setupManager = SetupManager();
     setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
       await setupManager.setup();
     });
     late final String recipientAddress;
