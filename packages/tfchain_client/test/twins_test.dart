@@ -7,6 +7,7 @@ void main() {
   group("Twins Test", () {
     final setupManager = SetupManager();
     setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
       await setupManager.setup();
     });
 

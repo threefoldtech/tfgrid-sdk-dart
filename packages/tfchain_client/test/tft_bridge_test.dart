@@ -8,6 +8,7 @@ void main() {
   group("Bridge Tests", () {
     final setupManager = SetupManager();
     setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
       await setupManager.setup();
     });
     test('Test Get Withdraw fee', () async {
