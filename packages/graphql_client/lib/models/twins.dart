@@ -1,6 +1,6 @@
 part of '../models.dart';
 
-enum OrderByOptions {
+enum TwinOrderByOptions {
   none,
   id_ASC,
   id_DESC,
@@ -14,13 +14,6 @@ enum OrderByOptions {
   relay_DESC,
   publicKey_ASC,
   publicKey_DESC,
-}
-
-String? parseToString(OrderByOptions orderby) {
-  if (orderby == OrderByOptions.none) {
-    return null;
-  }
-  return orderby.toString().split('.').last;
 }
 
 class TwinQueryWhereOptions {
@@ -342,20 +335,20 @@ class TwinQueryWhereOptions {
 }
 
 class TwinQueryOptions {
-  OrderByOptions orderby;
+  TwinOrderByOptions orderby;
   int? limit;
   int? offset;
   TwinQueryWhereOptions? whereOptions;
 
   TwinQueryOptions({
-    this.orderby = OrderByOptions.none,
+    this.orderby = TwinOrderByOptions.none,
     this.limit,
     this.offset,
     this.whereOptions,
   });
   @override
   String toString() {
-    String? order = parseToString(orderby);
+    String? order =  orderby==TwinOrderByOptions.none ? null: orderby.toString().split('.').last;
     if ((whereOptions != null && whereOptions.toString() == " ") &&
         order == null &&
         limit == null &&
@@ -372,20 +365,20 @@ class TwinQueryOptions {
 }
 
 class TwinConnectionsQueryOptions {
-  OrderByOptions orderby;
+  TwinOrderByOptions orderby;
   int? first;
   int? after;
   TwinQueryWhereOptions? whereOptions;
 
   TwinConnectionsQueryOptions({
-    this.orderby = OrderByOptions.id_ASC,
+    this.orderby = TwinOrderByOptions.id_ASC,
     this.first,
     this.after,
     this.whereOptions,
   });
   @override
   String toString() {
-    String? order = parseToString(orderby);
+    String? order =  orderby==TwinOrderByOptions.none ? null: orderby.toString().split('.').last;
     if ((whereOptions != null && whereOptions.toString() == " ") &&
         order == null &&
         first == null &&

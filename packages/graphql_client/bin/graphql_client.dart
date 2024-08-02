@@ -11,13 +11,13 @@ void main() async {
               node: TwinReturnOptions(accountID: true, gridVersion: true))),
       TwinConnectionsQueryOptions(
           whereOptions: TwinQueryWhereOptions(gridVersionEq: 1),
-          orderby: OrderByOptions.gridVersion_ASC,
+          orderby: TwinOrderByOptions.gridVersion_ASC,
           after: 3,
           first: 3));
 
   await graphQLClient.twins.twins(
     TwinReturnOptions(accountID: true, relay: true, twinID: true),
-    TwinQueryOptions(orderby: OrderByOptions.id_ASC, limit: 10),
+    TwinQueryOptions(orderby: TwinOrderByOptions.id_ASC, limit: 10),
   );
 
   //await graphQLClient.farms
