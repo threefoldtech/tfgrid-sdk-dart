@@ -348,14 +348,16 @@ class TwinQueryOptions {
   });
   @override
   String toString() {
-    String? order =  orderby==TwinOrderByOptions.none ? null: orderby.toString().split('.').last;
+    String? order = orderby == TwinOrderByOptions.none
+        ? null
+        : orderby.toString().split('.').last;
     if ((whereOptions != null && whereOptions.toString() == " ") &&
         order == null &&
         limit == null &&
         offset == null) return "";
     List<String> queryString = [];
-    if (whereOptions != null && whereOptions.toString() == " ") {
-      queryString.add("where: {$whereOptions.toString()}");
+    if (whereOptions != null && whereOptions.toString() != " ") {
+      queryString.add("where: {${whereOptions.toString()}}");
     }
     if (order != null) queryString.add("orderBy: $order");
     if (limit != null) queryString.add("limit: $limit");
@@ -378,7 +380,9 @@ class TwinConnectionsQueryOptions {
   });
   @override
   String toString() {
-    String? order =  orderby==TwinOrderByOptions.none ? null: orderby.toString().split('.').last;
+    String? order = orderby == TwinOrderByOptions.none
+        ? null
+        : orderby.toString().split('.').last;
     if ((whereOptions != null && whereOptions.toString() == " ") &&
         order == null &&
         first == null &&

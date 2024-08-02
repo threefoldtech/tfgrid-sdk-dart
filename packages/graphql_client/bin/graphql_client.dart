@@ -3,6 +3,17 @@ import 'package:graphql_client/models.dart';
 
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
+
+  await graphQLClient.nodes.nodes(
+      NodesReturnOptions(
+        city: true,
+        interfaces: InterfacesReturnOptions(ips: true),
+      ),
+      NodesQueryOptions(
+          limit: 3,
+          whereOptions:
+              NodesQueryWhereOptions(idEq: "0006025774-000002-23a45")));
+
   await graphQLClient.twins.twinsConnections(
       TwinConnectionsReturnOptions(
           totalCount: true,
@@ -19,9 +30,4 @@ void main() async {
     TwinReturnOptions(accountID: true, relay: true, twinID: true),
     TwinQueryOptions(orderby: TwinOrderByOptions.id_ASC, limit: 10),
   );
-
-  Future<List<FarmInfo>> listFarms =
-      graphQLClient.farms.listFarms(farmsQueryOptions, farmsReturnOptions);
-
-
 }
