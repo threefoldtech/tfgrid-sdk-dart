@@ -20,32 +20,8 @@ void main() async {
     TwinQueryOptions(orderby: TwinOrderByOptions.id_ASC, limit: 10),
   );
 
-  //await graphQLClient.farms
-  //.listFarmsByTwinId(ListFarmsByTwinIdOptions(twinId: 214));
+  Future<List<FarmInfo>> listFarms =
+      graphQLClient.farms.listFarms(farmsQueryOptions, farmsReturnOptions);
 
-  // final contracts = await graphQLClient.contracts
-  //     .listContractsByTwinId(ListContractByTwinIdOptions(twinId: 5110));
-  // var res = 0.0;
 
-  // final nameContracts = contracts.nameContracts;
-  // print(nameContracts.length);
-  // for (final x in nameContracts) {
-  //   print(x.contractID);
-  //   final consumption = await graphQLClient.contracts
-  //       .getConsumption(GetConsumptionOptions(contractID: x.contractID));
-  //   res += consumption;
-  // }
-
-  // final nodeContracts = contracts.nodeContracts;
-  // print(nodeContracts.length);
-  // for (final x in nodeContracts) {
-  //   print(x.contractID);
-  //   final consumption = await graphQLClient.contracts
-  //       .getConsumption(GetConsumptionOptions(contractID: x.contractID));
-  //   res += consumption;
-  // }
-  // print("HEllo");
-  // print(res * 24 * 30);
-  // await graphQLClient.contracts
-  //     .getConsumption(GetConsumptionOptions(contractID: "54069"));
 }
