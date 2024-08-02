@@ -16,7 +16,6 @@ query Nodes {
     $returnString
   }
 }''';
-    print(body);
     final response = await gqlClient.query(body);
 
     if (response['data'] == null) throw Exception('Missing "data" field');
@@ -30,7 +29,6 @@ query Nodes {
         (response['data']['nodes'] as List<dynamic>).map((nodesData) {
       return Node.fromJson(nodesData as Map<String, dynamic>);
     }).toList();
-    print(nodes);
     return nodes;
   }
 }

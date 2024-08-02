@@ -388,8 +388,8 @@ class TwinConnectionsQueryOptions {
         first == null &&
         after == null) return "";
     List<String> queryString = [];
-    if (whereOptions != null && whereOptions.toString() == " ") {
-      queryString.add("where: {$whereOptions.toString()}");
+    if (whereOptions != null && whereOptions.toString() != " ") {
+      queryString.add("where: {${whereOptions.toString()}}");
     }
     if (order != null) queryString.add("orderBy: $order");
     if (first != null) queryString.add("first: $first");

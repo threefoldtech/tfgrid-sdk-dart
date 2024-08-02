@@ -1035,7 +1035,7 @@ class Node {
           ? NodeResourceTotal.fromJson(
               json['resourcesTotal'] as Map<String, dynamic>)
           : null,
-      uptime: json['uptime'] ?? 0,
+      uptime: BigInt.parse(json['uptime'] ?? '0'),
       created: json['created'] ?? 0,
       farmingPolicyId: json['farmingPolicyId'] ?? 0,
       interfaces: json['interfaces'] != null
@@ -1049,14 +1049,14 @@ class Node {
       secure: json['secure'] ?? false,
       virtualized: json['virtualized'] ?? false,
       serialNumber: json['serialNumber'] ?? "",
-      createdAt: json['createdAt'] ?? 0,
-      updatedAt: json['updatedAt'] ?? 0,
+      createdAt: BigInt.parse(json['createdAt'] ?? '0'),
+      updatedAt: BigInt.parse(json['updatedAt'] ?? '0'),
       connectionPrice: json['connectionPrice'] ?? 0,
       power: json['power'] != null
           ? NodePower.fromJson(json['power'] as Map<String, dynamic>)
           : null,
       dedicated: json['dedicated'] ?? false,
-      extraFee: json['extraFee'] ?? 0,
+      extraFee: BigInt.parse(json['extraFee'] ?? '0'),
     );
   }
 
