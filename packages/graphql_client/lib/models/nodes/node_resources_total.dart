@@ -1,5 +1,61 @@
 part of '../../models.dart';
 
+enum NodeResourcesTotalOrderByOptions {
+  none,
+  id_ASC,
+  id_DESC,
+  node_id_ASC,
+  node_id_DESC,
+  node_gridVersion_ASC,
+  node_gridVersion_DESC,
+  node_nodeID_ASC,
+  node_nodeID_DESC,
+  node_farmID_ASC,
+  node_farmID_DESC,
+  node_twinID_ASC,
+  node_twinID_DESC,
+  node_country_ASC,
+  node_country_DESC,
+  node_city_ASC,
+  node_city_DESC,
+  node_uptime_ASC,
+  node_uptime_DESC,
+  node_created_ASC,
+  node_created_DESC,
+  node_farmingPolicyId_ASC,
+  node_farmingPolicyId_DESC,
+  node_certification_ASC,
+  node_certification_DESC,
+  node_secure_ASC,
+  node_secure_DESC,
+  node_virtualized_ASC,
+  node_virtualized_DESC,
+  node_serialNumber_ASC,
+  node_serialNumber_DESC,
+  node_createdAt_ASC,
+  node_createdAt_DESC,
+  node_updatedAt_ASC,
+  node_updatedAt_DESC,
+  node_connectionPrice_ASC,
+  node_connectionPrice_DESC,
+  node_dedicated_ASC,
+  node_dedicated_DESC,
+  node_extraFee_ASC,
+  node_extraFee_DESC,
+  hru_ASC,
+  hru_DESC,
+  sru_ASC,
+  sru_DESC,
+  cru_ASC,
+  cru_DESC,
+  mru_ASC,
+  mru_DESC;
+
+  String toString() {
+    return this.name;
+  }
+}
+
 class NodeResourcesTotalReturnOptions {
   bool id;
   bool cru;
@@ -35,7 +91,7 @@ class NodeResourcesTotalReturnOptions {
   }
 }
 
-class NodeResourceTotal {
+class NodeResourcesTotal {
   String id;
   Node? node;
   BigInt? hru;
@@ -43,7 +99,7 @@ class NodeResourceTotal {
   BigInt? cru;
   BigInt? mru;
 
-  NodeResourceTotal({
+  NodeResourcesTotal({
     required this.id,
     required this.node,
     required this.hru,
@@ -52,8 +108,8 @@ class NodeResourceTotal {
     required this.mru,
   });
 
-  factory NodeResourceTotal.fromJson(Map<String, dynamic> json) {
-    return NodeResourceTotal(
+  factory NodeResourcesTotal.fromJson(Map<String, dynamic> json) {
+    return NodeResourcesTotal(
       id: json['id'] ?? "",
       node: json['node'] != null
           ? Node.fromJson(json['node'] as Map<String, dynamic>)
@@ -67,7 +123,7 @@ class NodeResourceTotal {
 
   @override
   String toString() {
-    return 'NodeResourceTotal(id: $id, node: $node, hru: $hru, sru: $sru, cru: $cru, mru: $mru)';
+    return 'NodeResourcesTotal(id: $id, node: $node, hru: $hru, sru: $sru, cru: $cru, mru: $mru)';
   }
 }
 
@@ -234,7 +290,7 @@ class NodeResourcesWhereOptions {
 
     //node
     _addToQueryList(queryOptions, "node_isNull", nodeIsNull);
-    if (node!=null)queryOptions.add('node: {${node.toString()}}');
+    if (node != null) queryOptions.add('node: {${node.toString()}}');
 
     //hru
     _addToQueryList(queryOptions, "hru_isNull", hruIsNull);
@@ -283,20 +339,34 @@ class NodeResourcesWhereOptions {
   }
 }
 
-
-class NodeResourceTotalQueryOptions {
+class NodeResourcesTotalQueryOptions {
+  NodeResourcesTotalOrderByOptions orderby;
+  int? limit;
+  int? offset;
   NodeResourcesWhereOptions? whereOptions;
 
-  NodeResourceTotalQueryOptions({
+  NodeResourcesTotalQueryOptions({
+    this.orderby = NodeResourcesTotalOrderByOptions.none,
+    this.limit,
+    this.offset,
     this.whereOptions,
   });
   @override
   String toString() {
-    if ((whereOptions != null && whereOptions.toString() == " ")) return "";
+    String? order = orderby == NodeResourcesTotalOrderByOptions.none
+        ? null
+        : orderby.toString();
+    if ((whereOptions != null && whereOptions.toString() == " ") &&
+        order == null &&
+        limit == null &&
+        offset == null) return "";
     List<String> queryString = [];
     if (whereOptions != null && whereOptions.toString() != " ") {
       queryString.add("where: {${whereOptions.toString()}}");
     }
-    return "(${queryString.join(', ')})";
+    if (order != null) queryString.add("orderBy: $order");
+    if (limit != null) queryString.add("limit: $limit");
+    if (offset != null) queryString.add("offset: $offset");
+    return queryString.isEmpty ? "" : "(${queryString.join(', ')})";
   }
 }

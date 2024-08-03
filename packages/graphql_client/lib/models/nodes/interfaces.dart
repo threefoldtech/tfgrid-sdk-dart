@@ -256,8 +256,7 @@ class InterfaceWhereOptions {
 
     //node
     _addToQueryList(queryOptions, "node_isNull", nodeIsNull);
-    if (node!=null)queryOptions.add('node: {${node.toString()}}');
-
+    if (node != null) queryOptions.add('node: {${node.toString()}}');
 
     //name
     _addToQueryList(queryOptions, "name_isNull", nameIsNull);

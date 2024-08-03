@@ -1,10 +1,12 @@
 part of '../../models.dart';
+
 enum NodeCertification {
   Diy,
   Certified;
 
+  @override
   String toString() {
-    return this.name; 
+    return this.name;
   }
 }
 
@@ -91,8 +93,9 @@ enum NodesOrderByOptions {
   extraFee_ASC,
   extraFee_DESC;
 
-   String toString() {
-    return this.name; 
+  @override
+  String toString() {
+    return this.name;
   }
 }
 
@@ -650,8 +653,8 @@ class NodesQueryWhereOptions {
 
     // location
     _addToQueryList(queryOptions, "location_isNull", locationIsNull);
-    if(location!=null) queryOptions.add('location: {${location.toString()}}');
-
+    if (location != null)
+      queryOptions.add('location: {${location.toString()}}');
 
     // country
     _addToQueryList(queryOptions, "country_isNull", countryIsNull);
@@ -698,14 +701,14 @@ class NodesQueryWhereOptions {
 
     // publicConfig
     _addToQueryList(queryOptions, "publicConfig_isNull", publicConfigIsNull);
-    if(publicConfig!=null) queryOptions.add('publicConfig: {${publicConfig.toString()}}');
-
+    if (publicConfig != null)
+      queryOptions.add('publicConfig: {${publicConfig.toString()}}');
 
     // resourcesTotal
     _addToQueryList(
         queryOptions, "resourcesTotal_isNull", resourcesTotalIsNull);
-    if(resourcesTotal!=null) queryOptions.add('resourcesTotal: {${resourcesTotal.toString()}}');
-
+    if (resourcesTotal != null)
+      queryOptions.add('resourcesTotal: {${resourcesTotal.toString()}}');
 
     // uptime
     _addToQueryList(queryOptions, "uptime_isNull", uptimeIsNull);
@@ -744,9 +747,12 @@ class NodesQueryWhereOptions {
         queryOptions, "farmingPolicyId_not_in", farmingPolicyIdNotIn);
 
     // interfaces
-    if(interfacesEvery!=null) queryOptions.add('interfaces_every: {${interfacesEvery.toString()}}');
-    if(interfacesSome!=null) queryOptions.add('interfaces_some: {${interfacesSome.toString()}}');
-    if(interfacesNone!=null) queryOptions.add('interfaces_none: {${interfacesNone.toString()}}');
+    if (interfacesEvery != null)
+      queryOptions.add('interfaces_every: {${interfacesEvery.toString()}}');
+    if (interfacesSome != null)
+      queryOptions.add('interfaces_some: {${interfacesSome.toString()}}');
+    if (interfacesNone != null)
+      queryOptions.add('interfaces_none: {${interfacesNone.toString()}}');
 
     // certification
     _addToQueryList(queryOptions, "certification_isNull", certificationIsNull);
@@ -830,8 +836,7 @@ class NodesQueryWhereOptions {
 
     // power
     _addToQueryList(queryOptions, "power_isNull", powerIsNull);
-    if(power!=null) queryOptions.add('power: {${power.toString()}}');
-
+    if (power != null) queryOptions.add('power: {${power.toString()}}');
 
     // dedicated
     _addToQueryList(queryOptions, "dedicated_isNull", dedicatedIsNull);
@@ -867,9 +872,8 @@ class NodesQueryOptions {
   });
   @override
   String toString() {
-    String? order = orderby == NodesOrderByOptions.none
-        ? null
-        : orderby.toString();
+    String? order =
+        orderby == NodesOrderByOptions.none ? null : orderby.toString();
     if ((whereOptions != null && whereOptions.toString() == " ") &&
         order == null &&
         limit == null &&
@@ -946,16 +950,20 @@ class NodesReturnOptions {
     returnOptions = _addToReturnList(returnOptions, "nodeID", nodeID);
     returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
     returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
-    if (location != null && location.toString()!="") returnOptions += "location { \n ${location.toString()} } \n";
+    if (location != null && location.toString() != "")
+      returnOptions += "location { \n ${location.toString()} } \n";
     returnOptions = _addToReturnList(returnOptions, "country", country);
     returnOptions = _addToReturnList(returnOptions, "city", city);
-    if (publicConfig != null && publicConfig.toString()!="") returnOptions += "publicConfig { \n ${publicConfig.toString()} } \n";
-    if (resourcesTotal != null && resourcesTotal.toString()!="") returnOptions += "resourcesTotal { \n ${resourcesTotal.toString()} } \n";
+    if (publicConfig != null && publicConfig.toString() != "")
+      returnOptions += "publicConfig { \n ${publicConfig.toString()} } \n";
+    if (resourcesTotal != null && resourcesTotal.toString() != "")
+      returnOptions += "resourcesTotal { \n ${resourcesTotal.toString()} } \n";
     returnOptions = _addToReturnList(returnOptions, "uptime", uptime);
     returnOptions = _addToReturnList(returnOptions, "created", created);
     returnOptions =
         _addToReturnList(returnOptions, "farmingPolicyId", farmingPolicyId);
-    if (interfaces != null && interfaces.toString()!="") returnOptions += "interfaces { \n ${interfaces.toString()} } \n";
+    if (interfaces != null && interfaces.toString() != "")
+      returnOptions += "interfaces { \n ${interfaces.toString()} } \n";
     returnOptions =
         _addToReturnList(returnOptions, "certification", certification);
     returnOptions = _addToReturnList(returnOptions, "secure", secure);
@@ -984,7 +992,7 @@ class Node {
   String? country;
   String? city;
   PublicConfig? publicConfig;
-  NodeResourceTotal? resourcesTotal;
+  NodeResourcesTotal? resourcesTotal;
   BigInt? uptime;
   int? created;
   int? farmingPolicyId;
@@ -1043,7 +1051,7 @@ class Node {
           ? PublicConfig.fromJson(json['publicConfig'] as Map<String, dynamic>)
           : null,
       resourcesTotal: json['resourcesTotal'] != null
-          ? NodeResourceTotal.fromJson(
+          ? NodeResourcesTotal.fromJson(
               json['resourcesTotal'] as Map<String, dynamic>)
           : null,
       uptime: BigInt.parse(json['uptime'] ?? '0'),

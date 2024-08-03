@@ -4,6 +4,17 @@ import 'package:graphql_client/models.dart';
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
+  await graphQLClient.nodeResourcesTotals.nodeResourcesTotal(
+      NodeResourcesTotalReturnOptions(
+          id: true,
+          node: NodesReturnOptions(gridVersion: true, certification: true)),
+      NodeResourcesTotalQueryOptions(
+          orderby: NodeResourcesTotalOrderByOptions.id_ASC,
+          limit: 1,
+          offset: 2,
+          whereOptions: NodeResourcesWhereOptions(idIsNull: false)));
+
+/*
   await graphQLClient.nodes.nodes(
       NodesReturnOptions(
         city: true,
@@ -22,10 +33,22 @@ void main() async {
           orderby: NodesOrderByOptions.id_ASC,
           whereOptions: NodesQueryWhereOptions(
               idIsNull: false,
-              uptimeIn: [BigInt.one , BigInt.two],
-              )));
+              uptimeEq: BigInt.one,
+              interfacesEvery: InterfaceWhereOptions(
+                  idIsNull: false,
+                  node: NodesQueryWhereOptions(idIsNull: false)),
+              location: LocationWhereOptions(idIsNull: false),
+              resourcesTotal: NodeResourcesWhereOptions(
+                  idIsNull: false,
+                  node: NodesQueryWhereOptions(idIsNull: false)),
+              power: PowerWhereOptions(stateIsNull: true),
+              publicConfig: PublicConfigWhereOptions(
+                  idIsNull: false,
+                  node: NodesQueryWhereOptions(idIsNull: false)))));
 
-/*
+
+
+
   await graphQLClient.twins.twinsConnections(
       TwinConnectionsReturnOptions(
           totalCount: true,

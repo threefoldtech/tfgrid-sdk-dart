@@ -5,8 +5,8 @@ enum PowerState {
   Down;
 
   @override
-   String toString() {
-    return this.name; 
+  String toString() {
+    return this.name;
   }
 }
 
@@ -15,8 +15,8 @@ enum Power {
   Down;
 
   @override
-   String toString() {
-    return this.name; 
+  String toString() {
+    return this.name;
   }
 }
 
@@ -84,16 +84,16 @@ class NodePower {
 class PowerWhereOptions {
   //state
   bool? stateIsNull;
-  PowerState? stateEq; 
+  PowerState? stateEq;
   PowerState? stateNotEq;
-  List<PowerState>? stateIn; 
+  List<PowerState>? stateIn;
   List<PowerState>? stateNotIn;
 
   //target
   bool? targetIsNull;
-  Power? targetEq; 
+  Power? targetEq;
   Power? targetNotEq;
-  List<Power>? targetIn; 
+  List<Power>? targetIn;
   List<Power>? targetNotIn;
 
   PowerWhereOptions({

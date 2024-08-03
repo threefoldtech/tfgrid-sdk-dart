@@ -343,7 +343,7 @@ class PublicConfigWhereOptions {
 
     //node
     _addToQueryList(queryOptions, "node_isNull", nodeIsNull);
-    if (node!=null )queryOptions.add('node: {${node.toString()}}');
+    if (node != null) queryOptions.add('node: {${node.toString()}}');
 
     //ipv4
     _addToQueryList(queryOptions, "ipv4_isNull", ipv4IsNull);
