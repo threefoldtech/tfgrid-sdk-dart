@@ -2,12 +2,22 @@ part of '../../models.dart';
 
 enum PowerState {
   Up,
-  Down,
+  Down;
+
+  @override
+   String toString() {
+    return this.name; 
+  }
 }
 
 enum Power {
   Up,
-  Down,
+  Down;
+
+  @override
+   String toString() {
+    return this.name; 
+  }
 }
 
 Power powerFromJson(String jsonString) {
@@ -68,5 +78,57 @@ class NodePower {
   @override
   String toString() {
     return 'NodePower(state: $state, target: $target)';
+  }
+}
+
+class PowerWhereOptions {
+  //state
+  bool? stateIsNull;
+  PowerState? stateEq; 
+  PowerState? stateNotEq;
+  List<PowerState>? stateIn; 
+  List<PowerState>? stateNotIn;
+
+  //target
+  bool? targetIsNull;
+  Power? targetEq; 
+  Power? targetNotEq;
+  List<Power>? targetIn; 
+  List<Power>? targetNotIn;
+
+  PowerWhereOptions({
+    //state
+    this.stateIsNull,
+    this.stateEq,
+    this.stateNotEq,
+    this.stateIn,
+    this.stateNotIn,
+
+    //target
+    this.targetIsNull,
+    this.targetEq,
+    this.targetNotEq,
+    this.targetIn,
+    this.targetNotIn,
+  });
+
+  @override
+  String toString() {
+    List<String> queryOptions = [];
+    //state
+    _addToQueryList(queryOptions, "state_isNull", stateIsNull);
+    _addToQueryList(queryOptions, "state_eq", stateEq);
+    _addToQueryList(queryOptions, "state_not_eq", stateNotEq);
+    _addToQueryList(queryOptions, "state_in", stateIn);
+    _addToQueryList(queryOptions, "state_not_in", stateNotIn);
+
+    //target
+    _addToQueryList(queryOptions, "target_isNull", targetIsNull);
+    _addToQueryList(queryOptions, "target_eq", targetEq);
+    _addToQueryList(queryOptions, "target_not_eq", targetNotEq);
+    _addToQueryList(queryOptions, "target_in", targetIn);
+    _addToQueryList(queryOptions, "target_not_in", targetNotIn);
+
+    return queryOptions.isNotEmpty ? queryOptions.join(', ') : " ";
   }
 }

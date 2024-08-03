@@ -1,8 +1,26 @@
 part of '../../models.dart';
+enum NodeCertification {
+  Diy,
+  Certified;
+
+  String toString() {
+    return this.name; 
+  }
+}
+
+NodeCertification certificationFromJson(String jsonString) {
+  switch (jsonString) {
+    case 'Certified':
+      return NodeCertification.Certified;
+    case 'Diy':
+    default:
+      return NodeCertification.Diy;
+  }
+}
 
 enum NodesOrderByOptions {
   none,
-  id_AS,
+  id_ASC,
   id_DESC,
   gridVersion_ASC,
   gridVersion_DESC,
@@ -71,11 +89,15 @@ enum NodesOrderByOptions {
   dedicated_ASC,
   dedicated_DESC,
   extraFee_ASC,
-  extraFee_DESC
+  extraFee_DESC;
+
+   String toString() {
+    return this.name; 
+  }
 }
 
 class NodesQueryWhereOptions {
-  // ids options
+  // ids
   bool? idIsNull;
   String? idEq;
   String? idNotEq;
@@ -94,7 +116,7 @@ class NodesQueryWhereOptions {
   String? idEndsWith;
   String? idNotEndsWith;
 
-  // grid options
+  // grid
   bool? gridVersionIsNull;
   int? gridVersionEq;
   int? gridVersionNotEq;
@@ -105,7 +127,7 @@ class NodesQueryWhereOptions {
   List<int>? gridVersionIn;
   List<int>? gridVersionNotIn;
 
-  // nodeID options
+  // nodeID
   bool? nodeIDIsNull;
   int? nodeIDEq;
   int? nodeIDNotEq;
@@ -116,7 +138,7 @@ class NodesQueryWhereOptions {
   List<int>? nodeIDIn;
   List<int>? nodeIDNotIn;
 
-  // farmID options
+  // farmID
   bool? farmIDIsNull;
   int? farmIDEq;
   int? farmIDNotEq;
@@ -127,7 +149,7 @@ class NodesQueryWhereOptions {
   List<int>? farmIDIn;
   List<int>? farmIDNotIn;
 
-  // twins options
+  // twins
   bool? twinIDIsNull;
   int? twinIDEq;
   int? twinIDNotEq;
@@ -138,11 +160,11 @@ class NodesQueryWhereOptions {
   List<int>? twinIDIn;
   List<int>? twinIDNotIn;
 
-  // location options
+  // location
   bool? locationIsNull;
-  //LocationWhereInput? location;
+  LocationWhereOptions? location;
 
-  // country options
+  // country
   bool? countryIsNull;
   String? countryEq;
   String? countryNotEq;
@@ -161,7 +183,7 @@ class NodesQueryWhereOptions {
   String? countryEndsWith;
   String? countryNotEndsWith;
 
-  // city options
+  // city
   bool? cityIsNull;
   String? cityEq;
   String? cityNotEq;
@@ -180,15 +202,15 @@ class NodesQueryWhereOptions {
   String? cityEndsWith;
   String? cityNotEndsWith;
 
-  // publicConfig options
+  // publicConfig
   bool? publicConfigIsNull;
-  //PublicConfigWhereInput? publicConfig;
+  PublicConfigWhereOptions? publicConfig;
 
-  // resourcesTotal options
+  // resourcesTotal
   bool? resourcesTotalIsNull;
-  //NodeResourcesTotalWhereInput? resourcesTotal;
+  NodeResourcesWhereOptions? resourcesTotal;
 
-  // uptime options
+  // uptime
   bool? uptimeIsNull;
   BigInt? uptimeEq;
   BigInt? uptimeNotEq;
@@ -199,7 +221,7 @@ class NodesQueryWhereOptions {
   List<BigInt>? uptimeIn;
   List<BigInt>? uptimeNotIn;
 
-  // created options
+  // created
   bool? createdIsNull;
   int? createdEq;
   int? createdNotEq;
@@ -210,7 +232,7 @@ class NodesQueryWhereOptions {
   List<int>? createdIn;
   List<int>? createdNotIn;
 
-  // farmingPolicyId options
+  // farmingPolicyId
   bool? farmingPolicyIdIsNull;
   int? farmingPolicyIdEq;
   int? farmingPolicyIdNotEq;
@@ -221,29 +243,29 @@ class NodesQueryWhereOptions {
   List<int>? farmingPolicyIdIn;
   List<int>? farmingPolicyIdNotIn;
 
-  // interfaces options
-  //InterfacesWhereInput? interfacesEvery;
-  //InterfacesWhereInput? interfacesSome;
-  //InterfacesWhereInput? interfacesNone;
+  // interfaces
+  InterfaceWhereOptions? interfacesEvery;
+  InterfaceWhereOptions? interfacesSome;
+  InterfaceWhereOptions? interfacesNone;
 
-  // certification options
+  // certification
   bool? certificationIsNull;
   NodeCertification? certificationEq;
   NodeCertification? certificationNotEq;
   List<NodeCertification>? certificationIn;
   List<NodeCertification>? certificationNotIn;
 
-  // secure options
+  // secure
   bool? secureIsNull;
   bool? secureEq;
   bool? secureNotEq;
 
-  // virtualized options
+  // virtualized
   bool? virtualizedIsNull;
   bool? virtualizedEq;
   bool? virtualizedNotEq;
 
-  // serialNumber options
+  // serialNumber
   bool? serialNumberIsNull;
   String? serialNumberEq;
   String? serialNumberNotEq;
@@ -262,7 +284,7 @@ class NodesQueryWhereOptions {
   String? serialNumberEndsWith;
   String? serialNumberNotEndsWith;
 
-  // createdAt options
+  // createdAt
   bool? createdAtIsNull;
   BigInt? createdAtEq;
   BigInt? createdAtNotEq;
@@ -273,7 +295,7 @@ class NodesQueryWhereOptions {
   List<BigInt>? createdAtIn;
   List<BigInt>? createdAtNotIn;
 
-  // updatedAt options
+  // updatedAt
   bool? updatedAtIsNull;
   BigInt? updatedAtEq;
   BigInt? updatedAtNotEq;
@@ -284,7 +306,7 @@ class NodesQueryWhereOptions {
   List<BigInt>? updatedAtIn;
   List<BigInt>? updatedAtNotIn;
 
-  // connectionPrice options
+  // connectionPrice
   bool? connectionPriceIsNull;
   int? connectionPriceEq;
   int? connectionPriceNotEq;
@@ -295,16 +317,16 @@ class NodesQueryWhereOptions {
   List<int>? connectionPriceIn;
   List<int>? connectionPriceNotIn;
 
-  // power options
+  // power
   bool? powerIsNull;
-  //NodePowerWhereInput? power;
+  PowerWhereOptions? power;
 
-  // dedicated options
+  // dedicated
   bool? dedicatedIsNull;
   bool? dedicatedEq;
   bool? dedicatedNotEq;
 
-  // extraFee options
+  // extraFee
   bool? extraFeeIsNull;
   BigInt? extraFeeEq;
   BigInt? extraFeeNotEq;
@@ -381,7 +403,7 @@ class NodesQueryWhereOptions {
 
     // location
     this.locationIsNull,
-    //this.location,
+    this.location,
 
     // country
     this.countryIsNull,
@@ -423,11 +445,11 @@ class NodesQueryWhereOptions {
 
     // publicConfig
     this.publicConfigIsNull,
-    //this.publicConfig,
+    this.publicConfig,
 
     // resourcesTotal
     this.resourcesTotalIsNull,
-    //this.resourcesTotal,
+    this.resourcesTotal,
 
     // uptime
     this.uptimeIsNull,
@@ -463,9 +485,9 @@ class NodesQueryWhereOptions {
     this.farmingPolicyIdNotIn,
 
     // interfaces
-    //this.interfacesEvery,
-    //this.interfacesSome,
-    //this.interfacesNone,
+    this.interfacesEvery,
+    this.interfacesSome,
+    this.interfacesNone,
 
     // certification
     this.certificationIsNull,
@@ -538,7 +560,7 @@ class NodesQueryWhereOptions {
 
     // power
     this.powerIsNull,
-    //this.power,
+    this.power,
 
     // dedicated
     this.dedicatedIsNull,
@@ -628,7 +650,8 @@ class NodesQueryWhereOptions {
 
     // location
     _addToQueryList(queryOptions, "location_isNull", locationIsNull);
-    //_addToQueryList(queryOptions, "location", location);
+    if(location!=null) queryOptions.add('location: {${location.toString()}}');
+
 
     // country
     _addToQueryList(queryOptions, "country_isNull", countryIsNull);
@@ -675,12 +698,14 @@ class NodesQueryWhereOptions {
 
     // publicConfig
     _addToQueryList(queryOptions, "publicConfig_isNull", publicConfigIsNull);
-    //_addToQueryList(queryOptions, "publicConfig", publicConfig);
+    if(publicConfig!=null) queryOptions.add('publicConfig: {${publicConfig.toString()}}');
+
 
     // resourcesTotal
     _addToQueryList(
         queryOptions, "resourcesTotal_isNull", resourcesTotalIsNull);
-    //_addToQueryList(queryOptions, "resourcesTotal", resourcesTotal);
+    if(resourcesTotal!=null) queryOptions.add('resourcesTotal: {${resourcesTotal.toString()}}');
+
 
     // uptime
     _addToQueryList(queryOptions, "uptime_isNull", uptimeIsNull);
@@ -719,9 +744,9 @@ class NodesQueryWhereOptions {
         queryOptions, "farmingPolicyId_not_in", farmingPolicyIdNotIn);
 
     // interfaces
-    //_addToQueryList(queryOptions, "interfaces_every", interfacesEvery);
-    //_addToQueryList(queryOptions, "interfaces_some", interfacesSome);
-    //_addToQueryList(queryOptions, "interfaces_none", interfacesNone);
+    if(interfacesEvery!=null) queryOptions.add('interfaces_every: {${interfacesEvery.toString()}}');
+    if(interfacesSome!=null) queryOptions.add('interfaces_some: {${interfacesSome.toString()}}');
+    if(interfacesNone!=null) queryOptions.add('interfaces_none: {${interfacesNone.toString()}}');
 
     // certification
     _addToQueryList(queryOptions, "certification_isNull", certificationIsNull);
@@ -805,7 +830,8 @@ class NodesQueryWhereOptions {
 
     // power
     _addToQueryList(queryOptions, "power_isNull", powerIsNull);
-    //_addToQueryList(queryOptions, "power", power);
+    if(power!=null) queryOptions.add('power: {${power.toString()}}');
+
 
     // dedicated
     _addToQueryList(queryOptions, "dedicated_isNull", dedicatedIsNull);
@@ -843,7 +869,7 @@ class NodesQueryOptions {
   String toString() {
     String? order = orderby == NodesOrderByOptions.none
         ? null
-        : orderby.toString().split('.').last;
+        : orderby.toString();
     if ((whereOptions != null && whereOptions.toString() == " ") &&
         order == null &&
         limit == null &&
@@ -920,16 +946,16 @@ class NodesReturnOptions {
     returnOptions = _addToReturnList(returnOptions, "nodeID", nodeID);
     returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
     returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
-    if (location != null) returnOptions += location.toString();
+    if (location != null && location.toString()!="") returnOptions += "location { \n ${location.toString()} } \n";
     returnOptions = _addToReturnList(returnOptions, "country", country);
     returnOptions = _addToReturnList(returnOptions, "city", city);
-    if (publicConfig != null) returnOptions += publicConfig.toString();
-    if (resourcesTotal != null) returnOptions += resourcesTotal.toString();
+    if (publicConfig != null && publicConfig.toString()!="") returnOptions += "publicConfig { \n ${publicConfig.toString()} } \n";
+    if (resourcesTotal != null && resourcesTotal.toString()!="") returnOptions += "resourcesTotal { \n ${resourcesTotal.toString()} } \n";
     returnOptions = _addToReturnList(returnOptions, "uptime", uptime);
     returnOptions = _addToReturnList(returnOptions, "created", created);
     returnOptions =
         _addToReturnList(returnOptions, "farmingPolicyId", farmingPolicyId);
-    if (interfaces != null) returnOptions += interfaces.toString();
+    if (interfaces != null && interfaces.toString()!="") returnOptions += "interfaces { \n ${interfaces.toString()} } \n";
     returnOptions =
         _addToReturnList(returnOptions, "certification", certification);
     returnOptions = _addToReturnList(returnOptions, "secure", secure);
@@ -945,21 +971,6 @@ class NodesReturnOptions {
     returnOptions = _addToReturnList(returnOptions, "extraFee", extraFee);
     if (returnOptions == "") returnOptions = "id \n";
     return returnOptions;
-  }
-}
-
-enum NodeCertification {
-  Diy,
-  Certified,
-}
-
-NodeCertification certificationFromJson(String jsonString) {
-  switch (jsonString) {
-    case 'Certified':
-      return NodeCertification.Certified;
-    case 'Diy':
-    default:
-      return NodeCertification.Diy;
   }
 }
 
