@@ -112,10 +112,6 @@ void main() {
         final ip = randomIp.split('/')[0];
 
         final gatewayIp = generateGatewayIPv4FromIp(ip);
-
-        print(randomIp);
-        print(gatewayIp);
-
         final farmId = await setupManager.client.farms
             .create(name: generateRandomString(6), publicIps: []);
 
