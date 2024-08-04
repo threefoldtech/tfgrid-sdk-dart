@@ -2,7 +2,7 @@ part of '../models.dart';
 
 class NodeInfo {
   String id;
-  Certification? certification;
+  String? certification;
   bool? dedicatedFarm;
   int? farmID;
   int? gridVersion;
@@ -88,7 +88,8 @@ class NodeReturnOptions {
     returnOptions =
         _addToReturnList(returnOptions, "stellarAddress", stellarAddress);
     returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
-    _addToReturnList(returnOptions, "publicIPs {", publicIPs != null);
+    returnOptions =
+        _addToReturnList(returnOptions, "publicIPs {", publicIPs != null);
     returnOptions = _addToReturnList(
         returnOptions, publicIPs.toString(), publicIPs != null);
     returnOptions = _addToReturnList(returnOptions, "}", publicIPs != null);

@@ -19,7 +19,6 @@ class TFFarms {
             }''';
 
     final response = await gqlClient.query(body);
-    //print(response);
     if (response['data'] == null || response['data']['farms'] == null) {
       throw Exception('Invalid response structure: $response');
     }
@@ -63,11 +62,9 @@ class TFFarms {
                 $returnString
               }
             }''';
-    //debug
-    print(body);
 
     final response = await gqlClient.query(body);
-    print(response);
+
     if (response['data'] == null ||
         response['data']['farmsConnection'] == null) {
       throw Exception('Invalid response structure: $response');
@@ -79,9 +76,7 @@ class TFFarms {
       throw Exception('Invalid data format: Expected a map: $response');
     }
 
-    FarmsConnectionInfo farmsConnection = FarmsConnectionInfo(
-      totalCount: farmsConnectionData['totalCount'],
-    );
+    final farmsConnection = FarmsConnectionInfo.fromJson(farmsConnectionData);
     return farmsConnection;
   }
 }
