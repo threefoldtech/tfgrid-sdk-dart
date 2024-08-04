@@ -1,55 +1,27 @@
 part of '../models.dart';
 
-enum OrderBy {
+enum OrderByOptions {
   none,
-  idAsc,
-  idDesc,
-  gridVersionAsc,
-  gridVersionDesc,
-  twinIdAsc,
-  twinIdDesc,
-  accountIdAsc,
-  accountIdDesc,
-  relayAsc,
-  relayDesc,
-  publicKeyAsc,
-  publicKeyDesc,
-}
+  id_ASC,
+  id_DESC,
+  gridVersion_ASC,
+  gridVersion_DESC,
+  twinID_ASC,
+  twinID_DESC,
+  accountID_ASC,
+  accountID_DESC,
+  relay_ASC,
+  relay_DESC,
+  publicKey_ASC,
+  publicKey_DESC;
 
-String? parseToString(OrderBy orderby) {
-  switch (orderby) {
-    case OrderBy.none:
-      return null;
-    case OrderBy.idAsc:
-      return 'id_ASC';
-    case OrderBy.idDesc:
-      return 'id_DESC';
-    case OrderBy.gridVersionAsc:
-      return 'gridVersion_ASC';
-    case OrderBy.gridVersionDesc:
-      return 'gridVersion_DESC';
-    case OrderBy.twinIdAsc:
-      return 'twinID_ASC';
-    case OrderBy.twinIdDesc:
-      return 'twinID_DESC';
-    case OrderBy.accountIdAsc:
-      return 'accountID_ASC';
-    case OrderBy.accountIdDesc:
-      return 'accountID_DESC';
-    case OrderBy.relayAsc:
-      return 'relay_ASC';
-    case OrderBy.relayDesc:
-      return 'relay_DESC';
-    case OrderBy.publicKeyAsc:
-      return 'publicKey_ASC';
-    case OrderBy.publicKeyDesc:
-      return 'publicKey_DESC';
-    default:
-      return null;
+  @override
+  String toString() {
+    return this.name;
   }
 }
 
-class TwinWhereOptions {
+class TwinQueryWhereOptions {
   //ids options
   bool? idIsNull;
   String? idEq;
@@ -148,7 +120,7 @@ class TwinWhereOptions {
   String? publicKeyEndsWith;
   String? publicKeyNotEndsWith;
 
-  TwinWhereOptions({
+  TwinQueryWhereOptions({
     //ids
     this.idIsNull,
     this.idEq,
@@ -368,62 +340,56 @@ class TwinWhereOptions {
 }
 
 class TwinQueryOptions {
-  OrderBy orderby;
+  OrderByOptions? orderby;
   int? limit;
   int? offset;
-  TwinWhereOptions? whereOptions;
+  TwinQueryWhereOptions? whereOptions;
 
   TwinQueryOptions({
-    this.orderby = OrderBy.none,
+    this.orderby,
     this.limit,
     this.offset,
     this.whereOptions,
   });
   @override
   String toString() {
-    String? order = parseToString(orderby);
-    if ((whereOptions != null && whereOptions.toString() == " ") &&
-        order == null &&
+    if ((whereOptions == null || whereOptions.toString() == " ") &&
+        orderby == null &&
         limit == null &&
         offset == null) return "";
     List<String> queryString = [];
-    if (whereOptions != null && whereOptions.toString() == " ") {
-      queryString.add("where: {$whereOptions.toString()}");
+    if (whereOptions != null && whereOptions.toString() != " ") {
+      queryString.add("where: {${whereOptions.toString()}}");
     }
-    if (order != null) queryString.add("orderBy: $order");
+    if (orderby != null) queryString.add("orderBy: $orderby");
     if (limit != null) queryString.add("limit: $limit");
     if (offset != null) queryString.add("offset: $offset");
-    return "(${queryString.join(', ')})";
+    return queryString.isEmpty ? "" : "(${queryString.join(', ')})";
   }
 }
 
 class TwinConnectionsQueryOptions {
-  OrderBy orderby;
+  OrderByOptions orderby;
   int? first;
   int? after;
-  TwinWhereOptions? whereOptions;
+  TwinQueryWhereOptions? whereOptions;
 
   TwinConnectionsQueryOptions({
-    this.orderby = OrderBy.idAsc,
+    this.orderby = OrderByOptions.id_ASC,
     this.first,
     this.after,
     this.whereOptions,
   });
   @override
   String toString() {
-    String? order = parseToString(orderby);
-    if ((whereOptions != null && whereOptions.toString() == " ") &&
-        order == null &&
-        first == null &&
-        after == null) return "";
     List<String> queryString = [];
-    if (whereOptions != null && whereOptions.toString() == " ") {
-      queryString.add("where: {$whereOptions.toString()}");
+    if (whereOptions != null && whereOptions.toString() != " ") {
+      queryString.add("where: {${whereOptions.toString()}}");
     }
-    if (order != null) queryString.add("orderBy: $order");
+    queryString.add("orderBy: $orderby");
     if (first != null) queryString.add("first: $first");
     if (after != null) queryString.add('after: "$after"');
-    return "(${queryString.join(', ')})";
+    return queryString.isEmpty ? "" : "(${queryString.join(', ')})";
   }
 }
 

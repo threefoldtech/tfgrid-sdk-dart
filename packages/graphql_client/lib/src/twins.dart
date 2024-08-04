@@ -16,24 +16,20 @@ query Twins {
     $returnString
   }
 }''';
-    print(body);
-    try {
-      final response = await gqlClient.query(body);
+    final response = await gqlClient.query(body);
 
-      if (response['data'] == null) throw Exception('Missing "data" field');
-      if (response['data']['twins'] == null)
-        throw Exception('Missing "twins" field');
-      List<TwinInfo> twins =
-          (response['data']['twins'] as List<dynamic>).map((twinsData) {
-        return TwinInfo.fromJson(twinsData as Map<String, dynamic>);
-      }).toList();
-
-      print(twins);
-      return twins;
-    } catch (err) {
-      print(err.toString());
-      rethrow;
+    if (response['data'] == null) throw Exception('Missing "data" field');
+    if (response['data']['twins'] == null) {
+      throw Exception('Missing "twins" field');
     }
+    if (response['data']['twins'] is! List<dynamic>) {
+      throw Exception('Invalid data format: Expected a list: $response');
+    }
+    List<TwinInfo> twins =
+        (response['data']['twins'] as List<dynamic>).map((twinsData) {
+      return TwinInfo.fromJson(twinsData as Map<String, dynamic>);
+    }).toList();
+    return twins;
   }
 
   Future<TwinConnectionsInfo> twinsConnections(
@@ -47,18 +43,17 @@ query Twins {
     $returnString
   }
 }''';
-    try {
-      print(body);
-      final response = await gqlClient.query(body);
-      if (response['data'] == null) throw Exception('Missing "data" field');
-      if (response['data']['twinsConnection'] == null)
-        throw Exception('Missing "twinsConnection" field');
-      TwinConnectionsInfo twinsConnection = TwinConnectionsInfo.fromJson(
-          response['data']['twinsConnection'] as Map<String, dynamic>);
-      print(twinsConnection);
-      return twinsConnection;
-    } catch (err) {
-      rethrow;
+    final response = await gqlClient.query(body);
+    if (response['data'] == null) throw Exception('Missing "data" field');
+    if (response['data']['twinsConnection'] == null) {
+      throw Exception('Missing "twinsConnection" field');
     }
+    if (response['data']['twinsConnection'] is! Map<String, dynamic>) {
+      throw Exception(
+          'Invalid data format: Expected a list of maps: $response');
+    }
+    TwinConnectionsInfo twinsConnection = TwinConnectionsInfo.fromJson(
+        response['data']['twinsConnection'] as Map<String, dynamic>);
+    return twinsConnection;
   }
 }
