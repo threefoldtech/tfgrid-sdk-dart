@@ -32,16 +32,28 @@ int getInt32FromIp(String ip) {
       segments[3];
 }
 
-bool isPublicIp(String ip) {
+bool isAllowedPublicIp(String ip) {
   final segments = ip.split('.').map(int.parse).toList();
-  if (segments[0] == 10 ||
-      (segments[0] == 172 && segments[1] >= 16 && segments[1] <= 31) ||
-      (segments[0] == 192 && segments[1] == 168) ||
-      segments[0] == 127 ||
-      (segments[0] == 169 && segments[1] == 254)) {
-    return false;
-  }
-  return true;
+  final int ipValue = getInt32FromIp(ip);
+
+  return (ipValue >= getInt32FromIp("1.0.0.0") &&
+          ipValue <= getInt32FromIp("9.255.255.255")) ||
+      (ipValue >= getInt32FromIp("11.0.0.0") &&
+          ipValue <= getInt32FromIp("126.255.255.255")) ||
+      (ipValue >= getInt32FromIp("129.0.0.0") &&
+          ipValue <= getInt32FromIp("169.253.255.255")) ||
+      (ipValue >= getInt32FromIp("169.255.0.0") &&
+          ipValue <= getInt32FromIp("172.15.255.255")) ||
+      (ipValue >= getInt32FromIp("172.32.0.0") &&
+          ipValue <= getInt32FromIp("191.0.1.255")) ||
+      (ipValue >= getInt32FromIp("192.0.3.0") &&
+          ipValue <= getInt32FromIp("192.88.98.255")) ||
+      (ipValue >= getInt32FromIp("192.88.100.0") &&
+          ipValue <= getInt32FromIp("192.167.255.255")) ||
+      (ipValue >= getInt32FromIp("192.169.0.0") &&
+          ipValue <= getInt32FromIp("198.17.255.255")) ||
+      (ipValue >= getInt32FromIp("198.20.0.0") &&
+          ipValue <= getInt32FromIp("223.255.255.255"));
 }
 
 String generateRandomPublicIPv4() {
@@ -50,7 +62,7 @@ String generateRandomPublicIPv4() {
   do {
     final value = random.nextInt(0xFFFFFFFF);
     ip = getIpFromInt32Value(value);
-  } while (!isPublicIp(ip));
+  } while (!isAllowedPublicIp(ip));
   return ip;
 }
 
