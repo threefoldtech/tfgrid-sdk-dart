@@ -68,8 +68,7 @@ String generateRandomPublicIPv4() {
 
 String generateRandomCIDRIPv4() {
   final ip = generateRandomPublicIPv4();
-  final subnet = Random().nextInt(16) + 16;
-  return '$ip/$subnet';
+  return '$ip/24';
 }
 
 String generateGatewayIPv4FromIp(String ip) {
