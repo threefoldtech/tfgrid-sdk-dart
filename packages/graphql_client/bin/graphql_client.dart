@@ -27,8 +27,7 @@ void main() async {
                   farmID: true, publicIPs: PublicIpsReturnOptions(ip: true))));
 
   Future<FarmsConnectionInfo> farmsConnection = graphQLClient.farms
-      .getFarmsConnection(
-          farmsConnectionQueryOptions, farmsConnectionReturnOptions);
+      .getFarmsConnection(null, FarmsConnectionReturnOptions());
 
   print(await farmsConnection);
 }

@@ -19,8 +19,11 @@ class TFFarms {
             }''';
 
     final response = await gqlClient.query(body);
-    if (response['data'] == null || response['data']['farms'] == null) {
-      throw Exception('Invalid response structure: $response');
+    if (response['data'] == null) {
+      throw Exception("Data returned is null");
+    }
+    if (response['data']['farms'] == null) {
+      throw Exception("Farms returned is null");
     }
     final farmsDataList = response['data']['farms'] as List<dynamic>;
     if (farmsDataList.any((item) => item is! Map<String, dynamic>)) {
@@ -65,9 +68,11 @@ class TFFarms {
 
     final response = await gqlClient.query(body);
 
-    if (response['data'] == null ||
-        response['data']['farmsConnection'] == null) {
-      throw Exception('Invalid response structure: $response');
+    if (response['data'] == null) {
+      throw Exception("Data returned is null");
+    }
+    if (response['data']['farmsConnection'] == null) {
+      throw Exception("FarmsConnection returned is null");
     }
 
     final farmsConnectionData = response['data']['farmsConnection'];
