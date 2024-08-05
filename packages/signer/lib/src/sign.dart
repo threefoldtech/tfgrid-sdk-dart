@@ -1,4 +1,5 @@
 part of '../signer.dart';
+// TODO: should return keypair or not ?
 
 class Signer {
   KeyPair? keypair;
@@ -29,12 +30,26 @@ class Signer {
     }
   }
 
-  void fromHexSeed(String hexSeed, KPType type) {
+  KeyPair? fromHexSeed(String hexSeed, KPType type) {
     try {
       final seed = HEX.decode(hexSeed.replaceAll('0x', ''));
       keypair = fromSeed(Uint8List.fromList(seed), type);
+      return keypair;
     } catch (e) {
       throw Exception("Failed to create keyPair from hex seed. Error: $e");
+    }
+  }
+
+  Future<KeyPair?> fromUri(String uri, KPType type) async {
+    try {
+      if (type == KPType.sr25519) {
+        keypair = await KeyPair.sr25519.fromUri(uri);
+      } else if (type == KPType.ed25519) {
+        keypair = await KeyPair.ed25519.fromUri(uri);
+      }
+      return keypair;
+    } catch (e) {
+      throw Exception("Failed to create keyPair from mnemonic. Error: $e");
     }
   }
 
