@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:signer/signer.dart';
 import 'package:test/test.dart';
 
