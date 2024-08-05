@@ -162,7 +162,7 @@ class Client extends QueryClient {
 
     if (mnemonicOrSecretSeed.isEmpty) {
       throw FormatException("Mnemonic or secret should be provided");
-    } else if (mnemonicOrSecretSeed == "//Alice") {
+    } else if (mnemonicOrSecretSeed.startsWith("//")) {
       return;
     } else if (!validateMnemonic(mnemonicOrSecretSeed)) {
       if (mnemonicOrSecretSeed.contains(" ")) {
@@ -253,10 +253,6 @@ class Client extends QueryClient {
     final nonce = await api.rpc.system.accountNextIndex(address);
     final metadata = await api.rpc.state.getMetadata();
 
-    // await api.rpc.state.queryStorageAt(keys)
-    // state vs systemApi
-    // different naming between polkadot vs flutter
-    // how to make rpc call on state
     final payloadToSign = SigningPayload(
         method: encodedCall,
         specVersion: specVersion,
@@ -272,9 +268,6 @@ class Client extends QueryClient {
 
     final signature = keypair!.sign(payload);
 
-    // final hexSignature = hex.encode(signature);
-
-    // final publicKey = hex.encode(keyring.publicKey.bytes);
     final signatureType = _keypairType == "sr25519"
         ? SignatureType.sr25519
         : SignatureType.ed25519;
@@ -288,11 +281,6 @@ class Client extends QueryClient {
             tip: 0)
         .encode(api.registry, signatureType);
 
-    // final hexExtrinsic = hex.encode(extrinsic);
-    // final input = Input.fromHex(hexExtrinsic);
-    // final dynamic extrinsicDecoded =
-    //     ExtrinsicsCodec(chainInfo: metadata.chainInfo).decode(input);
-    // print(extrinsicDecoded);
     Completer<void> _complete = Completer();
     final StreamSubscription subscription =
         await AuthorApi(provider!).submitAndWatchExtrinsic(
@@ -326,7 +314,6 @@ class Client extends QueryClient {
                 for (final event in myEvents) {
                   if (event.key == "System" &&
                       event.value.key == "ExtrinsicFailed") {
-                    // TODO: get the error name and type
                     final error = event.value.value["DispatchError"].value;
                     final errorType = event.value.value["DispatchError"].key;
                     String? errorName;
