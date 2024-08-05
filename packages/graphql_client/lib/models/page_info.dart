@@ -1,16 +1,16 @@
 part of '../models.dart';
 
 class PageInfo {
-  String startCursor;
-  String endCursor;
-  bool hasNextPage;
-  bool hasPreviousPage;
+  String? startCursor;
+  String? endCursor;
+  bool? hasNextPage;
+  bool? hasPreviousPage;
 
   PageInfo({
-    required this.startCursor,
-    required this.endCursor,
-    required this.hasNextPage,
-    required this.hasPreviousPage,
+    this.startCursor,
+    this.endCursor,
+    this.hasNextPage,
+    this.hasPreviousPage,
   });
 
   factory PageInfo.fromJson(Map<String, dynamic> json) {
