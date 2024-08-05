@@ -1,8 +1,8 @@
 part of '../models.dart';
 
 class NodeInfo {
-  String id;
-  Certification? certification;
+  String? id;
+  String? certification;
   bool? dedicatedFarm;
   int? farmID;
   int? gridVersion;
@@ -13,7 +13,7 @@ class NodeInfo {
   List<PublicIpsInfo>? publicIPs;
 
   NodeInfo({
-    required this.id,
+    this.id,
     this.certification,
     this.dedicatedFarm,
     this.farmID,
@@ -32,7 +32,7 @@ class NodeInfo {
 
   factory NodeInfo.fromJson(Map<String, dynamic> json) {
     return NodeInfo(
-      id: json['id'],
+      id: json['id'] ?? '',
       certification: json['certification'] ?? '',
       dedicatedFarm: json['dedicatedFarm'] ?? false,
       farmID: json['farmID'] ?? 0,
@@ -50,7 +50,9 @@ class NodeInfo {
   }
 }
 
+@reflector
 class NodeReturnOptions {
+  bool id;
   bool certification;
   bool dedicatedFarm;
   bool farmID;
@@ -62,6 +64,7 @@ class NodeReturnOptions {
   PublicIpsReturnOptions? publicIPs;
 
   NodeReturnOptions({
+    this.id = false,
     this.certification = false,
     this.dedicatedFarm = false,
     this.farmID = false,
@@ -75,7 +78,8 @@ class NodeReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "id \n";
+    String returnOptions = "";
+    returnOptions = _addToReturnList(returnOptions, "id", id);
     returnOptions =
         _addToReturnList(returnOptions, "certification", certification);
     returnOptions =
@@ -88,7 +92,8 @@ class NodeReturnOptions {
     returnOptions =
         _addToReturnList(returnOptions, "stellarAddress", stellarAddress);
     returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
-    _addToReturnList(returnOptions, "publicIPs {", publicIPs != null);
+    returnOptions =
+        _addToReturnList(returnOptions, "publicIPs {", publicIPs != null);
     returnOptions = _addToReturnList(
         returnOptions, publicIPs.toString(), publicIPs != null);
     returnOptions = _addToReturnList(returnOptions, "}", publicIPs != null);

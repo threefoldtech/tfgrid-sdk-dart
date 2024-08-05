@@ -9,7 +9,28 @@ class TFFarms {
   Future<List<FarmInfo>> listFarms(FarmsQueryOptions? queryOptions,
       FarmsReturnOptions? returnOptions) async {
     final queryString = queryOptions?.toString() ?? "";
-    final returnString = returnOptions?.toString() ?? "id \n";
+    final String returnString;
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
+      returnString = '''
+    certification
+    dedicatedFarm
+    farmID
+    gridVersion
+    id
+    name
+    pricingPolicyID
+    publicIPs {
+      contractId
+      gateway
+      id
+      ip
+    }
+    stellarAddress
+    twinID
+''';
+    } else {
+      returnString = returnOptions.toString();
+    }
 
     final body = '''
             query Farms{
@@ -19,9 +40,11 @@ class TFFarms {
             }''';
 
     final response = await gqlClient.query(body);
-    //print(response);
-    if (response['data'] == null || response['data']['farms'] == null) {
-      throw Exception('Invalid response structure: $response');
+    if (response['data'] == null) {
+      throw Exception("Data returned is null");
+    }
+    if (response['data']['farms'] == null) {
+      throw Exception("Farms returned is null");
     }
     final farmsDataList = response['data']['farms'] as List<dynamic>;
     if (farmsDataList.any((item) => item is! Map<String, dynamic>)) {
@@ -31,7 +54,7 @@ class TFFarms {
     List<FarmInfo> farms =
         (response['data']['farms'] as List<dynamic>).map((farmsData) {
       return FarmInfo(
-        id: farmsData['id'],
+        id: farmsData['id'] ?? '',
         farmID: farmsData['farmID'] ?? 0,
         certification: farmsData['certification'] ?? '',
         dedicatedFarm: farmsData['dedicatedFarm'] ?? false,
@@ -55,7 +78,40 @@ class TFFarms {
       FarmsConnectionQueryOptions? queryOptions,
       FarmsConnectionReturnOptions? returnOptions) async {
     final queryString = queryOptions?.toString() ?? "(orderBy: id_ASC)";
-    final returnString = returnOptions?.toString() ?? "totalCount \n";
+    final String returnString;
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
+      returnString = '''
+totalCount
+    edges {
+      node {
+        publicIPs {
+          contractId
+          gateway
+          id
+          ip
+        }
+        certification
+        dedicatedFarm
+        farmID
+        gridVersion
+        id
+        name
+        pricingPolicyID
+        stellarAddress
+        twinID
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+''';
+    } else {
+      returnString = returnOptions.toString();
+    }
 
     final body = '''
             query FarmsConnection{
@@ -63,14 +119,14 @@ class TFFarms {
                 $returnString
               }
             }''';
-    //debug
-    print(body);
 
     final response = await gqlClient.query(body);
-    print(response);
-    if (response['data'] == null ||
-        response['data']['farmsConnection'] == null) {
-      throw Exception('Invalid response structure: $response');
+
+    if (response['data'] == null) {
+      throw Exception("Data returned is null");
+    }
+    if (response['data']['farmsConnection'] == null) {
+      throw Exception("FarmsConnection returned is null");
     }
 
     final farmsConnectionData = response['data']['farmsConnection'];
@@ -79,9 +135,7 @@ class TFFarms {
       throw Exception('Invalid data format: Expected a map: $response');
     }
 
-    FarmsConnectionInfo farmsConnection = FarmsConnectionInfo(
-      totalCount: farmsConnectionData['totalCount'],
-    );
+    final farmsConnection = FarmsConnectionInfo.fromJson(farmsConnectionData);
     return farmsConnection;
   }
 }
