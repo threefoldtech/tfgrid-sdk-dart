@@ -9,7 +9,19 @@ class TFTwins {
   Future<List<TwinInfo>> twins(
       TwinReturnOptions? returnOptions, TwinQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
-    final returnString = returnOptions?.toString() ?? "id \n";
+    final String returnString;
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
+      returnString = '''
+    accountID
+    gridVersion
+    id
+    publicKey
+    relay
+    twinID
+''';
+    } else {
+      returnString = returnOptions.toString();
+    }
     final body = '''
 query Twins {
   twins $queryString {
@@ -18,8 +30,9 @@ query Twins {
 }''';
     final response = await gqlClient.query(body);
 
-    if (response['data'] == null)
+    if (response['data'] == null) {
       throw Exception('Missing "data" field in response: $response');
+    }
     if (response['data']['twins'] == null) {
       throw Exception(
           'Missing "twins" field in response data: ${response['data']}');
@@ -32,6 +45,7 @@ query Twins {
         (response['data']['twins'] as List<dynamic>).map((twinsData) {
       return TwinInfo.fromJson(twinsData as Map<String, dynamic>);
     }).toList();
+    print(twins);
     return twins;
   }
 
@@ -39,7 +53,31 @@ query Twins {
       TwinConnectionsReturnOptions? returnOptions,
       TwinConnectionsQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
-    final returnString = returnOptions?.toString();
+    final String returnString;
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
+      returnString = '''
+    totalCount
+    pageInfo {
+      startCursor
+      hasPreviousPage
+      hasNextPage
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        accountID
+        gridVersion
+        id
+        publicKey
+        relay
+        twinID
+      }
+    }
+''';
+    } else {
+      returnString = returnOptions.toString();
+    }
     final body = '''
 query Twins {
   twinsConnection $queryString {
@@ -47,8 +85,9 @@ query Twins {
   }
 }''';
     final response = await gqlClient.query(body);
-    if (response['data'] == null)
+    if (response['data'] == null) {
       throw Exception('Missing "data" field in response: $response');
+    }
     if (response['data']['twinsConnection'] == null) {
       throw Exception(
           'Missing "twinsConnection" field in response data: ${response['data']}');
@@ -59,6 +98,7 @@ query Twins {
     }
     TwinConnectionsInfo twinsConnection = TwinConnectionsInfo.fromJson(
         response['data']['twinsConnection'] as Map<String, dynamic>);
+    print(twinsConnection);
     return twinsConnection;
   }
 }

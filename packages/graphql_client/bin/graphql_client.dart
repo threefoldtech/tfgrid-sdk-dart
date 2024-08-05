@@ -6,37 +6,16 @@ void main() async {
   initializeReflectable();
 
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
+  await graphQLClient.twins.twinsConnections(
+      TwinConnectionsReturnOptions(),
+      TwinConnectionsQueryOptions(
+          whereOptions: TwinQueryWhereOptions(gridVersionEq: 1),
+          orderby: OrderByOptions.gridVersion_ASC,
+          after: 3,
+          first: 3));
 
-  final FarmsReturnOptions farmsReturnOptions = FarmsReturnOptions(
-    farmID: true,
-    publicIps: PublicIpsReturnOptions(ip: true),
+  await graphQLClient.twins.twins(
+    TwinReturnOptions(),
+    TwinQueryOptions(orderby: OrderByOptions.id_ASC, limit: 10),
   );
-  final FarmsQueryOptions farmsQueryOptions = FarmsQueryOptions(
-    idEq: "0000013810-000001-a75c1",
-  );
-
-  FarmsConnectionQueryOptions farmsConnectionQueryOptions =
-      FarmsConnectionQueryOptions(
-          orderBy: FarmsOrderByOptions.id_ASC,
-          first: 2,
-          after: "10",
-          farmIDEq: 10);
-
-  FarmsConnectionReturnOptions farmsConnectionReturnOptions =
-      FarmsConnectionReturnOptions(
-          pageInfo: true,
-          edges: EdgesReturnOptions(
-              nodeReturnOptions: NodeReturnOptions(
-                  farmID: true, publicIPs: PublicIpsReturnOptions(ip: true))));
-
-  Future<FarmsConnectionInfo> farmsConnection = graphQLClient.farms
-      .getFarmsConnection(null, FarmsConnectionReturnOptions());
-
-  Future<List<FarmInfo>> farms = graphQLClient.farms.listFarms(null, null);
-
-  for (var farm in await farms) {
-    print(farm);
-  }
-
-  print(await farmsConnection);
 }
