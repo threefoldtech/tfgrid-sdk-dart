@@ -50,6 +50,7 @@ class NodeInfo {
   }
 }
 
+@reflector
 class NodeReturnOptions {
   bool certification;
   bool dedicatedFarm;

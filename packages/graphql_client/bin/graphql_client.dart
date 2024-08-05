@@ -1,33 +1,40 @@
 import 'package:graphql_client/graphql_client.dart';
 import 'package:graphql_client/models.dart';
+import 'graphql_client.reflectable.dart';
 
 void main() async {
-  final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
+  initializeReflectable();
+  FarmsReturnOptions farmsReturnOptions =
+      FarmsReturnOptions(publicIps: PublicIpsReturnOptions(ip: true));
 
-  final FarmsReturnOptions farmsReturnOptions = FarmsReturnOptions(
-    farmID: true,
-    publicIps: PublicIpsReturnOptions(ip: true),
-  );
-  final FarmsQueryOptions farmsQueryOptions = FarmsQueryOptions(
-    idEq: "0000013810-000001-a75c1",
-  );
+  print(areAllBooleansFalse(farmsReturnOptions));
 
-  FarmsConnectionQueryOptions farmsConnectionQueryOptions =
-      FarmsConnectionQueryOptions(
-          orderBy: FarmsOrderByOptions.id_ASC,
-          first: 2,
-          after: "10",
-          farmIDEq: 10);
+  // final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  FarmsConnectionReturnOptions farmsConnectionReturnOptions =
-      FarmsConnectionReturnOptions(
-          pageInfo: true,
-          edges: EdgesReturnOptions(
-              nodeReturnOptions: NodeReturnOptions(
-                  farmID: true, publicIPs: PublicIpsReturnOptions(ip: true))));
+  // final FarmsReturnOptions farmsReturnOptions = FarmsReturnOptions(
+  //   farmID: true,
+  //   publicIps: PublicIpsReturnOptions(ip: true),
+  // );
+  // final FarmsQueryOptions farmsQueryOptions = FarmsQueryOptions(
+  //   idEq: "0000013810-000001-a75c1",
+  // );
 
-  Future<FarmsConnectionInfo> farmsConnection = graphQLClient.farms
-      .getFarmsConnection(null, FarmsConnectionReturnOptions());
+  // FarmsConnectionQueryOptions farmsConnectionQueryOptions =
+  //     FarmsConnectionQueryOptions(
+  //         orderBy: FarmsOrderByOptions.id_ASC,
+  //         first: 2,
+  //         after: "10",
+  //         farmIDEq: 10);
 
-  print(await farmsConnection);
+  // FarmsConnectionReturnOptions farmsConnectionReturnOptions =
+  //     FarmsConnectionReturnOptions(
+  //         pageInfo: true,
+  //         edges: EdgesReturnOptions(
+  //             nodeReturnOptions: NodeReturnOptions(
+  //                 farmID: true, publicIPs: PublicIpsReturnOptions(ip: true))));
+
+  // Future<FarmsConnectionInfo> farmsConnection = graphQLClient.farms
+  //     .getFarmsConnection(null, FarmsConnectionReturnOptions());
+
+  // print(await farmsConnection);
 }

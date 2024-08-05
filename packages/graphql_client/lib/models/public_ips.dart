@@ -28,6 +28,7 @@ class PublicIpsInfo {
   }
 }
 
+@reflector
 class PublicIpsReturnOptions {
   bool contractId;
   bool ip;

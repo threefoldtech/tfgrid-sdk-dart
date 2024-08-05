@@ -25,3 +25,25 @@ String _addToReturnList(String returnOptions, String key, bool value) {
   }
   return returnOptions;
 }
+
+bool areAllBooleansFalse(Object object) {
+  var instanceMirror = reflector.reflect(object);
+  var classMirror = instanceMirror.type;
+
+  for (var declaration in classMirror.declarations.values) {
+    if (declaration is VariableMirror) {
+      var value = instanceMirror.invokeGetter(declaration.simpleName);
+      if (declaration.reflectedType == bool) {
+        if (value == true) {
+          return false;
+        }
+      } else if (value != null && reflector.canReflect(value)) {
+        if (!areAllBooleansFalse(value)) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+}

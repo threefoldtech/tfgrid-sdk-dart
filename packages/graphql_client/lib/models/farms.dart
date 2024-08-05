@@ -28,6 +28,7 @@ enum Certification {
   Gold,
 }
 
+@reflector
 class FarmsReturnOptions {
   bool farmID;
   bool name;
@@ -449,6 +450,7 @@ class FarmInfo {
 }
 
 //pageinfo returns all 4 parameters
+@reflector
 class FarmsConnectionReturnOptions {
   bool pageInfo;
   EdgesReturnOptions? edges;
