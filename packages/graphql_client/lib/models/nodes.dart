@@ -1,4 +1,4 @@
-part of '../../models.dart';
+part of '../models.dart';
 
 enum NodeCertification {
   Diy,
