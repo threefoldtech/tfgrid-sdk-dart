@@ -56,6 +56,16 @@ class GqlNameContract extends GqlBaseContract {
     required super.solutionProviderID,
     required this.name,
   });
+
+  factory GqlNameContract.fromJson(Map<String, dynamic> json) {
+    return GqlNameContract(
+        contractID: json['contractID'] ?? '',
+        twinID: json['twinID'] ?? 0,
+        state: json['state'] ?? '',
+        createdAt: json['createdAt'] ?? '',
+        solutionProviderID: json['solutionProviderID'] ?? 0,
+        name: json['name'] ?? '');
+  }
 }
 
 class GqlNodeContract extends GqlBaseContract {
@@ -81,6 +91,20 @@ class GqlNodeContract extends GqlBaseContract {
     this.resourcesUsed,
     this.parsedDeploymentData,
   });
+
+  factory GqlNodeContract.fromJson(Map<String, dynamic> json) {
+    return GqlNodeContract(
+      contractID: json['contractID'] ?? '',
+      twinID: json['twinID'] ?? 0,
+      state: json['state'] ?? '',
+      createdAt: json['createdAt'] ?? '',
+      solutionProviderID: json['solutionProviderID'] ?? 0,
+      nodeID: json['nodeID'] ?? 0,
+      deploymentData: json['deploymentData'] ?? '',
+      deploymentHash: json['deploymentHash'] ?? '',
+      numberOfPublicIPs: json['numberOfPublicIPs'] ?? 0,
+    );
+  }
 }
 
 class GqlRentContract extends GqlBaseContract {
@@ -96,6 +120,17 @@ class GqlRentContract extends GqlBaseContract {
     required super.solutionProviderID,
     required this.nodeID,
   });
+
+  factory GqlRentContract.fromJson(Map<String, dynamic> json) {
+    return GqlRentContract(
+      contractID: json['contractID'] ?? '',
+      twinID: json['twinID'] ?? 0,
+      state: json['state'] ?? '',
+      createdAt: json['createdAt'] ?? '',
+      solutionProviderID: json['solutionProviderID'] ?? 0,
+      nodeID: json['nodeID'] ?? 0,
+    );
+  }
 }
 
 class ContractUsedResources {
@@ -164,6 +199,16 @@ class GqlContractBillReports {
     required this.amountBilled,
     required this.timeStamp,
   });
+
+  factory GqlContractBillReports.fromJson(Map<String, dynamic> json) {
+    return GqlContractBillReports(
+      id: json['id'] ?? '',
+      contractID: json['contractID'] ?? 0,
+      discountLevel: parseDiscountLevel(json['discountReceived']),
+      amountBilled: json['amountBilled'] ?? '',
+      timeStamp: json['timestamp'] ?? '',
+    );
+  }
 }
 
 class GqlConsumption {

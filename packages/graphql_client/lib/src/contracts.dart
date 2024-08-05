@@ -81,43 +81,19 @@ class TFContracts {
       List<GqlNameContract> nameContracts =
           (response['data']['nameContracts'] as List<dynamic>)
               .map((contractData) {
-        return GqlNameContract(
-          contractID: contractData['contractID'] ?? '',
-          twinID: contractData['twinID'] ?? 0,
-          state: contractData['state'] ?? '',
-          createdAt: contractData['createdAt'] ?? '',
-          solutionProviderID: contractData['solutionProviderID'] ?? 0,
-          name: contractData['name'] ?? '',
-        );
+        return GqlNameContract.fromJson(contractData);
       }).toList();
 
       List<GqlNodeContract> nodeContracts =
           (response['data']['nodeContracts'] as List<dynamic>)
               .map((contractData) {
-        return GqlNodeContract(
-          contractID: contractData['contractID'] ?? '',
-          twinID: contractData['twinID'] ?? 0,
-          state: contractData['state'] ?? '',
-          createdAt: contractData['createdAt'] ?? '',
-          solutionProviderID: contractData['solutionProviderID'] ?? 0,
-          nodeID: contractData['nodeID'] ?? 0,
-          deploymentData: contractData['deploymentData'] ?? '',
-          deploymentHash: contractData['deploymentHash'] ?? '',
-          numberOfPublicIPs: contractData['numberOfPublicIPs'] ?? 0,
-        );
+        return GqlNodeContract.fromJson(contractData);
       }).toList();
 
       List<GqlRentContract> rentContracts =
           (response['data']['rentContracts'] as List<dynamic>)
               .map((contractData) {
-        return GqlRentContract(
-          contractID: contractData['contractID'] ?? '',
-          twinID: contractData['twinID'] ?? 0,
-          state: contractData['state'] ?? '',
-          createdAt: contractData['createdAt'] ?? '',
-          solutionProviderID: contractData['solutionProviderID'] ?? 0,
-          nodeID: contractData['nodeID'] ?? 0,
-        );
+        return GqlRentContract.fromJson(contractData);
       }).toList();
 
       return GqlContracts(
@@ -177,49 +153,19 @@ query getConsumption(\$contractId: BigInt!) {
 
       List<GqlContractBillReports> contractBillReports =
           contractBillReportsData.map((data) {
-        return GqlContractBillReports(
-          id: data['id'] ?? '',
-          contractID: data['contractID'] ?? 0,
-          discountLevel: parseDiscountLevel(data['discountReceived']),
-          amountBilled: data['amountBilled'] ?? '',
-          timeStamp: data['timestamp'] ?? '',
-        );
+        return GqlContractBillReports.fromJson(data);
       }).toList();
 
       List<GqlNodeContract> nodeContracts = nodeContractsData.map((data) {
-        return GqlNodeContract(
-          contractID: data['contractID'] ?? '',
-          twinID: data['twinID'] ?? 0,
-          state: data['state'] ?? '',
-          createdAt: data['createdAt'] ?? '',
-          solutionProviderID: data['solutionProviderID'] ?? 0,
-          nodeID: data['nodeID'] ?? 0,
-          deploymentData: data['deploymentData'] ?? '',
-          deploymentHash: data['deploymentHash'] ?? '',
-          numberOfPublicIPs: data['numberOfPublicIPs'] ?? 0,
-        );
+        return GqlNodeContract.fromJson(data);
       }).toList();
 
       List<GqlNameContract> nameContracts = nameContractsData.map((data) {
-        return GqlNameContract(
-          contractID: data['contractID'] ?? '',
-          twinID: data['twinID'] ?? 0,
-          state: data['state'] ?? '',
-          createdAt: data['createdAt'] ?? '',
-          solutionProviderID: data['solutionProviderID'] ?? 0,
-          name: data['name'] ?? '',
-        );
+        return GqlNameContract.fromJson(data);
       }).toList();
 
       List<GqlRentContract> rentContracts = rentContractsData.map((data) {
-        return GqlRentContract(
-          contractID: data['contractID'] ?? '',
-          twinID: data['twinID'] ?? 0,
-          state: data['state'] ?? '',
-          createdAt: data['createdAt'] ?? '',
-          solutionProviderID: data['solutionProviderID'] ?? 0,
-          nodeID: data['nodeID'] ?? 0,
-        );
+        return GqlRentContract.fromJson(data);
       }).toList();
 
       GqlConsumption gqlConsumption = GqlConsumption(
