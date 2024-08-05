@@ -31,6 +31,7 @@ enum Certification {
 @reflector
 class FarmsReturnOptions {
   bool farmID;
+  bool id;
   bool name;
   bool certification;
   bool dedicatedFarm;
@@ -40,6 +41,7 @@ class FarmsReturnOptions {
   PublicIpsReturnOptions? publicIps;
 
   FarmsReturnOptions({
+    this.id = false,
     this.farmID = false,
     this.name = false,
     this.certification = false,
@@ -52,7 +54,8 @@ class FarmsReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "id \n";
+    String returnOptions = "";
+    returnOptions = _addToReturnList(returnOptions, "id", id);
     returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
     returnOptions = _addToReturnList(returnOptions, "name", name);
     returnOptions =
@@ -419,7 +422,7 @@ class FarmsQueryOptions {
 }
 
 class FarmInfo {
-  String id;
+  String? id;
   String? gridVersion;
   int? farmID;
   String? name;
@@ -431,7 +434,7 @@ class FarmInfo {
   List<PublicIpsInfo>? publicIPs;
 
   FarmInfo({
-    required this.id,
+    this.id,
     this.gridVersion,
     this.farmID,
     this.name,
@@ -452,17 +455,20 @@ class FarmInfo {
 //pageinfo returns all 4 parameters
 @reflector
 class FarmsConnectionReturnOptions {
+  bool totalCount;
   bool pageInfo;
   EdgesReturnOptions? edges;
 
   FarmsConnectionReturnOptions({
+    this.totalCount = false,
     this.pageInfo = false,
     this.edges,
   });
 
   @override
   String toString() {
-    String returnOptions = 'totalCount \n';
+    String returnOptions = '';
+    returnOptions = _addToReturnList(returnOptions, "totalCount", totalCount);
     returnOptions = _addToReturnList(
         returnOptions,
         "pageInfo{\n startCursor \n endCursor \n hasNextPage \n hasPreviousPage \n }",
@@ -814,19 +820,19 @@ class FarmsConnectionQueryOptions {
 }
 
 class FarmsConnectionInfo {
-  int totalCount;
+  int? totalCount;
   PageInfo? pageInfo;
   List<EdgesInfo>? edges;
 
   FarmsConnectionInfo({
-    required this.totalCount,
+    this.totalCount,
     this.pageInfo,
     this.edges,
   });
 
   factory FarmsConnectionInfo.fromJson(Map<String, dynamic> json) {
     return FarmsConnectionInfo(
-      totalCount: json['totalCount'],
+      totalCount: json['totalCount'] ?? 0,
       pageInfo:
           json['pageInfo'] != null ? PageInfo.fromJson(json['pageInfo']) : null,
       edges: json['edges'] != null
