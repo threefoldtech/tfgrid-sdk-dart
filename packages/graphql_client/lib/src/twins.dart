@@ -18,12 +18,15 @@ query Twins {
 }''';
     final response = await gqlClient.query(body);
 
-    if (response['data'] == null) throw Exception('Missing "data" field');
+    if (response['data'] == null)
+      throw Exception('Missing "data" field in response: $response');
     if (response['data']['twins'] == null) {
-      throw Exception('Missing "twins" field');
+      throw Exception(
+          'Missing "twins" field in response data: ${response['data']}');
     }
     if (response['data']['twins'] is! List<dynamic>) {
-      throw Exception('Invalid data format: Expected a list: $response');
+      throw Exception(
+          'Invalid data format: Expected a list in "twins" field, got ${response['data']['twins'].runtimeType}');
     }
     List<TwinInfo> twins =
         (response['data']['twins'] as List<dynamic>).map((twinsData) {
@@ -44,13 +47,15 @@ query Twins {
   }
 }''';
     final response = await gqlClient.query(body);
-    if (response['data'] == null) throw Exception('Missing "data" field');
+    if (response['data'] == null)
+      throw Exception('Missing "data" field in response: $response');
     if (response['data']['twinsConnection'] == null) {
-      throw Exception('Missing "twinsConnection" field');
+      throw Exception(
+          'Missing "twinsConnection" field in response data: ${response['data']}');
     }
     if (response['data']['twinsConnection'] is! Map<String, dynamic>) {
       throw Exception(
-          'Invalid data format: Expected a list of maps: $response');
+          'Invalid data format: Expected a Map<String, dynamic> for "twinsConnection" field, got ${response['data']['twinsConnection'].runtimeType}');
     }
     TwinConnectionsInfo twinsConnection = TwinConnectionsInfo.fromJson(
         response['data']['twinsConnection'] as Map<String, dynamic>);
