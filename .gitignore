@@ -4,6 +4,6 @@ coverage/
 /packages/*/.dart_tool
 /packages/*/build
 /packages/*/idea
-
+.vscode/
 *.iml
 .idea
