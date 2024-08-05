@@ -19,12 +19,12 @@ query nodeResourcesTotals {
 }''';
     final response = await gqlClient.query(body);
 
-    if (response['data'] == null) throw Exception('Missing "data" field');
+    if (response['data'] == null) throw Exception('Missing "data" field in response: $response');
     if (response['data']['nodeResourcesTotals'] == null) {
-      throw Exception('Missing "nodeResourcesTotals" field');
+      throw Exception('Missing "nodeResourcesTotals" field in response data: ${response['data']}');
     }
     if (response['data']['nodeResourcesTotals'] is! List<dynamic>) {
-      throw Exception('Invalid data format: Expected a list: $response');
+      throw Exception('Invalid data format: Expected a list in "nodeResourcesTotals" field, got ${response['data']['nodeResourcesTotals'].runtimeType}');
     }
     List<NodeResourcesTotal> nodeResourcesTotals =
         (response['data']['nodeResourcesTotals'] as List<dynamic>)

@@ -18,12 +18,12 @@ query Nodes {
 }''';
     final response = await gqlClient.query(body);
 
-    if (response['data'] == null) throw Exception('Missing "data" field');
+    if (response['data'] == null) throw Exception('Missing "data" field in response: $response');
     if (response['data']['nodes'] == null) {
-      throw Exception('Missing "nodes" field');
+      throw Exception('Missing "nodes" field in response data: ${response['data']}');
     }
     if (response['data']['nodes'] is! List<dynamic>) {
-      throw Exception('Invalid data format: Expected a list: $response');
+      throw Exception('Invalid data format: Expected a list in "nodes" field, got ${response['data']['nodes'].runtimeType}');
     }
     List<Node> nodes =
         (response['data']['nodes'] as List<dynamic>).map((nodesData) {
