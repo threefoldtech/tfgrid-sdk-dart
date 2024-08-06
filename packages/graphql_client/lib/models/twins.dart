@@ -439,8 +439,6 @@ class TwinConnectionsEdgeReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    if (!cursor && node == null) node = TwinReturnOptions(id: true);
-
     returnOptions = _addToReturnList(returnOptions, "cursor", cursor);
     returnOptions = _addToReturnList(returnOptions, "node {", node != null);
     returnOptions =
