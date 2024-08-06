@@ -21,9 +21,9 @@
     },
     {
       "name": "args",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/args-2.4.2",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/args-2.5.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "async",
@@ -63,7 +63,7 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/built_value-8.9.1",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/built_value-8.9.2",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -93,7 +93,7 @@
     },
     {
       "name": "coverage",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/coverage-1.7.2",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/coverage-1.8.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -135,9 +135,9 @@
     },
     {
       "name": "ffi",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/ffi-2.1.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/ffi-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.3"
     },
     {
       "name": "file",
@@ -159,9 +159,9 @@
     },
     {
       "name": "frontend_server_client",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/frontend_server_client-3.2.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/frontend_server_client-4.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "glob",
@@ -170,8 +170,14 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "hashlib",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/hashlib-1.17.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "hashlib_codecs",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/hashlib_codecs-2.2.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/hashlib_codecs-2.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -183,9 +189,9 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/http-1.2.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/http-1.2.1",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.3"
     },
     {
       "name": "http_multi_server",
@@ -249,7 +255,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/meta-1.12.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/meta-1.15.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -261,7 +267,7 @@
     },
     {
       "name": "moment_dart",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/moment_dart-2.0.2",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/moment_dart-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -285,13 +291,13 @@
     },
     {
       "name": "pointycastle",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/pointycastle-3.7.4",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/pointycastle-3.9.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "polkadart",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/polkadart-0.4.3",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/polkadart-0.4.6",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -375,9 +381,9 @@
     },
     {
       "name": "shelf_web_socket",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/shelf_web_socket-1.0.4",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/shelf_web_socket-2.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "signer",
@@ -465,21 +471,21 @@
     },
     {
       "name": "test",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/test-1.25.2",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/test-1.25.7",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/test_api-0.7.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/test_api-0.7.2",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "test_core",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/test_core-0.6.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/test_core-0.6.4",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "typed_data",
@@ -507,15 +513,15 @@
     },
     {
       "name": "uuid",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/uuid-4.3.3",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/uuid-4.4.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "vm_service",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/vm_service-14.0.0",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/vm_service-14.2.4",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.3"
     },
     {
       "name": "watcher",
@@ -525,15 +531,15 @@
     },
     {
       "name": "web",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web-0.4.2",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web-0.5.1",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.3"
     },
     {
       "name": "web_socket_channel",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.3",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.5",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.3"
     },
     {
       "name": "webkit_inspection_protocol",
@@ -549,7 +555,7 @@
     },
     {
       "name": "yaon",
-      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/yaon-1.1.4+4",
+      "rootUri": "file:///home/alaa/.pub-cache/hosted/pub.dev/yaon-1.1.4+10",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -560,7 +566,8 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-03-12T20:12:01.018755Z",
+  "generated": "2024-08-06T11:22:27.600062Z",
   "generator": "pub",
-  "generatorVersion": "3.2.0"
+  "generatorVersion": "3.4.0",
+  "pubCache": "file:///home/alaa/.pub-cache"
 }
