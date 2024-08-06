@@ -1,42 +1,34 @@
 import 'package:graphql_client/graphql_client.dart';
 import 'package:graphql_client/models.dart';
+import 'package:graphql_client/models/contract_state.dart';
 import 'graphql_client.reflectable.dart';
 
 void main() async {
   initializeReflectable();
-
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  final FarmsReturnOptions farmsReturnOptions = FarmsReturnOptions(
-    farmID: true,
-    publicIps: PublicIpsReturnOptions(ip: true),
+  final List<ContractStates> contractStates = [
+    ContractStates.Created,
+    ContractStates.GracePeriod
+  ];
+  final GqlNodeContractReturnOptions returnOptions =
+      GqlNodeContractReturnOptions(
+    id: true,
+    gridVersion: true,
+    contractID: true,
+    twinID: true,
+    state: true,
+    createdAt: true,
+    solutionProviderID: true,
+    nodeID: true,
+    resourcesUsed: ContractUsedResourcesReturnOptions(
+      hru: true,
+    ),
   );
-  final FarmsQueryOptions farmsQueryOptions = FarmsQueryOptions(
-    idEq: "0000013810-000001-a75c1",
-  );
+  final Future<List<GqlNodeContract>> contracts = graphQLClient.contracts
+      .listNodeContractsByTwinId(89, contractStates, returnOptions);
 
-  FarmsConnectionQueryOptions farmsConnectionQueryOptions =
-      FarmsConnectionQueryOptions(
-          orderBy: FarmsOrderByOptions.id_ASC,
-          first: 2,
-          after: "10",
-          farmIDEq: 10);
-
-  FarmsConnectionReturnOptions farmsConnectionReturnOptions =
-      FarmsConnectionReturnOptions(
-          pageInfo: true,
-          edges: EdgesReturnOptions(
-              nodeReturnOptions: NodeReturnOptions(
-                  farmID: true, publicIPs: PublicIpsReturnOptions(ip: true))));
-
-  Future<FarmsConnectionInfo> farmsConnection = graphQLClient.farms
-      .getFarmsConnection(null, FarmsConnectionReturnOptions());
-
-  Future<List<FarmInfo>> farms = graphQLClient.farms.listFarms(null, null);
-
-  for (var farm in await farms) {
-    print(farm);
+  for (final contract in await contracts) {
+    print(contract);
   }
-
-  print(await farmsConnection);
 }

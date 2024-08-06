@@ -10,3 +10,4 @@ part 'models/farms.dart';
 part 'models/edges.dart';
 part 'models/node.dart';
 part 'models/page_info.dart';
+part 'models/contracts.dart';
