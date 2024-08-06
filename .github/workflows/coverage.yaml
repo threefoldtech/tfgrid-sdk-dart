@@ -22,7 +22,7 @@ jobs:
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.6.0
         with:
-          sdk: "3.4.4."
+          sdk: "stable"
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -31,26 +31,19 @@ jobs:
       - name: Install Melos
         run: dart pub global activate melos
 
-      - name: Install Dart dependencies
-        run: |
-          melos exec -c 1 -- \
-            'if [ "$MELOS_PACKAGE_NAME" != "stellar_client" ]; then dart pub get; fi'
-
-      - name: Install Flutter dependencies
-        run: |
-          melos exec -c 1 -- \
-            'if [ "$MELOS_PACKAGE_NAME" == "stellar_client" ]; then flutter pub get; fi'
+      - name: Install dependencies
+        run: melos bootstrap
 
       - name: Start TFChain Docker Container
         run: |
           sudo docker run -d --network host ghcr.io/threefoldtech/tfchain  --dev --rpc-cors all --rpc-external --rpc-methods=safe
-
+      
       - name: Wait for TFChain to be ready
         run: |
           while ! nc -z localhost 9944; do
             echo "Waiting for TFChain to be ready..."
             sleep 5
-          done
+          done    
 
       - name: Run unit tests and generate coverage
         run: |
