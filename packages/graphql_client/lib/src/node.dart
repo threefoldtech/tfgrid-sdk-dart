@@ -55,7 +55,7 @@ class TFNodes {
       NodesQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
     final String returnString;
-    if (returnOptions == null || returnOptions.toString() == "") {
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
       returnString = nodeReturnOptions;
     } else {
       returnString = returnOptions.toString();
@@ -92,7 +92,7 @@ query Nodes {
     queryOptions ??= NodesConnectionsQueryOptions();
     final queryString = queryOptions.toString();
     final String returnString;
-    if (returnOptions == null || returnOptions.toString() == "") {
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
       returnString = '''
     pageInfo {
       endCursor

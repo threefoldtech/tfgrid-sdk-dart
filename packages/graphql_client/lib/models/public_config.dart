@@ -1,5 +1,6 @@
 part of '../models.dart';
 
+@reflector
 class PublicConfigReturnOptions {
   bool id;
   NodesReturnOptions? node;

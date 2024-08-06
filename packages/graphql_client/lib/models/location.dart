@@ -1,5 +1,6 @@
 part of '../models.dart';
 
+@reflector
 class LocationReturnOptions {
   bool id;
   bool longitude;

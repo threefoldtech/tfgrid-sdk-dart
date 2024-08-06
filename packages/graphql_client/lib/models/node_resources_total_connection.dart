@@ -24,10 +24,9 @@ class NodeResourcesTotalEdgeInfo {
   }
 }
 
-// Use Page Info  --> fixed 3la branch twins  -- Update after U pull el twins
 class NodeResourcesTotalsConnectionInfo {
   List<NodeResourcesTotalEdgeInfo>? edges;
-  TwinConnectionsPageInfo? pageInfo;
+  PageInfo? pageInfo;
   int? totalCount;
 
   NodeResourcesTotalsConnectionInfo({
@@ -46,8 +45,7 @@ class NodeResourcesTotalsConnectionInfo {
               .toList()
           : null,
       pageInfo: json['pageInfo'] != null
-          ? TwinConnectionsPageInfo.fromJson(
-              json['pageInfo'] as Map<String, dynamic>)
+          ? PageInfo.fromJson(json['pageInfo'] as Map<String, dynamic>)
           : null,
       totalCount: json['totalCount'] ?? 0,
     );
@@ -84,6 +82,7 @@ class NodeResourcesTotalsConnectionQueryOptions {
   }
 }
 
+@reflector
 class NodeResourcesTotalEdgeReturnOptions {
   bool cursor;
   NodeResourcesTotalReturnOptions? node;
@@ -106,9 +105,10 @@ class NodeResourcesTotalEdgeReturnOptions {
   }
 }
 
+@reflector
 class NodeResourcesTotalsConnectionReturnOptions {
   NodeResourcesTotalEdgeReturnOptions? edges;
-  TwinConnectionsPageReturnOptions? pageInfo; //Fix to be Page return info 3mtan
+  PageInfoReturnOptions? pageInfo;
   bool totalCount;
 
   NodeResourcesTotalsConnectionReturnOptions({

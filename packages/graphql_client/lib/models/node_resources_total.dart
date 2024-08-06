@@ -59,6 +59,7 @@ enum NodeResourcesTotalOrderByOptions {
   }
 }
 
+@reflector
 class NodeResourcesTotalReturnOptions {
   bool id;
   bool cru;

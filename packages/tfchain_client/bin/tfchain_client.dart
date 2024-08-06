@@ -12,10 +12,8 @@ void main() async {
 
   // await queryClient.disconnect();
 
-  final client = Client(
-      "wss://tfchain.dev.grid.tf/ws",
-      "your-mnemonic",
-      "sr25519");
+  final client =
+      Client("wss://tfchain.dev.grid.tf/ws", "your-mnemonic", "sr25519");
   await client.connect();
   // final extrinsic = await client.clientBalances.transfer(
   //     address: "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC", amount: 10);

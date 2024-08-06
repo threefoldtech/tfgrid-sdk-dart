@@ -33,6 +33,7 @@ class Interfaces {
   }
 }
 
+@reflector
 class InterfacesReturnOptions {
   bool id;
   NodesReturnOptions? node;

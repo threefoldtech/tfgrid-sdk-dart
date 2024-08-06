@@ -58,7 +58,7 @@ class TFNodesResourcesTotals {
       NodeResourcesTotalQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
     final String returnString;
-    if (returnOptions == null || returnOptions.toString() == "") {
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
       returnString = '''
     cru
     hru
@@ -103,7 +103,7 @@ query nodeResourcesTotals {
     queryOptions ??= NodeResourcesTotalsConnectionQueryOptions();
     final queryString = queryOptions.toString();
     final String returnString;
-    if (returnOptions == null || returnOptions.toString() == "") {
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
       returnString = '''
     edges {
       cursor

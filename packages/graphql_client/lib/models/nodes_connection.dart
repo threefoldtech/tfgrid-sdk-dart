@@ -24,10 +24,9 @@ class NodeEdgeInfo {
   }
 }
 
-// fix howar el page info when u pull twins hena
 class NodeConnectionsInfo {
   List<NodeEdgeInfo>? edges;
-  TwinConnectionsPageInfo? pageInfo;
+  PageInfo? pageInfo;
   int? totalCount;
 
   NodeConnectionsInfo({
@@ -44,8 +43,7 @@ class NodeConnectionsInfo {
               .toList()
           : null,
       pageInfo: json['pageInfo'] != null
-          ? TwinConnectionsPageInfo.fromJson(
-              json['pageInfo'] as Map<String, dynamic>)
+          ? PageInfo.fromJson(json['pageInfo'] as Map<String, dynamic>)
           : null,
       totalCount: json['totalCount'] ?? 0,
     );
@@ -82,6 +80,7 @@ class NodesConnectionsQueryOptions {
   }
 }
 
+@reflector
 class NodeEdgeReturnOptions {
   bool cursor;
   NodesReturnOptions? node;
@@ -104,10 +103,10 @@ class NodeEdgeReturnOptions {
   }
 }
 
-// fix howar el page info when u pull twins hena
+@reflector
 class NodesConnectionsReturnOptions {
   NodeEdgeReturnOptions? edges;
-  TwinConnectionsPageReturnOptions? pageInfo;
+  PageInfoReturnOptions? pageInfo;
   bool totalCount;
 
   NodesConnectionsReturnOptions({

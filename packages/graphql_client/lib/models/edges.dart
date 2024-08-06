@@ -22,6 +22,7 @@ class EdgesInfo {
   }
 }
 
+@reflector
 class EdgesReturnOptions {
   NodeReturnOptions? nodeReturnOptions;
 

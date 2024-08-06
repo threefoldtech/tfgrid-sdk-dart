@@ -897,6 +897,7 @@ class NodesQueryOptions {
   }
 }
 
+@reflector
 class NodesReturnOptions {
   bool id;
   bool gridVersion;
