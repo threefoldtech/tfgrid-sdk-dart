@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "67.0.0"
+  adaptive_number:
+    dependency: transitive
+    description:
+      name: adaptive_number
+      sha256: "3a567544e9b5c9c803006f51140ad544aedc79604fd4f3f2c1380003f97c1d77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   analyzer:
     dependency: transitive
     description:
@@ -21,10 +29,10 @@ packages:
     dependency: transitive
     description:
       name: args
-      sha256: eef6c46b622e0494a36c5a12d10d77fb4e855501a91c1b9ef9339326e58f0596
+      sha256: "7cf60b9f0cc88203c5a190b4cd62a99feea42759a7fa695010eb5de1c0b2252a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.5.0"
   async:
     dependency: transitive
     description:
@@ -33,6 +41,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  base_x:
+    dependency: transitive
+    description:
+      name: base_x
+      sha256: "519abcdafd637d4b6bd7e72fabd8f9264935f804b9b9f6c5d8411c7d52cbf8fd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  bip39_mnemonic:
+    dependency: transitive
+    description:
+      name: bip39_mnemonic
+      sha256: "24855a62fb9dd930f697063a274e084b0a574e1cc55ec270ca4756f579ab512c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.6"
   boolean_selector:
     dependency: transitive
     description:
@@ -58,7 +82,7 @@ packages:
     source: hosted
     version: "3.1.1"
   coverage:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: coverage
       sha256: "8acabb8306b57a409bf4c83522065672ee13179297a6bb0cb9ead73948df7c76"
@@ -73,6 +97,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  cryptography:
+    dependency: transitive
+    description:
+      name: cryptography
+      sha256: d146b76d33d94548cf035233fbc2f4338c1242fa119013bead807d033fc4ae05
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.0"
+  ed25519_edwards:
+    dependency: transitive
+    description:
+      name: ed25519_edwards
+      sha256: "6ce0112d131327ec6d42beede1e5dfd526069b18ad45dcf654f15074ad9276cd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
+  edwards25519:
+    dependency: transitive
+    description:
+      name: edwards25519
+      sha256: "48e4678136e362bed9790dfb716ebe8e2f34f026bdb900b058214620672c6273"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
+  ffi:
+    dependency: transitive
+    description:
+      name: ffi
+      sha256: "493f37e7df1804778ff3a53bd691d8692ddf69702cf4c1c1096a2e41b4779e21"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.2"
   file:
     dependency: transitive
     description:
@@ -81,6 +145,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  fixnum:
+    dependency: transitive
+    description:
+      name: fixnum
+      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  flutter_curve25519:
+    dependency: transitive
+    description:
+      name: flutter_curve25519
+      sha256: d2d196e51de878f5f0289d2d7c5e93dc0c62ccda7ca98c7e47b5a58a6851b861
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   frontend_server_client:
     dependency: transitive
     description:
@@ -97,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  hex:
+    dependency: "direct main"
+    description:
+      name: hex
+      sha256: "4e7cd54e4b59ba026432a6be2dd9d96e4c5205725194997193bf871703b82c4a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -133,10 +221,10 @@ packages:
     dependency: "direct dev"
     description:
       name: lints
-      sha256: "0a217c6c989d21039f1498c3ed9f3ed71b354e69873f13a8dfc3c9fe76f1b452"
+      sha256: cbf8d4b858bb0134ef3ef87841abdf8d63bfc255c266b7bf6b39daa1085c4290
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "3.0.0"
   logging:
     dependency: transitive
     description:
@@ -153,14 +241,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.16+1"
+  merlin:
+    dependency: transitive
+    description:
+      name: merlin
+      sha256: c6b5d5bc70880aa7639686db66480d0be4b89da843b5cab20550610507da2540
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   meta:
     dependency: transitive
     description:
       name: meta
-      sha256: "7687075e408b093f36e6bbf6c91878cc0d4cd10f409506f7bc996f68220b9136"
+      sha256: "25dfcaf170a0190f47ca6355bdd4552cb8924b430512ff0cafb8db9bd41fe33b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.12.0"
+    version: "1.14.0"
   mime:
     dependency: transitive
     description:
@@ -193,6 +289,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.1"
+  polkadart_keyring:
+    dependency: "direct main"
+    description:
+      name: polkadart_keyring
+      sha256: "10cdd75e3319169ca7a4bb49745d85fab3f56bba2eafda35655c4f278a4c5e07"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.3"
+  polkadart_scale_codec:
+    dependency: transitive
+    description:
+      name: polkadart_scale_codec
+      sha256: fab60c739f6ebcc812796e56378656dca57179cec46e92c23614db6fd9ed0f86
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   pool:
     dependency: transitive
     description:
@@ -209,6 +329,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: b1c1ac5ce6688d77f65f3375a9abb9319b3cb32486bdc7a1e0fdf004d7ba4e47
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
+  ristretto255:
+    dependency: transitive
+    description:
+      name: ristretto255
+      sha256: "3824d6786146dfb3b0783f305b714d36fa213c0d08e0ba864267baa0ede51cdd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  secp256k1_ecdsa:
+    dependency: transitive
+    description:
+      name: secp256k1_ecdsa
+      sha256: "87008b4fd164d861b94b0edf2e01ffadd6f06769e1f0382e19bb091daecc0576"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   shelf:
     dependency: transitive
     description:
@@ -265,6 +409,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  sr25519:
+    dependency: transitive
+    description:
+      name: sr25519
+      sha256: "266f7b2a4dd2d6a41a49924d41e80665f3b8340c157deff172f2b0cf64657a27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
+  ss58:
+    dependency: transitive
+    description:
+      name: ss58
+      sha256: b24d2713597b83708ef30daea5a565dba8bc9129031b30c025069e168301ae5e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   stack_trace:
     dependency: transitive
     description:
@@ -289,6 +449,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  strobe:
+    dependency: transitive
+    description:
+      name: strobe
+      sha256: a23adf7d305e45c6f210270aa925d8b404819144e29f7c5257a67281b63e0887
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
+  substrate_bip39:
+    dependency: transitive
+    description:
+      name: substrate_bip39
+      sha256: "29548105e939d1fb213aba96686eb5c5aae472249fa12b8dda58b252d23f492c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   term_glyph:
     dependency: transitive
     description:
@@ -301,26 +477,26 @@ packages:
     dependency: "direct dev"
     description:
       name: test
-      sha256: "7ee446762c2c50b3bd4ea96fe13ffac69919352bd3b4b17bac3f3465edc58073"
+      sha256: d87214d19fb311997d8128ec501a980f77cb240ac4e7e219accf452813ff473c
       url: "https://pub.dev"
     source: hosted
-    version: "1.25.2"
+    version: "1.25.3"
   test_api:
     dependency: transitive
     description:
       name: test_api
-      sha256: "9955ae474176f7ac8ee4e989dadfb411a58c30415bcfb648fa04b2b8a03afa7f"
+      sha256: "2419f20b0c8677b2d67c8ac4d1ac7372d862dc6c460cdbb052b40155408cd794"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1"
   test_core:
     dependency: transitive
     description:
       name: test_core
-      sha256: "2bc4b4ecddd75309300d8096f781c0e3280ca1ef85beda558d33fcbedc2eead4"
+      sha256: "2236f70be1e5ab405c675e88c36935a87dad9e05a506b57dd5c0f617f5aebcb2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "0.6.1"
   typed_data:
     dependency: transitive
     description:
@@ -329,6 +505,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  unorm_dart:
+    dependency: transitive
+    description:
+      name: unorm_dart
+      sha256: "5b35bff83fce4d76467641438f9e867dc9bcfdb8c1694854f230579d68cd8f4b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   vm_service:
     dependency: transitive
     description:
@@ -357,10 +541,10 @@ packages:
     dependency: transitive
     description:
       name: web_socket_channel
-      sha256: "1d8e795e2a8b3730c41b8a98a2dff2e0fb57ae6f0764a1c46ec5915387d257b2"
+      sha256: "58c6666b342a38816b2e7e50ed0f1e261959630becd4c879c4f26bfa14aa5a42"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.4"
+    version: "2.4.5"
   webkit_inspection_protocol:
     dependency: transitive
     description:
