@@ -1,6 +1,6 @@
 name: signer
 description: A signer to sign and verify raw data
-version: 1.0.0
+version: 0.1.0
 
 environment:
   sdk: ^3.2.0
