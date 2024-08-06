@@ -14,6 +14,7 @@ import 'package:polkadart/polkadart.dart'
         StateApi;
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
+import 'package:signer/signer.dart' as Signer;
 import 'package:tfchain_client/generated/dev/types/tfchain_runtime/runtime_call.dart';
 import 'package:tfchain_client/src/error_mapper.dart';
 import 'package:tfchain_client/src/balances.dart' as balance;
@@ -29,7 +30,6 @@ import 'package:tfchain_client/src/tft_bridge.dart';
 import 'package:tfchain_client/src/tft_price.dart';
 import 'package:tfchain_client/src/twins.dart';
 import 'package:bip39/bip39.dart';
-import 'package:signer/signer.dart' as Signer;
 import 'package:collection/collection.dart';
 import 'package:tfchain_client/src/utils.dart';
 
