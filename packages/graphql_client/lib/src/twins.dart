@@ -45,7 +45,6 @@ query Twins {
         (response['data']['twins'] as List<dynamic>).map((twinsData) {
       return TwinInfo.fromJson(twinsData as Map<String, dynamic>);
     }).toList();
-    print(twins);
     return twins;
   }
 
@@ -98,7 +97,6 @@ query Twins {
     }
     TwinConnectionsInfo twinsConnection = TwinConnectionsInfo.fromJson(
         response['data']['twinsConnection'] as Map<String, dynamic>);
-    print(twinsConnection);
     return twinsConnection;
   }
 }

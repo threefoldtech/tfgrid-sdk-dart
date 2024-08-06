@@ -422,7 +422,6 @@ class TwinReturnOptions {
     returnOptions = _addToReturnList(returnOptions, "publicKey", publicKey);
     returnOptions = _addToReturnList(returnOptions, "relay", relay);
     returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
-    if (returnOptions == "") returnOptions = "id \n";
     return returnOptions;
   }
 }
@@ -470,15 +469,6 @@ class TwinConnectionsReturnOptions {
     if (edges != null) returnOptions += edges.toString();
     if (pageInfo != null) returnOptions += pageInfo.toString();
     returnOptions = _addToReturnList(returnOptions, "totalCount", totalCount);
-    if (returnOptions == "") {
-      returnOptions += '''
-      edges {
-      node {
-        id
-      }
-    }
-''';
-    }
     return returnOptions;
   }
 }
@@ -529,7 +519,9 @@ class TwinConnectionsEdgeInfo {
   factory TwinConnectionsEdgeInfo.fromJson(Map<String, dynamic> json) {
     return TwinConnectionsEdgeInfo(
       cursor: json['cursor'] ?? '',
-      node: TwinInfo.fromJson(json['node']),
+      node: json['node'] != null
+          ? TwinInfo.fromJson(json['node'] as Map<String, dynamic>)
+          : null,
     );
   }
 
