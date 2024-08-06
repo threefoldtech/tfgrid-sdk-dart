@@ -13,7 +13,6 @@ class LocationReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    if (!id && !longitude & !latitude) id = true;
     returnOptions = _addToReturnList(returnOptions, "id", id);
     returnOptions = _addToReturnList(returnOptions, "longitude", longitude);
     returnOptions = _addToReturnList(returnOptions, "latitude", latitude);
@@ -22,12 +21,12 @@ class LocationReturnOptions {
 }
 
 class Location {
-  String id;
+  String? id;
   String? longitude;
   String? latitude;
 
   Location({
-    required this.id,
+    this.id,
     this.longitude,
     this.latitude,
   });

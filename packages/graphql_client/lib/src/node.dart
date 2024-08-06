@@ -1,6 +1,51 @@
 import '../graphql_client.dart';
 import '../models.dart';
 
+const nodeReturnOptions = '''
+certification
+    city
+    id
+    gridVersion
+    farmingPolicyId
+    farmID
+    dedicated
+    createdAt
+    extraFee
+    created
+    country
+    connectionPrice
+    nodeID
+    secure
+    serialNumber
+    twinID
+    updatedAt
+    uptime
+    virtualized
+    resourcesTotal {
+      cru
+      hru
+      id
+      mru
+      sru
+    }
+    publicConfig {
+      domain
+      gw4
+      gw6
+      ipv4
+      id
+      ipv6
+    }
+    power {
+      state
+      target
+    }
+    location {
+      id
+      latitude
+      longitude
+    }''';
+
 class TFNodes {
   final GraphQLClient gqlClient;
 
@@ -9,7 +54,12 @@ class TFNodes {
   Future<List<Node>> nodes(NodesReturnOptions? returnOptions,
       NodesQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
-    final returnString = returnOptions?.toString() ?? "id \n";
+    final String returnString;
+    if (returnOptions == null || returnOptions.toString() == "") {
+      returnString = nodeReturnOptions;
+    } else {
+      returnString = returnOptions.toString();
+    }
     final body = '''
 query Nodes {
   nodes $queryString {
@@ -18,8 +68,9 @@ query Nodes {
 }''';
     final response = await gqlClient.query(body);
 
-    if (response['data'] == null)
+    if (response['data'] == null) {
       throw Exception('Missing "data" field in response: $response');
+    }
     if (response['data']['nodes'] == null) {
       throw Exception(
           'Missing "nodes" field in response data: ${response['data']}');
@@ -38,15 +89,29 @@ query Nodes {
   Future<NodeConnectionsInfo> nodesConnection(
       NodesConnectionsReturnOptions? returnOptions,
       NodesConnectionsQueryOptions? queryOptions) async {
-    if (queryOptions == null) queryOptions = NodesConnectionsQueryOptions();
+    queryOptions ??= NodesConnectionsQueryOptions();
     final queryString = queryOptions.toString();
-    final returnString = returnOptions?.toString() ??
-        '''
+    final String returnString;
+    if (returnOptions == null || returnOptions.toString() == "") {
+      returnString = '''
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+    totalCount
     edges {
+      cursor
       node {
-        id
+        $nodeReturnOptions
       }
-    }''';
+    }
+
+''';
+    } else {
+      returnString = returnOptions.toString();
+    }
     final body = '''
 query Nodes {
   nodesConnection $queryString {
@@ -54,9 +119,9 @@ query Nodes {
   }
 }''';
     final response = await gqlClient.query(body);
-
-    if (response['data'] == null)
+    if (response['data'] == null) {
       throw Exception('Missing "data" field in response: $response');
+    }
     if (response['data']['nodesConnection'] == null) {
       throw Exception(
           'Missing "nodesConnection" field in response data: ${response['data']}');

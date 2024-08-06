@@ -6,7 +6,7 @@ enum PowerState {
 
   @override
   String toString() {
-    return this.name;
+    return name;
   }
 }
 
@@ -16,7 +16,7 @@ enum Power {
 
   @override
   String toString() {
-    return this.name;
+    return name;
   }
 }
 
@@ -51,7 +51,6 @@ class NodePowerReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    if (!state && !target) state = true;
     returnOptions = _addToReturnList(returnOptions, "state", state);
     returnOptions = _addToReturnList(returnOptions, "target", target);
     if (returnOptions != "") returnOptions = "power { \n $returnOptions } \n";

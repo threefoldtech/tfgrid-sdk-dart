@@ -1,46 +1,48 @@
-// ignore_for_file: constant_identifier_names
-
 part of '../models.dart';
 
-class NodeEdgeInfo {
+class NodeResourcesTotalEdgeInfo {
   String? cursor;
-  Node? node;
+  NodeResourcesTotal? node;
 
-  NodeEdgeInfo({
+  NodeResourcesTotalEdgeInfo({
     this.cursor,
     this.node,
   });
 
-  factory NodeEdgeInfo.fromJson(Map<String, dynamic> json) {
-    return NodeEdgeInfo(
+  factory NodeResourcesTotalEdgeInfo.fromJson(Map<String, dynamic> json) {
+    return NodeResourcesTotalEdgeInfo(
       cursor: json['cursor'] ?? '',
-      node: json['node'] != null ? Node.fromJson(json['node']) : null,
+      node: json['node'] != null
+          ? NodeResourcesTotal.fromJson(json['node'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   @override
   String toString() {
-    return 'NodeEdgeInfo(cursor: $cursor, node: $node)';
+    return 'NodeResourcesTotalEdgeInfo(cursor: $cursor, node: $node)';
   }
 }
 
-// fix howar el page info when u pull twins hena
-class NodeConnectionsInfo {
-  List<NodeEdgeInfo>? edges;
+// Use Page Info  --> fixed 3la branch twins  -- Update after U pull el twins
+class NodeResourcesTotalsConnectionInfo {
+  List<NodeResourcesTotalEdgeInfo>? edges;
   TwinConnectionsPageInfo? pageInfo;
   int? totalCount;
 
-  NodeConnectionsInfo({
+  NodeResourcesTotalsConnectionInfo({
     this.edges,
     this.pageInfo,
     this.totalCount,
   });
 
-  factory NodeConnectionsInfo.fromJson(Map<String, dynamic> json) {
-    return NodeConnectionsInfo(
+  factory NodeResourcesTotalsConnectionInfo.fromJson(
+      Map<String, dynamic> json) {
+    return NodeResourcesTotalsConnectionInfo(
       edges: json['edges'] != null
           ? (json['edges'] as List)
-              .map((i) => NodeEdgeInfo.fromJson(i as Map<String, dynamic>))
+              .map((i) => NodeResourcesTotalEdgeInfo.fromJson(
+                  i as Map<String, dynamic>))
               .toList()
           : null,
       pageInfo: json['pageInfo'] != null
@@ -53,18 +55,18 @@ class NodeConnectionsInfo {
 
   @override
   String toString() {
-    return 'NodeConnectionsInfo(edges: $edges, pageInfo: $pageInfo, totalCount: $totalCount)';
+    return 'NodeResourcesTotalsConnectionInfo(edges: $edges, pageInfo: $pageInfo, totalCount: $totalCount)';
   }
 }
 
-class NodesConnectionsQueryOptions {
-  NodesOrderByOptions orderby;
+class NodeResourcesTotalsConnectionQueryOptions {
+  NodeResourcesTotalOrderByOptions orderby;
   int? first;
   int? after;
   NodesQueryWhereOptions? whereOptions;
 
-  NodesConnectionsQueryOptions({
-    this.orderby = NodesOrderByOptions.id_ASC,
+  NodeResourcesTotalsConnectionQueryOptions({
+    this.orderby = NodeResourcesTotalOrderByOptions.id_ASC,
     this.first,
     this.after,
     this.whereOptions,
@@ -82,11 +84,11 @@ class NodesConnectionsQueryOptions {
   }
 }
 
-class NodeEdgeReturnOptions {
+class NodeResourcesTotalEdgeReturnOptions {
   bool cursor;
-  NodesReturnOptions? node;
+  NodeResourcesTotalReturnOptions? node;
 
-  NodeEdgeReturnOptions({
+  NodeResourcesTotalEdgeReturnOptions({
     this.cursor = false,
     this.node,
   });
@@ -104,13 +106,12 @@ class NodeEdgeReturnOptions {
   }
 }
 
-// fix howar el page info when u pull twins hena
-class NodesConnectionsReturnOptions {
-  NodeEdgeReturnOptions? edges;
-  TwinConnectionsPageReturnOptions? pageInfo;
+class NodeResourcesTotalsConnectionReturnOptions {
+  NodeResourcesTotalEdgeReturnOptions? edges;
+  TwinConnectionsPageReturnOptions? pageInfo; //Fix to be Page return info 3mtan
   bool totalCount;
 
-  NodesConnectionsReturnOptions({
+  NodeResourcesTotalsConnectionReturnOptions({
     this.edges,
     this.pageInfo,
     this.totalCount = false,

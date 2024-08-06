@@ -4,6 +4,11 @@ import 'package:graphql_client/models.dart';
 void main() async {
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
+  await graphQLClient.nodeResourcesTotals.nodeResourcesTotalConnection(
+      NodeResourcesTotalsConnectionReturnOptions(),
+      NodeResourcesTotalsConnectionQueryOptions());
+
+/* 
   await graphQLClient.nodeResourcesTotals.nodeResourcesTotal(
       NodeResourcesTotalReturnOptions(
           id: true,
@@ -14,7 +19,7 @@ void main() async {
           offset: 2,
           whereOptions: NodeResourcesWhereOptions(idIsNull: false)));
 
-/*
+
   await graphQLClient.nodes.nodes(
       NodesReturnOptions(
         city: true,

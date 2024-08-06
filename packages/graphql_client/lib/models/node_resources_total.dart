@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of '../models.dart';
 
 enum NodeResourcesTotalOrderByOptions {
@@ -51,8 +53,9 @@ enum NodeResourcesTotalOrderByOptions {
   mru_ASC,
   mru_DESC;
 
+  @override
   String toString() {
-    return this.name;
+    return name;
   }
 }
 
@@ -75,9 +78,6 @@ class NodeResourcesTotalReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    if (!cru && !hru & !mru && !sru && !id && node == null) {
-      node = NodesReturnOptions(id: true);
-    }
     returnOptions = _addToReturnList(returnOptions, "id", id);
     returnOptions = _addToReturnList(returnOptions, "cru", cru);
     returnOptions = _addToReturnList(returnOptions, "hru", hru);
@@ -92,7 +92,7 @@ class NodeResourcesTotalReturnOptions {
 }
 
 class NodeResourcesTotal {
-  String id;
+  String? id;
   Node? node;
   BigInt? hru;
   BigInt? sru;
@@ -100,12 +100,12 @@ class NodeResourcesTotal {
   BigInt? mru;
 
   NodeResourcesTotal({
-    required this.id,
-    required this.node,
-    required this.hru,
-    required this.sru,
-    required this.cru,
-    required this.mru,
+    this.id,
+    this.node,
+    this.hru,
+    this.sru,
+    this.cru,
+    this.mru,
   });
 
   factory NodeResourcesTotal.fromJson(Map<String, dynamic> json) {

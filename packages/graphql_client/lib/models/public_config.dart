@@ -21,9 +21,6 @@ class PublicConfigReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    if (!ipv4 && !ipv6 & !gw4 && !gw6 && !domain && !id && node == null) {
-      node = NodesReturnOptions(id: true);
-    }
     returnOptions = _addToReturnList(returnOptions, "id", id);
     returnOptions = _addToReturnList(returnOptions, "ipv4", ipv4);
     returnOptions = _addToReturnList(returnOptions, "ipv6", ipv6);
@@ -39,7 +36,7 @@ class PublicConfigReturnOptions {
 }
 
 class PublicConfig {
-  String id;
+  String? id;
   Node? node;
   String? ipv4;
   String? ipv6;
@@ -48,7 +45,7 @@ class PublicConfig {
   String? domain;
 
   PublicConfig({
-    required this.id,
+    this.id,
     this.node,
     this.ipv4,
     this.ipv6,

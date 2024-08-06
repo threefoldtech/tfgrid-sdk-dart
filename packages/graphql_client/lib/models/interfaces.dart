@@ -1,14 +1,14 @@
 part of '../models.dart';
 
 class Interfaces {
-  String id;
+  String? id;
   Node? node;
   String? name;
   String? mac;
   String? ips;
 
   Interfaces({
-    required this.id,
+    this.id,
     this.node,
     this.name,
     this.mac,
@@ -51,9 +51,6 @@ class InterfacesReturnOptions {
   @override
   String toString() {
     String returnOptions = "";
-    if (!name && !mac & !ips && !id && node == null) {
-      node = NodesReturnOptions(id: true);
-    }
     returnOptions = _addToReturnList(returnOptions, "id", id);
     returnOptions = _addToReturnList(returnOptions, "name", name);
     returnOptions = _addToReturnList(returnOptions, "mac", mac);
