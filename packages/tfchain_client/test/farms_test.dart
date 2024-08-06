@@ -1,4 +1,3 @@
-@Timeout(Duration(seconds: 70))
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
 
