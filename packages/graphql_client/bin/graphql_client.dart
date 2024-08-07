@@ -25,8 +25,8 @@ void main() async {
       hru: true,
     ),
   );
-  final Future<List<GqlNodeContract>> contracts = graphQLClient.contracts
-      .listNodeContractsByTwinId(89, contractStates, returnOptions);
+  final Future<List<GqlContractBillReports>> contracts = graphQLClient.contracts
+      .listContractConsumption(BigInt.from(113803), null);
 
   for (final contract in await contracts) {
     print(contract);

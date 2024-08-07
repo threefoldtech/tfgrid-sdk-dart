@@ -5,7 +5,12 @@ enum DiscountLevel {
   Default,
   Bronze,
   Silver,
-  Gold,
+  Gold;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 DiscountLevel parseDiscountLevel(String level) {
@@ -377,28 +382,64 @@ class GetConsumptionOptions {
 }
 
 class GqlContractBillReports {
-  String id;
-  int contractID;
-  DiscountLevel discountLevel;
-  String amountBilled;
-  String timeStamp;
+  String? id;
+  BigInt? contractID;
+  DiscountLevel? discountLevel;
+  String? amountBilled;
+  String? timeStamp;
 
   GqlContractBillReports({
-    required this.id,
-    required this.contractID,
-    required this.discountLevel,
-    required this.amountBilled,
-    required this.timeStamp,
+    this.id,
+    this.contractID,
+    this.discountLevel,
+    this.amountBilled,
+    this.timeStamp,
   });
 
   factory GqlContractBillReports.fromJson(Map<String, dynamic> json) {
     return GqlContractBillReports(
       id: json['id'] ?? '',
-      contractID: json['contractID'] ?? 0,
+      contractID: BigInt.parse(json['contractID'] ?? 0),
       discountLevel: parseDiscountLevel(json['discountReceived']),
       amountBilled: json['amountBilled'] ?? '',
       timeStamp: json['timestamp'] ?? '',
     );
+  }
+
+  @override
+  String toString() {
+    return 'GqlContractBillReports{id: $id, contractID: $contractID, discountLevel: $discountLevel, amountBilled: $amountBilled, timeStamp: $timeStamp}';
+  }
+}
+
+@reflector
+class GqlContractBillReportsReturnOptions {
+  bool id;
+  bool contractID;
+  bool discountLevel;
+  bool amountBilled;
+  bool timeStamp;
+
+  GqlContractBillReportsReturnOptions({
+    this.id = false,
+    this.contractID = false,
+    this.discountLevel = false,
+    this.amountBilled = false,
+    this.timeStamp = false,
+  });
+
+  @override
+  String toString() {
+    String returnOptions = '';
+    returnOptions = _addToReturnList(returnOptions, 'id', id);
+    returnOptions = _addToReturnList(returnOptions, 'contractID', contractID);
+    returnOptions =
+        _addToReturnList(returnOptions, 'discountLevel', discountLevel);
+    returnOptions =
+        _addToReturnList(returnOptions, 'amountBilled', amountBilled);
+    returnOptions = _addToReturnList(returnOptions, 'timeStamp', timeStamp);
+
+    return returnOptions;
   }
 }
 

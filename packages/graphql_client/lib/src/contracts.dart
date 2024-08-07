@@ -175,6 +175,58 @@ class TFContracts {
     return nodeContracts;
   }
 
+  Future<List<GqlContractBillReports>> listContractConsumption(
+      BigInt contractId,
+      GqlContractBillReportsReturnOptions? returnOptions) async {
+    final String returnString;
+
+    if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
+      returnString = '''
+    contractID
+    amountBilled
+    discountReceived
+    timestamp
+    id
+    ''';
+    } else {
+      returnString = returnOptions.toString();
+    }
+
+    final body = '''
+        query getConsumptionforNameContracts {
+          contractBillReports(where : {contractID_eq: $contractId}){
+            $returnString
+          }
+        }
+
+      ''';
+
+    final response = await gqlClient.query(body);
+
+    if (response['data'] == null) {
+      throw Exception("Data returned is null");
+    }
+
+    if (response['data']['contractBillReports'] == null) {
+      throw Exception("contractBillReports returned is null");
+    }
+
+    final contractBillReportsDataList =
+        response['data']['contractBillReports'] as List<dynamic>;
+    if (contractBillReportsDataList
+        .any((item) => item is! Map<String, dynamic>)) {
+      throw Exception(
+          'Invalid data format: Expected a list of maps: $response');
+    }
+
+    List<GqlContractBillReports> contractBillReports =
+        contractBillReportsDataList.map((data) {
+      return GqlContractBillReports.fromJson(data);
+    }).toList();
+
+    return contractBillReports;
+  }
+
   Future<GqlContracts> listContractsByTwinId(
       ListContractByTwinIdOptions options) async {
     options.stateList ??= [
@@ -270,7 +322,7 @@ class TFContracts {
     }
   }
 
-//   Future<double> getConsumption(GetConsumptionOptions options) async {
+  //Future<double> getConsumption(GetConsumptionOptions options) async {
 //     final body = '''
 // query getConsumption(\$contractId: BigInt!) {
 //   contractBillReports(where: {contractID_eq: \$contractId}, limit: 2, orderBy: timestamp_DESC) {
