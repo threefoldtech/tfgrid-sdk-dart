@@ -6,14 +6,17 @@ environment:
   sdk: ^3.2.0
 
 dev_dependencies:
-  lints: ^3.0.0
+  lints: ">=3.0.0 <5.0.0"
   test: ^1.24.0
 
 dependencies:
   coverage: ^1.7.1
   melos: ^4.1.0
   signer: 
-    path: ./packages/signer
+    git:
+      url: https://github.com/codescalers/tfgrid-sdk-dart.git
+      ref: main
+      path: packages/signer
   substrate_bip39: ^0.4.0
   tfchain_client:
     path: ./packages/tfchain_client 

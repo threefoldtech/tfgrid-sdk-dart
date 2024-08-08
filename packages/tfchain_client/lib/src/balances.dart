@@ -25,6 +25,7 @@ class Balances extends QueryBalances {
     if (amount <= BigInt.zero) {
       throw Exception("Amount must be a positive numeric value");
     }
+
     final keyring = Keyring();
     final publicKey = keyring.decodeAddress(address);
     MultiAddress multiAddress = Id(publicKey);

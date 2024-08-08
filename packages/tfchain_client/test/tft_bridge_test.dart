@@ -1,46 +1,31 @@
-import 'package:test/test.dart';
-import 'package:tfchain_client/tfchain_client.dart';
+import 'dart:math';
 
-import 'shared_setup.dart';
+import 'package:test/test.dart';
+
+import 'setup_manager.dart';
 
 void main() {
-  group("Query Bridge Test", () {
-    late QueryClient queryClient;
-    sharedSetup();
-
-    setUp(() async {
-      queryClient = QueryClient(url);
-      await queryClient.connect();
+  group("Bridge Tests", () {
+    final setupManager = SetupManager();
+    setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
+      await setupManager.setup();
     });
-
     test('Test Get Withdraw fee', () async {
-      BigInt? fee = await queryClient.bridge.getWithdrawFee();
+      BigInt? fee = await setupManager.client.bridge.getWithdrawFee();
       expect(fee, isNotNull);
     });
 
     test('Test Get Deposit fee', () async {
-      BigInt? fee = await queryClient.bridge.getDepositFee();
+      BigInt? fee = await setupManager.client.bridge.getDepositFee();
       expect(fee, isNotNull);
-    });
-
-    tearDownAll(() async {
-      await queryClient.disconnect();
-    });
-  });
-
-  group("Bridge Test", () {
-    late Client client;
-    sharedSetup();
-
-    setUp(() async {
-      client = Client(url, mnemonic, type);
-      await client.connect();
     });
 
     test('Test swap to stellar zero TFTs', () async {
       try {
-        await client.bridge
-            .swapToStellar(target: stellarAddress, amount: BigInt.zero);
+        await setupManager.client.bridge.swapToStellar(
+            target: "GDHJP6TF3UXYXTNEZ2P36J5FH7W4BJJQ4AYYAXC66I2Q2AH5B6O6BCFG",
+            amount: BigInt.zero);
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -48,18 +33,17 @@ void main() {
 
     test('Test swap to stellar', () async {
       try {
-        await client.bridge
-            .swapToStellar(target: stellarAddress, amount: BigInt.from(5));
+        var random = Random();
+        var randomNumber = random.nextInt(100) + 1;
+        await setupManager.client.bridge.swapToStellar(
+            target: "GDHJP6TF3UXYXTNEZ2P36J5FH7W4BJJQ4AYYAXC66I2Q2AH5B6O6BCFG",
+            amount: BigInt.from(randomNumber));
       } catch (error) {
         expect(
           error,
           Null,
         );
       }
-    });
-
-    tearDownAll(() async {
-      await client.disconnect();
     });
   });
 }

@@ -2,7 +2,7 @@
 
 part of '../models.dart';
 
-enum OrderByOptions {
+enum TwinOrderByOptions {
   none,
   id_ASC,
   id_DESC,
@@ -342,7 +342,7 @@ class TwinQueryWhereOptions {
 }
 
 class TwinQueryOptions {
-  OrderByOptions? orderby;
+  TwinOrderByOptions? orderby;
   int? limit;
   int? offset;
   TwinQueryWhereOptions? whereOptions;
@@ -371,13 +371,13 @@ class TwinQueryOptions {
 }
 
 class TwinConnectionsQueryOptions {
-  OrderByOptions orderby;
+  TwinOrderByOptions orderby;
   int? first;
   int? after;
   TwinQueryWhereOptions? whereOptions;
 
   TwinConnectionsQueryOptions({
-    this.orderby = OrderByOptions.id_ASC,
+    this.orderby = TwinOrderByOptions.id_ASC,
     this.first,
     this.after,
     this.whereOptions,

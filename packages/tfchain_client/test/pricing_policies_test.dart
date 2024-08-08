@@ -1,35 +1,27 @@
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/pricing_policy.dart';
-import 'package:tfchain_client/tfchain_client.dart';
 
-import 'shared_setup.dart';
+import 'setup_manager.dart';
 
 void main() {
   group("Query Pricing Policies", () {
-    late QueryClient queryClient;
-    sharedSetup();
-
-    setUp(() async {
-      queryClient = QueryClient(url);
-      await queryClient.connect();
+    final setupManager = SetupManager();
+    setUpAll(() async {
+      setupManager.setInitializationFlags(queryClient: true);
+      await setupManager.setup();
     });
-
     test('Test Get Pricing Policy', () async {
-      PricingPolicy? res = await queryClient.policies.get(id: pricingPolicyId);
+      PricingPolicy? res = await setupManager.queryClient.policies.get(id: 1);
       expect(res, isNotNull);
     });
 
     test('Test Get Pricing Policy with wrong Id', () async {
       try {
         PricingPolicy? res =
-            await queryClient.policies.get(id: invalidPricingPolicyId);
+            await setupManager.queryClient.policies.get(id: -10);
       } catch (error) {
         expect(error, isNotNull);
       }
-    });
-
-    tearDownAll(() async {
-      await queryClient.disconnect();
     });
   });
 }
