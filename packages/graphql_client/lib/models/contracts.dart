@@ -1,4 +1,13 @@
+// ignore_for_file: constant_identifier_names
+
 part of '../models.dart';
+
+enum ContractStates {
+  Created,
+  Deleted,
+  OutOfFunds,
+  GracePeriod,
+}
 
 enum DiscountLevel {
   None,
@@ -31,7 +40,7 @@ DiscountLevel parseDiscountLevel(String level) {
 }
 
 @reflector
-class GqlBaseContractReturnOptions {
+class BaseContractReturnOptions {
   bool id;
   bool gridVersion;
   bool contractID;
@@ -40,7 +49,7 @@ class GqlBaseContractReturnOptions {
   bool createdAt;
   bool solutionProviderID;
 
-  GqlBaseContractReturnOptions({
+  BaseContractReturnOptions({
     this.id = false,
     this.gridVersion = false,
     this.contractID = false,
@@ -65,7 +74,7 @@ class GqlBaseContractReturnOptions {
   }
 }
 
-class GqlBaseContract {
+class BaseContract {
   String? id;
   int? gridVersion;
   String? contractID;
@@ -74,7 +83,7 @@ class GqlBaseContract {
   String? createdAt;
   int? solutionProviderID;
 
-  GqlBaseContract({
+  BaseContract({
     this.id,
     this.gridVersion,
     this.contractID,
@@ -86,10 +95,10 @@ class GqlBaseContract {
 }
 
 @reflector
-class GqlNameContractReturnOptions extends GqlBaseContractReturnOptions {
+class NameContractReturnOptions extends BaseContractReturnOptions {
   bool name;
 
-  GqlNameContractReturnOptions({
+  NameContractReturnOptions({
     this.name = false,
     super.id = false,
     super.gridVersion = false,
@@ -108,10 +117,10 @@ class GqlNameContractReturnOptions extends GqlBaseContractReturnOptions {
   }
 }
 
-class GqlNameContract extends GqlBaseContract {
+class NameContract extends BaseContract {
   String? name;
 
-  GqlNameContract({
+  NameContract({
     super.id,
     super.gridVersion,
     super.contractID,
@@ -122,10 +131,10 @@ class GqlNameContract extends GqlBaseContract {
     this.name,
   });
 
-  factory GqlNameContract.fromJson(Map<String, dynamic> json) {
-    return GqlNameContract(
+  factory NameContract.fromJson(Map<String, dynamic> json) {
+    return NameContract(
       id: json['id'] ?? '',
-      gridVersion: json['gridVersion'] ?? '',
+      gridVersion: json['gridVersion'] ?? 0,
       contractID: json['contractID'] ?? '',
       twinID: json['twinID'] ?? 0,
       state: json['state'] ?? '',
@@ -137,19 +146,19 @@ class GqlNameContract extends GqlBaseContract {
 
   @override
   String toString() {
-    return 'GqlNameContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, name: $name}';
+    return 'NameContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, name: $name}';
   }
 }
 
 @reflector
-class GqlNodeContractReturnOptions extends GqlBaseContractReturnOptions {
+class NodeContractReturnOptions extends BaseContractReturnOptions {
   bool nodeID;
   bool deploymentData;
   bool deploymentHash;
   bool numberOfPublicIPs;
   ContractUsedResourcesReturnOptions? resourcesUsed;
 
-  GqlNodeContractReturnOptions({
+  NodeContractReturnOptions({
     this.nodeID = false,
     this.deploymentData = false,
     this.deploymentHash = false,
@@ -183,14 +192,14 @@ class GqlNodeContractReturnOptions extends GqlBaseContractReturnOptions {
   }
 }
 
-class GqlNodeContract extends GqlBaseContract {
+class NodeContract extends BaseContract {
   int? nodeID;
   String? deploymentData;
   String? deploymentHash;
   int? numberOfPublicIPs;
   ContractUsedResources? resourcesUsed;
 
-  GqlNodeContract({
+  NodeContract({
     super.id,
     super.gridVersion,
     super.contractID,
@@ -205,8 +214,8 @@ class GqlNodeContract extends GqlBaseContract {
     this.resourcesUsed,
   });
 
-  factory GqlNodeContract.fromJson(Map<String, dynamic> json) {
-    return GqlNodeContract(
+  factory NodeContract.fromJson(Map<String, dynamic> json) {
+    return NodeContract(
       contractID: json['contractID'] ?? '',
       twinID: json['twinID'] ?? 0,
       state: json['state'] ?? '',
@@ -226,15 +235,15 @@ class GqlNodeContract extends GqlBaseContract {
 
   @override
   String toString() {
-    return 'GqlNodeContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, nodeID: $nodeID, deploymentData: $deploymentData, deploymentHash: $deploymentHash, numberOfPublicIPs: $numberOfPublicIPs, resourcesUsed: $resourcesUsed}';
+    return 'NodeContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, nodeID: $nodeID, deploymentData: $deploymentData, deploymentHash: $deploymentHash, numberOfPublicIPs: $numberOfPublicIPs, resourcesUsed: $resourcesUsed}';
   }
 }
 
 @reflector
-class GqlRentContractReturnOptions extends GqlBaseContractReturnOptions {
+class RentContractReturnOptions extends BaseContractReturnOptions {
   bool nodeID;
 
-  GqlRentContractReturnOptions({
+  RentContractReturnOptions({
     this.nodeID = false,
     super.id = false,
     super.gridVersion = false,
@@ -253,10 +262,10 @@ class GqlRentContractReturnOptions extends GqlBaseContractReturnOptions {
   }
 }
 
-class GqlRentContract extends GqlBaseContract {
+class RentContract extends BaseContract {
   int? nodeID;
 
-  GqlRentContract({
+  RentContract({
     super.id,
     super.gridVersion,
     super.contractID,
@@ -267,10 +276,10 @@ class GqlRentContract extends GqlBaseContract {
     this.nodeID,
   });
 
-  factory GqlRentContract.fromJson(Map<String, dynamic> json) {
-    return GqlRentContract(
+  factory RentContract.fromJson(Map<String, dynamic> json) {
+    return RentContract(
       id: json['id'] ?? '',
-      gridVersion: json['gridVersion'] ?? '',
+      gridVersion: json['gridVersion'] ?? 0,
       contractID: json['contractID'] ?? '',
       twinID: json['twinID'] ?? 0,
       state: json['state'] ?? '',
@@ -282,7 +291,7 @@ class GqlRentContract extends GqlBaseContract {
 
   @override
   String toString() {
-    return 'GqlRentContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, nodeID: $nodeID}';
+    return 'RentContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, nodeID: $nodeID}';
   }
 }
 
@@ -345,12 +354,12 @@ class ContractUsedResources {
   }
 }
 
-class GqlContracts {
-  List<GqlNameContract> nameContracts;
-  List<GqlNodeContract> nodeContracts;
-  List<GqlRentContract> rentContracts;
+class Contracts {
+  List<NameContract> nameContracts;
+  List<NodeContract> nodeContracts;
+  List<RentContract> rentContracts;
 
-  GqlContracts({
+  Contracts({
     required this.nameContracts,
     required this.nodeContracts,
     required this.rentContracts,
@@ -381,14 +390,14 @@ class GetConsumptionOptions {
   });
 }
 
-class GqlContractBillReports {
+class ContractBillReports {
   String? id;
   BigInt? contractID;
   DiscountLevel? discountLevel;
   String? amountBilled;
   String? timeStamp;
 
-  GqlContractBillReports({
+  ContractBillReports({
     this.id,
     this.contractID,
     this.discountLevel,
@@ -396,8 +405,8 @@ class GqlContractBillReports {
     this.timeStamp,
   });
 
-  factory GqlContractBillReports.fromJson(Map<String, dynamic> json) {
-    return GqlContractBillReports(
+  factory ContractBillReports.fromJson(Map<String, dynamic> json) {
+    return ContractBillReports(
       id: json['id'] ?? '',
       contractID: BigInt.parse(json['contractID'] ?? 0),
       discountLevel: parseDiscountLevel(json['discountReceived']),
@@ -408,19 +417,19 @@ class GqlContractBillReports {
 
   @override
   String toString() {
-    return 'GqlContractBillReports{id: $id, contractID: $contractID, discountLevel: $discountLevel, amountBilled: $amountBilled, timeStamp: $timeStamp}';
+    return 'ContractBillReports{id: $id, contractID: $contractID, discountLevel: $discountLevel, amountBilled: $amountBilled, timeStamp: $timeStamp}';
   }
 }
 
 @reflector
-class GqlContractBillReportsReturnOptions {
+class ContractBillReportsReturnOptions {
   bool id;
   bool contractID;
   bool discountLevel;
   bool amountBilled;
   bool timeStamp;
 
-  GqlContractBillReportsReturnOptions({
+  ContractBillReportsReturnOptions({
     this.id = false,
     this.contractID = false,
     this.discountLevel = false,
@@ -443,11 +452,11 @@ class GqlContractBillReportsReturnOptions {
   }
 }
 
-class GqlConsumption {
-  GqlContracts contracts;
-  List<GqlContractBillReports> contractBillReports;
+class Consumption {
+  Contracts contracts;
+  List<ContractBillReports> contractBillReports;
 
-  GqlConsumption({
+  Consumption({
     required this.contracts,
     required this.contractBillReports,
   });
