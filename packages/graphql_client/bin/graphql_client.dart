@@ -1,6 +1,5 @@
 import 'package:graphql_client/graphql_client.dart';
 import 'package:graphql_client/models.dart';
-import 'package:graphql_client/models/contract_state.dart';
 import 'graphql_client.reflectable.dart';
 
 void main() async {
@@ -11,8 +10,7 @@ void main() async {
     ContractStates.Created,
     ContractStates.GracePeriod
   ];
-  final GqlNodeContractReturnOptions returnOptions =
-      GqlNodeContractReturnOptions(
+  final NodeContractReturnOptions returnOptions = NodeContractReturnOptions(
     id: true,
     gridVersion: true,
     contractID: true,
@@ -25,7 +23,7 @@ void main() async {
       hru: true,
     ),
   );
-  final Future<List<GqlContractBillReports>> contracts = graphQLClient.contracts
+  final Future<List<ContractBillReports>> contracts = graphQLClient.contracts
       .listContractConsumption(BigInt.from(113803), null);
 
   for (final contract in await contracts) {
