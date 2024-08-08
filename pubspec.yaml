@@ -11,4 +11,13 @@ dev_dependencies:
 
 dependencies:
   coverage: ^1.7.1
-  melos: ">=3.2.0 <7.0.0"
+  melos: ^4.1.0
+  signer: 
+    git:
+      url: https://github.com/codescalers/tfgrid-sdk-dart.git
+      ref: main
+      path: packages/signer
+  substrate_bip39: ^0.4.0
+  tfchain_client:
+    path: ./packages/tfchain_client 
+
