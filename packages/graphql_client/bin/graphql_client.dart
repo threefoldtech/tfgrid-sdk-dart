@@ -7,11 +7,11 @@ void main() async {
 
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  await graphQLClient.nodeResourcesTotals.nodeResourcesTotalConnection(
+  await graphQLClient.nodes.nodeResourcesTotalConnection(
       NodeResourcesTotalsConnectionReturnOptions(),
       NodeResourcesTotalsConnectionQueryOptions());
 
-  await graphQLClient.nodeResourcesTotals.nodeResourcesTotal(
+  await graphQLClient.nodes.nodeResourcesTotal(
       NodeResourcesTotalReturnOptions(), NodeResourcesTotalQueryOptions());
 
   await graphQLClient.nodes.nodes(
