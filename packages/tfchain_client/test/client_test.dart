@@ -26,7 +26,7 @@ void main() {
     });
 
     test('Initialization', () {
-      expect(queryClient.url, equals("wss://tfchain.dev.grid.tf/ws"));
+      expect(queryClient.url, equals(url));
       expect(queryClient.contracts, isA<QueryContracts>());
       expect(queryClient.balances, isA<QueryBalances>());
       expect(queryClient.farms, isA<QueryFarms>());
@@ -48,27 +48,12 @@ void main() {
       await queryClient.disconnect();
       expect(false, queryClient.provider!.isConnected());
     });
-
-    tearDownAll(() async {
-      await queryClient.disconnect();
-    });
   });
 
   group("Full Client Tests", () {
-    late Client client;
     sharedSetup();
-
-    setUp(() async {
-      client = Client(
-        url,
-        mnemonic,
-        type,
-      );
-      await client.connect();
-    });
-
     test('Initialization', () {
-      expect(client.url, equals("wss://tfchain.dev.grid.tf/ws"));
+      expect(client.url, equals(url));
       expect(client.contracts, isA<Contracts>());
       expect(client.farms, isA<Farms>());
       expect(client.balances, isA<Balances>());
@@ -90,10 +75,6 @@ void main() {
     test('Disconnect', () async {
       await client.disconnect();
       expect(false, client.provider!.isConnected());
-    });
-
-    tearDownAll(() async {
-      await client.disconnect();
     });
   });
 }

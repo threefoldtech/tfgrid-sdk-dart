@@ -12,6 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      tfchain:
+        image: ghcr.io/threefoldtech/tfchain:2.8.1
+        options: --network host --dev --rpc-cors all --rpc-external --rpc-methods=safe
+        ports:
+          - 9944:9944
+
     steps:
       - name: Set up Repository
         uses: actions/checkout@v2
@@ -36,7 +43,6 @@ jobs:
 
       - name: Run unit tests and generate coverage
         env:
-          MNEMONIC: ${{ secrets.MNEMONIC }}
           URL: ${{ secrets.URL }}
           KEYPAIR_TYPE: ${{ secrets.KEYPAIR_TYPE}}
         run: |

@@ -1,23 +1,11 @@
 import 'package:tfchain_client/tfchain_client.dart';
 
 void main() async {
-  // final queryClient = QueryClient("wss://tfchain.dev.grid.tf/ws");
-  // await queryClient.connect();
-
-  // final twin = await queryClient.twins.get(QueryTwinsGetOptions(id: 214));
-
-  // final twinId = await queryClient.twins.getTwinIdByAccountId(
-  //     QueryTwinsGetTwinByAccountIdOptions(accountId: twin!.accountId));
-  // print(twinId);
-
-  // await queryClient.disconnect();
-
   final client =
       Client("wss://tfchain.dev.grid.tf/ws", "your-mnemonic", "sr25519");
   await client.connect();
-  // final extrinsic = await client.clientBalances.transfer(
-  //     address: "5CJrCjZvsudNoJApTGG5PKcZfhAzAyGqgSK8bysoCV2oRBMC", amount: 10);
-  final twinId = await client.twins.create(relay: [], pk: []);
+
+  final twinId = await client.twins.create(relay: "", pk: []);
 
   print(twinId);
   // await client.kvStrore.list();

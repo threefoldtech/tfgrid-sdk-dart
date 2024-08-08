@@ -25,9 +25,9 @@ class Twins extends QueryTwins {
 
   final Client client;
 
-  Future<int?> create({required List<int> relay, required List<int> pk}) async {
+  Future<int?> create({required String relay, required List<int> pk}) async {
     final extrinsic =
-        client.api.tx.tfgridModule.createTwin(relay: relay, pk: pk);
+        client.api.tx.tfgridModule.createTwin(relay: relay.codeUnits, pk: pk);
 
     await client.apply(extrinsic);
     return await getTwinIdByAccountId(address: client.address);

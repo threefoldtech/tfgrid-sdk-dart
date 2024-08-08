@@ -1,47 +1,41 @@
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dart';
 import 'package:tfchain_client/tfchain_client.dart';
+import 'package:bip39/bip39.dart' as bip39;
 
 import 'shared_setup.dart';
 
 void main() {
-  group("Query Balances Test", () {
-    late QueryClient queryClient;
+  group("Balances Tests", () {
     sharedSetup();
-
-    setUp(() async {
-      queryClient = QueryClient(url);
-      await queryClient.connect();
-    });
+    late final String recipientAddress;
 
     test('Test Get Balance', () async {
       AccountInfo? accountInfo =
-          await queryClient.balances.get(address: myAddress);
+          await client.balances.get(address: myAddress);
       expect(accountInfo, isNotNull);
     });
 
     test('Test Get Balance with Invalid address', () async {
       try {
         AccountInfo? accountInfo =
-            await queryClient.balances.get(address: invalidAddress);
+            await client.balances.get(address: "invalidAddress");
         expect(accountInfo, isNull);
       } catch (error) {
         expect(error, isNotNull);
       }
     });
 
-    tearDownAll(() async {
-      await queryClient.disconnect();
-    });
-  });
+    setUpAll(() async {
+      final mnemonic = bip39.generateMnemonic();
+      final recipientClient = Client(url, mnemonic, type);
+      await recipientClient.connect();
 
-  group("Test Balances", () {
-    late Client client;
-    sharedSetup();
+      recipientAddress = recipientClient.address;
+      Client alice = Client(url, "//Alice", type);
+      await alice.connect();
 
-    setUp(() async {
-      client = Client(url, mnemonic, type);
-      await client.connect();
+      await alice.balances.transfer(address: client.address, amount: myBalance);
     });
 
     test('Test Transfer TFTs with invalid amount', () async {
@@ -68,7 +62,6 @@ void main() {
 
         expect(diff, closeTo(10.0, 0.0001));
       } catch (error) {
-        print(error);
         expect(error, isNull);
       }
     });
@@ -76,10 +69,6 @@ void main() {
     test('Test get my balance', () async {
       AccountInfo? info = await client.balances.getMyBalance();
       expect(info, isNotNull);
-    });
-
-    tearDownAll(() async {
-      await client.disconnect();
     });
   });
 }
