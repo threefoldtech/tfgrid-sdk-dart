@@ -4,42 +4,29 @@ import 'graphql_client.reflectable.dart';
 
 void main() async {
   initializeReflectable();
-
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  await graphQLClient.nodes.nodeResourcesTotalConnection(
-      NodeResourcesTotalsConnectionReturnOptions(),
-      NodeResourcesTotalsConnectionQueryOptions());
-
-  await graphQLClient.nodes.nodeResourcesTotal(
-      NodeResourcesTotalReturnOptions(), NodeResourcesTotalQueryOptions());
-
-  await graphQLClient.nodes.nodes(
-      NodesReturnOptions(
-        city: true,
-        location: LocationReturnOptions(latitude: true),
-        resourcesTotal: NodeResourcesTotalReturnOptions(
-            mru: true, node: NodesReturnOptions(createdAt: true)),
-        power: NodePowerReturnOptions(state: true),
-        publicConfig: PublicConfigReturnOptions(
-            ipv4: true, node: NodesReturnOptions(createdAt: true)),
-        interfaces: InterfacesReturnOptions(
-            name: true, node: NodesReturnOptions(createdAt: true)),
-      ),
-      NodesQueryOptions(
-        limit: 1,
-      ));
-
-  await graphQLClient.twins.twinsConnections(
-      TwinConnectionsReturnOptions(),
-      TwinConnectionsQueryOptions(
-          whereOptions: TwinQueryWhereOptions(gridVersionEq: 1),
-          orderby: TwinOrderByOptions.gridVersion_ASC,
-          after: 3,
-          first: 3));
-
-  await graphQLClient.twins.twins(
-    TwinReturnOptions(),
-    TwinQueryOptions(orderby: TwinOrderByOptions.id_ASC, limit: 10),
+  final List<ContractStates> contractStates = [
+    ContractStates.Created,
+    ContractStates.GracePeriod
+  ];
+  final NodeContractReturnOptions returnOptions = NodeContractReturnOptions(
+    id: true,
+    gridVersion: true,
+    contractID: true,
+    twinID: true,
+    state: true,
+    createdAt: true,
+    solutionProviderID: true,
+    nodeID: true,
+    resourcesUsed: ContractUsedResourcesReturnOptions(
+      hru: true,
+    ),
   );
+  final Future<List<ContractBillReports>> contracts = graphQLClient.contracts
+      .listContractConsumption(BigInt.from(113803), null);
+
+  for (final contract in await contracts) {
+    print(contract);
+  }
 }
