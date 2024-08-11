@@ -11,7 +11,7 @@ void main() async {
       retCount: true,
       sortBy: ContractSortBy.state,
       sortOrder: ContractSortOrder.desc,
-      type: ContractTypes.rent,
+      type: ContractTypes.name,
       state: ContractState.Deleted));
   await client.contracts.getContractByID(119696);
   await client.contracts.getContractBills(

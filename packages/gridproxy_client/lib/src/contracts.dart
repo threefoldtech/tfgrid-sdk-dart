@@ -14,7 +14,6 @@ class Contracts {
         (response as List<dynamic>).map((contractsData) {
       return ContractInfo.fromJson(contractsData as Map<String, dynamic>);
     }).toList();
-    print(contracts);
     return contracts;
   }
 
@@ -22,7 +21,6 @@ class Contracts {
     final response = await client.getRequest('/contracts/$contractId', null);
     ContractInfo contract =
         ContractInfo.fromJson(response as Map<String, dynamic>);
-    print(contract);
     return contract;
   }
 
@@ -34,7 +32,6 @@ class Contracts {
         (response as List<dynamic>).map((contractsData) {
       return ContractBills.fromJson(contractsData as Map<String, dynamic>);
     }).toList();
-    print(contractsBills);
     return contractsBills;
   }
 }
