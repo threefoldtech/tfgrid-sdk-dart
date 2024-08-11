@@ -1,24 +1,26 @@
 // ignore_for_file: constant_identifier_names
-class Details {}
+class Contract {}
 
-class NameDetails extends Details {
+class NameContract extends Contract {
   String name;
 
-  NameDetails({required this.name});
+  NameContract({
+    required this.name
+  });
 
   @override
   String toString() {
     return 'Details: {name: $name}';
   }
 
-  factory NameDetails.fromJson(Map<String, dynamic> json) {
-    return NameDetails(
+  factory NameContract.fromJson(Map<String, dynamic> json) {
+    return NameContract(
       name: json['name'] ?? '',
     );
   }
 }
 
-class NodeDetails extends Details {
+class NodeContract extends Contract {
   int nodeID;
   String deploymentData;
   String deploymentHash;
@@ -26,16 +28,17 @@ class NodeDetails extends Details {
   String farmName;
   int farmId;
 
-  NodeDetails(
-      {required this.nodeID,
-      required this.deploymentData,
-      required this.deploymentHash,
-      required this.numberOfPublicIps,
-      required this.farmName,
-      required this.farmId});
+  NodeContract({
+    required this.nodeID,
+    required this.deploymentData,
+    required this.deploymentHash,
+    required this.numberOfPublicIps,
+    required this.farmName,
+    required this.farmId
+  });
 
-  factory NodeDetails.fromJson(Map<String, dynamic> json) {
-    return NodeDetails(
+  factory NodeContract.fromJson(Map<String, dynamic> json) {
+    return NodeContract(
       nodeID: json['nodeId'] ?? 0,
       deploymentData: json['deployment_data'] ?? '',
       deploymentHash: json['deployment_hash'] ?? '',
@@ -50,16 +53,19 @@ class NodeDetails extends Details {
   }
 }
 
-class RentDetails extends Details {
+class RentContract extends Contract {
   int nodeID;
   String farmName;
   int farmId;
 
-  RentDetails(
-      {required this.nodeID, required this.farmName, required this.farmId});
+  RentContract({
+    required this.nodeID, 
+    required this.farmName, 
+    required this.farmId
+  });
 
-  factory RentDetails.fromJson(Map<String, dynamic> json) {
-    return RentDetails(
+  factory RentContract.fromJson(Map<String, dynamic> json) {
+    return RentContract(
       nodeID: json['nodeId'] ?? 0,
       farmName: json['farm_name'] ?? '',
       farmId: json['farm_id'] ?? 0,
@@ -74,7 +80,7 @@ class RentDetails extends Details {
 class ContractInfo {
   int contractId;
   int createdAt;
-  Details? details;
+  Contract? details;
   String state;
   int twinID;
   String type;
@@ -94,11 +100,11 @@ class ContractInfo {
       createdAt: json['created_at'] ?? 0,
       details: json['details'] != null
           ? json['details']['name'] != null
-              ? NameDetails.fromJson(json['details'] as Map<String, dynamic>)
+              ? NameContract.fromJson(json['details'] as Map<String, dynamic>)
               : json['details']['deployment_hash'] != null
-                  ? NodeDetails.fromJson(
+                  ? NodeContract.fromJson(
                       json['details'] as Map<String, dynamic>)
-                  : RentDetails.fromJson(
+                  : RentContract.fromJson(
                       json['details'] as Map<String, dynamic>)
           : null,
       state: json['state'] ?? '',
