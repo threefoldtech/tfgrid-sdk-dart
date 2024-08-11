@@ -8,15 +8,15 @@ class NameContract extends Contract {
     required this.name
   });
 
-  @override
-  String toString() {
-    return 'Details: {name: $name}';
-  }
-
   factory NameContract.fromJson(Map<String, dynamic> json) {
     return NameContract(
       name: json['name'] ?? '',
     );
+  }
+
+  @override
+  String toString() {
+    return 'Details: {name: $name}';
   }
 }
 
@@ -49,7 +49,7 @@ class NodeContract extends Contract {
   }
   @override
   String toString() {
-    return '''Details(nodeID: $nodeID, deploymentData: $deploymentData, deploymentHash: $deploymentHash, numberOfPublicIps: $numberOfPublicIps, farmName: $farmName, farmId: $farmId)''';
+    return '''Details(nodeId: $nodeID, deployment_data: $deploymentData, deployment_hash: $deploymentHash, number_of_public_ips: $numberOfPublicIps, farm_name: $farmName, farm_id: $farmId)''';
   }
 }
 
@@ -73,7 +73,7 @@ class RentContract extends Contract {
   }
   @override
   String toString() {
-    return '''Details(nodeID: $nodeID, farmName: $farmName, farmId: $farmId)''';
+    return '''Details(nodeId: $nodeID, farm_name: $farmName, farm_id: $farmId)''';
   }
 }
 
@@ -114,7 +114,7 @@ class ContractInfo {
   }
   @override
   String toString() {
-    return '''Contract(contractId: $contractId, createdAt: $createdAt, details: $details, state: $state, twinID: $twinID, type: $type)''';
+    return '''Contract(contract_id: $contractId, twin_id: $twinID, state: $state, created_at: $createdAt, type: $type, details: $details)''';
   }
 }
 
