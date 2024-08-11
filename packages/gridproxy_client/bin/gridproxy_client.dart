@@ -3,5 +3,16 @@ import 'package:gridproxy_client/models/nodes.dart';
 
 void main() async {
   GridProxyClient client = GridProxyClient('gridproxy.dev.grid.tf');
-  await client.nodes.getNodeStatus(GetNodeStatusOptions(nodeID: 72));
+  // await client.nodes.getNodeStatus(GetNodeStatusOptions(nodeID: 72));
+
+  // final options = ListNodesQueryParamaters(gpuAvailable: true);
+  // final nodes = await client.nodes.listNodes(options);
+
+  //final node = await client.nodes.getNode(64);
+
+  //final nodeGPUs = await client.nodes.listNodeGPUs(179);
+
+  final nodeStatistics = await client.nodes.getNodeStatistics(179);
+
+  print(nodeStatistics.toJson());
 }
