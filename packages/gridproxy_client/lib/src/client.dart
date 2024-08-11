@@ -3,9 +3,11 @@ part of '../gridproxy_client.dart';
 class GridProxyClient {
   final String baseUrl;
   late final Nodes nodes;
+  late final Contracts contracts;
 
   GridProxyClient(this.baseUrl) {
     nodes = Nodes(this);
+    contracts = Contracts(this);
   }
 
   Future<dynamic> getRequest(
