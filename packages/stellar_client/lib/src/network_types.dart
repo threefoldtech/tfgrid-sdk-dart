@@ -1,16 +1,15 @@
 part of '../stellar_client.dart';
 
 enum NetworkType {
-  TestNet,
-  PublicNet,
-}
+  TESTNET,
+  PUBLIC;
 
-extension NetworkTypeExtension on NetworkType {
-  String get value {
+  @override
+  String toString() {
     switch (this) {
-      case NetworkType.TestNet:
+      case NetworkType.TESTNET:
         return 'TESTNET';
-      case NetworkType.PublicNet:
+      case NetworkType.PUBLIC:
         return 'PUBLIC';
     }
   }

@@ -9,16 +9,20 @@ class Client {
   late Map<String, String> serviceUrls;
 
   Client(this.network) {
-    late final tft;
+    late final currency.Currency tft;
+    serviceUrls = {
+      'PUBLIC': 'https://tokenservices.threefold.io/threefoldfoundation',
+      'TESTNET': 'https://testnet.threefold.io/threefoldfoundation'
+    };
     switch (network) {
-      case NetworkType.TestNet:
+      case NetworkType.TESTNET:
         sdk = StellarSDK.TESTNET;
         tft = currency.Currency(
           assetCode: 'TFT',
           issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
         );
         break;
-      case NetworkType.PublicNet:
+      case NetworkType.PUBLIC:
         sdk = StellarSDK.PUBLIC;
         tft = currency.Currency(
           assetCode: 'TFT',
@@ -28,31 +32,14 @@ class Client {
       default:
         break;
     }
-    // if (network.value == 'TESTNET') {
-    //   sdk = StellarSDK.TESTNET;
-    //   tft = currency.Currency(
-    //     assetCode: 'TFT',
-    //     issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
-    //   );
-    // } else if (network.value == 'PUBLIC') {
-    //   sdk = StellarSDK.PUBLIC;
-    //   tft = currency.Currency(
-    //     assetCode: 'TFT',
-    //     issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
-    //   );
-    // }
 
     currencies = currency.Currencies({'TFT': tft});
-
-    serviceUrls = {
-      'PUBLIC': 'https://tokenservices.threefold.io/threefoldfoundation',
-      'TESTNET': 'https://testnet.threefold.io/threefoldfoundation'
-    };
   }
 
-  Future<AccountResponse?> loadAccount(LoadAccountOptions options) async {
+  Future<AccountResponse?> loadAccountFromPublicKey(
+      {required String accountId}) async {
     try {
-      final account = await sdk.accounts.account(options.accountId);
+      final account = await sdk.accounts.account(accountId);
       keyPair = account.keypair;
       return account;
     } catch (error) {
@@ -61,25 +48,39 @@ class Client {
     }
   }
 
-  Future<KeyPair?> createThreefoldAccount(CreateAccountOptions options) async {
-    String? mnemonic = options.mnemonic;
+  Future<KeyPair> loadAccountFromSecretSeed(
+      {required String secretSeed}) async {
+    keyPair = KeyPair.fromSecretSeed(secretSeed);
+    return keyPair;
+  }
+
+  // TODO: get keypair with secret key
+
+  Future<KeyPair?> createThreefoldAccount({required String mnemonic}) async {
     try {
-      if (mnemonic != null) {
+      if (mnemonic.isNotEmpty) {
         Wallet wallet = await Wallet.from(mnemonic);
         keyPair = await wallet.getKeyPair();
       } else {
         keyPair = KeyPair.random();
       }
 
-      if (network.value == NetworkType.TestNet.value) {
-        // can be done using activation service
-        await activateTestNetAccount(
-            ActivateTestNetOptions(accountId: keyPair.accountId));
-      } else if (network.value == NetworkType.PublicNet.value) {
-        Transaction? transaction = await getActivationTransaction();
-        transaction!.sign(keyPair, Network.PUBLIC);
+      Network networkType;
+      if (network == NetworkType.TESTNET) {
+        networkType = Network.TESTNET;
+      } else if (network == NetworkType.PUBLIC) {
+        networkType = Network.PUBLIC;
+      } else {
+        throw Exception("Unsupported network type");
+      }
+
+      Transaction? transaction = await getActivationTransaction();
+      if (transaction != null) {
+        transaction.sign(keyPair, networkType);
         await sdk.submitTransaction(transaction);
         print("Account Activated Successfully.");
+      } else {
+        throw Exception("Failed to retrieve activation transaction.");
       }
 
       await sdk.accounts.account(keyPair.accountId);
@@ -103,9 +104,9 @@ class Client {
               CreateAccountOperationBuilder(keyPair.accountId, "10").build())
           .build();
 
-      if (network.value == 'TESTNET') {
+      if (network == NetworkType.TESTNET) {
         transaction.sign(existingAccountPair, Network.TESTNET);
-      } else if (network.value == 'PUBLIC') {
+      } else if (network == NetworkType.PUBLIC) {
         transaction.sign(existingAccountPair, Network.PUBLIC);
       }
 
@@ -118,14 +119,19 @@ class Client {
     return null;
   }
 
-  Future<bool> activateTestNetAccount(ActivateTestNetOptions options) async {
-    bool funded = await FriendBot.fundTestAccount(options.accountId);
-    if (funded) {
-      print("Account funded successfully");
-    } else {
-      print("Failed to fund account");
+  Future<bool> activateTestNetAccount({required String accountId}) async {
+    try {
+      bool funded = await FriendBot.fundTestAccount(accountId);
+      if (funded) {
+        print("Account funded successfully");
+      } else {
+        print("Failed to fund account");
+      }
+      return funded;
+    } catch (error) {
+      print("Error while funding account: $error");
+      return false;
     }
-    return funded;
   }
 
   Future<void> addTrustLine(KeyPair pair) async {
@@ -141,16 +147,15 @@ class Client {
       ChangeTrustOperationBuilder changeTrustOperation =
           ChangeTrustOperationBuilder(currencyAsset, "300000");
 
-      final account =
-          await loadAccount(LoadAccountOptions(accountId: pair.accountId));
+      final account = await loadAccountFromPublicKey(accountId: pair.accountId);
 
       Transaction transaction = new TransactionBuilder(account!)
           .addOperation(changeTrustOperation.build())
           .build();
 
-      if (network.value == 'TESTNET') {
+      if (network == NetworkType.TESTNET) {
         transaction.sign(pair, Network.TESTNET);
-      } else if (network.value == 'PUBLIC') {
+      } else if (network == NetworkType.PUBLIC) {
         transaction.sign(pair, Network.PUBLIC);
       }
 
@@ -165,45 +170,50 @@ class Client {
     }
   }
 
-  Future<void> sendTransaction(SendPaymentTransactionOptions options) async {
+  Future<void> sendTransaction(
+      {required KeyPair sourceKeyPair,
+      required String destinationAddress,
+      required String amount,
+      required String currency,
+      String? memoText}) async {
     // check that receiver account exists
-    final receiver = await loadAccount(
-        LoadAccountOptions(accountId: options.destinationAddress));
+    final receiver =
+        await loadAccountFromPublicKey(accountId: destinationAddress);
 
     // check that asset exists
     var specificBalance = receiver!.balances.firstWhere(
-      (balance) => balance.assetCode == options.currency,
+      (balance) => balance.assetCode == currency,
       orElse: () {
-        throw Exception(
-            'Balance with asset code ${options.currency} not found.');
+        throw Exception('Balance with asset code ${currency} not found.');
       },
     );
 
-    final asset = currencies.currencies[options.currency];
+    final asset = currencies.currencies[currency];
     if (asset == null) {
-      throw Exception('${options.currency} not supported');
+      throw Exception('${currency} not supported');
     }
 
     AccountResponse sender =
-        await sdk.accounts.account(options.sourceKeyPair.accountId);
+        await sdk.accounts.account(sourceKeyPair.accountId);
 
     Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
 
     Transaction transaction = TransactionBuilder(sender)
-        .addOperation(PaymentOperationBuilder(
-                options.destinationAddress, tftAsset, options.amount)
-            .build())
-        .addMemo(Memo.text(options.memoText!))
+        .addOperation(
+            PaymentOperationBuilder(destinationAddress, tftAsset, amount)
+                .build())
+        .addMemo(Memo.text(memoText!))
         .build();
-    transaction.sign(options.sourceKeyPair, Network.TESTNET);
+    transaction.sign(sourceKeyPair, Network.TESTNET);
     await sdk.submitTransaction(transaction);
+    print("Successful");
   }
 
   Future<Transaction?> getActivationTransaction() async {
     try {
       final response = await http.post(
         Uri.parse(
-            '${serviceUrls[network.value]}/activation_service/activate_account'),
+            '${serviceUrls[network.toString()]}/activation_service/activate_account'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'address': keyPair.accountId}),
       );
@@ -233,7 +243,7 @@ class Client {
     try {
       final response = await http.post(
         Uri.parse(
-            '${serviceUrls[network.value]}/activation_service/fund_trustline'),
+            '${serviceUrls[network.toString()]}/activation_service/fund_trustline'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'asset': '${asset.assetCode}:${asset.issuer}',
@@ -249,9 +259,9 @@ class Client {
 
       Transaction transaction =
           Transaction.fromV1EnvelopeXdr(xdrTxEnvelope.v1!);
-      if (network.value == 'TESTNET') {
+      if (network.toString() == 'TESTNET') {
         transaction.sign(keyPair, Network.TESTNET);
-      } else if (network.value == 'PUBLIC') {
+      } else if (network.toString() == 'PUBLIC') {
         transaction.sign(keyPair, Network.PUBLIC);
       }
 
@@ -273,7 +283,7 @@ class Client {
     try {
       final response = await http.get(
         Uri.parse(
-            '${serviceUrls[network.value]}/transactionfunding_service/conditions'),
+            '${serviceUrls[network.toString()]}/transactionfunding_service/conditions'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -314,8 +324,8 @@ class Client {
   Future<Transaction?> buildFundedPaymentTransaction(
       SendPaymentTransactionOptions options) async {
     // check that receiver account exists
-    final receiver = await loadAccount(
-        LoadAccountOptions(accountId: options.destinationAddress));
+    final receiver =
+        await loadAccountFromPublicKey(accountId: options.destinationAddress);
 
     // check that asset exists
     var specificBalance = receiver!.balances.firstWhere(
@@ -351,20 +361,20 @@ class Client {
   }
 
   Future<void> submitFundedTransaction(Transaction fundedTransaction) async {
-    if (network.value == 'TESTNET') {
+    if (network == NetworkType.TESTNET) {
       fundedTransaction.sign(keyPair, Network.TESTNET);
-    } else if (network.value == 'PUBLIC') {
+    } else if (network == NetworkType.PUBLIC) {
       fundedTransaction.sign(keyPair, Network.PUBLIC);
     }
 
     print('Sending to');
     print(
-        '${serviceUrls[network.value]}/transactionfunding_service/fund_transaction');
+        '${serviceUrls[network.toString()]}/transactionfunding_service/fund_transaction');
 
     try {
       final response = await http.post(
         Uri.parse(
-            '${serviceUrls[network.value]}/transactionfunding_service/fund_transaction'),
+            '${serviceUrls[network.toString()]}/transactionfunding_service/fund_transaction'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'transaction': fundedTransaction.toXdr()}),
       );
@@ -376,9 +386,89 @@ class Client {
     }
   }
 
-  // TODO: get transactions of account
   Future<void> getTransactions() async {
-    // AccountResponse response = await sdk.accounts.account(keyPair.accountId);
+    Page<OperationResponse> payments = await sdk.payments
+        .forAccount(keyPair.accountId)
+        .order(RequestBuilderOrder.DESC)
+        .execute();
+
+    if (payments.records != null && payments.records!.isNotEmpty) {
+      for (OperationResponse response in payments.records!) {
+        print("Operation type: ${response.runtimeType}");
+        print("Transaction hash: ${response.transactionHash}");
+
+        if (response is PaymentOperationResponse) {
+          _handlePaymentOperationResponse(response);
+        } else if (response is CreateAccountOperationResponse) {
+          _handleCreateAccountOperationResponse(response);
+        } else if (response is PathPaymentStrictReceiveOperationResponse) {
+          _handlePathPaymentStrictReceiveOperationResponse(response);
+        } else {
+          print("Unhandled operation type: ${response.runtimeType}");
+        }
+      }
+    } else {
+      print("No payment records found.");
+    }
+  }
+
+  void _handlePathPaymentStrictReceiveOperationResponse(
+      PathPaymentStrictReceiveOperationResponse ppsrResponse) {
+    print("\n--- Path Payment Strict Receive Operation ---");
+    print("Transaction hash: ${ppsrResponse.transactionHash}");
+    print("From: ${ppsrResponse.from}");
+    print("To: ${ppsrResponse.to}");
+    print("Source Amount: ${ppsrResponse.sourceAmount}");
+    print("Source Asset: ${ppsrResponse.sourceAssetType}");
+    print("Destination Amount: ${ppsrResponse.amount}");
+    print("Destination Asset: ${ppsrResponse.assetType}");
+    print("--------------------------------------------\n");
+
+    _fetchTransactionDetails(ppsrResponse.transactionHash!);
+  }
+
+  void _handlePaymentOperationResponse(PaymentOperationResponse por) {
+    print("\n--- Payment Operation ---");
+    if (por.transactionSuccessful!) {
+      print("Transaction was successful.");
+      print("From: ${por.from!.accountId}");
+      print("Amount: ${por.amount}");
+      print("Asset Code: ${por.assetCode}");
+    } else {
+      print("Transaction was not successful.");
+    }
+    print("Transaction hash: ${por.transactionHash}");
+    print("--------------------------------\n");
+
+    _fetchTransactionDetails(por.transactionHash!);
+  }
+
+  void _handleCreateAccountOperationResponse(
+      CreateAccountOperationResponse caor) {
+    print("\n--- Create Account Operation ---");
+    print("Transaction hash: ${caor.transactionHash}");
+    print("Account created: ${caor.account}");
+
+    print("Starting balance: ${caor.startingBalance!}");
+    print("-----------------------------------\n");
+
+    _fetchTransactionDetails(caor.transactionHash!);
+  }
+
+  void _fetchTransactionDetails(String transactionHash) async {
+    try {
+      TransactionResponse transaction =
+          await sdk.transactions.transaction(transactionHash);
+
+      print("\n--- Transaction Details ---");
+      print("Transaction hash: $transactionHash");
+      print("Source Account: ${transaction.sourceAccount}");
+      print("Operation Count: ${transaction.operationCount}");
+      print("--------------------------------\n");
+    } catch (e) {
+      print(
+          "Failed to fetch transaction details for hash $transactionHash: $e");
+    }
   }
 
   Future<List<Map<String, dynamic>>> getBalance() async {

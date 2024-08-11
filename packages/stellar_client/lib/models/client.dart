@@ -1,24 +1,5 @@
 import 'package:stellar_flutter_sdk/stellar_flutter_sdk.dart';
 
-class LoadAccountOptions {
-  String accountId;
-
-  LoadAccountOptions({
-    required this.accountId,
-  });
-}
-
-class ActivateTestNetOptions {
-  String accountId;
-
-  ActivateTestNetOptions({required this.accountId});
-}
-
-class CreateAccountOptions {
-  String? mnemonic;
-  CreateAccountOptions({this.mnemonic});
-}
-
 class CreateAccountSecretOptions {
   String secretSeed;
 
