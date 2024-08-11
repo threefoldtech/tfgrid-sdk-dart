@@ -5,7 +5,7 @@ class NameContract extends Contract {
   String name;
 
   NameContract({
-    required this.name
+    required this.name,
   });
 
   factory NameContract.fromJson(Map<String, dynamic> json) {
@@ -14,9 +14,15 @@ class NameContract extends Contract {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name.isEmpty ? '""' : name,
+    };
+  }
+
   @override
   String toString() {
-    return 'Details: {name: $name}';
+    return toJson().toString();
   }
 }
 
@@ -34,7 +40,7 @@ class NodeContract extends Contract {
     required this.deploymentHash,
     required this.numberOfPublicIps,
     required this.farmName,
-    required this.farmId
+    required this.farmId,
   });
 
   factory NodeContract.fromJson(Map<String, dynamic> json) {
@@ -47,9 +53,21 @@ class NodeContract extends Contract {
       farmId: json['farm_id'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nodeId': nodeID,
+      'deployment_data': deploymentData.isEmpty ? '""' : deploymentData,
+      'deployment_hash': deploymentHash.isEmpty ? '""' : deploymentHash,
+      'number_of_public_ips': numberOfPublicIps,
+      'farm_name': farmName.isEmpty ? '""' : farmName,
+      'farm_id': farmId,
+    };
+  }
+
   @override
   String toString() {
-    return '''Details(nodeId: $nodeID, deployment_data: $deploymentData, deployment_hash: $deploymentHash, number_of_public_ips: $numberOfPublicIps, farm_name: $farmName, farm_id: $farmId)''';
+    return toJson().toString();
   }
 }
 
@@ -58,11 +76,8 @@ class RentContract extends Contract {
   String farmName;
   int farmId;
 
-  RentContract({
-    required this.nodeID, 
-    required this.farmName, 
-    required this.farmId
-  });
+  RentContract(
+      {required this.nodeID, required this.farmName, required this.farmId});
 
   factory RentContract.fromJson(Map<String, dynamic> json) {
     return RentContract(
@@ -71,9 +86,18 @@ class RentContract extends Contract {
       farmId: json['farm_id'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nodeId': nodeID,
+      'farm_name': farmName.isEmpty ? '""' : farmName,
+      'farm_id': farmId,
+    };
+  }
+
   @override
   String toString() {
-    return '''Details(nodeId: $nodeID, farm_name: $farmName, farm_id: $farmId)''';
+    return toJson().toString();
   }
 }
 
@@ -112,9 +136,20 @@ class ContractInfo {
       type: json['type'] ?? '',
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'contract_id': contractId,
+      'twin_id': twinID,
+      'state': state.isEmpty ? '""' : state,
+      'created_at': createdAt,
+      'type': type.isEmpty ? '""' : type,
+      'details': details.toString(),
+    };
+  }
+
   @override
   String toString() {
-    return '''Contract(contract_id: $contractId, twin_id: $twinID, state: $state, created_at: $createdAt, type: $type, details: $details)''';
+    return toJson().toString();
   }
 }
 
@@ -242,9 +277,18 @@ class ContractBills {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'amountBilled': amountBilled,
+      if (contractID != 0) 'contract_id': contractID,
+      'discountReceived': discountReceived.isEmpty ? '""' : discountReceived,
+      'timestamp': timeStamp,
+    };
+  }
+
   @override
   String toString() {
-    return '''ContractBills(amountBilled: $amountBilled ,contractID: $contractID, discountReceived: $discountReceived, timeStamp: $timeStamp)''';
+    return toJson().toString();
   }
 }
 
