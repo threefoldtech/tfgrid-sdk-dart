@@ -7,7 +7,7 @@ class Nodes {
   Nodes(this.client);
 
   Future<void> getNodeStatus(GetNodeStatusOptions options) async {
-    final nodeStatus = await client.getRequest('/nodes/72/status');
+    final nodeStatus = await client.getRequest('/nodes/72/status', null);
     print(nodeStatus['status']);
   }
 }
