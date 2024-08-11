@@ -1,4 +1,5 @@
 import 'package:gridproxy_client/gridproxy_client.dart';
+import 'package:gridproxy_client/models/contracts.dart';
 import 'package:gridproxy_client/models/nodes.dart';
 
 void main() async {
