@@ -18,7 +18,7 @@ class NameDetails extends Details {
   }
 }
 
-class OtherDetails extends Details {
+class NodeDetails extends Details {
   int nodeID;
   String deploymentData;
   String deploymentHash;
@@ -26,7 +26,7 @@ class OtherDetails extends Details {
   String farmName;
   int farmId;
 
-  OtherDetails(
+  NodeDetails(
       {required this.nodeID,
       required this.deploymentData,
       required this.deploymentHash,
@@ -34,8 +34,8 @@ class OtherDetails extends Details {
       required this.farmName,
       required this.farmId});
 
-  factory OtherDetails.fromJson(Map<String, dynamic> json) {
-    return OtherDetails(
+  factory NodeDetails.fromJson(Map<String, dynamic> json) {
+    return NodeDetails(
       nodeID: json['nodeId'] ?? 0,
       deploymentData: json['deployment_data'] ?? '',
       deploymentHash: json['deployment_hash'] ?? '',
@@ -47,6 +47,27 @@ class OtherDetails extends Details {
   @override
   String toString() {
     return '''Details(nodeID: $nodeID, deploymentData: $deploymentData, deploymentHash: $deploymentHash, numberOfPublicIps: $numberOfPublicIps, farmName: $farmName, farmId: $farmId)''';
+  }
+}
+
+class RentDetails extends Details {
+  int nodeID;
+  String farmName;
+  int farmId;
+
+  RentDetails(
+      {required this.nodeID, required this.farmName, required this.farmId});
+
+  factory RentDetails.fromJson(Map<String, dynamic> json) {
+    return RentDetails(
+      nodeID: json['nodeId'] ?? 0,
+      farmName: json['farm_name'] ?? '',
+      farmId: json['farm_id'] ?? 0,
+    );
+  }
+  @override
+  String toString() {
+    return '''Details(nodeID: $nodeID, farmName: $farmName, farmId: $farmId)''';
   }
 }
 
@@ -74,7 +95,11 @@ class ContractInfo {
       details: json['details'] != null
           ? json['details']['name'] != null
               ? NameDetails.fromJson(json['details'] as Map<String, dynamic>)
-              : OtherDetails.fromJson(json['details'] as Map<String, dynamic>)
+              : json['details']['deployment_hash'] != null
+                  ? NodeDetails.fromJson(
+                      json['details'] as Map<String, dynamic>)
+                  : RentDetails.fromJson(
+                      json['details'] as Map<String, dynamic>)
           : null,
       state: json['state'] ?? '',
       twinID: json['twin_id'] ?? 0,
