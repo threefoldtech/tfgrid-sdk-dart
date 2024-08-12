@@ -4,10 +4,12 @@ class GridProxyClient {
   final String baseUrl;
   late final Nodes nodes;
   late final Contracts contracts;
+  late final Twins twins;
 
   GridProxyClient(this.baseUrl) {
     nodes = Nodes(this);
     contracts = Contracts(this);
+    twins = Twins(this);
   }
 
   Future<dynamic> getRequest(
