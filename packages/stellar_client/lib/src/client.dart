@@ -174,37 +174,45 @@ class Client {
       required String amount,
       required String currency,
       String? memoText}) async {
-    // check that receiver account exists
-    final receiver =
-        await loadAccountFromPublicKey(accountId: destinationAddress);
+    try {
+      // check that receiver account exists
+      final receiver =
+          await loadAccountFromPublicKey(accountId: destinationAddress);
+      if (receiver == null) {
+        throw Exception('Receiver account does not exist.');
+      }
 
-    // check that asset exists
-    var specificBalance = receiver!.balances.firstWhere(
-      (balance) => balance.assetCode == currency,
-      orElse: () {
-        throw Exception('Balance with asset code ${currency} not found.');
-      },
-    );
+      // check that asset exists
+      var specificBalance = receiver.balances.firstWhere(
+        (balance) => balance.assetCode == currency,
+        orElse: () {
+          throw Exception('Balance with asset code ${currency} not found.');
+        },
+      );
 
-    final asset = currencies.currencies[currency];
-    if (asset == null) {
-      throw Exception('${currency} not supported');
+      final asset = currencies.currencies[currency];
+      if (asset == null) {
+        throw Exception('${currency} not supported');
+      }
+
+      AccountResponse sender =
+          await sdk.accounts.account(sourceKeyPair.accountId);
+
+      Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
+
+      Transaction transaction = TransactionBuilder(sender)
+          .addOperation(
+              PaymentOperationBuilder(destinationAddress, tftAsset, amount)
+                  .build())
+          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .build();
+
+      transaction.sign(sourceKeyPair, Network.TESTNET);
+      await sdk.submitTransaction(transaction);
+      print("Transaction successful.");
+    } catch (error) {
+      print("Failed to send transaction: $error");
     }
-
-    AccountResponse sender =
-        await sdk.accounts.account(sourceKeyPair.accountId);
-
-    Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
-
-    Transaction transaction = TransactionBuilder(sender)
-        .addOperation(
-            PaymentOperationBuilder(destinationAddress, tftAsset, amount)
-                .build())
-        .addMemo(Memo.text(memoText!))
-        .build();
-    transaction.sign(sourceKeyPair, Network.TESTNET);
-    await sdk.submitTransaction(transaction);
-    print("Successful");
   }
 
   Future<Transaction?> getActivationTransaction() async {
@@ -353,7 +361,9 @@ class Client {
         .addOperation(PaymentOperationBuilder(
                 options.destinationAddress, tftAsset, options.amount)
             .build())
-        .addMemo(Memo.text(options.memoText!))
+        .addMemo(options.memoText != null
+            ? Memo.text(options.memoText!)
+            : Memo.none())
         .build();
     return transaction;
   }
@@ -379,8 +389,7 @@ class Client {
 
       print(response.body);
     } catch (error) {
-      print('Something went wrong! $error');
-      throw error;
+      throw Exception('Something went wrong! $error');
     }
   }
 
