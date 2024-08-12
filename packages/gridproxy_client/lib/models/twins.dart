@@ -102,7 +102,7 @@ class TwinsInfo {
 }
 
 class TwinConsumption {
-  int lastHourConsumption;
+  double lastHourConsumption;
   double overallConsumption;
 
   TwinConsumption({
@@ -112,7 +112,9 @@ class TwinConsumption {
 
   factory TwinConsumption.fromJson(Map<String, dynamic> json) {
     return TwinConsumption(
-      lastHourConsumption: json['last_hour_consumption'] ?? 0,
+      lastHourConsumption: double.parse(json['last_hour_consumption'] != null
+          ? json['last_hour_consumption'].toString()
+          : '0.0'),
       overallConsumption: double.parse(json['overall_consumption'] != null
           ? json['overall_consumption'].toString()
           : '0.0'),
