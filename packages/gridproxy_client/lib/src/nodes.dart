@@ -6,11 +6,6 @@ class Nodes {
 
   Nodes(this.client);
 
-  Future<void> getNodeStatus(GetNodeStatusOptions options) async {
-    final nodeStatus = await client.getRequest('/nodes/72/status', null);
-    print(nodeStatus['status']);
-  }
-
   Future<List<Node>> listNodes(ListNodesQueryParamaters? queryParams) async {
     final nodes = await client.getRequest(
         '/nodes', queryParams?.toQueryParamaters()) as List<dynamic>;

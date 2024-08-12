@@ -311,7 +311,7 @@ class Node {
 
   @override
   String toString() {
-    return 'Node{certificationType: $certificationType, city: $city, country: $country, created: $created, dedicated: $dedicated, dmi: $dmi, extraFee: $extraFee, farmId: $farmId, farmName: $farmName, farmingPolicyId: $farmingPolicyId, gridVersion: $gridVersion, healthy: $healthy, id: $id, inDedicatedFarm: $inDedicatedFarm, location: $location, nodeId: $nodeId, numGpu: $numGpu, power: $power, priceUsd: $priceUsd, publicConfig: $publicConfig, rentContractId: $rentContractId, rentable: $rentable, rented: $rented, rentedByTwinId: $rentedByTwinId, serialNumber: $serialNumber, speed: $speed, status: $status, totalResources: $totalResources, twinId: $twinId, updatedAt: $updatedAt, uptime: $uptime, usedResources: $usedResources}';
+    return toJson().toString();
   }
 }
 
@@ -364,7 +364,7 @@ class Dmi {
 
   @override
   String toString() {
-    return 'Dmi{baseboard: $baseboard, bios: $bios, memory: $memory, nodeTwinId: $nodeTwinId, processor: $processor}';
+    return toJson().toString();
   }
 }
 
@@ -393,7 +393,7 @@ class Bios {
 
   @override
   String toString() {
-    return 'Bios{vendor: $vendor, version: $version}';
+    return toJson().toString();
   }
 }
 
@@ -422,7 +422,7 @@ class Memory {
 
   @override
   String toString() {
-    return 'Memory{manufacturer: $manufacturer, type: $type}';
+    return toJson().toString();
   }
 }
 
@@ -451,7 +451,7 @@ class Processor {
 
   @override
   String toString() {
-    return 'Processor{threadCount: $threadCount, version: $version}';
+    return toJson().toString();
   }
 }
 
@@ -488,7 +488,7 @@ class Location {
 
   @override
   String toString() {
-    return 'Location{city: $city, country: $country, latitude: $latitude, longitude: $longitude}';
+    return toJson().toString();
   }
 }
 
@@ -517,7 +517,7 @@ class Power {
 
   @override
   String toString() {
-    return 'Power{state: $state, target: $target}';
+    return toJson().toString();
   }
 }
 
@@ -557,7 +557,7 @@ class PublicConfig {
 
   @override
   String toString() {
-    return 'PublicConfig{domain: $domain, gw4: $gw4, gw6: $gw6, ipv4: $ipv4, ipv6: $ipv6}';
+    return toJson().toString();
   }
 }
 
@@ -590,7 +590,7 @@ class Speed {
 
   @override
   String toString() {
-    return 'Speed{download: $download, nodeTwinId: $nodeTwinId, upload: $upload}';
+    return toJson().toString();
   }
 }
 
@@ -619,7 +619,7 @@ class Baseboard {
 
   @override
   String toString() {
-    return 'Baseboard{manufacturer: $manufacturer, productName: $productName}';
+    return toJson().toString();
   }
 }
 
@@ -660,7 +660,7 @@ class Resources {
 
   @override
   String toString() {
-    return 'Resources{cru: $cru, hru: $hru, mru: $mru, sru: $sru, ipv4u: $ipv4u}';
+    return toJson().toString();
   }
 }
 
@@ -705,7 +705,7 @@ class NodeGPUInfo {
 
   @override
   String toString() {
-    return 'NodeGPUInfo{contract: $contract, device: $device, id: $id, nodeTwinId: $nodeTwinId, updatedAt: $updatedAt, vendor: $vendor}';
+    return toJson().toString();
   }
 }
 
@@ -743,7 +743,7 @@ class NodeStatistics {
 
   @override
   String toString() {
-    return 'NodeStatistics{system: $system, total: $total, used: $used, users: $users}';
+    return toJson().toString();
   }
 }
 
@@ -778,6 +778,6 @@ class NodeUsers {
 
   @override
   String toString() {
-    return 'NodeUsers{deployments: $deployments, lastDeploymentTimestamp: $lastDeploymentTimestamp, workloads: $workloads}';
+    return toJson().toString();
   }
 }
