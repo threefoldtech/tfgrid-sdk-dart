@@ -5,11 +5,15 @@ class GridProxyClient {
   late final Nodes nodes;
   late final Contracts contracts;
   late final Farms farms;
+  late final Stats stats;
+  late final Twins twins;
 
   GridProxyClient(this.baseUrl) {
     nodes = Nodes(this);
     contracts = Contracts(this);
     farms = Farms(this);
+    stats = Stats(this);
+    twins = Twins(this);
   }
 
   Future<dynamic> getRequest(
