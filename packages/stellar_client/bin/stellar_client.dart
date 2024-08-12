@@ -9,7 +9,7 @@ void main() async {
   // GBMOW6C22NABBCZRB5V7OTBX56RG64TTV4QL3SECMY5M7FBZA6V46M2X
 
   final x = await stellarClient.loadAccountFromPublicKey(
-      accountId: "GBMOW6C22NABBCZRB5V7OTBX56RG64TTV4QL3SECMY5M7FBZA6V46M2X");
+      accountId: "GA6TSFIXQETAOQEHXZE7AOT7BQMHQIRPDLKFJ6M6DEYOMOLHOVWHDODC");
   final balance = await stellarClient.getBalance();
   print(balance);
   await stellarClient.getTransactions();

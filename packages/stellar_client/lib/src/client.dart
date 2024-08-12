@@ -1,5 +1,4 @@
 part of '../stellar_client.dart';
-//TODO: handle catching errors
 
 class Client {
   final NetworkType network;
@@ -53,8 +52,6 @@ class Client {
     keyPair = KeyPair.fromSecretSeed(secretSeed);
     return keyPair;
   }
-
-  // TODO: get keypair with secret key
 
   Future<KeyPair?> createThreefoldAccount({required String mnemonic}) async {
     try {
@@ -119,6 +116,7 @@ class Client {
     return null;
   }
 
+  // If testnet account activated with FriendBot, the asset should be added manually.
   Future<bool> activateTestNetAccount({required String accountId}) async {
     try {
       bool funded = await FriendBot.fundTestAccount(accountId);
@@ -415,60 +413,48 @@ class Client {
   void _handlePathPaymentStrictReceiveOperationResponse(
       PathPaymentStrictReceiveOperationResponse ppsrResponse) {
     print("\n--- Path Payment Strict Receive Operation ---");
-    print("Transaction hash: ${ppsrResponse.transactionHash}");
+
     print("From: ${ppsrResponse.from}");
     print("To: ${ppsrResponse.to}");
-    print("Source Amount: ${ppsrResponse.sourceAmount}");
-    print("Source Asset: ${ppsrResponse.sourceAssetType}");
-    print("Destination Amount: ${ppsrResponse.amount}");
-    print("Destination Asset: ${ppsrResponse.assetType}");
-    print("--------------------------------------------\n");
 
-    _fetchTransactionDetails(ppsrResponse.transactionHash!);
+    print("Source Amount: ${ppsrResponse.sourceAmount}");
+    print("Source Asset Code: ${ppsrResponse.sourceAssetCode ?? 'XLM'}");
+
+    print("Destination Amount: ${ppsrResponse.amount}");
+    print("Destination Asset Code: ${ppsrResponse.assetCode} ");
+
+    print("--------------------------------------------\n");
   }
 
   void _handlePaymentOperationResponse(PaymentOperationResponse por) {
     print("\n--- Payment Operation ---");
     if (por.transactionSuccessful!) {
       print("Transaction was successful.");
-      print("From: ${por.from!.accountId}");
+      bool isSender = por.from!.accountId == keyPair.accountId;
+
+      if (isSender) {
+        print("Role: Sender");
+        print("Sent to: ${por.to!.accountId}");
+      } else {
+        print("Role: Receiver");
+        print("Received from: ${por.from!.accountId}");
+      }
+
       print("Amount: ${por.amount}");
-      print("Asset Code: ${por.assetCode}");
+      print("Asset Code: ${por.assetCode ?? 'XLM'}");
     } else {
       print("Transaction was not successful.");
     }
-    print("Transaction hash: ${por.transactionHash}");
     print("--------------------------------\n");
-
-    _fetchTransactionDetails(por.transactionHash!);
   }
 
   void _handleCreateAccountOperationResponse(
       CreateAccountOperationResponse caor) {
     print("\n--- Create Account Operation ---");
-    print("Transaction hash: ${caor.transactionHash}");
     print("Account created: ${caor.account}");
-
+    // Which asset is the starting balance ??
     print("Starting balance: ${caor.startingBalance!}");
     print("-----------------------------------\n");
-
-    _fetchTransactionDetails(caor.transactionHash!);
-  }
-
-  void _fetchTransactionDetails(String transactionHash) async {
-    try {
-      TransactionResponse transaction =
-          await sdk.transactions.transaction(transactionHash);
-
-      print("\n--- Transaction Details ---");
-      print("Transaction hash: $transactionHash");
-      print("Source Account: ${transaction.sourceAccount}");
-      print("Operation Count: ${transaction.operationCount}");
-      print("--------------------------------\n");
-    } catch (e) {
-      print(
-          "Failed to fetch transaction details for hash $transactionHash: $e");
-    }
   }
 
   Future<List<Map<String, dynamic>>> getBalance() async {
