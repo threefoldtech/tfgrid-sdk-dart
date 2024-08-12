@@ -1,10 +1,12 @@
 import 'package:gridproxy_client/gridproxy_client.dart';
 import 'package:gridproxy_client/models/contracts.dart';
 import 'package:gridproxy_client/models/nodes.dart';
+import 'package:gridproxy_client/models/stats.dart';
 
 void main() async {
   GridProxyClient client = GridProxyClient('gridproxy.dev.grid.tf');
   await client.nodes.getNodeStatus(GetNodeStatusOptions(nodeID: 72));
+  await client.stats.getStats(StatsQueryParams(status: NodeStatus.up));
   await client.contracts.getContracts(ContractInfoQueryParams(
       page: 1,
       size: 2,
