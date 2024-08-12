@@ -196,7 +196,7 @@ class PublicIp {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     if (contractId != null) data['contract_id'] = contractId;
-    if (farmId != null) data['farm_id'] = farmId;
+    data['farm_id'] = farmId!.isEmpty ? '""' : farmId;
     if (gateway != null) data['gateway'] = gateway;
     if (id != null) data['id'] = id;
     if (ip != null) data['ip'] = ip;
