@@ -136,6 +136,8 @@ class SetupManager {
 
       await client2.balances
           .transfer(address: _client.address, amount: myBalance);
+      await Future.delayed(Duration(seconds: 10));
+
       final balance = await client2.balances.getMyBalance();
       print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
