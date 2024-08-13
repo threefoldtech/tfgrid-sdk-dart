@@ -122,6 +122,7 @@ class SetupManager {
     _url = Platform.environment['URL'] ?? 'ws://0.0.0.0:9944';
     _type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     _relay = "relay.dev.grid.tf";
+    Client client2;
 
     if (_initializeClient) {
       _mnemonic = bip39.generateMnemonic();
@@ -130,7 +131,7 @@ class SetupManager {
 
       _myAddress = _client.address;
 
-      Client client2 = Client(_url, "//Alice", _type);
+      client2 = Client(_url, "//Alice", _type);
       await client2.connect();
 
       await client2.balances
