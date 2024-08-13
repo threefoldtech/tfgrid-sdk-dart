@@ -1,4 +1,3 @@
-@Timeout(Duration(seconds: 70))
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
 
@@ -51,7 +50,7 @@ void main() {
       } catch (error) {
         expect(error, isNotNull);
       }
-    }, timeout: Timeout(Duration(seconds: 70)));
+    }, timeout: Timeout(Duration(seconds: 50)));
 
     test('Test adding farm ip with equal ip and gateway', () async {
       try {
@@ -104,7 +103,7 @@ void main() {
         // will fail as the ip already exists
         expect(error, isNotNull);
       }
-    }, timeout: Timeout(Duration(seconds: 100)));
+    }, timeout: Timeout(Duration(seconds: 80)));
 
     test('Test removing farm IP', () async {
       try {
@@ -123,7 +122,7 @@ void main() {
       } catch (error) {
         expect(error, isNull);
       }
-    }, timeout: Timeout(Duration(seconds: 100)));
+    }, timeout: Timeout(Duration(seconds: 60)));
 
     test('Test adding Stellar Address', () async {
       try {
@@ -136,7 +135,7 @@ void main() {
       } catch (error) {
         expect(error, isNull);
       }
-    }, timeout: Timeout(Duration(seconds: 50)));
+    }, timeout: Timeout(Duration(seconds: 70)));
 
     tearDown(() async {
       if (farmsIps.isNotEmpty) {
