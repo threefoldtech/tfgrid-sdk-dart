@@ -262,7 +262,7 @@ class Client extends QueryClient {
         blockNumber: blockNumber,
         eraPeriod: 64,
         nonce: nonce,
-        tip: 0);
+        tip: 1000);
 
     final payload = payloadToSign.encode(api.registry);
 
