@@ -136,6 +136,8 @@ class SetupManager {
       await client2.connect();
       print('Client2 connected');
 
+      await Future.delayed(Duration(seconds: 5));
+
       await client2.balances
           .transfer(address: _client.address, amount: myBalance);
       print('Transfer request sent');
