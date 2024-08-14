@@ -122,7 +122,6 @@ class SetupManager {
     _url = Platform.environment['URL'] ?? 'ws://0.0.0.0:9944';
     _type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     _relay = "relay.dev.grid.tf";
-    late Client client2;
 
     if (_initializeClient) {
       _mnemonic = bip39.generateMnemonic();
@@ -131,13 +130,11 @@ class SetupManager {
 
       _myAddress = _client.address;
 
-      client2 = Client(_url, "//Alice", _type);
+      Client client2 = Client(_url, "//Alice", _type);
       await client2.connect();
 
       await client2.balances
           .transfer(address: _client.address, amount: myBalance);
-      await Future.delayed(Duration(seconds: 10));
-
       final balance = await client2.balances.getMyBalance();
       print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
