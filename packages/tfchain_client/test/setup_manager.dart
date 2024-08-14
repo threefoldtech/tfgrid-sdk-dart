@@ -128,21 +128,17 @@ class SetupManager {
       _mnemonic = bip39.generateMnemonic();
       _client = Client(_url, _mnemonic, _type);
       await _client.connect();
-      print('Client connected with address: $_client.address');
 
       _myAddress = _client.address;
 
       _client2 = Client(_url, "//Alice", _type);
       await _client2.connect();
-      print('Client2 connected');
 
       await Future.delayed(Duration(seconds: 20));
 
       await _client2.balances
           .transfer(address: _client.address, amount: myBalance);
-      print('Transfer request sent');
       final balance = await _client.balances.getMyBalance();
-      print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
       var bytes = utf8.encode("https://library.threefold.me/info/legal/");
       var digest = md5.convert(bytes);
@@ -150,11 +146,9 @@ class SetupManager {
           .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
           .join();
 
-      print('Accepting terms and conditions...');
       await _client.termsAndConditions.accept(
           documentLink: "https://library.threefold.me/info/legal/",
           documentHash: hashString.codeUnits);
-      print('Creating twin...');
       _twinId = await _client.twins.create(relay: _relay, pk: []);
       print(_twinId);
     }
