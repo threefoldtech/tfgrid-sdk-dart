@@ -100,6 +100,7 @@ class SetupManager {
   BigInt myBalance = BigInt.from(5000);
   late int? _twinId;
   late String _relay;
+  late Client client2;
 
   bool _initializeClient = false;
   bool _initializeQueryClient = false;
@@ -130,7 +131,7 @@ class SetupManager {
 
       _myAddress = _client.address;
 
-      Client client2 = Client(_url, "//Alice", _type);
+      client2 = Client(_url, "//Alice", _type);
       await client2.connect();
 
       await client2.balances
