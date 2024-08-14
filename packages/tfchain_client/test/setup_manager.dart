@@ -128,14 +128,17 @@ class SetupManager {
       _mnemonic = bip39.generateMnemonic();
       _client = Client(_url, _mnemonic, _type);
       await _client.connect();
+      print('Client connected with address: $_client.address');
 
       _myAddress = _client.address;
 
       client2 = Client(_url, "//Alice", _type);
       await client2.connect();
+      print('Client2 connected');
 
       await client2.balances
           .transfer(address: _client.address, amount: myBalance);
+      print('Transfer request sent');
       final balance = await client2.balances.getMyBalance();
       print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
@@ -145,10 +148,11 @@ class SetupManager {
           .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
           .join();
 
+      print('Accepting terms and conditions...');
       await _client.termsAndConditions.accept(
           documentLink: "https://library.threefold.me/info/legal/",
           documentHash: hashString.codeUnits);
-
+      print('Creating twin...');
       _twinId = await _client.twins.create(relay: _relay, pk: []);
       print(_twinId);
     }
