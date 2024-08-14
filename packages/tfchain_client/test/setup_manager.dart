@@ -134,8 +134,6 @@ class SetupManager {
       _client2 = Client(_url, "//Alice", _type);
       await _client2.connect();
 
-      await Future.delayed(Duration(seconds: 20));
-
       try {
         await _client2.balances
             .transfer(address: _client.address, amount: myBalance);
