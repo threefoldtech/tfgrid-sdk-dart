@@ -100,7 +100,7 @@ class SetupManager {
   BigInt myBalance = BigInt.from(5000);
   late int? _twinId;
   late String _relay;
-  late Client client2;
+  late Client _client2;
 
   bool _initializeClient = false;
   bool _initializeQueryClient = false;
@@ -132,16 +132,16 @@ class SetupManager {
 
       _myAddress = _client.address;
 
-      client2 = Client(_url, "//Alice", _type);
-      await client2.connect();
+      _client2 = Client(_url, "//Alice", _type);
+      await _client2.connect();
       print('Client2 connected');
 
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(Duration(seconds: 20));
 
-      await client2.balances
+      await _client2.balances
           .transfer(address: _client.address, amount: myBalance);
       print('Transfer request sent');
-      final balance = await client2.balances.getMyBalance();
+      final balance = await _client2.balances.getMyBalance();
       print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
       var bytes = utf8.encode("https://library.threefold.me/info/legal/");
