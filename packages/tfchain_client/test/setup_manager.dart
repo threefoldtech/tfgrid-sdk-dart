@@ -141,7 +141,7 @@ class SetupManager {
       await _client2.balances
           .transfer(address: _client.address, amount: myBalance);
       print('Transfer request sent');
-      final balance = await _client2.balances.getMyBalance();
+      final balance = await _client.balances.getMyBalance();
       print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
 
       var bytes = utf8.encode("https://library.threefold.me/info/legal/");
