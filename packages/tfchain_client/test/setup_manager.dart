@@ -97,7 +97,7 @@ class SetupManager {
   late String _url;
   late String _type;
   late String _myAddress;
-  BigInt myBalance = BigInt.from(5000);
+  BigInt myBalance = BigInt.from(500);
   late int? _twinId;
   late String _relay;
   late Client _client2;

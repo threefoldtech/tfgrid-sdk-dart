@@ -10,14 +10,13 @@ import 'setup_manager.dart';
 void main() {
   group("Balances Tests", () {
     final setupManager = SetupManager();
-    setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-    });
     late final String recipientAddress;
     late final Client alice;
 
     setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
+      await setupManager.setup();
+
       final mnemonic = bip39.generateMnemonic();
       final recipientClient =
           Client(setupManager.url, mnemonic, setupManager.type);
@@ -59,7 +58,7 @@ void main() {
     test('Test Transfer TFTs', () async {
       try {
         var random = Random();
-        var randomNumber = random.nextInt(1000) + 1;
+        var randomNumber = random.nextInt(100) + 1;
         AccountInfo? before =
             await setupManager.client.balances.get(address: recipientAddress);
         await setupManager.client.balances.transfer(
