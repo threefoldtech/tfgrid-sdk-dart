@@ -136,8 +136,12 @@ class SetupManager {
 
       await Future.delayed(Duration(seconds: 20));
 
-      await _client2.balances
-          .transfer(address: _client.address, amount: myBalance);
+      try {
+        await _client2.balances
+            .transfer(address: _client.address, amount: myBalance);
+      } catch (error) {
+        print("ERROR FROM SETUP MANAGER: $error");
+      }
       final balance = await _client.balances.getMyBalance();
 
       var bytes = utf8.encode("https://library.threefold.me/info/legal/");
