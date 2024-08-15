@@ -36,8 +36,15 @@ jobs:
       - name: Verify Melos Installation
         run: melos --version
 
-      - name: Install Dependencies
-        run: melos bootstrap
+      - name: Install Dart dependencies
+        run: |
+          melos exec -c 1 -- \
+            'if [ "$MELOS_PACKAGE_NAME" != "stellar_client" ]; then dart pub get; fi'
+
+      - name: Install Flutter dependencies
+        run: |
+          melos exec -c 1 -- \
+            'if [ "$MELOS_PACKAGE_NAME" == "stellar_client" ]; then flutter pub get; fi'
 
       - name: Start TFChain Docker Container
         run: |
