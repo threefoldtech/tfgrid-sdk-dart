@@ -7,21 +7,7 @@ scripts:
     run: melos exec -- flutter analyze .
     description: Run `dart analyze` in all packages (linting).
   unit_test:
-    run: |
-      EXCLUDE_PACKAGE="stellar_client"
-
-      export PATH="$PATH:/opt/hostedtoolcache/flutter/stable-3.16.0-x64/bin"
-
-      for package in $(ls packages); do
-        if [ "$package" != "$EXCLUDE_PACKAGE" ]; then
-          echo "Running tests in $package"
-          cd "packages/$package"
-          flutter test --no-pub --coverage
-          cd ../..
-        else
-          echo "Skipping $package"
-        fi
-      done
+    run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
     description: Run all Flutter tests in this project.
   unit_test_and_coverage:
     description: Merge all packages coverage trace files ignoring data related to generated files.
