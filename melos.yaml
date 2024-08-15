@@ -10,11 +10,16 @@ scripts:
     run: |
       EXCLUDE_PACKAGE="stellar_client"
 
+      export PATH="$PATH:/opt/hostedtoolcache/flutter/stable-3.16.0-x64/bin"
+
       for package in $(ls packages); do
         if [ "$package" != "$EXCLUDE_PACKAGE" ]; then
+          echo "Running tests in $package"
           cd "packages/$package"
           flutter test --no-pub --coverage
           cd ../..
+        else
+          echo "Skipping $package"
         fi
       done
     description: Run all Flutter tests in this project.
