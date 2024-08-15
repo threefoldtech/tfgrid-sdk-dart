@@ -8,14 +8,16 @@ scripts:
     description: Run `dart analyze` in all packages (linting).
   unit_test:
     run: |
+      EXCLUDE_PACKAGE="stellar_client"
+
       for package in $(ls packages); do
-        if [ "$package" != "stellar_client" ]; then
+        if [ "$package" != "$EXCLUDE_PACKAGE" ]; then
           cd "packages/$package"
           flutter test --no-pub --coverage
           cd ../..
         fi
       done
-    description: Run all Flutter tests in this project except for stellar client.
+    description: Run all Flutter tests in this project.
   unit_test_and_coverage:
     description: Merge all packages coverage trace files ignoring data related to generated files.
     run: |
