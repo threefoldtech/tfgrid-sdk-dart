@@ -16,48 +16,28 @@ jobs:
       - name: Set up Repository
         uses: actions/checkout@v2
 
-      - name: List Files
-        run: ls -R
+      - name: Clear Dart SDK Cache
+        run: sudo rm -rf /opt/hostedtoolcache/dart
+
+      - name: Clear Pub Cache
+        run: rm -rf ~/.pub-cache
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.6.0
         with:
           sdk: "3.5.0"
 
-      - name: Verify Dart SDK version
+      - name: Verify Dart SDK Version
         run: dart --version
-      
-      - name: Set Dart SDK Path
-        run: |
-          export PATH="/opt/hostedtoolcache/dart/3.5.0/x64/bin:$PATH"
-          echo $PATH
-
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.16.0"
 
       - name: Install Melos
         run: dart pub global activate melos
-      
+
       - name: Verify Melos Installation
-        run: melos --version  
+        run: melos --version
 
-      - name: Clear Dart Cache
-        run: |
-          rm -rf ~/.pub-cache
-          rm -rf .dart_tool
-
-      - name: Debug Melos Configuration
-        run: |
-          melos --version
-          melos doctor  
-
-      - name: Run Melos with Specific SDK
-        run: |
-          export DART_HOME="/opt/hostedtoolcache/dart/3.5.0/x64"
-          melos bootstrap
+      - name: Install Dependencies
+        run: melos bootstrap
 
       - name: Start TFChain Docker Container
         run: |
