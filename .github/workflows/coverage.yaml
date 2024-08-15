@@ -30,16 +30,17 @@ jobs:
       - name: Verify Dart SDK Version
         run: dart --version
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.16.0"
 
       - name: Install Melos
         run: dart pub global activate melos
 
       - name: Verify Melos Installation
         run: melos --version
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.16.0"  
 
       - name: Install Dart dependencies
         run: |
