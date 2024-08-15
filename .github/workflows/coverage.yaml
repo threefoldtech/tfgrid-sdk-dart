@@ -38,10 +38,6 @@ jobs:
       - name: Install Melos
         run: dart pub global activate melos
 
-      - name: Verify Melos Installation
-        run: melos --version
-
-
       - name: Install Dart dependencies
         run: |
           melos exec -c 1 -- \
