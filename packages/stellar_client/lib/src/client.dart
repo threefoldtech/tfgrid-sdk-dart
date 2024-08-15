@@ -88,10 +88,9 @@ class Client {
     }
   }
 
-  Future<KeyPair?> createAccountFromSecret(
-      CreateAccountSecretOptions options) async {
+  Future<KeyPair?> createAccountFromSecret({required String secretSeed}) async {
     try {
-      KeyPair existingAccountPair = KeyPair.fromSecretSeed(options.secretSeed);
+      KeyPair existingAccountPair = KeyPair.fromSecretSeed(secretSeed);
       keyPair = KeyPair.random();
       AccountResponse existingAccount =
           await sdk.accounts.account(existingAccountPair.accountId);
@@ -186,13 +185,13 @@ class Client {
       var specificBalance = receiver.balances.firstWhere(
         (balance) => balance.assetCode == currency,
         orElse: () {
-          throw Exception('Balance with asset code ${currency} not found.');
+          throw Exception('Balance with asset code $currency not found.');
         },
       );
 
       final asset = currencies.currencies[currency];
       if (asset == null) {
-        throw Exception('${currency} not supported');
+        throw Exception('$currency not supported');
       }
 
       AccountResponse sender =
@@ -284,8 +283,7 @@ class Client {
     }
   }
 
-  Future<TransactionData?> fetchFundDetails(
-      FetchFundDetailsOptions options) async {
+  Future<TransactionData?> fetchFundDetails({required String assetCode}) async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -296,7 +294,7 @@ class Client {
       final body = jsonDecode(response.body);
       Map<String, dynamic>? details;
       for (var item in body) {
-        if (item['asset'].startsWith(options.assetCode)) {
+        if (item['asset'].startsWith(assetCode)) {
           details = item;
           break;
         }
@@ -318,9 +316,10 @@ class Client {
   }
 
   Future<Operation?> makeFundPaumentOperation(
-      FetchFundDetailsOptions options) async {
-    TransactionData? transactionData = await fetchFundDetails(options);
-    Asset asset = AssetTypeCreditAlphaNum4(options.assetCode, options.issuer);
+      {required String assetCode, required String issuer}) async {
+    TransactionData? transactionData =
+        await fetchFundDetails(assetCode: assetCode);
+    Asset asset = AssetTypeCreditAlphaNum4(assetCode, issuer);
 
     return PaymentOperationBuilder(
             transactionData!.feeAccountId, asset, transactionData.feeFixed)
@@ -328,42 +327,42 @@ class Client {
   }
 
   Future<Transaction?> buildFundedPaymentTransaction(
-      SendPaymentTransactionOptions options) async {
+      {required KeyPair sourceKeyPair,
+      required String destinationAddress,
+      required String amount,
+      required String currency,
+      String? memoText}) async {
     // check that receiver account exists
     final receiver =
-        await loadAccountFromPublicKey(accountId: options.destinationAddress);
+        await loadAccountFromPublicKey(accountId: destinationAddress);
 
     // check that asset exists
     var specificBalance = receiver!.balances.firstWhere(
-      (balance) => balance.assetCode == options.currency,
+      (balance) => balance.assetCode == currency,
       orElse: () {
-        throw Exception(
-            'Balance with asset code ${options.currency} not found.');
+        throw Exception('Balance with asset code ${currency} not found.');
       },
     );
 
-    final asset = currencies.currencies[options.currency];
+    final asset = currencies.currencies[currency];
     if (asset == null) {
-      throw Exception('${options.currency} not supported');
+      throw Exception('${currency} not supported');
     }
 
     AccountResponse sourceAccount =
         await sdk.accounts.account(keyPair.accountId);
 
     Operation? paymentOperation = await makeFundPaumentOperation(
-        FetchFundDetailsOptions(
-            assetCode: asset.assetCode, issuer: asset.issuer));
+        assetCode: asset.assetCode, issuer: asset.issuer);
 
     Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
 
     Transaction transaction = TransactionBuilder(sourceAccount)
         .addOperation(paymentOperation!)
-        .addOperation(PaymentOperationBuilder(
-                options.destinationAddress, tftAsset, options.amount)
-            .build())
-        .addMemo(options.memoText != null
-            ? Memo.text(options.memoText!)
-            : Memo.none())
+        .addOperation(
+            PaymentOperationBuilder(destinationAddress, tftAsset, amount)
+                .build())
+        .addMemo(memoText != null ? Memo.text(memoText!) : Memo.none())
         .build();
     return transaction;
   }
@@ -420,37 +419,37 @@ class Client {
   }
 
   void _handlePathPaymentStrictReceiveOperationResponse(
-      PathPaymentStrictReceiveOperationResponse ppsrResponse) {
+      PathPaymentStrictReceiveOperationResponse response) {
     print("\n--- Path Payment Strict Receive Operation ---");
 
-    print("From: ${ppsrResponse.from}");
-    print("To: ${ppsrResponse.to}");
+    print("From: ${response.from}");
+    print("To: ${response.to}");
 
-    print("Source Amount: ${ppsrResponse.sourceAmount}");
-    print("Source Asset Code: ${ppsrResponse.sourceAssetCode ?? 'XLM'}");
+    print("Source Amount: ${response.sourceAmount}");
+    print("Source Asset Code: ${response.sourceAssetCode ?? 'XLM'}");
 
-    print("Destination Amount: ${ppsrResponse.amount}");
-    print("Destination Asset Code: ${ppsrResponse.assetCode} ");
+    print("Destination Amount: ${response.amount}");
+    print("Destination Asset Code: ${response.assetCode} ");
 
     print("--------------------------------------------\n");
   }
 
-  void _handlePaymentOperationResponse(PaymentOperationResponse por) {
+  void _handlePaymentOperationResponse(PaymentOperationResponse response) {
     print("\n--- Payment Operation ---");
-    if (por.transactionSuccessful!) {
+    if (response.transactionSuccessful!) {
       print("Transaction was successful.");
-      bool isSender = por.from!.accountId == keyPair.accountId;
+      bool isSender = response.from!.accountId == keyPair.accountId;
 
       if (isSender) {
         print("Role: Sender");
-        print("Sent to: ${por.to!.accountId}");
+        print("Sent to: ${response.to!.accountId}");
       } else {
         print("Role: Receiver");
-        print("Received from: ${por.from!.accountId}");
+        print("Received from: ${response.from!.accountId}");
       }
 
-      print("Amount: ${por.amount}");
-      print("Asset Code: ${por.assetCode ?? 'XLM'}");
+      print("Amount: ${response.amount}");
+      print("Asset Code: ${response.assetCode ?? 'XLM'}");
     } else {
       print("Transaction was not successful.");
     }
@@ -458,11 +457,11 @@ class Client {
   }
 
   void _handleCreateAccountOperationResponse(
-      CreateAccountOperationResponse caor) {
+      CreateAccountOperationResponse response) {
     print("\n--- Create Account Operation ---");
-    print("Account created: ${caor.account}");
+    print("Account created: ${response.account}");
     // Which asset is the starting balance ??
-    print("Starting balance: ${caor.startingBalance!}");
+    print("Starting balance: ${response.startingBalance!}");
     print("-----------------------------------\n");
   }
 
