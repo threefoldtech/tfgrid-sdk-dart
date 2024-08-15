@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Clear Dart SDK cache
-        run: sudo rm -rf /opt/hostedtoolcache/dart  
+        run: sudo rm -rf /opt/hostedtoolcache/dart
 
       - name: List Files
         run: ls -R
@@ -26,6 +26,10 @@ jobs:
         uses: dart-lang/setup-dart@v1.6.0
         with:
           sdk: "3.5.0"
+          
+      - name: Verify Dart SDK version
+        run: dart --version
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -40,13 +44,13 @@ jobs:
       - name: Start TFChain Docker Container
         run: |
           sudo docker run -d --network host ghcr.io/threefoldtech/tfchain  --dev --rpc-cors all --rpc-external --rpc-methods=safe
-      
+
       - name: Wait for TFChain to be ready
         run: |
           while ! nc -z localhost 9944; do
             echo "Waiting for TFChain to be ready..."
             sleep 5
-          done    
+          done
 
       - name: Run unit tests and generate coverage
         run: |
