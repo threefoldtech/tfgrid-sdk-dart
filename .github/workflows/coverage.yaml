@@ -28,7 +28,10 @@ jobs:
         run: dart --version
       
       - name: Set Dart SDK Path
-        run: export PATH="/opt/hostedtoolcache/dart/3.5.0/x64/bin:$PATH"  
+        run: |
+          export PATH="/opt/hostedtoolcache/dart/3.5.0/x64/bin:$PATH"
+          echo $PATH
+
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -40,6 +43,16 @@ jobs:
       
       - name: Verify Melos Installation
         run: melos --version  
+
+      - name: Clear Dart Cache
+        run: |
+          rm -rf ~/.pub-cache
+          rm -rf .dart_tool
+
+      - name: Debug Melos Configuration
+        run: |
+          melos --version
+          melos doctor  
 
       - name: Install dependencies
         run: melos bootstrap
