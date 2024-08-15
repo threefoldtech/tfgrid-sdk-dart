@@ -54,8 +54,10 @@ jobs:
           melos --version
           melos doctor  
 
-      - name: Install dependencies
-        run: melos bootstrap
+      - name: Run Melos with Specific SDK
+        run: |
+          export DART_HOME="/opt/hostedtoolcache/dart/3.5.0/x64"
+          melos bootstrap
 
       - name: Start TFChain Docker Container
         run: |
