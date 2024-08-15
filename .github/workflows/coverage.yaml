@@ -16,13 +16,16 @@ jobs:
       - name: Set up Repository
         uses: actions/checkout@v2
 
+      - name: Clear Dart SDK cache
+        run: sudo rm -rf /opt/hostedtoolcache/dart  
+
       - name: List Files
         run: ls -R
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.6.0
         with:
-          sdk: "stable"
+          sdk: "3.5.0"
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
