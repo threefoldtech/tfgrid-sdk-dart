@@ -1,5 +1,6 @@
 coverage/
 
+.dart_tool
 /packages/*/.dart_tool
 /packages/*/build
 /packages/*/idea
