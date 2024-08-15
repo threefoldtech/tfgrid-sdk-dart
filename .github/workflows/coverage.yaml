@@ -16,9 +16,6 @@ jobs:
       - name: Set up Repository
         uses: actions/checkout@v2
 
-      - name: Clear Dart SDK cache
-        run: sudo rm -rf /opt/hostedtoolcache/dart
-
       - name: List Files
         run: ls -R
 
@@ -26,9 +23,12 @@ jobs:
         uses: dart-lang/setup-dart@v1.6.0
         with:
           sdk: "3.5.0"
-          
+
       - name: Verify Dart SDK version
         run: dart --version
+      
+      - name: Set Dart SDK Path
+        run: export PATH="/opt/hostedtoolcache/dart/3.5.0/x64/bin:$PATH"  
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -37,6 +37,9 @@ jobs:
 
       - name: Install Melos
         run: dart pub global activate melos
+      
+      - name: Verify Melos Installation
+        run: melos --version  
 
       - name: Install dependencies
         run: melos bootstrap
