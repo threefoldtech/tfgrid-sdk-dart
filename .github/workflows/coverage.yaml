@@ -40,6 +40,7 @@ jobs:
 
       - name: Install Dart dependencies
         run: |
+          export PATH="$DART_HOME/bin:$PATH"
           melos exec -c 1 -- \
             'if [ "$MELOS_PACKAGE_NAME" != "stellar_client" ]; then dart pub get; fi'
 
