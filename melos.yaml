@@ -7,7 +7,7 @@ scripts:
     run: melos exec -- flutter analyze .
     description: Run `dart analyze` in all packages (linting).
   unit_test:
-    run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
+    run: melos exec --dir-exists="test" --fail-fast -- dart test --concurrency=1 test/
     description: Run all Flutter tests in this project.
   unit_test_and_coverage:
     description: Merge all packages coverage trace files ignoring data related to generated files.

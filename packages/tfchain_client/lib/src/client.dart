@@ -89,8 +89,6 @@ class Client extends QueryClient {
   Signer.KPType? _type;
   TermsAndConditions? _termsAndConditions;
   static const List<String> _SUPPORTED_KEYPAIR_TYPES = ["sr25519", "ed25519"];
-  // final _lock = Completer<void>(); //manage transactions state
-  Completer<void> _lock = Completer<void>();
 
   Client(String url, this.mnemonicOrSecretSeed, this._keypairType)
       : super(url) {}
@@ -228,12 +226,6 @@ class Client extends QueryClient {
   }
 
   Future<void> apply(RuntimeCall runtimeCall) async {
-    await _lock.future;
-
-    // start new transaction
-    final newlock = Completer<void>();
-    _lock.complete(newlock.future);
-
     if (provider == null) {
       throw Exception("Provider is not initialized");
     }
@@ -358,7 +350,5 @@ class Client extends QueryClient {
     );
     await _complete.future;
     subscription.cancel();
-    // complete newlock to allow next transactions
-    newlock.complete();
   }
 }

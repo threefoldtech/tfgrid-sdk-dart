@@ -58,7 +58,7 @@ void main() {
     test('Test Transfer TFTs', () async {
       try {
         var random = Random();
-        var randomNumber = random.nextInt(100) + 1;
+        var randomNumber = random.nextInt(1000) + 1;
         AccountInfo? before =
             await setupManager.client.balances.get(address: recipientAddress);
         await setupManager.client.balances.transfer(
