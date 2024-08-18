@@ -100,6 +100,7 @@ class SetupManager {
   BigInt myBalance = BigInt.from(5000);
   late int? _twinId;
   late String _relay;
+  late Client _client2;
 
   bool _initializeClient = false;
   bool _initializeQueryClient = false;
@@ -130,13 +131,16 @@ class SetupManager {
 
       _myAddress = _client.address;
 
-      Client client2 = Client(_url, "//Alice", _type);
-      await client2.connect();
+      _client2 = Client(_url, "//Alice", _type);
+      await _client2.connect();
 
-      await client2.balances
-          .transfer(address: _client.address, amount: myBalance);
-      final balance = await client2.balances.getMyBalance();
-      print("My Balance : ${balance!.data.free ~/ BigInt.from(10).pow(7)}");
+      try {
+        await _client2.balances
+            .transfer(address: _client.address, amount: myBalance);
+      } catch (error) {
+        print("ERROR FROM SETUP MANAGER: $error");
+      }
+      final balance = await _client.balances.getMyBalance();
 
       var bytes = utf8.encode("https://library.threefold.me/info/legal/");
       var digest = md5.convert(bytes);
@@ -147,7 +151,6 @@ class SetupManager {
       await _client.termsAndConditions.accept(
           documentLink: "https://library.threefold.me/info/legal/",
           documentHash: hashString.codeUnits);
-
       _twinId = await _client.twins.create(relay: _relay, pk: []);
       print(_twinId);
     }
