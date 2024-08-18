@@ -16,20 +16,10 @@ jobs:
       - name: Set up Repository
         uses: actions/checkout@v2
 
-      - name: Clear Dart SDK Cache
-        run: sudo rm -rf /opt/hostedtoolcache/dart
-
-      - name: Clear Pub Cache
-        run: rm -rf ~/.pub-cache
-
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.6.0
         with:
-          sdk: "3.5.0"
-
-      - name: Verify Dart SDK Version
-        run: dart --version
-
+          sdk: "3.2.3"
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -40,7 +30,6 @@ jobs:
 
       - name: Install Dart dependencies
         run: |
-          export PATH="$DART_HOME/bin:$PATH"
           melos exec -c 1 -- \
             'if [ "$MELOS_PACKAGE_NAME" != "stellar_client" ]; then dart pub get; fi'
 
