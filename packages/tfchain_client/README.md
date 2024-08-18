@@ -62,5 +62,5 @@ docker run --network host ghcr.io/threefoldtech/tfchain:2.8.1 --dev --rpc-cors a
 2- Then run:
 
 ```bash
- dart test --concurrency=1 test/
+ dart test --concurrency=1
 ```
