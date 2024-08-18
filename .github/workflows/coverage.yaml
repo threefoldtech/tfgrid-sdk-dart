@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Set up Repository
         uses: actions/checkout@v2
+      
+      - name: List Files
+        run: ls -R  
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.6.0
