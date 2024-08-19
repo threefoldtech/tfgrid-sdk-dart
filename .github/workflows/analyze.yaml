@@ -26,12 +26,5 @@ jobs:
       - name: Install dependencies
         run: dart pub global run melos bootstrap
 
-      - name: Analyze Dart packages
-        run: |
-          melos exec -c 1 -- \
-            'if [ "$MELOS_PACKAGE_NAME" != "stellar_client" ]; then dart analyze .; fi'
-
-      - name: Analyze Flutter packages
-        run: |
-          melos exec -c 1 -- \
-            'if [ "$MELOS_PACKAGE_NAME" == "stellar_client" ]; then flutter analyze .; fi'
+      - name: Analyze
+        run: dart analyze .
