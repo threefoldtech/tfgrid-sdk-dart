@@ -55,7 +55,7 @@ class Client {
     _currencies = currency.Currencies({'TFT': tft});
   }
 
-  Future<bool> activateWithThreefoldService() async {
+  Future<bool> activateThroughThreefoldService() async {
     Network networkType;
     if (_network == NetworkType.TESTNET) {
       networkType = Network.TESTNET;
@@ -101,9 +101,9 @@ class Client {
     }
   }
 
-  Future<bool> activateTestNetAccount({required String accountId}) async {
+  Future<bool> activateThroughFriendBot({required String accountId}) async {
     if (_network.toString() != Network.TESTNET.toString()) {
-      return false;
+      throw Exception("Network should be TEST");
     }
     try {
       bool funded = await FriendBot.fundTestAccount(accountId);
