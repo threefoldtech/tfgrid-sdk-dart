@@ -7,4 +7,4 @@ coverage/
 .vscode/
 *.iml
 .idea
-/packages/*/*.reflectable.dart
+/packages/*/bin/*.reflectable.dart
