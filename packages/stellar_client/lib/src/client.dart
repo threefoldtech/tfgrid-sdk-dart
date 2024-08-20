@@ -6,6 +6,7 @@ class Client {
   late KeyPair _keyPair;
   late currency.Currencies _currencies;
   late Map<String, String> _serviceUrls;
+  late Network _stellarNetwork;
 
   String get accountId => _keyPair.accountId;
   String get secretSeed => _keyPair.secretSeed;
@@ -36,6 +37,7 @@ class Client {
     switch (_network) {
       case NetworkType.TESTNET:
         _sdk = StellarSDK.TESTNET;
+        _stellarNetwork = Network.TESTNET;
         tft = currency.Currency(
           assetCode: 'TFT',
           issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
@@ -43,6 +45,7 @@ class Client {
         break;
       case NetworkType.PUBLIC:
         _sdk = StellarSDK.PUBLIC;
+        _stellarNetwork = Network.PUBLIC;
         tft = currency.Currency(
           assetCode: 'TFT',
           issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
@@ -56,18 +59,9 @@ class Client {
   }
 
   Future<bool> activateThroughThreefoldService() async {
-    Network networkType;
-    if (_network == NetworkType.TESTNET) {
-      networkType = Network.TESTNET;
-    } else if (_network == NetworkType.PUBLIC) {
-      networkType = Network.PUBLIC;
-    } else {
-      throw Exception("Unsupported network type");
-    }
-
     Transaction? transaction = await _getActivationTransaction();
     if (transaction != null) {
-      transaction.sign(_keyPair, networkType);
+      transaction.sign(_keyPair, _stellarNetwork);
       await _sdk.submitTransaction(transaction);
       print("Account Activated Successfully.");
       print("TFT Asset was added Successfully ");
@@ -137,12 +131,7 @@ class Client {
       Transaction transaction = TransactionBuilder(account)
           .addOperation(changeTrustOperation.build())
           .build();
-
-      if (_network == NetworkType.TESTNET) {
-        transaction.sign(_keyPair, Network.TESTNET);
-      } else if (_network == NetworkType.PUBLIC) {
-        transaction.sign(_keyPair, Network.PUBLIC);
-      }
+      transaction.sign(_keyPair, _stellarNetwork);
 
       SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
@@ -191,7 +180,7 @@ class Client {
           .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
           .build();
 
-      transaction.sign(_keyPair, Network.TESTNET);
+      transaction.sign(_keyPair, _stellarNetwork);
       await _sdk.submitTransaction(transaction);
       print("Transaction successful.");
       return true;
@@ -254,11 +243,8 @@ class Client {
 
       Transaction transaction =
           Transaction.fromV1EnvelopeXdr(xdrTxEnvelope.v1!);
-      if (_network.toString() == 'TESTNET') {
-        transaction.sign(_keyPair, Network.TESTNET);
-      } else if (_network.toString() == 'PUBLIC') {
-        transaction.sign(_keyPair, Network.PUBLIC);
-      }
+          
+      transaction.sign(_keyPair, _stellarNetwork);
 
       SubmitTransactionResponse response2 =
           await _sdk.submitTransaction(transaction);
