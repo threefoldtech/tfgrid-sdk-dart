@@ -5,5 +5,4 @@ void main() async {
       "SCQPJVHZ6ZBWQAXNAGUPULZMD2XFYRQ3C4NOF5ZDPN7VWTDNDVZWY674");
   final res = await stellarClient.getTransactions();
   print(res);
-  // await stellarClient.
 }
