@@ -96,7 +96,7 @@ class Client {
   }
 
   Future<bool> activateThroughFriendBot({required String accountId}) async {
-    if (_network.toString() != Network.TESTNET.toString()) {
+    if (_stellarNetwork != Network.TESTNET) {
       throw Exception("Network should be TEST");
     }
     try {
