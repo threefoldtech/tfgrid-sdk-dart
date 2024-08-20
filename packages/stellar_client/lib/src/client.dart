@@ -190,32 +190,25 @@ class Client {
     }
   }
 
-  // Future<KeyPair?> createAccountFromSecret({required String secretSeed}) async {
-  //   try {
-  //     KeyPair existingAccountPair = KeyPair.fromSecretSeed(secretSeed);
-  //     keyPair = KeyPair.random();
-  //     AccountResponse existingAccount =
-  //         await sdk.accounts.account(existingAccountPair.accountId);
+  Future<bool> activateThroughWallet({required String secretSeed}) async {
+    try {
+      KeyPair walletKeyPair = KeyPair.fromSecretSeed(secretSeed);
+      AccountResponse existingAccount =
+          await _sdk.accounts.account(walletKeyPair.accountId);
 
-  //     Transaction transaction = TransactionBuilder(existingAccount)
-  //         .addOperation(
-  //             CreateAccountOperationBuilder(keyPair.accountId, "10").build())
-  //         .build();
+      Transaction transaction = TransactionBuilder(existingAccount)
+          .addOperation(CreateAccountOperationBuilder(accountId, "10").build())
+          .build();
 
-  //     if (network == NetworkType.TESTNET) {
-  //       transaction.sign(existingAccountPair, Network.TESTNET);
-  //     } else if (network == NetworkType.PUBLIC) {
-  //       transaction.sign(existingAccountPair, Network.PUBLIC);
-  //     }
+      transaction.sign(walletKeyPair, _stellarNetwork);
 
-  //     await sdk.submitTransaction(transaction);
-  //     await sdk.accounts.account(keyPair.accountId);
-  //     return keyPair;
-  //   } catch (error) {
-  //     print("Failed to create account $error");
-  //   }
-  //   return null;
-  // }
+      await _sdk.submitTransaction(transaction);
+      return true;
+    } catch (error) {
+      print("Failed to create account $error");
+      return false;
+    }
+  }
 
   // take asset code code && issuer (optional)
   Future<bool> fundTrustLine(String asset_code) async {
@@ -243,7 +236,7 @@ class Client {
 
       Transaction transaction =
           Transaction.fromV1EnvelopeXdr(xdrTxEnvelope.v1!);
-          
+
       transaction.sign(_keyPair, _stellarNetwork);
 
       SubmitTransactionResponse response2 =
@@ -292,82 +285,76 @@ class Client {
     }
   }
 
-  // Future<Operation?> makeFundPaumentOperation(
-  //     {required String assetCode, required String issuer}) async {
-  //   TransactionData? transactionData =
-  //       await fetchFundDetails(assetCode: assetCode);
-  //   Asset asset = AssetTypeCreditAlphaNum4(assetCode, issuer);
+  Future<Operation?> makeFundPaumentOperation(
+      {required String assetCode, required String issuer}) async {
+    TransactionData? transactionData =
+        await fetchFundDetails(assetCode: assetCode);
+    Asset asset = AssetTypeCreditAlphaNum4(assetCode, issuer);
 
-  //   return PaymentOperationBuilder(
-  //           transactionData!.feeAccountId, asset, transactionData.feeFixed)
-  //       .build();
-  // }
+    return PaymentOperationBuilder(
+            transactionData!.feeAccountId, asset, transactionData.feeFixed)
+        .build();
+  }
 
-  // Future<Transaction?> buildFundedPaymentTransaction(
-  //     {required KeyPair sourceKeyPair,
-  //     required String destinationAddress,
-  //     required String amount,
-  //     required String currency,
-  //     String? memoText}) async {
-  //   // check that receiver account exists
-  //   final receiver =
-  //       await loadAccountFromPublicKey(accountId: destinationAddress);
+  Future<Transaction?> buildFundedPaymentTransaction(
+      {required KeyPair sourceKeyPair,
+      required String destinationAddress,
+      required String amount,
+      required String currency,
+      String? memoText}) async {
+    // check that receiver account exists
+    final receiver = await _sdk.accounts.account(accountId);
 
-  //   // check that asset exists
-  //   var specificBalance = receiver!.balances.firstWhere(
-  //     (balance) => balance.assetCode == currency,
-  //     orElse: () {
-  //       throw Exception('Balance with asset code ${currency} not found.');
-  //     },
-  //   );
+    // check that asset exists
+    var specificBalance = receiver.balances.firstWhere(
+      (balance) => balance.assetCode == currency,
+      orElse: () {
+        throw Exception('Balance with asset code ${currency} not found.');
+      },
+    );
 
-  //   final asset = currencies.currencies[currency];
-  //   if (asset == null) {
-  //     throw Exception('${currency} not supported');
-  //   }
+    final asset = _currencies.currencies[currency];
+    if (asset == null) {
+      throw Exception('${currency} not supported');
+    }
 
-  //   AccountResponse sourceAccount =
-  //       await sdk.accounts.account(keyPair.accountId);
+    AccountResponse sourceAccount = await _sdk.accounts.account(accountId);
 
-  //   Operation? paymentOperation = await makeFundPaumentOperation(
-  //       assetCode: asset.assetCode, issuer: asset.issuer);
+    Operation? paymentOperation = await makeFundPaumentOperation(
+        assetCode: asset.assetCode, issuer: asset.issuer);
 
-  //   Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
+    Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
 
-  //   Transaction transaction = TransactionBuilder(sourceAccount)
-  //       .addOperation(paymentOperation!)
-  //       .addOperation(
-  //           PaymentOperationBuilder(destinationAddress, tftAsset, amount)
-  //               .build())
-  //       .addMemo(memoText != null ? Memo.text(memoText!) : Memo.none())
-  //       .build();
-  //   return transaction;
-  // }
+    Transaction transaction = TransactionBuilder(sourceAccount)
+        .addOperation(paymentOperation!)
+        .addOperation(
+            PaymentOperationBuilder(destinationAddress, tftAsset, amount)
+                .build())
+        .addMemo(memoText != null ? Memo.text(memoText!) : Memo.none())
+        .build();
+    return transaction;
+  }
 
-  // Future<void> submitFundedTransaction(Transaction fundedTransaction) async {
-  //   if (network == NetworkType.TESTNET) {
-  //     fundedTransaction.sign(keyPair, Network.TESTNET);
-  //   } else if (network == NetworkType.PUBLIC) {
-  //     fundedTransaction.sign(keyPair, Network.PUBLIC);
-  //   }
+  Future<void> submitFundedTransaction(Transaction fundedTransaction) async {
+    fundedTransaction.sign(_keyPair, _stellarNetwork);
 
-  //   print('Sending to');
-  //   print(
-  //       '${serviceUrls[network.toString()]}/transactionfunding_service/fund_transaction');
+    print('Sending to');
+    print(
+        '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction');
 
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(
-  //           '${serviceUrls[network.toString()]}/transactionfunding_service/fund_transaction'),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode({'transaction': fundedTransaction.toXdr()}),
-  //     );
+    try {
+      final response = await http.post(
+        Uri.parse(
+            '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'transaction': fundedTransaction.toXdr()}),
+      );
 
-  //     print(response.body);
-  //   } catch (error) {
-  //     throw Exception('Something went wrong! $error');
-  //   }
-  // }
+      print(response.body);
+    } catch (error) {
+      throw Exception('Something went wrong! $error');
+    }
+  }
 
   Future<List<Map<String, dynamic>>> getTransactions() async {
     Page<OperationResponse> payments = await _sdk.payments
