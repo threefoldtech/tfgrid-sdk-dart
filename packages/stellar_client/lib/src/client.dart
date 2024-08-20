@@ -330,7 +330,7 @@ class Client {
         .addOperation(
             PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                 .build())
-        .addMemo(memoText != null ? Memo.text(memoText!) : Memo.none())
+        .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
         .build();
     return transaction;
   }
