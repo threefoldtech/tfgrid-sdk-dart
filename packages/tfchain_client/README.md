@@ -56,7 +56,7 @@ dart run polkadart_cli:generate -v
 1- To run the tests against a local docker image of the TFChain:
 
 ```bash
-docker run --network host ghcr.io/threefoldtech/tfchain:2.8.1 --dev --rpc-cors all --rpc-external --rpc-methods=safe
+docker run --network host ghcr.io/threefoldtech/tfchain --dev --rpc-cors all --rpc-external --rpc-methods=safe
 ```
 
 2- Then run:
