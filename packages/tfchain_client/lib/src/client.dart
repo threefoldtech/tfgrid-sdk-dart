@@ -183,10 +183,9 @@ class Client extends QueryClient {
   @override
   Future<void> connect() async {
     await super.connect();
-    _checkInputs();
     final Signer.Signer signer = Signer.Signer();
-    if (mnemonicOrSecretSeed == "//Alice") {
-      keypair = await signer.fromUri("//Alice", _type!);
+    if (mnemonicOrSecretSeed.startsWith("//")) {
+      keypair = await signer.fromUri(mnemonicOrSecretSeed, _type!);
     } else if (validateMnemonic(mnemonicOrSecretSeed)) {
       keypair = await signer.fromMnemonic(mnemonicOrSecretSeed, _type!);
     } else {
