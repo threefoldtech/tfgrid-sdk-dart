@@ -1,21 +1,24 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+# Graphql Client
 
-# Getting Started
+This is a dart client to send requests to graphql based on network for Threefold grid.
 
-## Install Dependencies 
+## Install Dependencies
+
 ``` bash
 dart pub get
 ```
-## Generate Reflectable code 
+
+## Generate Reflectable code
+
 ```bash
 dart run build_runner build
 ```
 
-# Usage 
- - Ensure that initializeReflectable() is called at the beggining of your main
- 
- - Example usage:
+## Usage
+
+- Ensure that initializeReflectable() is called at the beginning of your main
+
+- Example usage:
 
 ```dart
 import 'package:graphql_client/graphql_client.dart';
@@ -32,7 +35,7 @@ void main() async {
     publicIps: PublicIpsReturnOptions(ip: true),
   );
   final FarmsQueryOptions farmsQueryOptions = FarmsQueryOptions(
-    idEq: "0000013810-000001-a75c1",
+    idEq: "farm-id",
   );
 
   Future<List<FarmInfo>> farms = graphQLClient.farms.listFarms(farmsQueryOptions, farmsReturnOptions);
@@ -42,8 +45,3 @@ void main() async {
   } 
 }
 ```
-
-
-
-
-
