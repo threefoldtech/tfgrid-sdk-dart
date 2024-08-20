@@ -37,6 +37,12 @@ melos run analyze
 To run unit tests in all packages that have `test` directory, run the following command
 
 ```bash
+docker run --network host ghcr.io/threefoldtech/tfchain --dev --rpc-cors all --rpc-external --rpc-methods=safe
+```
+
+Then run :
+
+```bash
 melos run unit_test
 ```
 
