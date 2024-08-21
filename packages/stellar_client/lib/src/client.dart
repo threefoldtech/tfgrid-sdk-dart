@@ -116,13 +116,12 @@ class Client {
   Future<bool> addTrustLine() async {
     for (var entry in _currencies.currencies.entries) {
       String currencyCode = entry.key;
-      currency.Currency Currency = entry.value;
+      currency.Currency currentCurrency = entry.value;
 
-      String issuerAccountId = Currency.issuer;
+      String issuerAccountId = currentCurrency.issuer;
       Asset currencyAsset =
-          AssetTypeCreditAlphaNum4(Currency.assetCode, issuerAccountId);
+          AssetTypeCreditAlphaNum4(currentCurrency.assetCode, issuerAccountId);
 
-      // TODO:
       ChangeTrustOperationBuilder changeTrustOperation =
           ChangeTrustOperationBuilder(currencyAsset, "300000");
 
@@ -149,38 +148,19 @@ class Client {
     return false;
   }
 
-  Future<bool> sendTransaction(
+  Future<bool> transfer(
       {required String destinationAddress,
       required String amount,
       required String currency,
       String? memoText}) async {
     try {
-      final receiver = await _sdk.accounts.account(accountId);
+      Transaction? transaction = await _buildTransaction(
+          destinationAddress: destinationAddress,
+          amount: amount,
+          currency: currency,
+          funded: false);
 
-      var specificBalance = receiver.balances.firstWhere(
-        (balance) => balance.assetCode == currency,
-        orElse: () {
-          throw Exception('Balance with asset code $currency not found.');
-        },
-      );
-
-      final asset = _currencies.currencies[currency];
-      if (asset == null) {
-        throw Exception('$currency not supported');
-      }
-
-      AccountResponse sender = await _sdk.accounts.account(accountId);
-
-      Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
-
-      Transaction transaction = TransactionBuilder(sender)
-          .addOperation(
-              PaymentOperationBuilder(destinationAddress, tftAsset, amount)
-                  .build())
-          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
-          .build();
-
-      transaction.sign(_keyPair, _stellarNetwork);
+      transaction!.sign(_keyPair, _stellarNetwork);
       await _sdk.submitTransaction(transaction);
       print("Transaction successful.");
       return true;
@@ -190,14 +170,16 @@ class Client {
     }
   }
 
-  Future<bool> activateThroughWallet({required String secretSeed}) async {
+  Future<bool> activateThroughActivationWallet(
+      {required String activationWalletSecretSeed}) async {
     try {
-      KeyPair walletKeyPair = KeyPair.fromSecretSeed(secretSeed);
+      KeyPair walletKeyPair =
+          KeyPair.fromSecretSeed(activationWalletSecretSeed);
       AccountResponse existingAccount =
           await _sdk.accounts.account(walletKeyPair.accountId);
 
       Transaction transaction = TransactionBuilder(existingAccount)
-          .addOperation(CreateAccountOperationBuilder(accountId, "10").build())
+          .addOperation(CreateAccountOperationBuilder(accountId, "1").build())
           .build();
 
       transaction.sign(walletKeyPair, _stellarNetwork);
@@ -210,8 +192,8 @@ class Client {
     }
   }
 
-  // take asset code code && issuer (optional)
-  Future<bool> fundTrustLine(String asset_code) async {
+  // take asset code && issuer (optional)
+  Future<bool> addTrustLineThroughThreefoldService(String asset_code) async {
     final asset = _currencies.currencies[asset_code];
     if (asset == null) {
       throw Exception("Asset $asset_code not supported");
@@ -254,7 +236,8 @@ class Client {
     }
   }
 
-  Future<TransactionData?> fetchFundDetails({required String assetCode}) async {
+  Future<TransactionData?> _fetchFundDetails(
+      {required String assetCode}) async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -285,10 +268,10 @@ class Client {
     }
   }
 
-  Future<Operation?> makeFundPaumentOperation(
+  Future<Operation?> _makeFundPaymentOperation(
       {required String assetCode, required String issuer}) async {
     TransactionData? transactionData =
-        await fetchFundDetails(assetCode: assetCode);
+        await _fetchFundDetails(assetCode: assetCode);
     Asset asset = AssetTypeCreditAlphaNum4(assetCode, issuer);
 
     return PaymentOperationBuilder(
@@ -296,12 +279,12 @@ class Client {
         .build();
   }
 
-  Future<Transaction?> buildFundedPaymentTransaction(
-      {required KeyPair sourceKeyPair,
-      required String destinationAddress,
+  Future<Transaction?> _buildTransaction(
+      {required String destinationAddress,
       required String amount,
       required String currency,
-      String? memoText}) async {
+      String? memoText,
+      required bool funded}) async {
     // check that receiver account exists
     final receiver = await _sdk.accounts.account(accountId);
 
@@ -318,25 +301,44 @@ class Client {
       throw Exception('${currency} not supported');
     }
 
-    AccountResponse sourceAccount = await _sdk.accounts.account(accountId);
-
-    Operation? paymentOperation = await makeFundPaumentOperation(
-        assetCode: asset.assetCode, issuer: asset.issuer);
-
+    AccountResponse sender = await _sdk.accounts.account(accountId);
     Asset tftAsset = AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
+    Transaction? transaction;
 
-    Transaction transaction = TransactionBuilder(sourceAccount)
-        .addOperation(paymentOperation!)
-        .addOperation(
-            PaymentOperationBuilder(destinationAddress, tftAsset, amount)
-                .build())
-        .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
-        .build();
+    if (funded) {
+      Operation? paymentOperation = await _makeFundPaymentOperation(
+          assetCode: asset.assetCode, issuer: asset.issuer);
+      transaction = TransactionBuilder(sender)
+          .addOperation(paymentOperation!)
+          .addOperation(
+              PaymentOperationBuilder(destinationAddress, tftAsset, amount)
+                  .build())
+          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .build();
+    } else {
+      transaction = TransactionBuilder(sender)
+          .addOperation(
+              PaymentOperationBuilder(destinationAddress, tftAsset, amount)
+                  .build())
+          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .build();
+    }
+
     return transaction;
   }
 
-  Future<void> submitFundedTransaction(Transaction fundedTransaction) async {
-    fundedTransaction.sign(_keyPair, _stellarNetwork);
+  Future<void> transferThroughThreefoldService(
+      {required String destinationAddress,
+      required String amount,
+      required String currency,
+      String? memoText}) async {
+    Transaction? fundedTransaction = await _buildTransaction(
+        destinationAddress: destinationAddress,
+        amount: amount,
+        currency: currency,
+        funded: true);
+
+    fundedTransaction!.sign(_keyPair, _stellarNetwork);
 
     print('Sending to');
     print(
@@ -419,22 +421,23 @@ class Client {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getBalance() async {
-    List<Map<String, dynamic>> balancesList = [];
+  Future<List<BalanceInfo>> getBalance() async {
+    List<BalanceInfo> balancesList = [];
     AccountResponse account = await _sdk.accounts.account(accountId);
+
     for (Balance balance in account.balances) {
-      Map<String, dynamic> balanceMap = {};
+      BalanceData balanceData;
       switch (balance.assetType) {
         case Asset.TYPE_NATIVE:
-          balanceMap['assetCode'] = 'XLM';
-          balanceMap['balance'] = balance.balance;
+          balanceData = BalanceData(assetCode: 'XLM', balance: balance.balance);
           break;
         default:
-          balanceMap['assetCode'] = balance.assetCode;
-          balanceMap['balance'] = balance.balance;
+          balanceData = BalanceData(
+              assetCode: balance.assetCode!, balance: balance.balance);
       }
-      balancesList.add(balanceMap);
+      balancesList.add(balanceData);
     }
+
     return balancesList;
   }
 }
