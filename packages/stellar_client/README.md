@@ -18,9 +18,9 @@ This client enables you to create new Stellar accounts or load existing ones on 
 
 Create new testnet account:
 
-- If no mnemonic provided, it will be created by the client.
+- If no mnemonic is provided, the client will create a new one using `Client.create`. If a mnemonic is provided, the client will be created using `Client.createFromMnemonic`.
 - Account can be activated through friendbot (only for testnet).
-- After activation trustlines can be added to account. 
+- After activation, trustlines can be added to the account.
 
 ```dart
   import 'package:stellar_client/stellar_client.dart';
