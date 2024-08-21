@@ -19,42 +19,46 @@ This client enables you to create new Stellar accounts or load existing ones on 
 Create new testnet account:
 
 - If no mnemonic provided, it will be created by the client.
-- By default the account activated by threefold activation service, will contains both assets TFT and XLM.
+- Account can be activated through friendbot (only for testnet).
+- After activation trustlines can be added to account. 
 
 ```dart
   import 'package:stellar_client/stellar_client.dart';
 
-  final stellarClient = Client(NetworkType.TESTNET);
-  final keypair = stellarClient.createThreefoldAccount(mnemonic: "");
+  final stellarClient = Client.create(NetworkType.TESTNET);
+  // final stellarClient = await Client.createFromMnemonic(NetworkType.TESTNET, "mnemonic");
+
+  await stellarClient.activateThroughFriendBot(accountId: stellarClient.accountId);
+  await stellarClient.addTrustLine();
+
   final balance = await stellarClient.getBalance();
   print(balance);
-
-  await stellarClient.getTransactions();
 ```
 
 Load previously created account:
 
-- Accounts can be loaded from public key or secret seed.
-- If user wants to make any transactions, account should be loaded from secret seed.
+- Accounts can be loaded from secret seed.
 
 ```dart
   import 'package:stellar_client/stellar_client.dart';
 
-  final stellarClient = Client(NetworkType.TESTNET);
-  final account = stellarClient.loadAccountFromPublicKey(accountId: "account_id");
+  final stellarClient = Client(NetworkType.TESTNET, secretSeed);
+  final transactions = await stellarClient.getTransactions();
+  print(transactions);
 ```  
 
 ### PUBLIC
 
+- Activation through Threefold service will add assets automatically.
+
 ```dart
   import 'package:stellar_client/stellar_client.dart';
 
-  final stellarClient = Client(NetworkType.PUBLIC);
-  final keypair = stellarClient.createThreefoldAccount(mnemonic: "");
-  await stellarClient.sendTransaction(
-      sourceKeyPair: account,
-      destinationAddress:
-          "destination-public-key",
+  final stellarClient = Client.create(NetworkType.PUBLIC);
+  await stellarClient.activateThroughThreefoldService();
+
+  await stellarClient.transfer(
+      destinationAddress: "destination-public-key",
       amount: "20",
       currency: "TFT",
       memoText: "Memo Text");
