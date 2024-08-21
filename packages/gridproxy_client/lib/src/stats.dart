@@ -1,6 +1,5 @@
 import 'package:gridproxy_client/gridproxy_client.dart';
 import 'package:gridproxy_client/models/stats.dart';
-import 'package:http/http.dart';
 
 class Stats {
   final GridProxyClient client;
