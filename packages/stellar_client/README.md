@@ -18,7 +18,8 @@ This client enables you to create new Stellar accounts or load existing ones on 
 
 Create new testnet account:
 
-- If no mnemonic is provided, the client will create a new one using `Client.create`. If a mnemonic is provided, the client will be created using `Client.createFromMnemonic`.
+- Use `Client.create(NetworkType.TESTNET)` to create a new client.
+- Use `Client.createFromMnemonic(NetworkType.TESTNET, "mnemonic")` to create a client from an existing mnemonic.
 - Account can be activated through friendbot (only for testnet).
 - After activation, trustlines can be added to the account.
 
