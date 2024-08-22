@@ -368,30 +368,22 @@ class Client {
 
     if (payments.records != null && payments.records!.isNotEmpty) {
       for (OperationResponse response in payments.records!) {
-        if (response is CreateAccountOperationResponse &&
-            assetCodeFilter == null) {
+        if (response is PaymentOperationResponse) {
+          String assetCode = response.assetCode ?? 'XLM';
+          if (assetCodeFilter == null || assetCode == assetCodeFilter) {
+            var details = _handlePaymentOperationResponse(response);
+            transactionDetails.add({'type': 'Payment', 'details': details});
+          }
+        } else if (response is CreateAccountOperationResponse) {
           var details = _handleCreateAccountOperationResponse(response);
           transactionDetails.add({'type': 'CreateAccount', 'details': details});
-        } else if (response is PaymentOperationResponse ||
-            response is PathPaymentStrictReceiveOperationResponse) {
-          String assetCode = response is PaymentOperationResponse
-              ? response.assetCode ?? 'XLM'
-              : (response as PathPaymentStrictReceiveOperationResponse)
-                      .assetCode ??
-                  'XLM';
-
+        } else if (response is PathPaymentStrictReceiveOperationResponse) {
+          String assetCode = response.assetCode ?? 'XLM';
           if (assetCodeFilter == null || assetCode == assetCodeFilter) {
-            var details = response is PaymentOperationResponse
-                ? _handlePaymentOperationResponse(response)
-                : _handlePathPaymentStrictReceiveOperationResponse(
-                    response as PathPaymentStrictReceiveOperationResponse);
-
-            transactionDetails.add({
-              'type': response is PaymentOperationResponse
-                  ? 'Payment'
-                  : 'PathPaymentStrictReceive',
-              'details': details
-            });
+            var details =
+                _handlePathPaymentStrictReceiveOperationResponse(response);
+            transactionDetails
+                .add({'type': 'PathPaymentStrictReceive', 'details': details});
           }
         } else {
           print("Unhandled operation type: ${response.runtimeType}");
@@ -400,7 +392,6 @@ class Client {
     } else {
       print("No payment records found.");
     }
-
     return transactionDetails;
   }
 
