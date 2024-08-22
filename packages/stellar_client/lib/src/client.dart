@@ -375,8 +375,11 @@ class Client {
             transactionDetails.add({'type': 'Payment', 'details': details});
           }
         } else if (response is CreateAccountOperationResponse) {
-          var details = _handleCreateAccountOperationResponse(response);
-          transactionDetails.add({'type': 'CreateAccount', 'details': details});
+          if (assetCodeFilter == null) {
+            var details = _handleCreateAccountOperationResponse(response);
+            transactionDetails
+                .add({'type': 'CreateAccount', 'details': details});
+          }
         } else if (response is PathPaymentStrictReceiveOperationResponse) {
           String assetCode = response.assetCode ?? 'XLM';
           if (assetCodeFilter == null || assetCode == assetCodeFilter) {
