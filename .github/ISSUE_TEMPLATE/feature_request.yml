@@ -15,6 +15,7 @@ body:
       options:
         - signer
         - tfchain_client
+        - stellar_client
 
   - type: textarea
     id: describe
