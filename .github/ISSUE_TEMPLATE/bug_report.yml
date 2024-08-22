@@ -28,6 +28,7 @@ body:
       options:
         - signer
         - tfchain_client
+        - stellar_client
     validations:
       required: true
 
