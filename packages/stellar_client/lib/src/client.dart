@@ -358,7 +358,8 @@ class Client {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getTransactions() async {
+  Future<List<Map<String, dynamic>>> getTransactions(
+      {String? assetCodeFilter}) async {
     Page<OperationResponse> payments = await _sdk.payments
         .forAccount(accountId)
         .order(RequestBuilderOrder.DESC)
@@ -368,16 +369,25 @@ class Client {
     if (payments.records != null && payments.records!.isNotEmpty) {
       for (OperationResponse response in payments.records!) {
         if (response is PaymentOperationResponse) {
-          var details = _handlePaymentOperationResponse(response);
-          transactionDetails.add({'type': 'Payment', 'details': details});
+          String assetCode = response.assetCode ?? 'XLM';
+          if (assetCodeFilter == null || assetCode == assetCodeFilter) {
+            var details = _handlePaymentOperationResponse(response);
+            transactionDetails.add({'type': 'Payment', 'details': details});
+          }
         } else if (response is CreateAccountOperationResponse) {
-          var details = _handleCreateAccountOperationResponse(response);
-          transactionDetails.add({'type': 'CreateAccount', 'details': details});
+          if (assetCodeFilter == null) {
+            var details = _handleCreateAccountOperationResponse(response);
+            transactionDetails
+                .add({'type': 'CreateAccount', 'details': details});
+          }
         } else if (response is PathPaymentStrictReceiveOperationResponse) {
-          var details =
-              _handlePathPaymentStrictReceiveOperationResponse(response);
-          transactionDetails
-              .add({'type': 'PathPaymentStrictReceive', 'details': details});
+          String assetCode = response.assetCode ?? 'XLM';
+          if (assetCodeFilter == null || assetCode == assetCodeFilter) {
+            var details =
+                _handlePathPaymentStrictReceiveOperationResponse(response);
+            transactionDetails
+                .add({'type': 'PathPaymentStrictReceive', 'details': details});
+          }
         } else {
           print("Unhandled operation type: ${response.runtimeType}");
         }
@@ -385,7 +395,6 @@ class Client {
     } else {
       print("No payment records found.");
     }
-
     return transactionDetails;
   }
 
