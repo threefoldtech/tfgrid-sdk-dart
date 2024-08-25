@@ -6,7 +6,7 @@ class Twins {
 
   Twins(this.client);
 
-  Future<List<TwinsInfo>> getTwins(TwinsQueryParams queryParameters) async {
+  Future<List<TwinsInfo>> list(TwinsQueryParams queryParameters) async {
     final response = await client.getRequest('/twins', queryParameters.toMap());
     List<TwinsInfo> twins = (response as List<dynamic>).map((contractsData) {
       return TwinsInfo.fromJson(contractsData as Map<String, dynamic>);
@@ -14,7 +14,7 @@ class Twins {
     return twins;
   }
 
-  Future<TwinConsumption> getTwinConsumption(int twinID) async {
+  Future<TwinConsumption> getConsumption(int twinID) async {
     final response = await client.getRequest('twins/$twinID/consumption', null);
     TwinConsumption twinConsumption =
         TwinConsumption.fromJson(response as Map<String, dynamic>);

@@ -5,7 +5,7 @@ void main() async {
   GridProxyClient client = GridProxyClient('gridproxy.dev.grid.tf');
 
   final options = ListFarmsQueryParameters(farmID: 1);
-  final farms = await client.farms.listFarms(options);
+  final farms = await client.farms.list(options);
 
   print(farms);
 }

@@ -6,13 +6,13 @@ class Nodes {
 
   Nodes(this.client);
 
-  Future<List<Node>> listNodes(ListNodesQueryParamaters? queryParams) async {
+  Future<List<Node>> list(ListNodesQueryParamaters? queryParams) async {
     final nodes = await client.getRequest(
         '/nodes', queryParams?.toQueryParamaters()) as List<dynamic>;
     return nodes.map((node) => Node.fromJson(node)).toList();
   }
 
-  Future<Node> getNode(int nodeID) async {
+  Future<Node> getById(int nodeID) async {
     final node = await client.getRequest('/nodes/$nodeID', null);
     return Node.fromJson(node);
   }

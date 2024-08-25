@@ -6,7 +6,7 @@ class Farms {
 
   Farms(this.client);
 
-  Future<List<Farm>> listFarms(ListFarmsQueryParameters? queryParams) async {
+  Future<List<Farm>> list(ListFarmsQueryParameters? queryParams) async {
     final farms = await client.getRequest(
         '/farms', queryParams?.toQueryParamaters()) as List<dynamic>;
     return farms.map((farm) => Farm.fromJson(farm)).toList();

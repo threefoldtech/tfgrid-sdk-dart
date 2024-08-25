@@ -6,7 +6,7 @@ class Stats {
 
   Stats(this.client);
 
-  Future<StatsInfo> getStats(StatsQueryParams options) async {
+  Future<StatsInfo> get(StatsQueryParams options) async {
     final response = await client.getRequest('stats', options.toMap());
     StatsInfo stat = StatsInfo.fromJson(response as Map<String, dynamic>);
     return stat;

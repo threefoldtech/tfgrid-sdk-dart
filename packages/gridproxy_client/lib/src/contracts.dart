@@ -6,7 +6,7 @@ class Contracts {
 
   Contracts(this.client);
 
-  Future<List<ContractInfo>> getContracts(
+  Future<List<ContractInfo>> list(
       ContractInfoQueryParams queryParameters) async {
     final response =
         await client.getRequest('/contracts', queryParameters.toMap());
@@ -17,14 +17,14 @@ class Contracts {
     return contracts;
   }
 
-  Future<ContractInfo> getContractByID(int contractId) async {
+  Future<ContractInfo> getById(int contractId) async {
     final response = await client.getRequest('/contracts/$contractId', null);
     ContractInfo contract =
         ContractInfo.fromJson(response as Map<String, dynamic>);
     return contract;
   }
 
-  Future<List<ContractBills>> getContractBills(
+  Future<List<ContractBills>> getBills(
       int contractId, ContractBillQueryParams queryParameters) async {
     final response = await client.getRequest(
         '/contracts/$contractId/bills', queryParameters.toMap());
