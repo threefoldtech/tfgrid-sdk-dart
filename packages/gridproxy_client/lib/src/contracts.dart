@@ -1,6 +1,5 @@
 import 'package:gridproxy_client/gridproxy_client.dart';
 import 'package:gridproxy_client/models/contracts.dart';
-import 'package:gridproxy_client/src/query_builder.dart';
 
 class Contracts {
   final GridProxyClient client;
@@ -9,7 +8,6 @@ class Contracts {
 
   Future<List<ContractInfo>> list(
       ContractInfoQueryParams queryParameters) async {
-      
     final response =
         await client.getRequest('/contracts', queryParameters.toJson());
     List<ContractInfo> contracts =

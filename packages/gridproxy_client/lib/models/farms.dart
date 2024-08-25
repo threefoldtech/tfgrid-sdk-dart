@@ -1,4 +1,5 @@
 import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/models/sort_order.dart';
 import 'package:gridproxy_client/src/query_builder.dart';
 
 @reflector
@@ -8,7 +9,7 @@ class ListFarmsQueryParameters {
   bool? ret_count;
   bool? randomize;
   String? sort_by;
-  String? sort_order;
+  sortOrder? sort_order;
   int? free_ips;
   int? total_ips;
   int? pricing_policy_id;

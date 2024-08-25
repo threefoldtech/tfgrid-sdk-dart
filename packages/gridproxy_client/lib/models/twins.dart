@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/models/sort_order.dart';
 import 'package:gridproxy_client/src/query_builder.dart';
 
 enum TwinSortBy {
@@ -15,16 +16,6 @@ enum TwinSortBy {
   }
 }
 
-enum TwinSortOrder {
-  desc,
-  asc;
-
-  @override
-  String toString() {
-    return name;
-  }
-}
-
 @reflector
 class TwinsQueryParams {
   int? page;
@@ -32,7 +23,7 @@ class TwinsQueryParams {
   bool? ret_count;
   bool? randomize;
   TwinSortBy? sort_by;
-  TwinSortOrder? sort_order;
+  sortOrder? sort_order;
   int? twin_id;
   String? account_id;
   String? relay;

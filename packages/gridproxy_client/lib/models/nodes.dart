@@ -1,4 +1,5 @@
 import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/models/sort_order.dart';
 import 'package:gridproxy_client/src/query_builder.dart';
 
 class GetNodeStatusOptions {
@@ -16,7 +17,7 @@ class ListNodesQueryParamaters {
   bool? ret_count;
   bool? randomize;
   String? sort_by;
-  String? sort_order;
+  sortOrder? sort_order;
   String? balance;
   int? free_mru;
   int? free_hru;

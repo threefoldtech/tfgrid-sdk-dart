@@ -1,4 +1,5 @@
 import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/models/sort_order.dart';
 import 'package:gridproxy_client/src/query_builder.dart';
 
 @reflector
@@ -153,16 +154,6 @@ enum ContractSortBy {
   }
 }
 
-enum ContractSortOrder {
-  asc,
-  desc;
-
-  @override
-  String toString() {
-    return name;
-  }
-}
-
 enum ContractTypes {
   node,
   name,
@@ -192,7 +183,7 @@ class ContractInfoQueryParams {
   bool? retCount;
   bool? randomize;
   ContractSortBy? sort_by;
-  ContractSortOrder? sort_order;
+  sortOrder? sort_order;
   int? contract_id;
   int? twin_id;
   int? node_id;
