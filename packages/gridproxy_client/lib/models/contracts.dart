@@ -32,7 +32,7 @@ class NodeContract extends Contract {
   String deploymentHash;
   int numberOfPublicIps;
   String farmName;
-  int farmId;
+  int farmID;
 
   NodeContract({
     required this.nodeID,
@@ -40,7 +40,7 @@ class NodeContract extends Contract {
     required this.deploymentHash,
     required this.numberOfPublicIps,
     required this.farmName,
-    required this.farmId,
+    required this.farmID,
   });
 
   factory NodeContract.fromJson(Map<String, dynamic> json) {
@@ -50,7 +50,7 @@ class NodeContract extends Contract {
       deploymentHash: json['deployment_hash'] ?? '',
       numberOfPublicIps: json['number_of_public_ips'] ?? 0,
       farmName: json['farm_name'] ?? '',
-      farmId: json['farm_id'] ?? 0,
+      farmID: json['farm_id'] ?? 0,
     );
   }
 
@@ -61,7 +61,7 @@ class NodeContract extends Contract {
       'deployment_hash': deploymentHash.isEmpty ? '""' : deploymentHash,
       'number_of_public_ips': numberOfPublicIps,
       'farm_name': farmName.isEmpty ? '""' : farmName,
-      'farm_id': farmId,
+      'farm_id': farmID,
     };
   }
 
@@ -74,16 +74,16 @@ class NodeContract extends Contract {
 class RentContract extends Contract {
   int nodeID;
   String farmName;
-  int farmId;
+  int farmID;
 
   RentContract(
-      {required this.nodeID, required this.farmName, required this.farmId});
+      {required this.nodeID, required this.farmName, required this.farmID});
 
   factory RentContract.fromJson(Map<String, dynamic> json) {
     return RentContract(
       nodeID: json['nodeId'] ?? 0,
       farmName: json['farm_name'] ?? '',
-      farmId: json['farm_id'] ?? 0,
+      farmID: json['farm_id'] ?? 0,
     );
   }
 
@@ -91,7 +91,7 @@ class RentContract extends Contract {
     return {
       'nodeId': nodeID,
       'farm_name': farmName.isEmpty ? '""' : farmName,
-      'farm_id': farmId,
+      'farm_id': farmID,
     };
   }
 
@@ -102,7 +102,7 @@ class RentContract extends Contract {
 }
 
 class ContractInfo {
-  int contractId;
+  int contractID;
   int createdAt;
   Contract? details;
   String state;
@@ -110,7 +110,7 @@ class ContractInfo {
   String type;
 
   ContractInfo({
-    required this.contractId,
+    required this.contractID,
     required this.createdAt,
     required this.details,
     required this.state,
@@ -120,7 +120,7 @@ class ContractInfo {
 
   factory ContractInfo.fromJson(Map<String, dynamic> json) {
     return ContractInfo(
-      contractId: json['contract_id'] ?? 0,
+      contractID: json['contract_id'] ?? 0,
       createdAt: json['created_at'] ?? 0,
       details: json['details'] != null
           ? json['details']['name'] != null
@@ -138,7 +138,7 @@ class ContractInfo {
   }
   Map<String, dynamic> toJson() {
     return {
-      'contract_id': contractId,
+      'contract_id': contractID,
       'twin_id': twinID,
       'state': state.isEmpty ? '""' : state,
       'created_at': createdAt,

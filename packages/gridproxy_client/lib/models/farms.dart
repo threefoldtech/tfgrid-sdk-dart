@@ -7,9 +7,9 @@ class ListFarmsQueryParameters {
   String? sortOrder;
   int? freeIps;
   int? totalIps;
-  int? pricingPolicyId;
-  int? farmId;
-  int? twinId;
+  int? pricingPolicyID;
+  int? farmID;
+  int? twinID;
   String? name;
   String? nameContains;
   String? certificationType;
@@ -37,9 +37,9 @@ class ListFarmsQueryParameters {
     this.sortOrder,
     this.freeIps,
     this.totalIps,
-    this.pricingPolicyId,
-    this.farmId,
-    this.twinId,
+    this.pricingPolicyID,
+    this.farmID,
+    this.twinID,
     this.name,
     this.nameContains,
     this.certificationType,
@@ -70,11 +70,11 @@ class ListFarmsQueryParameters {
     if (sortOrder != null) params['sort_order'] = sortOrder!;
     if (freeIps != null) params['free_ips'] = freeIps.toString();
     if (totalIps != null) params['total_ips'] = totalIps.toString();
-    if (pricingPolicyId != null) {
-      params['pricing_policy_id'] = pricingPolicyId.toString();
+    if (pricingPolicyID != null) {
+      params['pricing_policy_id'] = pricingPolicyID.toString();
     }
-    if (farmId != null) params['farm_id'] = farmId.toString();
-    if (twinId != null) params['twin_id'] = twinId.toString();
+    if (farmID != null) params['farm_id'] = farmID.toString();
+    if (twinID != null) params['twin_id'] = twinID.toString();
     if (name != null) params['name'] = name!;
     if (nameContains != null) params['name_contains'] = nameContains!;
     if (certificationType != null) {
@@ -110,7 +110,7 @@ class ListFarmsQueryParameters {
 class Farm {
   String? certificationType;
   bool? dedicated;
-  int? farmId;
+  int? farmID;
   String? name;
   int? pricingPolicyId;
   List<PublicIp>? publicIps;
@@ -120,7 +120,7 @@ class Farm {
   Farm({
     this.certificationType,
     this.dedicated,
-    this.farmId,
+    this.farmID,
     this.name,
     this.pricingPolicyId,
     this.publicIps,
@@ -132,7 +132,7 @@ class Farm {
     return Farm(
       certificationType: json['certificationType'],
       dedicated: json['dedicated'],
-      farmId: json['farmId'],
+      farmID: json['farmId'],
       name: json['name'],
       pricingPolicyId: json['pricingPolicyId'],
       publicIps: json['publicIps'] != null
@@ -151,7 +151,7 @@ class Farm {
       data['certificationType'] = certificationType;
     }
     if (dedicated != null) data['dedicated'] = dedicated;
-    if (farmId != null) data['farmId'] = farmId;
+    if (farmID != null) data['farmId'] = farmID;
     if (name != null) data['name'] = name;
     if (pricingPolicyId != null) data['pricingPolicyId'] = pricingPolicyId;
     if (publicIps != null) {
@@ -169,15 +169,15 @@ class Farm {
 }
 
 class PublicIp {
-  int? contractId;
-  String? farmId;
+  int? contractID;
+  String? farmID;
   String? gateway;
   String? id;
   String? ip;
 
   PublicIp({
-    this.contractId,
-    this.farmId,
+    this.contractID,
+    this.farmID,
     this.gateway,
     this.id,
     this.ip,
@@ -185,8 +185,8 @@ class PublicIp {
 
   factory PublicIp.fromJson(Map<String, dynamic> json) {
     return PublicIp(
-      contractId: json['contract_id'],
-      farmId: json['farm_id'],
+      contractID: json['contract_id'],
+      farmID: json['farm_id'],
       gateway: json['gateway'],
       id: json['id'],
       ip: json['ip'],
@@ -195,8 +195,8 @@ class PublicIp {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
-    if (contractId != null) data['contract_id'] = contractId;
-    data['farm_id'] = farmId!.isEmpty ? '""' : farmId;
+    if (contractID != null) data['contract_id'] = contractID;
+    data['farm_id'] = farmID!.isEmpty ? '""' : farmID;
     if (gateway != null) data['gateway'] = gateway;
     if (id != null) data['id'] = id;
     if (ip != null) data['ip'] = ip;

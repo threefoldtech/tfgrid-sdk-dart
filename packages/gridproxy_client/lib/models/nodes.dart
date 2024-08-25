@@ -41,9 +41,9 @@ class ListNodesQueryParamaters {
   String? farmIds;
   String? certificationType;
   bool? hasGpu;
-  String? gpuDeviceId;
+  String? gpuDeviceID;
   String? gpuDeviceName;
-  String? gpuVendorId;
+  String? gpuVendorID;
   String? gpuVendorName;
   bool? gpuAvailable;
   int? ownedBy;
@@ -85,9 +85,9 @@ class ListNodesQueryParamaters {
     this.farmIds,
     this.certificationType,
     this.hasGpu,
-    this.gpuDeviceId,
+    this.gpuDeviceID,
     this.gpuDeviceName,
-    this.gpuVendorId,
+    this.gpuVendorID,
     this.gpuVendorName,
     this.gpuAvailable,
     this.ownedBy,
@@ -136,9 +136,9 @@ class ListNodesQueryParamaters {
       params['certification_type'] = certificationType!;
     }
     if (hasGpu != null) params['has_gpu'] = hasGpu.toString();
-    if (gpuDeviceId != null) params['gpu_device_id'] = gpuDeviceId!;
+    if (gpuDeviceID != null) params['gpu_device_id'] = gpuDeviceID!;
     if (gpuDeviceName != null) params['gpu_device_name'] = gpuDeviceName!;
-    if (gpuVendorId != null) params['gpu_vendor_id'] = gpuVendorId!;
+    if (gpuVendorID != null) params['gpu_vendor_id'] = gpuVendorID!;
     if (gpuVendorName != null) params['gpu_vendor_name'] = gpuVendorName!;
     if (gpuAvailable != null) params['gpu_available'] = gpuAvailable.toString();
     if (ownedBy != null) params['owned_by'] = ownedBy.toString();
@@ -157,7 +157,7 @@ class Node {
   bool? dedicated;
   Dmi? dmi;
   int? extraFee;
-  int? farmId;
+  int? farmID;
   String? farmName;
   int? farmingPolicyId;
   int? gridVersion;
@@ -165,20 +165,20 @@ class Node {
   String? id;
   bool? inDedicatedFarm;
   Location? location;
-  int? nodeId;
+  int? nodeID;
   int? numGpu;
   Power? power;
   double? priceUsd;
   PublicConfig? publicConfig;
-  int? rentContractId;
+  int? rentContractID;
   bool? rentable;
   bool? rented;
-  int? rentedByTwinId;
+  int? rentedByTwinID;
   String? serialNumber;
   Speed? speed;
   String? status;
   Resources? totalResources;
-  int? twinId;
+  int? twinID;
   int? updatedAt;
   int? uptime;
   Resources? usedResources;
@@ -191,7 +191,7 @@ class Node {
     this.dedicated,
     this.dmi,
     this.extraFee,
-    this.farmId,
+    this.farmID,
     this.farmName,
     this.farmingPolicyId,
     this.gridVersion,
@@ -199,20 +199,20 @@ class Node {
     this.id,
     this.inDedicatedFarm,
     this.location,
-    this.nodeId,
+    this.nodeID,
     this.numGpu,
     this.power,
     this.priceUsd,
     this.publicConfig,
-    this.rentContractId,
+    this.rentContractID,
     this.rentable,
     this.rented,
-    this.rentedByTwinId,
+    this.rentedByTwinID,
     this.serialNumber,
     this.speed,
     this.status,
     this.totalResources,
-    this.twinId,
+    this.twinID,
     this.updatedAt,
     this.uptime,
     this.usedResources,
@@ -228,7 +228,7 @@ class Node {
       dedicated: json['dedicated'] ?? false,
       dmi: json['dmi'] != null ? Dmi.fromJson(json['dmi']) : null,
       extraFee: json['extraFee'] ?? 0,
-      farmId: json['farmId'] ?? 0,
+      farmID: json['farmId'] ?? 0,
       farmName: json['farmName'] ?? '',
       farmingPolicyId: json['farmingPolicyId'] ?? 0,
       gridVersion: json['gridVersion'] ?? 0,
@@ -237,21 +237,21 @@ class Node {
       inDedicatedFarm: json['inDedicatedFarm'] ?? false,
       location:
           json['location'] != null ? Location.fromJson(json['location']) : null,
-      nodeId: json['nodeId'] ?? 0,
+      nodeID: json['nodeId'] ?? 0,
       numGpu: json['num_gpu'] ?? 0,
       power: json['power'] != null ? Power.fromJson(json['power']) : null,
       priceUsd: json['price_usd'].toDouble() ?? 0,
       publicConfig: json['publicConfig'] != null
           ? PublicConfig.fromJson(json['publicConfig'])
           : null,
-      rentContractId: json['rentContractId'] ?? 0,
+      rentContractID: json['rentContractId'] ?? 0,
       rentable: json['rentable'] ?? false,
       rented: json['rented'] ?? false,
-      rentedByTwinId: json['rentedByTwinId'] ?? 0,
+      rentedByTwinID: json['rentedByTwinId'] ?? 0,
       serialNumber: json['serialNumber'] ?? '',
       speed: json['speed'] != null ? Speed.fromJson(json['speed']) : null,
       status: json['status'] ?? '',
-      twinId: json['twinId'] ?? 0,
+      twinID: json['twinId'] ?? 0,
       updatedAt: json['updatedAt'] ?? 0,
       uptime: json['uptime'] ?? 0,
       usedResources: capacity != null && capacity['used_resources'] != null
@@ -278,7 +278,7 @@ class Node {
     if (dedicated != null) data['dedicated'] = dedicated;
     if (dmi != null) data['dmi'] = dmi?.toJson();
     if (extraFee != null) data['extraFee'] = extraFee;
-    if (farmId != null) data['farmId'] = farmId;
+    if (farmID != null) data['farmId'] = farmID;
     if (farmName != null) data['farmName'] = farmName;
     if (farmingPolicyId != null) data['farmingPolicyId'] = farmingPolicyId;
     if (gridVersion != null) data['gridVersion'] = gridVersion;
@@ -286,22 +286,22 @@ class Node {
     if (id != null) data['id'] = id;
     if (inDedicatedFarm != null) data['inDedicatedFarm'] = inDedicatedFarm;
     if (location != null) data['location'] = location?.toJson();
-    if (nodeId != null) data['nodeId'] = nodeId;
+    if (nodeID != null) data['nodeId'] = nodeID;
     if (numGpu != null) data['num_gpu'] = numGpu;
     if (power != null) data['power'] = power?.toJson();
     if (priceUsd != null) data['price_usd'] = priceUsd;
     if (publicConfig != null) data['publicConfig'] = publicConfig?.toJson();
-    if (rentContractId != null) data['rentContractId'] = rentContractId;
+    if (rentContractID != null) data['rentContractId'] = rentContractID;
     if (rentable != null) data['rentable'] = rentable;
     if (rented != null) data['rented'] = rented;
-    if (rentedByTwinId != null) data['rentedByTwinId'] = rentedByTwinId;
+    if (rentedByTwinID != null) data['rentedByTwinId'] = rentedByTwinID;
     if (serialNumber != null) data['serialNumber'] = serialNumber;
     if (speed != null) data['speed'] = speed?.toJson();
     if (status != null) data['status'] = status;
     if (totalResources != null) {
       data['total_resources'] = totalResources?.toJson();
     }
-    if (twinId != null) data['twinId'] = twinId;
+    if (twinID != null) data['twinId'] = twinID;
     if (updatedAt != null) data['updatedAt'] = updatedAt;
     if (uptime != null) data['uptime'] = uptime;
     if (usedResources != null) data['used_resources'] = usedResources?.toJson();
@@ -563,19 +563,19 @@ class PublicConfig {
 
 class Speed {
   double? download;
-  int? nodeTwinId;
+  int? nodeTwinID;
   double? upload;
 
   Speed({
     this.download,
-    this.nodeTwinId,
+    this.nodeTwinID,
     this.upload,
   });
 
   factory Speed.fromJson(Map<String, dynamic> json) {
     return Speed(
       download: json['download'].toDouble() ?? 0.0,
-      nodeTwinId: json['node_twin_id'] ?? 0,
+      nodeTwinID: json['node_twin_id'] ?? 0,
       upload: json['upload'].toDouble() ?? 0.0,
     );
   }
@@ -583,7 +583,7 @@ class Speed {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     if (download != null) data['download'] = download;
-    if (nodeTwinId != null) data['node_twin_id'] = nodeTwinId;
+    if (nodeTwinID != null) data['node_twin_id'] = nodeTwinID;
     if (upload != null) data['upload'] = upload;
     return data;
   }
@@ -668,7 +668,7 @@ class NodeGPUInfo {
   int? contract;
   String? device;
   String? id;
-  int? nodeTwinId;
+  int? nodeTwinID;
   int? updatedAt;
   String? vendor;
 
@@ -676,7 +676,7 @@ class NodeGPUInfo {
     this.contract,
     this.device,
     this.id,
-    this.nodeTwinId,
+    this.nodeTwinID,
     this.updatedAt,
     this.vendor,
   });
@@ -686,7 +686,7 @@ class NodeGPUInfo {
       contract: json['contract'],
       device: json['device'],
       id: json['id'],
-      nodeTwinId: json['node_twin_id'],
+      nodeTwinID: json['node_twin_id'],
       updatedAt: json['updated_at'],
       vendor: json['vendor'],
     );
@@ -697,7 +697,7 @@ class NodeGPUInfo {
     if (contract != null) data['contract'] = contract;
     if (device != null) data['device'] = device;
     if (id != null) data['id'] = id;
-    if (nodeTwinId != null) data['node_twin_id'] = nodeTwinId;
+    if (nodeTwinID != null) data['node_twin_id'] = nodeTwinID;
     if (updatedAt != null) data['updated_at'] = updatedAt;
     if (vendor != null) data['vendor'] = vendor;
     return data;
