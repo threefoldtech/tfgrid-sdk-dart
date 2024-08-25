@@ -1,6 +1,10 @@
-// ignore_for_file: constant_identifier_names
+import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/src/query_builder.dart';
+
+@reflector
 class Contract {}
 
+@reflector
 class NameContract extends Contract {
   String name;
 
@@ -15,9 +19,7 @@ class NameContract extends Contract {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name.isEmpty ? '""' : name,
-    };
+    return toMap(this);
   }
 
   @override
@@ -26,6 +28,7 @@ class NameContract extends Contract {
   }
 }
 
+@reflector
 class NodeContract extends Contract {
   int nodeID;
   String deploymentData;
@@ -55,14 +58,7 @@ class NodeContract extends Contract {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'nodeId': nodeID,
-      'deployment_data': deploymentData.isEmpty ? '""' : deploymentData,
-      'deployment_hash': deploymentHash.isEmpty ? '""' : deploymentHash,
-      'number_of_public_ips': numberOfPublicIps,
-      'farm_name': farmName.isEmpty ? '""' : farmName,
-      'farm_id': farmID,
-    };
+    return toMap(this);
   }
 
   @override
@@ -71,6 +67,7 @@ class NodeContract extends Contract {
   }
 }
 
+@reflector
 class RentContract extends Contract {
   int nodeID;
   String farmName;
@@ -88,11 +85,7 @@ class RentContract extends Contract {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'nodeId': nodeID,
-      'farm_name': farmName.isEmpty ? '""' : farmName,
-      'farm_id': farmID,
-    };
+    return toMap(this);
   }
 
   @override
@@ -101,6 +94,7 @@ class RentContract extends Contract {
   }
 }
 
+@reflector
 class ContractInfo {
   int contractID;
   int createdAt;
@@ -137,14 +131,7 @@ class ContractInfo {
     );
   }
   Map<String, dynamic> toJson() {
-    return {
-      'contract_id': contractID,
-      'twin_id': twinID,
-      'state': state.isEmpty ? '""' : state,
-      'created_at': createdAt,
-      'type': type.isEmpty ? '""' : type,
-      'details': details.toString(),
-    };
+    return toMap(this);
   }
 
   @override
@@ -198,60 +185,49 @@ enum ContractState {
   }
 }
 
+@reflector
 class ContractInfoQueryParams {
   int? page;
   int? size;
   bool? retCount;
   bool? randomize;
-  ContractSortBy? sortBy;
-  ContractSortOrder? sortOrder;
-  int? contractId;
-  int? twinID;
-  int? nodeID;
+  ContractSortBy? sort_by;
+  ContractSortOrder? sort_order;
+  int? contract_id;
+  int? twin_id;
+  int? node_id;
   String? name;
   ContractTypes? type;
   ContractState? state;
-  String? deploymentData;
-  String? deploymentHash;
-  int? numberOfPublicIps;
+  String? deployment_data;
+  String? deployment_hash;
+  int? number_of_public_ips;
 
   ContractInfoQueryParams({
     this.page,
     this.size,
     this.retCount,
     this.randomize,
-    this.sortBy,
-    this.sortOrder,
-    this.contractId,
-    this.twinID,
-    this.nodeID,
+    this.sort_by,
+    this.sort_order,
+    this.contract_id,
+    this.twin_id,
+    this.node_id,
     this.name,
     this.type,
     this.state,
-    this.deploymentData,
-    this.deploymentHash,
-    this.numberOfPublicIps,
+    this.deployment_data,
+    this.deployment_hash,
+    this.number_of_public_ips,
   });
 
-  Map<String, dynamic> toMap() {
-    final queryParameters = {
-      if (page != null) 'page': page,
-      if (size != null) 'size': size,
-      if (retCount != null) 'ret_count': retCount,
-      if (randomize != null) 'randomize': randomize,
-      if (sortBy != null) 'sort_by': sortBy,
-      if (sortOrder != null) 'sort_order': sortOrder,
-      if (contractId != null) 'contract_id': contractId,
-      if (twinID != null) 'twin_id': twinID,
-      if (nodeID != null) 'node_id': nodeID,
-      if (name != null) 'name': name,
-      if (type != null) 'type': type,
-      if (state != null) 'state': state,
-      if (deploymentData != null) 'deployment_data': deploymentData,
-      if (deploymentHash != null) 'deployment_hash': deploymentHash,
-      if (numberOfPublicIps != null) 'number_of_public_ips': numberOfPublicIps,
-    };
-    return queryParameters;
+  Map<String, dynamic> toJson() {
+    return toMap(this);
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }
 
@@ -278,12 +254,7 @@ class ContractBills {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'amountBilled': amountBilled,
-      if (contractID != 0) 'contract_id': contractID,
-      'discountReceived': discountReceived.isEmpty ? '""' : discountReceived,
-      'timestamp': timeStamp,
-    };
+    return toMap(this);
   }
 
   @override
@@ -303,12 +274,12 @@ class ContractBillQueryParams {
     this.retCount,
   });
 
-  Map<String, dynamic> toMap() {
-    final queryParameters = {
-      if (page != null) 'page': page,
-      if (size != null) 'size': size,
-      if (retCount != null) 'ret_count': retCount,
-    };
-    return queryParameters;
+  Map<String, dynamic> toJson() {
+    return toMap(this);
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }

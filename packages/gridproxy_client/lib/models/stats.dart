@@ -1,3 +1,7 @@
+import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/src/query_builder.dart';
+
+@reflector
 class StatsInfo {
   int accessNodes;
   int contracts;
@@ -57,24 +61,7 @@ class StatsInfo {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'accessNodes': accessNodes,
-      'contracts': contracts,
-      'countries': countries,
-      'dedicatedNodes': dedicatedNodes,
-      'farms': farms,
-      'gateways': gateways,
-      'gpus': gpus,
-      'nodes': nodes,
-      'nodesDistribution': nodesDistribution.isEmpty ? '{}' : nodesDistribution,
-      'publicIps': publicIps,
-      'totalCru': totalCru,
-      'totalHru': totalHru,
-      'totalMru': totalMru,
-      'totalSru': totalSru,
-      'twins': twins,
-      'workloads_number': workloadsNumber
-    };
+    return toMap(this);
   }
 
   @override
@@ -94,6 +81,7 @@ enum NodeStatus {
   }
 }
 
+@reflector
 class StatsQueryParams {
   NodeStatus? status;
 
@@ -101,10 +89,7 @@ class StatsQueryParams {
     this.status,
   });
 
-  Map<String, dynamic> toMap() {
-    final queryParameters = {
-      if (status != null) 'status': status,
-    };
-    return queryParameters;
+  Map<String, dynamic> toJson() {
+    return toMap(this);
   }
 }

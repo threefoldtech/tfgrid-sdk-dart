@@ -1,112 +1,74 @@
+import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/src/query_builder.dart';
+
+@reflector
 class ListFarmsQueryParameters {
   int? page;
   int? size;
-  bool? retCount;
+  bool? ret_count;
   bool? randomize;
-  String? sortBy;
-  String? sortOrder;
-  int? freeIps;
-  int? totalIps;
-  int? pricingPolicyID;
-  int? farmID;
-  int? twinID;
+  String? sort_by;
+  String? sort_order;
+  int? free_ips;
+  int? total_ips;
+  int? pricing_policy_id;
+  int? farm_id;
+  int? twin_id;
   String? name;
-  String? nameContains;
-  String? certificationType;
+  String? name_contains;
+  String? certification_type;
   bool? dedicated;
-  String? stellarAddress;
-  int? nodeFreeMru;
-  int? nodeFreeHru;
-  int? nodeFreeSru;
-  int? nodeTotalCru;
-  String? nodeStatus;
-  int? nodeRentedBy;
-  int? nodeAvailableFor;
-  bool? nodeHasGpu;
-  bool? nodeHasIpv6;
-  bool? nodeCertified;
+  String? stellar_address;
+  int? node_free_mru;
+  int? node_free_hru;
+  int? node_free_sru;
+  int? node_total_cru;
+  String? node_status;
+  int? node_rented_by;
+  int? node_available_for;
+  bool? node_has_gpu;
+  bool? node_has_ipv6;
+  bool? node_certified;
   String? country;
   String? region;
 
   ListFarmsQueryParameters({
     this.page,
     this.size,
-    this.retCount,
+    this.ret_count,
     this.randomize,
-    this.sortBy,
-    this.sortOrder,
-    this.freeIps,
-    this.totalIps,
-    this.pricingPolicyID,
-    this.farmID,
-    this.twinID,
+    this.sort_by,
+    this.sort_order,
+    this.free_ips,
+    this.total_ips,
+    this.pricing_policy_id,
+    this.farm_id,
+    this.twin_id,
     this.name,
-    this.nameContains,
-    this.certificationType,
+    this.name_contains,
+    this.certification_type,
     this.dedicated,
-    this.stellarAddress,
-    this.nodeFreeMru,
-    this.nodeFreeHru,
-    this.nodeFreeSru,
-    this.nodeTotalCru,
-    this.nodeStatus,
-    this.nodeRentedBy,
-    this.nodeAvailableFor,
-    this.nodeHasGpu,
-    this.nodeHasIpv6,
-    this.nodeCertified,
+    this.stellar_address,
+    this.node_free_mru,
+    this.node_free_hru,
+    this.node_free_sru,
+    this.node_total_cru,
+    this.node_status,
+    this.node_rented_by,
+    this.node_available_for,
+    this.node_has_gpu,
+    this.node_has_ipv6,
+    this.node_certified,
     this.country,
     this.region,
   });
 
-  Map<String, String> toQueryParamaters() {
-    final params = <String, String>{};
-
-    if (page != null) params['page'] = page.toString();
-    if (size != null) params['size'] = size.toString();
-    if (retCount != null) params['ret_count'] = retCount.toString();
-    if (randomize != null) params['randomize'] = randomize.toString();
-    if (sortBy != null) params['sort_by'] = sortBy!;
-    if (sortOrder != null) params['sort_order'] = sortOrder!;
-    if (freeIps != null) params['free_ips'] = freeIps.toString();
-    if (totalIps != null) params['total_ips'] = totalIps.toString();
-    if (pricingPolicyID != null) {
-      params['pricing_policy_id'] = pricingPolicyID.toString();
-    }
-    if (farmID != null) params['farm_id'] = farmID.toString();
-    if (twinID != null) params['twin_id'] = twinID.toString();
-    if (name != null) params['name'] = name!;
-    if (nameContains != null) params['name_contains'] = nameContains!;
-    if (certificationType != null) {
-      params['certification_type'] = certificationType!;
-    }
-    if (dedicated != null) params['dedicated'] = dedicated.toString();
-    if (stellarAddress != null) params['stellar_address'] = stellarAddress!;
-    if (nodeFreeMru != null) params['node_free_mru'] = nodeFreeMru.toString();
-    if (nodeFreeHru != null) params['node_free_hru'] = nodeFreeHru.toString();
-    if (nodeFreeSru != null) params['node_free_sru'] = nodeFreeSru.toString();
-    if (nodeTotalCru != null) {
-      params['node_total_cru'] = nodeTotalCru.toString();
-    }
-    if (nodeStatus != null) params['node_status'] = nodeStatus!;
-    if (nodeRentedBy != null) {
-      params['node_rented_by'] = nodeRentedBy.toString();
-    }
-    if (nodeAvailableFor != null) {
-      params['node_available_for'] = nodeAvailableFor.toString();
-    }
-    if (nodeHasGpu != null) params['node_has_gpu'] = nodeHasGpu.toString();
-    if (nodeHasIpv6 != null) params['node_has_ipv6'] = nodeHasIpv6.toString();
-    if (nodeCertified != null) {
-      params['node_certified'] = nodeCertified.toString();
-    }
-    if (country != null) params['country'] = country!;
-    if (region != null) params['region'] = region!;
-
-    return params;
+  Map<String, dynamic> toJson() {
+    return toMap(this);
   }
 }
 
+@reflector
 class Farm {
   String? certificationType;
   bool? dedicated;
@@ -146,20 +108,7 @@ class Farm {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (certificationType != null) {
-      data['certificationType'] = certificationType;
-    }
-    if (dedicated != null) data['dedicated'] = dedicated;
-    if (farmID != null) data['farmId'] = farmID;
-    if (name != null) data['name'] = name;
-    if (pricingPolicyId != null) data['pricingPolicyId'] = pricingPolicyId;
-    if (publicIps != null) {
-      data['publicIps'] = publicIps?.map((v) => v.toJson()).toList();
-    }
-    if (stellarAddress != null) data['stellarAddress'] = stellarAddress;
-    if (twinId != null) data['twinId'] = twinId;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -168,6 +117,7 @@ class Farm {
   }
 }
 
+@reflector
 class PublicIp {
   int? contractID;
   String? farmID;
@@ -194,13 +144,7 @@ class PublicIp {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (contractID != null) data['contract_id'] = contractID;
-    data['farm_id'] = farmID!.isEmpty ? '""' : farmID;
-    if (gateway != null) data['gateway'] = gateway;
-    if (id != null) data['id'] = id;
-    if (ip != null) data['ip'] = ip;
-    return data;
+    return toMap(this);
   }
 
   @override

@@ -1,5 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/src/query_builder.dart';
+
 enum TwinSortBy {
   relay,
   public_key,
@@ -22,48 +25,38 @@ enum TwinSortOrder {
   }
 }
 
+@reflector
 class TwinsQueryParams {
   int? page;
   int? size;
-  bool? retCount;
+  bool? ret_count;
   bool? randomize;
-  TwinSortBy? sortBy;
-  TwinSortOrder? sortOrder;
-  int? twinID;
-  String? accountID;
+  TwinSortBy? sort_by;
+  TwinSortOrder? sort_order;
+  int? twin_id;
+  String? account_id;
   String? relay;
-  String? publicKey;
+  String? public_key;
 
   TwinsQueryParams({
     this.page,
     this.size,
-    this.retCount,
+    this.ret_count,
     this.randomize,
-    this.sortBy,
-    this.sortOrder,
-    this.twinID,
-    this.accountID,
+    this.sort_by,
+    this.sort_order,
+    this.twin_id,
+    this.account_id,
     this.relay,
-    this.publicKey,
+    this.public_key,
   });
 
-  Map<String, dynamic> toMap() {
-    final queryParameters = {
-      if (page != null) 'page': page,
-      if (size != null) 'size': size,
-      if (retCount != null) 'ret_count': retCount,
-      if (randomize != null) 'randomize': randomize,
-      if (sortBy != null) 'sort_by': sortBy,
-      if (sortOrder != null) 'sort_order': sortOrder,
-      if (twinID != null) 'twin_id': twinID,
-      if (accountID != null) 'account_id': accountID,
-      if (relay != null) 'relay': relay,
-      if (publicKey != null) 'public_key': publicKey,
-    };
-    return queryParameters;
+  Map<String, dynamic> toJson() {
+    return toMap(this);
   }
 }
 
+@reflector
 class TwinsInfo {
   String accountID;
   String publicKey;
@@ -87,12 +80,7 @@ class TwinsInfo {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'twinId': twinID,
-      'accountId': accountID.isEmpty ? '""' : accountID,
-      'relay': relay.isEmpty ? '""' : relay,
-      'publicKey': publicKey.isEmpty ? '""' : publicKey,
-    };
+    return toMap(this);
   }
 
   @override
@@ -101,6 +89,7 @@ class TwinsInfo {
   }
 }
 
+@reflector
 class TwinConsumption {
   double lastHourConsumption;
   double overallConsumption;
@@ -122,10 +111,7 @@ class TwinConsumption {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'last_hour_consumption': lastHourConsumption,
-      'overall_consumption': overallConsumption,
-    };
+    return toMap(this);
   }
 
   @override

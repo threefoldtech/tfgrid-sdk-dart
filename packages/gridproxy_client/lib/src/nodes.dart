@@ -8,7 +8,7 @@ class Nodes {
 
   Future<List<Node>> list(ListNodesQueryParamaters? queryParams) async {
     final nodes = await client.getRequest(
-        '/nodes', queryParams?.toQueryParamaters()) as List<dynamic>;
+        '/nodes', queryParams?.toJson()) as List<dynamic>;
     return nodes.map((node) => Node.fromJson(node)).toList();
   }
 

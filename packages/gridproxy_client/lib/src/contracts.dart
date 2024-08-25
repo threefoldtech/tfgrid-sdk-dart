@@ -1,5 +1,6 @@
 import 'package:gridproxy_client/gridproxy_client.dart';
 import 'package:gridproxy_client/models/contracts.dart';
+import 'package:gridproxy_client/src/query_builder.dart';
 
 class Contracts {
   final GridProxyClient client;
@@ -8,8 +9,9 @@ class Contracts {
 
   Future<List<ContractInfo>> list(
       ContractInfoQueryParams queryParameters) async {
+      
     final response =
-        await client.getRequest('/contracts', queryParameters.toMap());
+        await client.getRequest('/contracts', queryParameters.toJson());
     List<ContractInfo> contracts =
         (response as List<dynamic>).map((contractsData) {
       return ContractInfo.fromJson(contractsData as Map<String, dynamic>);
@@ -27,7 +29,7 @@ class Contracts {
   Future<List<ContractBills>> getBills(
       int contractId, ContractBillQueryParams queryParameters) async {
     final response = await client.getRequest(
-        '/contracts/$contractId/bills', queryParameters.toMap());
+        '/contracts/$contractId/bills', queryParameters.toJson());
     List<ContractBills> contractsBills =
         (response as List<dynamic>).map((contractsData) {
       return ContractBills.fromJson(contractsData as Map<String, dynamic>);

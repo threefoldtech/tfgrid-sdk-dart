@@ -1,3 +1,6 @@
+import 'package:gridproxy_client/models/reflector.dart';
+import 'package:gridproxy_client/src/query_builder.dart';
+
 class GetNodeStatusOptions {
   int nodeID;
 
@@ -6,149 +9,102 @@ class GetNodeStatusOptions {
   });
 }
 
+@reflector
 class ListNodesQueryParamaters {
   int? page;
   int? size;
-  bool? retCount;
+  bool? ret_count;
   bool? randomize;
-  String? sortBy;
-  String? sortOrder;
+  String? sort_by;
+  String? sort_order;
   String? balance;
-  int? freeMru;
-  int? freeHru;
-  int? freeSru;
-  int? totalMru;
-  int? totalCru;
-  int? totalSru;
-  int? totalHru;
-  int? freeIps;
+  int? free_mru;
+  int? free_hru;
+  int? free_sru;
+  int? total_mru;
+  int? total_cru;
+  int? total_sru;
+  int? total_hru;
+  int? free_ips;
   String? status;
   bool? healthy;
-  bool? hasIpv6;
+  bool? has_ipv6;
   String? city;
   String? country;
   String? region;
-  String? farmName;
+  String? farm_name;
   bool? ipv4;
   bool? ipv6;
   bool? domain;
   bool? dedicated;
-  bool? inDedicatedFarm;
+  bool? in_dedicated_farm;
   bool? rentable;
   bool? rented;
-  int? rentedBy;
-  int? availableFor;
-  String? farmIds;
-  String? certificationType;
-  bool? hasGpu;
-  String? gpuDeviceID;
-  String? gpuDeviceName;
-  String? gpuVendorID;
-  String? gpuVendorName;
-  bool? gpuAvailable;
-  int? ownedBy;
-  String? priceMin;
-  String? priceMax;
+  int? rented_by;
+  int? available_for;
+  String? farm_ids;
+  String? certification_type;
+  bool? has_gpu;
+  String? gpu_device_id;
+  String? gpu_device_name;
+  String? gpu_vendor_id;
+  String? gpu_vendor_name;
+  bool? gpu_available;
+  int? owned_by;
+  String? price_min;
+  String? price_max;
 
   ListNodesQueryParamaters({
     this.page,
     this.size,
-    this.retCount,
+    this.ret_count,
     this.randomize,
-    this.sortBy,
-    this.sortOrder,
+    this.sort_by,
+    this.sort_order,
     this.balance,
-    this.freeMru,
-    this.freeHru,
-    this.freeSru,
-    this.totalMru,
-    this.totalCru,
-    this.totalSru,
-    this.totalHru,
-    this.freeIps,
+    this.free_mru,
+    this.free_hru,
+    this.free_sru,
+    this.total_mru,
+    this.total_cru,
+    this.total_sru,
+    this.total_hru,
+    this.free_ips,
     this.status,
     this.healthy,
-    this.hasIpv6,
+    this.has_ipv6,
     this.city,
     this.country,
     this.region,
-    this.farmName,
+    this.farm_name,
     this.ipv4,
     this.ipv6,
     this.domain,
     this.dedicated,
-    this.inDedicatedFarm,
+    this.in_dedicated_farm,
     this.rentable,
     this.rented,
-    this.rentedBy,
-    this.availableFor,
-    this.farmIds,
-    this.certificationType,
-    this.hasGpu,
-    this.gpuDeviceID,
-    this.gpuDeviceName,
-    this.gpuVendorID,
-    this.gpuVendorName,
-    this.gpuAvailable,
-    this.ownedBy,
-    this.priceMin,
-    this.priceMax,
+    this.rented_by,
+    this.available_for,
+    this.farm_ids,
+    this.certification_type,
+    this.has_gpu,
+    this.gpu_device_id,
+    this.gpu_device_name,
+    this.gpu_vendor_id,
+    this.gpu_vendor_name,
+    this.gpu_available,
+    this.owned_by,
+    this.price_min,
+    this.price_max,
   });
 
-  Map<String, String> toQueryParamaters() {
-    final params = <String, String>{};
-
-    if (page != null) params['page'] = page.toString();
-    if (size != null) params['size'] = size.toString();
-    if (retCount != null) params['ret_count'] = retCount.toString();
-    if (randomize != null) params['randomize'] = randomize.toString();
-    if (sortBy != null) params['sort_by'] = sortBy!;
-    if (sortOrder != null) params['sort_order'] = sortOrder!;
-    if (balance != null) params['balance'] = balance!;
-    if (freeMru != null) params['free_mru'] = freeMru.toString();
-    if (freeHru != null) params['free_hru'] = freeHru.toString();
-    if (freeSru != null) params['free_sru'] = freeSru.toString();
-    if (totalMru != null) params['total_mru'] = totalMru.toString();
-    if (totalCru != null) params['total_cru'] = totalCru.toString();
-    if (totalSru != null) params['total_sru'] = totalSru.toString();
-    if (totalHru != null) params['total_hru'] = totalHru.toString();
-    if (freeIps != null) params['free_ips'] = freeIps.toString();
-    if (status != null) params['status'] = status!;
-    if (healthy != null) params['healthy'] = healthy.toString();
-    if (hasIpv6 != null) params['has_ipv6'] = hasIpv6.toString();
-    if (city != null) params['city'] = city!;
-    if (country != null) params['country'] = country!;
-    if (region != null) params['region'] = region!;
-    if (farmName != null) params['farm_name'] = farmName!;
-    if (ipv4 != null) params['ipv4'] = ipv4.toString();
-    if (ipv6 != null) params['ipv6'] = ipv6.toString();
-    if (domain != null) params['domain'] = domain.toString();
-    if (dedicated != null) params['dedicated'] = dedicated.toString();
-    if (inDedicatedFarm != null) {
-      params['in_dedicated_farm'] = inDedicatedFarm.toString();
-    }
-    if (rentable != null) params['rentable'] = rentable.toString();
-    if (rented != null) params['rented'] = rented.toString();
-    if (rentedBy != null) params['rented_by'] = rentedBy.toString();
-    if (availableFor != null) params['available_for'] = availableFor.toString();
-    if (farmIds != null) params['farm_ids'] = farmIds!;
-    if (certificationType != null) {
-      params['certification_type'] = certificationType!;
-    }
-    if (hasGpu != null) params['has_gpu'] = hasGpu.toString();
-    if (gpuDeviceID != null) params['gpu_device_id'] = gpuDeviceID!;
-    if (gpuDeviceName != null) params['gpu_device_name'] = gpuDeviceName!;
-    if (gpuVendorID != null) params['gpu_vendor_id'] = gpuVendorID!;
-    if (gpuVendorName != null) params['gpu_vendor_name'] = gpuVendorName!;
-    if (gpuAvailable != null) params['gpu_available'] = gpuAvailable.toString();
-    if (ownedBy != null) params['owned_by'] = ownedBy.toString();
-    if (priceMin != null) params['price_min'] = priceMin!;
-    if (priceMax != null) params['price_max'] = priceMax!;
-
-    return params;
+  Map<String, dynamic> toJson() {
+    return toMap(this);
   }
 }
 
+@reflector
 class Node {
   String? certificationType;
   String? city;
@@ -267,46 +223,7 @@ class Node {
     );
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-
-    if (certificationType != null) {
-      data['certificationType'] = certificationType;
-    }
-    if (city != null) data['city'] = city;
-    if (country != null) data['country'] = country;
-    if (created != null) data['created'] = created;
-    if (dedicated != null) data['dedicated'] = dedicated;
-    if (dmi != null) data['dmi'] = dmi?.toJson();
-    if (extraFee != null) data['extraFee'] = extraFee;
-    if (farmID != null) data['farmId'] = farmID;
-    if (farmName != null) data['farmName'] = farmName;
-    if (farmingPolicyId != null) data['farmingPolicyId'] = farmingPolicyId;
-    if (gridVersion != null) data['gridVersion'] = gridVersion;
-    if (healthy != null) data['healthy'] = healthy;
-    if (id != null) data['id'] = id;
-    if (inDedicatedFarm != null) data['inDedicatedFarm'] = inDedicatedFarm;
-    if (location != null) data['location'] = location?.toJson();
-    if (nodeID != null) data['nodeId'] = nodeID;
-    if (numGpu != null) data['num_gpu'] = numGpu;
-    if (power != null) data['power'] = power?.toJson();
-    if (priceUsd != null) data['price_usd'] = priceUsd;
-    if (publicConfig != null) data['publicConfig'] = publicConfig?.toJson();
-    if (rentContractID != null) data['rentContractId'] = rentContractID;
-    if (rentable != null) data['rentable'] = rentable;
-    if (rented != null) data['rented'] = rented;
-    if (rentedByTwinID != null) data['rentedByTwinId'] = rentedByTwinID;
-    if (serialNumber != null) data['serialNumber'] = serialNumber;
-    if (speed != null) data['speed'] = speed?.toJson();
-    if (status != null) data['status'] = status;
-    if (totalResources != null) {
-      data['total_resources'] = totalResources?.toJson();
-    }
-    if (twinID != null) data['twinId'] = twinID;
-    if (updatedAt != null) data['updatedAt'] = updatedAt;
-    if (uptime != null) data['uptime'] = uptime;
-    if (usedResources != null) data['used_resources'] = usedResources?.toJson();
-
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -315,6 +232,7 @@ class Node {
   }
 }
 
+@reflector
 class Dmi {
   Baseboard? baseboard;
   Bios? bios;
@@ -349,17 +267,7 @@ class Dmi {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (baseboard != null) data['baseboard'] = baseboard!.toJson();
-    if (bios != null) data['bios'] = bios!.toJson();
-    if (memory != null) {
-      data['memory'] = memory!.map((v) => v.toJson()).toList();
-    }
-    if (nodeTwinId != null) data['node_twin_id'] = nodeTwinId;
-    if (processor != null) {
-      data['processor'] = processor!.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -368,6 +276,7 @@ class Dmi {
   }
 }
 
+@reflector
 class Bios {
   String? vendor;
   String? version;
@@ -385,10 +294,7 @@ class Bios {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (vendor != null) data['vendor'] = vendor;
-    if (version != null) data['version'] = version;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -397,6 +303,7 @@ class Bios {
   }
 }
 
+@reflector
 class Memory {
   String? manufacturer;
   String? type;
@@ -414,10 +321,7 @@ class Memory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (manufacturer != null) data['manufacturer'] = manufacturer;
-    if (type != null) data['type'] = type;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -426,6 +330,7 @@ class Memory {
   }
 }
 
+@reflector
 class Processor {
   String? threadCount;
   String? version;
@@ -443,10 +348,7 @@ class Processor {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (threadCount != null) data['thread_count'] = threadCount;
-    if (version != null) data['version'] = version;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -455,6 +357,7 @@ class Processor {
   }
 }
 
+@reflector
 class Location {
   String? city;
   String? country;
@@ -478,12 +381,7 @@ class Location {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (city != null) data['city'] = city;
-    if (country != null) data['country'] = country;
-    if (latitude != null) data['latitude'] = latitude;
-    if (longitude != null) data['longitude'] = longitude;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -492,6 +390,7 @@ class Location {
   }
 }
 
+@reflector
 class Power {
   String? state;
   String? target;
@@ -509,10 +408,7 @@ class Power {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (state != null) data['state'] = state;
-    if (target != null) data['target'] = target;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -521,6 +417,7 @@ class Power {
   }
 }
 
+@reflector
 class PublicConfig {
   String? domain;
   String? gw4;
@@ -546,13 +443,7 @@ class PublicConfig {
     );
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (domain != null) data['domain'] = domain;
-    if (gw4 != null) data['gw4'] = gw4;
-    if (gw6 != null) data['gw6'] = gw6;
-    if (ipv4 != null) data['ipv4'] = ipv4;
-    if (ipv6 != null) data['ipv6'] = ipv6;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -561,6 +452,7 @@ class PublicConfig {
   }
 }
 
+@reflector
 class Speed {
   double? download;
   int? nodeTwinID;
@@ -581,11 +473,7 @@ class Speed {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (download != null) data['download'] = download;
-    if (nodeTwinID != null) data['node_twin_id'] = nodeTwinID;
-    if (upload != null) data['upload'] = upload;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -594,6 +482,7 @@ class Speed {
   }
 }
 
+@reflector
 class Baseboard {
   String? manufacturer;
   String? productName;
@@ -611,10 +500,7 @@ class Baseboard {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (manufacturer != null) data['manufacturer'] = manufacturer;
-    if (productName != null) data['product_name'] = productName;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -623,6 +509,7 @@ class Baseboard {
   }
 }
 
+@reflector
 class Resources {
   int? cru;
   int? hru;
@@ -649,13 +536,7 @@ class Resources {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (cru != null) data['cru'] = cru;
-    if (hru != null) data['hru'] = hru;
-    if (mru != null) data['mru'] = mru;
-    if (sru != null) data['sru'] = sru;
-    if (ipv4u != null) data['ipv4u'] = ipv4u;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -664,6 +545,7 @@ class Resources {
   }
 }
 
+@reflector
 class NodeGPUInfo {
   int? contract;
   String? device;
@@ -693,14 +575,7 @@ class NodeGPUInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (contract != null) data['contract'] = contract;
-    if (device != null) data['device'] = device;
-    if (id != null) data['id'] = id;
-    if (nodeTwinID != null) data['node_twin_id'] = nodeTwinID;
-    if (updatedAt != null) data['updated_at'] = updatedAt;
-    if (vendor != null) data['vendor'] = vendor;
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -709,6 +584,7 @@ class NodeGPUInfo {
   }
 }
 
+@reflector
 class NodeStatistics {
   Resources? system;
   Resources? total;
@@ -733,12 +609,7 @@ class NodeStatistics {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (system != null) data['system'] = system?.toJson();
-    if (total != null) data['total'] = total?.toJson();
-    if (used != null) data['used'] = used?.toJson();
-    if (users != null) data['users'] = users?.toJson();
-    return data;
+    return toMap(this);
   }
 
   @override
@@ -747,6 +618,7 @@ class NodeStatistics {
   }
 }
 
+@reflector
 class NodeUsers {
   int? deployments;
   int? lastDeploymentTimestamp;
@@ -767,13 +639,7 @@ class NodeUsers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (deployments != null) data['deployments'] = deployments;
-    if (lastDeploymentTimestamp != null) {
-      data['last_deployment_timestamp'] = lastDeploymentTimestamp;
-    }
-    if (workloads != null) data['workloads'] = workloads;
-    return data;
+    return toMap(this);
   }
 
   @override

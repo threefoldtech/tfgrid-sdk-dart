@@ -7,7 +7,7 @@ class Twins {
   Twins(this.client);
 
   Future<List<TwinsInfo>> list(TwinsQueryParams queryParameters) async {
-    final response = await client.getRequest('/twins', queryParameters.toMap());
+    final response = await client.getRequest('/twins', queryParameters.toJson());
     List<TwinsInfo> twins = (response as List<dynamic>).map((contractsData) {
       return TwinsInfo.fromJson(contractsData as Map<String, dynamic>);
     }).toList();
