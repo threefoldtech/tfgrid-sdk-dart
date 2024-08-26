@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:moment_dart/moment_dart.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_dao/proposal/vote_weight.dart';
 
@@ -47,7 +45,7 @@ class ProposalInfo {
         if (entry.value == null) {
           args[entry.key] = entry.value;
         } else {
-          args[entry.key] = utf8.decode(entry.value);
+          args[entry.key] = String.fromCharCodes(entry.value);
         }
       }
     }
