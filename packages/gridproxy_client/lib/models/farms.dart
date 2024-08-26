@@ -71,24 +71,24 @@ class ListFarmsQueryParameters {
 
 @reflector
 class Farm {
-  String? certificationType;
-  bool? dedicated;
-  int? farmID;
-  String? name;
-  int? pricingPolicyId;
-  List<PublicIp>? publicIps;
-  String? stellarAddress;
-  int? twinId;
+  String certificationType;
+  bool dedicated;
+  int farmID;
+  String name;
+  int pricingPolicyId;
+  List<PublicIp> publicIps;
+  String stellarAddress;
+  int twinId;
 
   Farm({
-    this.certificationType,
-    this.dedicated,
-    this.farmID,
-    this.name,
-    this.pricingPolicyId,
-    this.publicIps,
-    this.stellarAddress,
-    this.twinId,
+    required this.certificationType,
+    required this.dedicated,
+    required this.farmID,
+    required this.name,
+    required this.pricingPolicyId,
+    required this.publicIps,
+    required this.stellarAddress,
+    required this.twinId,
   });
 
   factory Farm.fromJson(Map<String, dynamic> json) {
@@ -102,7 +102,7 @@ class Farm {
           ? (json['publicIps'] as List)
               .map((i) => PublicIp.fromJson(i))
               .toList()
-          : null,
+          : <PublicIp>[],
       stellarAddress: json['stellarAddress'],
       twinId: json['twinId'],
     );
@@ -120,18 +120,18 @@ class Farm {
 
 @reflector
 class PublicIp {
-  int? contractID;
-  String? farmID;
-  String? gateway;
-  String? id;
-  String? ip;
+  int contractID;
+  String farmID;
+  String gateway;
+  String id;
+  String ip;
 
   PublicIp({
-    this.contractID,
-    this.farmID,
-    this.gateway,
-    this.id,
-    this.ip,
+    required this.contractID,
+    required this.farmID,
+    required this.gateway,
+    required this.id,
+    required this.ip,
   });
 
   factory PublicIp.fromJson(Map<String, dynamic> json) {
