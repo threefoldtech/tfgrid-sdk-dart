@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:moment_dart/moment_dart.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_dao/proposal/vote_weight.dart';
 
@@ -29,8 +31,29 @@ class Proposal {
   });
 }
 
-class ProposalRemark {
-  String remark;
+class ProposalInfo {
+  String module;
+  String method;
+  Map<String, dynamic> args;
 
-  ProposalRemark({required this.remark});
+  ProposalInfo(
+      {required this.module, required this.method, required this.args});
+
+  factory ProposalInfo.fromJson(Map<String, Map<String, dynamic>> json) {
+    final argsJson = json.values.first.values.first;
+    final Map<String, dynamic> args = {};
+    if (argsJson != null) {
+      for (final entry in argsJson.entries) {
+        if (entry.value == null) {
+          args[entry.key] = entry.value;
+        } else {
+          args[entry.key] = utf8.decode(entry.value);
+        }
+      }
+    }
+    return ProposalInfo(
+        module: json.keys.first,
+        method: json.values.first.keys.first,
+        args: args);
+  }
 }
