@@ -449,4 +449,29 @@ class Client {
 
     return balancesList;
   }
+
+  Future<AccountResponse?> checkVestingAccount() async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            '${_serviceUrls[_network.toString()]}/vesting_service/vesting_accounts'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'owner_address': accountId}),
+      );
+
+      final body = jsonDecode(response.body);
+      print(body);
+      if (body['vesting_accounts'] is List &&
+          body['vesting_accounts'].isEmpty) {
+        print("no vesting account found");
+        return null;
+      } else {
+        AccountResponse account =
+            await _sdk.accounts.account(body['vesting_accounts']);
+        return account;
+      }
+    } catch (error) {
+      throw Exception('Could not create vestingAccount due to $error');
+    }
+  }
 }
