@@ -24,36 +24,24 @@ class QueryDao {
       final nowBlock = await client.api.query.system.number();
       final timeUntilEnd = (proposalVotes.end - nowBlock) * 6;
       if (proposal != null) {
+        final p = Proposal(
+            threshold: proposalVotes.threshold,
+            ayes: proposalVotes.ayes,
+            nayes: proposalVotes.nays,
+            vetos: proposalVotes.vetos,
+            end: Moment(DateTime.now()).add(Duration(seconds: timeUntilEnd)),
+            hash: hashes[i],
+            action: proposal.args["remark"] ?? "Generic Proposal",
+            description: String.fromCharCodes(daoProposal.description),
+            link: String.fromCharCodes(daoProposal.link),
+            ayesProgress:
+                getProgress(proposalVotes.ayes, proposalVotes.nays, true),
+            nayesProgress:
+                getProgress(proposalVotes.ayes, proposalVotes.nays, false));
         if (proposalVotes.end < nowBlock) {
-          inactiveProposals.add(Proposal(
-              threshold: proposalVotes.threshold,
-              ayes: proposalVotes.ayes,
-              nayes: proposalVotes.nays,
-              vetos: proposalVotes.vetos,
-              end: Moment(DateTime.now()).add(Duration(seconds: timeUntilEnd)),
-              hash: hashes[i],
-              action: proposal.args["remark"] ?? "Generic Proposal",
-              description: String.fromCharCodes(daoProposal.description),
-              link: String.fromCharCodes(daoProposal.link),
-              ayesProgress:
-                  getProgress(proposalVotes.ayes, proposalVotes.nays, true),
-              nayesProgress:
-                  getProgress(proposalVotes.ayes, proposalVotes.nays, false)));
+          inactiveProposals.add(p);
         } else {
-          activeProposals.add(Proposal(
-              threshold: proposalVotes.threshold,
-              ayes: proposalVotes.ayes,
-              nayes: proposalVotes.nays,
-              vetos: proposalVotes.vetos,
-              end: Moment(DateTime.now()).add(Duration(seconds: timeUntilEnd)),
-              hash: hashes[i],
-              action: proposal.args["remark"] ?? "Generic Proposal",
-              description: String.fromCharCodes(daoProposal.description),
-              link: String.fromCharCodes(daoProposal.link),
-              ayesProgress:
-                  getProgress(proposalVotes.ayes, proposalVotes.nays, true),
-              nayesProgress:
-                  getProgress(proposalVotes.ayes, proposalVotes.nays, false)));
+          activeProposals.add(p);
         }
       }
     }
