@@ -114,18 +114,29 @@ class ContractInfo {
   });
 
   factory ContractInfo.fromJson(Map<String, dynamic> json) {
+    final type = json['type'];
+    print(type.runtimeType);
+
+    Contract? details;
+    if (json['details'] != null && json['details'] is Map<String, dynamic>) {
+      final detailsJson = json['details'] as Map<String, dynamic>;
+      switch (type) {
+        case ContractTypes.name:
+          details = NameContract.fromJson(detailsJson);
+          break;
+        case ContractTypes.node:
+          details = NodeContract.fromJson(detailsJson);
+          break;
+        case ContractTypes.rent:
+          details = RentContract.fromJson(detailsJson);
+          break;
+      }
+    }
+
     return ContractInfo(
       contractID: json['contract_id'] ?? 0,
       createdAt: json['created_at'] ?? 0,
-      details: json['details'] != null
-          ? json['details']['name'] != null
-              ? NameContract.fromJson(json['details'] as Map<String, dynamic>)
-              : json['details']['deployment_hash'] != null
-                  ? NodeContract.fromJson(
-                      json['details'] as Map<String, dynamic>)
-                  : RentContract.fromJson(
-                      json['details'] as Map<String, dynamic>)
-          : null,
+      details: details,
       state: json['state'] ?? '',
       twinID: json['twin_id'] ?? 0,
       type: json['type'] ?? '',
