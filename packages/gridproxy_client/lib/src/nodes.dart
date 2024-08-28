@@ -12,18 +12,18 @@ class Nodes {
     return nodes.map((node) => Node.fromJson(node)).toList();
   }
 
-  Future<Node> getById(int nodeID) async {
+  Future<Node> getById({required int nodeID}) async {
     final node = await client.getRequest('/nodes/$nodeID', null);
     return Node.fromJson(node);
   }
 
-  Future<List<NodeGPUInfo>> listNodeGPUs(int nodeID) async {
+  Future<List<NodeGPUInfo>> listNodeGPUs({required int nodeID}) async {
     final nodeGPUs =
         await client.getRequest('/nodes/$nodeID/gpu', null) as List<dynamic>;
     return nodeGPUs.map((gpu) => NodeGPUInfo.fromJson(gpu)).toList();
   }
 
-  Future<NodeStatistics> getNodeStatistics(int nodeID) async {
+  Future<NodeStatistics> getNodeStatistics({required int nodeID}) async {
     final nodeStatistics =
         await client.getRequest('/nodes/$nodeID/statistics', null);
     return NodeStatistics.fromJson(nodeStatistics);

@@ -49,25 +49,20 @@ class TwinsQueryParams {
 
 @reflector
 class TwinsInfo {
-  String accountID;
+  String accountId;
   String publicKey;
   String relay;
-  int twinID;
+  int twinId;
 
   TwinsInfo({
-    required this.accountID,
+    required this.accountId,
     required this.publicKey,
     required this.relay,
-    required this.twinID,
+    required this.twinId,
   });
 
   factory TwinsInfo.fromJson(Map<String, dynamic> json) {
-    return TwinsInfo(
-      accountID: json['accountId'] ?? '',
-      publicKey: json['publicKey'] ?? '',
-      relay: json['relay'] ?? '',
-      twinID: json['twinId'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -82,23 +77,16 @@ class TwinsInfo {
 
 @reflector
 class TwinConsumption {
-  double lastHourConsumption;
-  double overallConsumption;
+  double last_hour_consumption;
+  double overall_consumption;
 
   TwinConsumption({
-    required this.lastHourConsumption,
-    required this.overallConsumption,
+    required this.last_hour_consumption,
+    required this.overall_consumption,
   });
 
   factory TwinConsumption.fromJson(Map<String, dynamic> json) {
-    return TwinConsumption(
-      lastHourConsumption: double.parse(json['last_hour_consumption'] != null
-          ? json['last_hour_consumption'].toString()
-          : '0.0'),
-      overallConsumption: double.parse(json['overall_consumption'] != null
-          ? json['overall_consumption'].toString()
-          : '0.0'),
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {

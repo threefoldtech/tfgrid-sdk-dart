@@ -18,7 +18,7 @@ class StatsInfo {
   int totalMru;
   int totalSru;
   int twins;
-  int workloadsNumber;
+  int workloads_number;
 
   StatsInfo({
     required this.accessNodes,
@@ -36,28 +36,11 @@ class StatsInfo {
     required this.totalMru,
     required this.totalSru,
     required this.twins,
-    required this.workloadsNumber,
+    required this.workloads_number,
   });
 
   factory StatsInfo.fromJson(Map<String, dynamic> json) {
-    return StatsInfo(
-      accessNodes: json['accessNodes'] ?? 0,
-      contracts: json['contracts'] ?? 0,
-      countries: json['countries'] ?? 0,
-      dedicatedNodes: json['dedicatedNodes'] ?? 0,
-      farms: json['farms'] ?? 0,
-      gateways: json['gateways'] ?? 0,
-      gpus: json['gpus'] ?? 0,
-      nodes: json['nodes'] ?? 0,
-      nodesDistribution: json['nodesDistribution'] ?? {},
-      publicIps: json['publicIps'] ?? 0,
-      totalCru: json['totalCru'] ?? '',
-      totalHru: json['totalHru'] ?? 0,
-      totalMru: json['totalMru'] ?? 0,
-      totalSru: json['totalSru'] ?? 0,
-      twins: json['twins'] ?? '',
-      workloadsNumber: json['workloads_number'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {

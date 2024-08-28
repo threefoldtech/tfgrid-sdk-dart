@@ -114,7 +114,7 @@ class Node {
   bool? dedicated;
   Dmi? dmi;
   int? extraFee;
-  int? farmID;
+  int? farmId;
   String? farmName;
   int? farmingPolicyId;
   int? gridVersion;
@@ -122,23 +122,23 @@ class Node {
   String? id;
   bool? inDedicatedFarm;
   Location? location;
-  int? nodeID;
-  int? numGpu;
+  int? nodeId;
+  int? num_gpu;
   Power? power;
   double? priceUsd;
   PublicConfig? publicConfig;
-  int? rentContractID;
+  int? rentContractId;
   bool? rentable;
   bool? rented;
-  int? rentedByTwinID;
+  int? rentedByTwinId;
   String? serialNumber;
   Speed? speed;
   String? status;
-  Resources? totalResources;
-  int? twinID;
+  Resources? total_resources;
+  int? twinId;
   int? updatedAt;
   int? uptime;
-  Resources? usedResources;
+  Resources? used_resources;
 
   Node({
     this.certificationType,
@@ -148,7 +148,7 @@ class Node {
     this.dedicated,
     this.dmi,
     this.extraFee,
-    this.farmID,
+    this.farmId,
     this.farmName,
     this.farmingPolicyId,
     this.gridVersion,
@@ -156,72 +156,27 @@ class Node {
     this.id,
     this.inDedicatedFarm,
     this.location,
-    this.nodeID,
-    this.numGpu,
+    this.nodeId,
+    this.num_gpu,
     this.power,
     this.priceUsd,
     this.publicConfig,
-    this.rentContractID,
+    this.rentContractId,
     this.rentable,
     this.rented,
-    this.rentedByTwinID,
+    this.rentedByTwinId,
     this.serialNumber,
     this.speed,
     this.status,
-    this.totalResources,
-    this.twinID,
+    this.total_resources,
+    this.twinId,
     this.updatedAt,
     this.uptime,
-    this.usedResources,
+    this.used_resources,
   });
 
   factory Node.fromJson(Map<String, dynamic> json) {
-    final capacity = json['capacity'];
-    return Node(
-      certificationType: json['certificationType'] ?? '',
-      city: json['city'] ?? '',
-      country: json['country'] ?? '',
-      created: json['created'] ?? 0,
-      dedicated: json['dedicated'] ?? false,
-      dmi: json['dmi'] != null ? Dmi.fromJson(json['dmi']) : null,
-      extraFee: json['extraFee'] ?? 0,
-      farmID: json['farmId'] ?? 0,
-      farmName: json['farmName'] ?? '',
-      farmingPolicyId: json['farmingPolicyId'] ?? 0,
-      gridVersion: json['gridVersion'] ?? 0,
-      healthy: json['healthy'] ?? false,
-      id: json['id'] ?? '',
-      inDedicatedFarm: json['inDedicatedFarm'] ?? false,
-      location:
-          json['location'] != null ? Location.fromJson(json['location']) : null,
-      nodeID: json['nodeId'] ?? 0,
-      numGpu: json['num_gpu'] ?? 0,
-      power: json['power'] != null ? Power.fromJson(json['power']) : null,
-      priceUsd: json['price_usd'].toDouble() ?? 0,
-      publicConfig: json['publicConfig'] != null
-          ? PublicConfig.fromJson(json['publicConfig'])
-          : null,
-      rentContractID: json['rentContractId'] ?? 0,
-      rentable: json['rentable'] ?? false,
-      rented: json['rented'] ?? false,
-      rentedByTwinID: json['rentedByTwinId'] ?? 0,
-      serialNumber: json['serialNumber'] ?? '',
-      speed: json['speed'] != null ? Speed.fromJson(json['speed']) : null,
-      status: json['status'] ?? '',
-      twinID: json['twinId'] ?? 0,
-      updatedAt: json['updatedAt'] ?? 0,
-      uptime: json['uptime'] ?? 0,
-      usedResources: capacity != null && capacity['used_resources'] != null
-          ? Resources.fromJson(capacity['used_resources'])
-          : json['used_resources'] != null
-              ? Resources.fromJson(json['used_resources'])
-              : null,
-      totalResources: capacity != null && capacity['total_resources'] != null
-          ? Resources.fromJson(capacity['total_resources'])
-          : json['total_resources'] != null
-              ? Resources.fromJson(json['total_resources'])
-              : null,
-    );
+    return fromJson(json);
   }
   Map<String, dynamic> toJson() {
     return toMap(this);
@@ -238,33 +193,19 @@ class Dmi {
   Baseboard? baseboard;
   Bios? bios;
   List<Memory>? memory;
-  int? nodeTwinId;
+  int? node_twin_id;
   List<Processor>? processor;
 
   Dmi({
     this.baseboard,
     this.bios,
     this.memory,
-    this.nodeTwinId,
+    this.node_twin_id,
     this.processor,
   });
 
   factory Dmi.fromJson(Map<String, dynamic> json) {
-    return Dmi(
-      baseboard: json['baseboard'] != null
-          ? Baseboard.fromJson(json['baseboard'])
-          : null,
-      bios: json['bios'] != null ? Bios.fromJson(json['bios']) : null,
-      memory: json['memory'] != null
-          ? (json['memory'] as List).map((i) => Memory.fromJson(i)).toList()
-          : [],
-      nodeTwinId: json['node_twin_id'] ?? 0,
-      processor: json['processor'] != null
-          ? (json['processor'] as List)
-              .map((i) => Processor.fromJson(i))
-              .toList()
-          : [],
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -288,10 +229,7 @@ class Bios {
   });
 
   factory Bios.fromJson(Map<String, dynamic> json) {
-    return Bios(
-      vendor: json['vendor'] ?? '',
-      version: json['version'] ?? '',
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -315,10 +253,7 @@ class Memory {
   });
 
   factory Memory.fromJson(Map<String, dynamic> json) {
-    return Memory(
-      manufacturer: json['manufacturer'] ?? '',
-      type: json['type'] ?? '',
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -333,19 +268,16 @@ class Memory {
 
 @reflector
 class Processor {
-  String? threadCount;
+  String? thread_count;
   String? version;
 
   Processor({
-    this.threadCount,
+    this.thread_count,
     this.version,
   });
 
   factory Processor.fromJson(Map<String, dynamic> json) {
-    return Processor(
-      threadCount: json['thread_count'] ?? '',
-      version: json['version'] ?? '',
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -373,12 +305,7 @@ class Location {
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-      city: json['city'] ?? '',
-      country: json['country'] ?? '',
-      latitude: (json['latitude'] ?? 0).toDouble(),
-      longitude: (json['longitude'] ?? 0).toDouble(),
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -402,10 +329,7 @@ class Power {
   });
 
   factory Power.fromJson(Map<String, dynamic> json) {
-    return Power(
-      state: json['state'] ?? '',
-      target: json['target'] ?? '',
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -435,13 +359,7 @@ class PublicConfig {
   });
 
   factory PublicConfig.fromJson(Map<String, dynamic> json) {
-    return PublicConfig(
-      domain: json['domain'] ?? '',
-      gw4: json['gw4'] ?? '',
-      gw6: json['gw6'] ?? '',
-      ipv4: json['ipv4'] ?? '',
-      ipv6: json['ipv6'] ?? '',
-    );
+    return fromJson(json);
   }
   Map<String, dynamic> toJson() {
     return toMap(this);
@@ -456,21 +374,17 @@ class PublicConfig {
 @reflector
 class Speed {
   double? download;
-  int? nodeTwinID;
+  int? node_twin_id;
   double? upload;
 
   Speed({
     this.download,
-    this.nodeTwinID,
+    this.node_twin_id,
     this.upload,
   });
 
   factory Speed.fromJson(Map<String, dynamic> json) {
-    return Speed(
-      download: json['download'].toDouble() ?? 0.0,
-      nodeTwinID: json['node_twin_id'] ?? 0,
-      upload: json['upload'].toDouble() ?? 0.0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -486,18 +400,15 @@ class Speed {
 @reflector
 class Baseboard {
   String? manufacturer;
-  String? productName;
+  String? product_name;
 
   Baseboard({
     this.manufacturer,
-    this.productName,
+    this.product_name,
   });
 
   factory Baseboard.fromJson(Map<String, dynamic> json) {
-    return Baseboard(
-      manufacturer: json['manufacturer'] ?? '',
-      productName: json['product_name'] ?? '',
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -527,13 +438,7 @@ class Resources {
   });
 
   factory Resources.fromJson(Map<String, dynamic> json) {
-    return Resources(
-      cru: json['cru'] ?? 0,
-      hru: json['hru'] ?? 0,
-      mru: json['mru'] ?? 0,
-      sru: json['sru'] ?? 0,
-      ipv4u: json['ipv4u'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -551,28 +456,21 @@ class NodeGPUInfo {
   int? contract;
   String? device;
   String? id;
-  int? nodeTwinID;
-  int? updatedAt;
+  int? node_twin_id;
+  int? updated_at;
   String? vendor;
 
   NodeGPUInfo({
     this.contract,
     this.device,
     this.id,
-    this.nodeTwinID,
-    this.updatedAt,
+    this.node_twin_id,
+    this.updated_at,
     this.vendor,
   });
 
   factory NodeGPUInfo.fromJson(Map<String, dynamic> json) {
-    return NodeGPUInfo(
-      contract: json['contract'],
-      device: json['device'],
-      id: json['id'],
-      nodeTwinID: json['node_twin_id'],
-      updatedAt: json['updated_at'],
-      vendor: json['vendor'],
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -600,13 +498,7 @@ class NodeStatistics {
   });
 
   factory NodeStatistics.fromJson(Map<String, dynamic> json) {
-    return NodeStatistics(
-      system:
-          json['system'] != null ? Resources.fromJson(json['system']) : null,
-      total: json['total'] != null ? Resources.fromJson(json['total']) : null,
-      used: json['used'] != null ? Resources.fromJson(json['used']) : null,
-      users: json['users'] != null ? NodeUsers.fromJson(json['users']) : null,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -632,11 +524,7 @@ class NodeUsers {
   });
 
   factory NodeUsers.fromJson(Map<String, dynamic> json) {
-    return NodeUsers(
-      deployments: json['deployments'] ?? 0,
-      lastDeploymentTimestamp: json['last_deployment_timestamp'] ?? 0,
-      workloads: json['workloads'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
