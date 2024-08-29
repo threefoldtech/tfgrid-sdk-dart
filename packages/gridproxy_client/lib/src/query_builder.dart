@@ -1,5 +1,3 @@
-import 'dart:mirrors';
-
 import 'package:gridproxy_client/models/reflector.dart';
 import 'package:reflectable/reflectable.dart';
 
@@ -10,7 +8,7 @@ Map<String, dynamic> toMap(Object object) {
   final map = <String, dynamic>{};
   for (var declaration in classMirror.declarations.values) {
     if (declaration is VariableMirror && !declaration.isStatic) {
-      final fieldName = MirrorSystem.getName(Symbol(declaration.simpleName));
+      final fieldName = declaration.simpleName.toString();
       final fieldValue = instanceMirror.invokeGetter(declaration.simpleName);
       if (fieldValue != null) {
         map[fieldName] = fieldValue;
@@ -27,7 +25,7 @@ T fromJson<T>(Map<String, dynamic> json) {
 
   classMirror.declarations.forEach((symbol, declaration) {
     if (declaration is VariableMirror && !declaration.isStatic) {
-      final fieldName = MirrorSystem.getName(Symbol(symbol));
+      final fieldName = declaration.simpleName.toString();
 
       var fieldValue = json.containsKey(fieldName)
           ? json[fieldName]
