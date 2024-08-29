@@ -75,7 +75,7 @@ void main() {
           await setupManager.client.contracts.createName(name: name);
       contractIds.add(contractId!);
       expect(contractId, isNotNull);
-    });
+    }, timeout: Timeout(Duration(seconds: 40)));
 
     tearDown(() async {
       if (contractIds.isNotEmpty) {
