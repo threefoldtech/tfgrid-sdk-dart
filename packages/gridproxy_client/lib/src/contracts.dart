@@ -17,7 +17,7 @@ class Contracts {
     return contracts;
   }
 
-  Future<ContractInfo> getById(int contractId) async {
+  Future<ContractInfo> getById({required int contractId}) async {
     final response = await client.getRequest('/contracts/$contractId', null);
     ContractInfo contract =
         ContractInfo.fromJson(response as Map<String, dynamic>);

@@ -14,9 +14,7 @@ class NameContract extends Contract {
   });
 
   factory NameContract.fromJson(Map<String, dynamic> json) {
-    return NameContract(
-      name: json['name'] ?? '',
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -31,31 +29,24 @@ class NameContract extends Contract {
 
 @reflector
 class NodeContract extends Contract {
-  int nodeID;
-  String deploymentData;
-  String deploymentHash;
-  int numberOfPublicIps;
-  String farmName;
-  int farmID;
+  int nodeId;
+  String deployment_data;
+  String deployment_hash;
+  int number_of_public_ips;
+  String farm_name;
+  int farm_id;
 
   NodeContract({
-    required this.nodeID,
-    required this.deploymentData,
-    required this.deploymentHash,
-    required this.numberOfPublicIps,
-    required this.farmName,
-    required this.farmID,
+    required this.nodeId,
+    required this.deployment_data,
+    required this.deployment_hash,
+    required this.number_of_public_ips,
+    required this.farm_name,
+    required this.farm_id,
   });
 
   factory NodeContract.fromJson(Map<String, dynamic> json) {
-    return NodeContract(
-      nodeID: json['nodeId'] ?? 0,
-      deploymentData: json['deployment_data'] ?? '',
-      deploymentHash: json['deployment_hash'] ?? '',
-      numberOfPublicIps: json['number_of_public_ips'] ?? 0,
-      farmName: json['farm_name'] ?? '',
-      farmID: json['farm_id'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -70,19 +61,15 @@ class NodeContract extends Contract {
 
 @reflector
 class RentContract extends Contract {
-  int nodeID;
-  String farmName;
-  int farmID;
+  int nodeId;
+  String farm_name;
+  int farm_id;
 
   RentContract(
-      {required this.nodeID, required this.farmName, required this.farmID});
+      {required this.nodeId, required this.farm_name, required this.farm_id});
 
   factory RentContract.fromJson(Map<String, dynamic> json) {
-    return RentContract(
-      nodeID: json['nodeId'] ?? 0,
-      farmName: json['farm_name'] ?? '',
-      farmID: json['farm_id'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -97,29 +84,29 @@ class RentContract extends Contract {
 
 @reflector
 class ContractInfo {
-  int contractID;
-  int createdAt;
+  int contract_id;
+  int created_at;
   Contract? details;
   String state;
-  int twinID;
+  int twin_id;
   String type;
 
   ContractInfo({
-    required this.contractID,
-    required this.createdAt,
+    required this.contract_id,
+    required this.created_at,
     required this.details,
     required this.state,
-    required this.twinID,
+    required this.twin_id,
     required this.type,
   });
 
   factory ContractInfo.fromJson(Map<String, dynamic> json) {
-    final type = json['type'];
-    print(type.runtimeType);
+    final jsonType = json['type'];
+    final type = ContractTypes.fromString(jsonType);
 
     Contract? details;
-    if (json['details'] != null && json['details'] is Map<String, dynamic>) {
-      final detailsJson = json['details'] as Map<String, dynamic>;
+    if (json['details'] != null) {
+      final detailsJson = json['details'];
       switch (type) {
         case ContractTypes.name:
           details = NameContract.fromJson(detailsJson);
@@ -130,18 +117,21 @@ class ContractInfo {
         case ContractTypes.rent:
           details = RentContract.fromJson(detailsJson);
           break;
+        default:
+          print("Unhandled type: $type");
       }
     }
 
     return ContractInfo(
-      contractID: json['contract_id'] ?? 0,
-      createdAt: json['created_at'] ?? 0,
+      contract_id: json['contract_id'] ?? 0,
+      created_at: json['created_at'] ?? 0,
       details: details,
       state: json['state'] ?? '',
-      twinID: json['twin_id'] ?? 0,
+      twin_id: json['twin_id'] ?? 0,
       type: json['type'] ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return toMap(this);
   }
@@ -169,6 +159,19 @@ enum ContractTypes {
   node,
   name,
   rent;
+
+  static ContractTypes fromString(String type) {
+    switch (type) {
+      case 'node':
+        return ContractTypes.node;
+      case 'name':
+        return ContractTypes.name;
+      case 'rent':
+        return ContractTypes.rent;
+      default:
+        throw ArgumentError('Unknown contract type: $type');
+    }
+  }
 
   @override
   String toString() {
@@ -233,26 +236,22 @@ class ContractInfoQueryParams {
   }
 }
 
+@reflector
 class ContractBills {
   int amountBilled;
-  int contractID;
+  int contract_id;
   String discountReceived;
-  int timeStamp;
+  int timestamp;
 
   ContractBills({
     required this.amountBilled,
-    required this.contractID,
+    required this.contract_id,
     required this.discountReceived,
-    required this.timeStamp,
+    required this.timestamp,
   });
 
   factory ContractBills.fromJson(Map<String, dynamic> json) {
-    return ContractBills(
-      amountBilled: json['amountBilled'] ?? 0,
-      contractID: json['contract_id'] ?? 0,
-      discountReceived: json['discountReceived'] ?? '',
-      timeStamp: json['timestamp'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -265,6 +264,7 @@ class ContractBills {
   }
 }
 
+@reflector
 class ContractBillQueryParams {
   int? page;
   int? size;

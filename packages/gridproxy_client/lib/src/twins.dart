@@ -15,7 +15,7 @@ class Twins {
     return twins;
   }
 
-  Future<TwinConsumption> getConsumption(int twinID) async {
+  Future<TwinConsumption> getConsumption({required int twinID}) async {
     final response = await client.getRequest('twins/$twinID/consumption', null);
     TwinConsumption twinConsumption =
         TwinConsumption.fromJson(response as Map<String, dynamic>);

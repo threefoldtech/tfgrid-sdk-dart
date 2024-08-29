@@ -176,7 +176,52 @@ class Node {
   });
 
   factory Node.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    final capacity = json['capacity'];
+    return Node(
+      certificationType: json['certificationType'] ?? '',
+      city: json['city'] ?? '',
+      country: json['country'] ?? '',
+      created: json['created'] ?? 0,
+      dedicated: json['dedicated'] ?? false,
+      dmi: json['dmi'] != null ? Dmi.fromJson(json['dmi']) : null,
+      extraFee: json['extraFee'] ?? 0,
+      farmId: json['farmId'] ?? 0,
+      farmName: json['farmName'] ?? '',
+      farmingPolicyId: json['farmingPolicyId'] ?? 0,
+      gridVersion: json['gridVersion'] ?? 0,
+      healthy: json['healthy'] ?? false,
+      id: json['id'] ?? '',
+      inDedicatedFarm: json['inDedicatedFarm'] ?? false,
+      location:
+          json['location'] != null ? Location.fromJson(json['location']) : null,
+      nodeId: json['nodeId'] ?? 0,
+      num_gpu: json['num_gpu'] ?? 0,
+      power: json['power'] != null ? Power.fromJson(json['power']) : null,
+      priceUsd: json['price_usd'].toDouble() ?? 0,
+      publicConfig: json['publicConfig'] != null
+          ? PublicConfig.fromJson(json['publicConfig'])
+          : null,
+      rentContractId: json['rentContractId'] ?? 0,
+      rentable: json['rentable'] ?? false,
+      rented: json['rented'] ?? false,
+      rentedByTwinId: json['rentedByTwinId'] ?? 0,
+      serialNumber: json['serialNumber'] ?? '',
+      speed: json['speed'] != null ? Speed.fromJson(json['speed']) : null,
+      status: json['status'] ?? '',
+      twinId: json['twinId'] ?? 0,
+      updatedAt: json['updatedAt'] ?? 0,
+      uptime: json['uptime'] ?? 0,
+      used_resources: capacity != null && capacity['used_resources'] != null
+          ? Resources.fromJson(capacity['used_resources'])
+          : json['used_resources'] != null
+              ? Resources.fromJson(json['used_resources'])
+              : null,
+      total_resources: capacity != null && capacity['total_resources'] != null
+          ? Resources.fromJson(capacity['total_resources'])
+          : json['total_resources'] != null
+              ? Resources.fromJson(json['total_resources'])
+              : null,
+    );
   }
   Map<String, dynamic> toJson() {
     return toMap(this);
@@ -205,7 +250,21 @@ class Dmi {
   });
 
   factory Dmi.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return Dmi(
+      baseboard: json['baseboard'] != null
+          ? Baseboard.fromJson(json['baseboard'])
+          : null,
+      bios: json['bios'] != null ? Bios.fromJson(json['bios']) : null,
+      memory: json['memory'] != null
+          ? (json['memory'] as List).map((i) => Memory.fromJson(i)).toList()
+          : [],
+      node_twin_id: json['node_twin_id'] ?? 0,
+      processor: json['processor'] != null
+          ? (json['processor'] as List)
+              .map((i) => Processor.fromJson(i))
+              .toList()
+          : [],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -498,7 +557,13 @@ class NodeStatistics {
   });
 
   factory NodeStatistics.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return NodeStatistics(
+      system:
+          json['system'] != null ? Resources.fromJson(json['system']) : null,
+      total: json['total'] != null ? Resources.fromJson(json['total']) : null,
+      used: json['used'] != null ? Resources.fromJson(json['used']) : null,
+      users: json['users'] != null ? NodeUsers.fromJson(json['users']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {

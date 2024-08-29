@@ -120,15 +120,15 @@ class Farm {
 
 @reflector
 class PublicIp {
-  int contractID;
-  String farmID;
+  int contract_id;
+  String farm_id;
   String gateway;
   String id;
   String ip;
 
   PublicIp({
-    required this.contractID,
-    required this.farmID,
+    required this.contract_id,
+    required this.farm_id,
     required this.gateway,
     required this.id,
     required this.ip,
@@ -136,8 +136,8 @@ class PublicIp {
 
   factory PublicIp.fromJson(Map<String, dynamic> json) {
     return PublicIp(
-      contractID: json['contract_id'],
-      farmID: json['farm_id'],
+      contract_id: json['contract_id'],
+      farm_id: json['farm_id'],
       gateway: json['gateway'],
       id: json['id'],
       ip: json['ip'],
