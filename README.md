@@ -7,6 +7,7 @@ This repo contains the dart clients for Threefold grid.
 
 - [signer](./packages/signer/README.md)
 - [tfchain_client](./packages/tfchain_client/README.md)
+- [stellar_client](./packages/stellar_client/README.md)
 ## Prerequisites
 
 Make sure you have the following tools installed:
@@ -35,6 +36,12 @@ melos run analyze
 ## Run Unit Tests
 
 To run unit tests in all packages that have `test` directory, run the following command
+
+```bash
+docker run --network host ghcr.io/threefoldtech/tfchain --dev --rpc-cors all --rpc-external --rpc-methods=safe
+```
+
+Then run :
 
 ```bash
 melos run unit_test

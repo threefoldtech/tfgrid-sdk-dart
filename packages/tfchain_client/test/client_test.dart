@@ -15,10 +15,10 @@ import 'package:tfchain_client/src/twins.dart';
 import 'setup_manager.dart';
 
 void main() {
-  group('Query Client Tests', () {
+  group('Client Tests', () {
     final setupManager = SetupManager();
     setUpAll(() async {
-      setupManager.setInitializationFlags(queryClient: true);
+      setupManager.setInitializationFlags(queryClient: true, client: true);
       await setupManager.setup();
     });
 
@@ -32,29 +32,7 @@ void main() {
       expect(setupManager.queryClient.twins, isA<QueryTwins>());
       expect(setupManager.queryClient.bridge, isA<QueryBridge>());
       expect(setupManager.queryClient.price, isA<QueryTFTPrice>());
-    });
 
-    test('Connect', () async {
-      if (setupManager.queryClient.provider!.isConnected()) {
-        expect(setupManager.queryClient.provider, isA<WsProvider>());
-        expect(setupManager.queryClient.api, isNotNull);
-      }
-    });
-
-    test('Disconnect', () async {
-      await setupManager.queryClient.disconnect();
-      expect(false, setupManager.queryClient.provider!.isConnected());
-    });
-  });
-
-  group("Full Client Tests", () {
-    final setupManager = SetupManager();
-    setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-    });
-
-    test('Initialization', () {
       expect(setupManager.client.url, equals(setupManager.url));
       expect(setupManager.client.contracts, isA<Contracts>());
       expect(setupManager.client.farms, isA<Farms>());
@@ -65,7 +43,13 @@ void main() {
       expect(setupManager.client.nodes, isA<Nodes>());
       expect(setupManager.client.termsAndConditions, isA<TermsAndConditions>());
     });
+
     test('Connect', () async {
+      if (setupManager.queryClient.provider!.isConnected()) {
+        expect(setupManager.queryClient.provider, isA<WsProvider>());
+        expect(setupManager.queryClient.api, isNotNull);
+      }
+
       if (setupManager.client.provider!.isConnected()) {
         expect(setupManager.client.keypair, isNotNull);
         expect(setupManager.client.address, isNotEmpty);
@@ -75,8 +59,12 @@ void main() {
     });
 
     test('Disconnect', () async {
+      await setupManager.queryClient.disconnect();
+      expect(false, setupManager.queryClient.provider!.isConnected());
+
       await setupManager.client.disconnect();
       expect(false, setupManager.client.provider!.isConnected());
     });
+
   });
 }

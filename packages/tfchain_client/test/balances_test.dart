@@ -10,14 +10,13 @@ import 'setup_manager.dart';
 void main() {
   group("Balances Tests", () {
     final setupManager = SetupManager();
-    setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-    });
     late final String recipientAddress;
     late final Client alice;
 
     setUpAll(() async {
+      setupManager.setInitializationFlags(client: true);
+      await setupManager.setup();
+
       final mnemonic = bip39.generateMnemonic();
       final recipientClient =
           Client(setupManager.url, mnemonic, setupManager.type);
