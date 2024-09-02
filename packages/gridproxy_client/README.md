@@ -21,11 +21,11 @@ dart run build_runner build
 - Example usage:
 
 ```dart
- import 'graphql_client.reflectable.dart';
+ import 'gridproxy_client.reflectable.dart';
 
  initializeReflectable();
 
- GridProxyClient client = GridProxyClient('gridproxy.dev.grid.tf');
+ GridProxyClient client = GridProxyClient('https://gridproxy.dev.grid.tf');
  final farms =
       await client.farms.list(ListFarmsQueryParameters(page: 1, size: 20));
  print(farms);
