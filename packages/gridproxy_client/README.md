@@ -26,7 +26,14 @@ dart run build_runner build
  initializeReflectable();
 
  GridProxyClient client = GridProxyClient('gridproxy.dev.grid.tf');
- final options = ListFarmsQueryParameters(farmId: 1);
- final farms = await client.farms.listFarms(options);
- print(farms);
+  final queryOptions =
+      FarmsQueryOptions(limit: 10, orderBy: FarmsOrderByOptions.farmID_DESC);
+  final returnOptions = FarmsReturnOptions(
+    id: true,
+    farmID: true,
+    name: true,
+    twinID: true,
+    publicIps: PublicIpsReturnOptions(ip: true, contractId: true, id: true, gateway: true));
+ final farms =
+      await graphQLClient.farms.listFarms(queryOptions, returnOptions);
 ```
