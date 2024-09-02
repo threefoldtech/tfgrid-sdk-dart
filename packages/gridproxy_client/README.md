@@ -4,7 +4,7 @@ This is a dart client to communicate with GridProxy based on the network.
 
 ## Install Dependencies
 
-``` bash
+```bash
 dart pub get
 ```
 
@@ -26,14 +26,7 @@ dart run build_runner build
  initializeReflectable();
 
  GridProxyClient client = GridProxyClient('gridproxy.dev.grid.tf');
-  final queryOptions =
-      FarmsQueryOptions(limit: 10, orderBy: FarmsOrderByOptions.farmID_DESC);
-  final returnOptions = FarmsReturnOptions(
-    id: true,
-    farmID: true,
-    name: true,
-    twinID: true,
-    publicIps: PublicIpsReturnOptions(ip: true, contractId: true, id: true, gateway: true));
  final farms =
-      await graphQLClient.farms.listFarms(queryOptions, returnOptions);
+      await client.farms.list(ListFarmsQueryParameters(page: 1, size: 20));
+ print(farms);
 ```
