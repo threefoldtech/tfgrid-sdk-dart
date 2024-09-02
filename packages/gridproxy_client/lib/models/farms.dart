@@ -135,13 +135,7 @@ class PublicIp {
   });
 
   factory PublicIp.fromJson(Map<String, dynamic> json) {
-    return PublicIp(
-      contract_id: json['contract_id'],
-      farm_id: json['farm_id'],
-      gateway: json['gateway'],
-      id: json['id'],
-      ip: json['ip'],
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
