@@ -107,71 +107,71 @@ class ListNodesQueryParamaters {
 
 @reflector
 class Node {
-  String? certificationType;
-  String? city;
-  String? country;
-  int? created;
-  bool? dedicated;
+  String certificationType;
+  String city;
+  String country;
+  int created;
+  bool dedicated;
   Dmi? dmi;
-  int? extraFee;
-  int? farmId;
-  String? farmName;
-  int? farmingPolicyId;
-  int? gridVersion;
-  bool? healthy;
-  String? id;
-  bool? inDedicatedFarm;
+  int extraFee;
+  int farmId;
+  String farmName;
+  int farmingPolicyId;
+  int gridVersion;
+  bool healthy;
+  String id;
+  bool inDedicatedFarm;
   Location? location;
-  int? nodeId;
-  int? num_gpu;
+  int nodeId;
+  int num_gpu;
   Power? power;
-  double? priceUsd;
+  double priceUsd;
   PublicConfig? publicConfig;
-  int? rentContractId;
-  bool? rentable;
-  bool? rented;
-  int? rentedByTwinId;
-  String? serialNumber;
+  int rentContractId;
+  bool rentable;
+  bool rented;
+  int rentedByTwinId;
+  String serialNumber;
   Speed? speed;
-  String? status;
+  String status;
   Resources? total_resources;
-  int? twinId;
-  int? updatedAt;
-  int? uptime;
+  int twinId;
+  int updatedAt;
+  int uptime;
   Resources? used_resources;
 
   Node({
-    this.certificationType,
-    this.city,
-    this.country,
-    this.created,
-    this.dedicated,
+    required this.certificationType,
+    required this.city,
+    required this.country,
+    required this.created,
+    required this.dedicated,
     this.dmi,
-    this.extraFee,
-    this.farmId,
-    this.farmName,
-    this.farmingPolicyId,
-    this.gridVersion,
-    this.healthy,
-    this.id,
-    this.inDedicatedFarm,
+    required this.extraFee,
+    required this.farmId,
+    required this.farmName,
+    required this.farmingPolicyId,
+    required this.gridVersion,
+    required this.healthy,
+    required this.id,
+    required this.inDedicatedFarm,
     this.location,
-    this.nodeId,
-    this.num_gpu,
+    required this.nodeId,
+    required this.num_gpu,
     this.power,
-    this.priceUsd,
+    required this.priceUsd,
     this.publicConfig,
-    this.rentContractId,
-    this.rentable,
-    this.rented,
-    this.rentedByTwinId,
-    this.serialNumber,
+    required this.rentContractId,
+    required this.rentable,
+    required this.rented,
+    required this.rentedByTwinId,
+    required this.serialNumber,
     this.speed,
-    this.status,
+    required this.status,
     this.total_resources,
-    this.twinId,
-    this.updatedAt,
-    this.uptime,
+    required this.twinId,
+    required this.updatedAt,
+    required this.uptime,
     this.used_resources,
   });
 
@@ -238,14 +238,14 @@ class Dmi {
   Baseboard? baseboard;
   Bios? bios;
   List<Memory>? memory;
-  int? node_twin_id;
+  int node_twin_id;
   List<Processor>? processor;
 
   Dmi({
     this.baseboard,
     this.bios,
     this.memory,
-    this.node_twin_id,
+    required this.node_twin_id,
     this.processor,
   });
 
@@ -279,12 +279,12 @@ class Dmi {
 
 @reflector
 class Bios {
-  String? vendor;
-  String? version;
+  String vendor;
+  String version;
 
   Bios({
-    this.vendor,
-    this.version,
+    required this.vendor,
+    required this.version,
   });
 
   factory Bios.fromJson(Map<String, dynamic> json) {
@@ -303,12 +303,12 @@ class Bios {
 
 @reflector
 class Memory {
-  String? manufacturer;
-  String? type;
+  String manufacturer;
+  String type;
 
   Memory({
-    this.manufacturer,
-    this.type,
+    required this.manufacturer,
+    required this.type,
   });
 
   factory Memory.fromJson(Map<String, dynamic> json) {
@@ -327,12 +327,12 @@ class Memory {
 
 @reflector
 class Processor {
-  String? thread_count;
-  String? version;
+  String thread_count;
+  String version;
 
   Processor({
-    this.thread_count,
-    this.version,
+    required this.thread_count,
+    required this.version,
   });
 
   factory Processor.fromJson(Map<String, dynamic> json) {
@@ -351,16 +351,16 @@ class Processor {
 
 @reflector
 class Location {
-  String? city;
-  String? country;
-  double? latitude;
-  double? longitude;
+  String city;
+  String country;
+  double latitude;
+  double longitude;
 
   Location({
-    this.city,
-    this.country,
-    this.latitude,
-    this.longitude,
+    required this.city,
+    required this.country,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
@@ -379,12 +379,12 @@ class Location {
 
 @reflector
 class Power {
-  String? state;
-  String? target;
+  String state;
+  String target;
 
   Power({
-    this.state,
-    this.target,
+    required this.state,
+    required this.target,
   });
 
   factory Power.fromJson(Map<String, dynamic> json) {
@@ -403,18 +403,18 @@ class Power {
 
 @reflector
 class PublicConfig {
-  String? domain;
-  String? gw4;
-  String? gw6;
-  String? ipv4;
-  String? ipv6;
+  String domain;
+  String gw4;
+  String gw6;
+  String ipv4;
+  String ipv6;
 
   PublicConfig({
-    this.domain,
-    this.gw4,
-    this.gw6,
-    this.ipv4,
-    this.ipv6,
+    required this.domain,
+    required this.gw4,
+    required this.gw6,
+    required this.ipv4,
+    required this.ipv6,
   });
 
   factory PublicConfig.fromJson(Map<String, dynamic> json) {
@@ -432,14 +432,14 @@ class PublicConfig {
 
 @reflector
 class Speed {
-  double? download;
-  int? node_twin_id;
-  double? upload;
+  double download;
+  int node_twin_id;
+  double upload;
 
   Speed({
-    this.download,
-    this.node_twin_id,
-    this.upload,
+    required this.download,
+    required this.node_twin_id,
+    required this.upload,
   });
 
   factory Speed.fromJson(Map<String, dynamic> json) {
@@ -458,12 +458,12 @@ class Speed {
 
 @reflector
 class Baseboard {
-  String? manufacturer;
-  String? product_name;
+  String manufacturer;
+  String product_name;
 
   Baseboard({
-    this.manufacturer,
-    this.product_name,
+    required this.manufacturer,
+    required this.product_name,
   });
 
   factory Baseboard.fromJson(Map<String, dynamic> json) {
@@ -482,18 +482,18 @@ class Baseboard {
 
 @reflector
 class Resources {
-  int? cru;
-  int? hru;
-  int? mru;
-  int? sru;
-  int? ipv4u;
+  int cru;
+  int hru;
+  int mru;
+  int sru;
+  int ipv4u;
 
   Resources({
-    this.cru,
-    this.hru,
-    this.mru,
-    this.sru,
-    this.ipv4u,
+    required this.cru,
+    required this.hru,
+    required this.mru,
+    required this.sru,
+    required this.ipv4u,
   });
 
   factory Resources.fromJson(Map<String, dynamic> json) {
@@ -512,20 +512,20 @@ class Resources {
 
 @reflector
 class NodeGPUInfo {
-  int? contract;
-  String? device;
-  String? id;
-  int? node_twin_id;
-  int? updated_at;
-  String? vendor;
+  int contract;
+  String device;
+  String id;
+  int node_twin_id;
+  int updated_at;
+  String vendor;
 
   NodeGPUInfo({
-    this.contract,
-    this.device,
-    this.id,
-    this.node_twin_id,
-    this.updated_at,
-    this.vendor,
+    required this.contract,
+    required this.device,
+    required this.id,
+    required this.node_twin_id,
+    required this.updated_at,
+    required this.vendor,
   });
 
   factory NodeGPUInfo.fromJson(Map<String, dynamic> json) {
@@ -578,14 +578,14 @@ class NodeStatistics {
 
 @reflector
 class NodeUsers {
-  int? deployments;
-  int? lastDeploymentTimestamp;
-  int? workloads;
+  int deployments;
+  int lastDeploymentTimestamp;
+  int workloads;
 
   NodeUsers({
-    this.deployments,
-    this.lastDeploymentTimestamp,
-    this.workloads,
+    required this.deployments,
+    required this.lastDeploymentTimestamp,
+    required this.workloads,
   });
 
   factory NodeUsers.fromJson(Map<String, dynamic> json) {
