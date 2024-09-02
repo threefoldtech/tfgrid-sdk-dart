@@ -7,6 +7,7 @@ This repo contains the dart clients for Threefold grid.
 
 - [signer](./packages/signer/README.md)
 - [tfchain_client](./packages/tfchain_client/README.md)
+- [gridproxy_client](./packages/gridproxy_client/README.md)
 - [stellar_client](./packages/stellar_client/README.md)
 ## Prerequisites
 
