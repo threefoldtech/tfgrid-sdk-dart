@@ -74,6 +74,7 @@ class BaseContractReturnOptions {
   }
 }
 
+@reflector
 class BaseContract {
   String? id;
   int? gridVersion;
@@ -117,6 +118,7 @@ class NameContractReturnOptions extends BaseContractReturnOptions {
   }
 }
 
+@reflector
 class NameContract extends BaseContract {
   String? name;
 
@@ -132,16 +134,7 @@ class NameContract extends BaseContract {
   });
 
   factory NameContract.fromJson(Map<String, dynamic> json) {
-    return NameContract(
-      id: json['id'] ?? '',
-      gridVersion: json['gridVersion'] ?? 0,
-      contractID: json['contractID'] ?? '',
-      twinID: json['twinID'] ?? 0,
-      state: json['state'] ?? '',
-      createdAt: json['createdAt'] ?? '',
-      solutionProviderID: json['solutionProviderID'] ?? 0,
-      name: json['name'] ?? '',
-    );
+    return fromJson(json);
   }
 
   @override
@@ -262,6 +255,7 @@ class RentContractReturnOptions extends BaseContractReturnOptions {
   }
 }
 
+@reflector
 class RentContract extends BaseContract {
   int? nodeID;
 
@@ -277,16 +271,7 @@ class RentContract extends BaseContract {
   });
 
   factory RentContract.fromJson(Map<String, dynamic> json) {
-    return RentContract(
-      id: json['id'] ?? '',
-      gridVersion: json['gridVersion'] ?? 0,
-      contractID: json['contractID'] ?? '',
-      twinID: json['twinID'] ?? 0,
-      state: json['state'] ?? '',
-      createdAt: json['createdAt'] ?? '',
-      solutionProviderID: json['solutionProviderID'] ?? 0,
-      nodeID: json['nodeID'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   @override
@@ -323,6 +308,7 @@ class ContractUsedResourcesReturnOptions {
   }
 }
 
+@reflector
 class ContractUsedResources {
   String? hru;
   String? sru;
@@ -339,13 +325,7 @@ class ContractUsedResources {
   });
 
   factory ContractUsedResources.fromJson(Map<String, dynamic> json) {
-    return ContractUsedResources(
-      hru: json['hru'] ?? '',
-      sru: json['sru'] ?? '',
-      cru: json['cru'] ?? '',
-      mru: json['mru'] ?? '',
-      id: json['id'] ?? '',
-    );
+    return fromJson(json);
   }
 
   @override
