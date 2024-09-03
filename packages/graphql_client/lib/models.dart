@@ -1,6 +1,5 @@
 library models;
 
-
 import 'package:graphql_client/models/reflector.dart';
 import 'package:reflectable/reflectable.dart';
 
