@@ -1,5 +1,6 @@
 part of '../models.dart';
 
+@reflector
 class EdgesInfo {
   String cursor;
   NodeInfo? node;

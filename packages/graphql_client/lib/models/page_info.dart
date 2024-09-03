@@ -14,12 +14,7 @@ class PageInfo {
   });
 
   factory PageInfo.fromJson(Map<String, dynamic> json) {
-    return PageInfo(
-      startCursor: json['startCursor'] ?? "",
-      endCursor: json['endCursor'] ?? "",
-      hasNextPage: json['hasNextPage'] ?? false,
-      hasPreviousPage: json['hasPreviousPage'] ?? false,
-    );
+    return fromJson(json);
   }
 
   @override

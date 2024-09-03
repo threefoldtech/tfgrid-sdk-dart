@@ -14,12 +14,7 @@ class PublicIpsInfo {
   });
 
   factory PublicIpsInfo.fromJson(Map<String, dynamic> json) {
-    return PublicIpsInfo(
-      id: json['id'] ?? "",
-      contractId: json['contractId'] ?? "",
-      ip: json['ip'] ?? "",
-      gateway: json['gateway'] ?? "",
-    );
+    return fromJson(json);
   }
 
   @override

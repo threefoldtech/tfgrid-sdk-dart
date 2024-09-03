@@ -489,14 +489,7 @@ class TwinInfo {
   });
 
   factory TwinInfo.fromJson(Map<String, dynamic> json) {
-    return TwinInfo(
-      id: json['id'] ?? '',
-      accountID: json['accountID'] ?? '',
-      gridVersion: json['gridVersion'] ?? 0,
-      publicKey: json['publicKey'] ?? '',
-      relay: json['relay'] ?? '',
-      twinID: json['twinID'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   @override

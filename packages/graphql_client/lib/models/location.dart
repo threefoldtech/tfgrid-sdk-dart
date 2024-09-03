@@ -33,11 +33,7 @@ class Location {
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-      id: json['id'] ?? "",
-      longitude: json['longitude'] ?? "",
-      latitude: json['latitude'] ?? "",
-    );
+    return fromJson(json);
   }
 
   @override

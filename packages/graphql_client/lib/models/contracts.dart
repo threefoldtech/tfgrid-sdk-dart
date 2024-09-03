@@ -95,7 +95,7 @@ class BaseContract {
   });
 
   factory BaseContract.fromJson(Map<String, dynamic> json) {
-    return fromJson<BaseContract>(json);
+    return fromJson(json);
   }
 }
 
@@ -138,7 +138,7 @@ class NameContract extends BaseContract {
   });
 
   factory NameContract.fromJson(Map<String, dynamic> json) {
-    return fromJson<NameContract>(json);
+    return fromJson(json);
   }
 
   @override

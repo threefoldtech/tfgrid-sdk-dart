@@ -1,5 +1,6 @@
 part of '../models.dart';
 
+@reflector
 class Interfaces {
   String? id;
   Node? node;

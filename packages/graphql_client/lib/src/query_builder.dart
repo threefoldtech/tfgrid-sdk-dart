@@ -49,25 +49,16 @@ bool areAllBooleansFalse(Object object) {
 }
 
 T fromJson<T>(Map<String, dynamic> json) {
-  print('Starting deserialization for type: ${T.toString()}');
-  print('JSON data: $json');
-
   ClassMirror classMirror = reflector.reflectType(T) as ClassMirror;
-  print('ClassMirror obtained for type: ${classMirror.simpleName}');
 
   Map<Symbol, dynamic> namedParams = {};
 
   void populateNamedParams(ClassMirror cm) {
-    print('Populating named parameters for class: ${cm.simpleName}');
-
     cm.declarations.forEach((symbol, declaration) {
       if (declaration is VariableMirror && !declaration.isStatic) {
-        String fieldName = MirrorSystem.getName(Symbol(symbol));
-        print('Processing field: $fieldName');
-
+        String fieldName = declaration.simpleName.toString();
         if (json.containsKey(fieldName)) {
           var fieldValue = json[fieldName];
-          print('Field $fieldName in JSON');
 
           if (declaration.reflectedType == double && fieldValue is int) {
             fieldValue = fieldValue.toDouble();
@@ -75,26 +66,15 @@ T fromJson<T>(Map<String, dynamic> json) {
 
           namedParams[Symbol(symbol)] = fieldValue;
         } else {
-          print('Field $fieldName is not present in JSON, using default value');
-
           namedParams[Symbol(symbol)] =
               _getDefaultValue(declaration.reflectedType);
         }
-      } else {
-        print(
-            'Skipping non-variable or static declaration: ${declaration.simpleName}');
       }
     });
-    // cm.su
-    // try {
-    // print('Processing superclass: ${cm.superclass!.simpleName}');
 
     if (cm.superclass != null && cm.superclass!.reflectedType != Object) {
       populateNamedParams(cm.superclass as ClassMirror);
     }
-    // } catch (error) {
-    //   print("THE ERROR IS $error");
-    // }
   }
 
   populateNamedParams(classMirror);

@@ -819,6 +819,7 @@ class FarmsConnectionQueryOptions {
   }
 }
 
+@reflector
 class FarmsConnectionInfo {
   int? totalCount;
   PageInfo? pageInfo;

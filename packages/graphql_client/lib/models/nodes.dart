@@ -994,6 +994,7 @@ class NodesReturnOptions {
   }
 }
 
+@reflector
 class Node {
   String? id;
   int? gridVersion;
