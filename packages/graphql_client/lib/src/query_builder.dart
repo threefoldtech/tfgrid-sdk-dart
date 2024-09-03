@@ -49,25 +49,55 @@ bool areAllBooleansFalse(Object object) {
 }
 
 T fromJson<T>(Map<String, dynamic> json) {
+  print('Starting deserialization for type: ${T.toString()}');
+  print('JSON data: $json');
+
   ClassMirror classMirror = reflector.reflectType(T) as ClassMirror;
+  print('ClassMirror obtained for type: ${classMirror.simpleName}');
 
   Map<Symbol, dynamic> namedParams = {};
 
-  classMirror.declarations.forEach((symbol, declaration) {
-    if (declaration is VariableMirror && !declaration.isStatic) {
-      final fieldName = declaration.simpleName.toString();
+  void populateNamedParams(ClassMirror cm) {
+    print('Populating named parameters for class: ${cm.simpleName}');
 
-      var fieldValue = json.containsKey(fieldName)
-          ? json[fieldName]
-          : _getDefaultValue(declaration.reflectedType);
+    cm.declarations.forEach((symbol, declaration) {
+      if (declaration is VariableMirror && !declaration.isStatic) {
+        String fieldName = MirrorSystem.getName(Symbol(symbol));
+        print('Processing field: $fieldName');
 
-      if (declaration.reflectedType == double && fieldValue is int) {
-        fieldValue = fieldValue.toDouble();
+        if (json.containsKey(fieldName)) {
+          var fieldValue = json[fieldName];
+          print('Field $fieldName in JSON');
+
+          if (declaration.reflectedType == double && fieldValue is int) {
+            fieldValue = fieldValue.toDouble();
+          }
+
+          namedParams[Symbol(symbol)] = fieldValue;
+        } else {
+          print('Field $fieldName is not present in JSON, using default value');
+
+          namedParams[Symbol(symbol)] =
+              _getDefaultValue(declaration.reflectedType);
+        }
+      } else {
+        print(
+            'Skipping non-variable or static declaration: ${declaration.simpleName}');
       }
+    });
+    // cm.su
+    // try {
+    // print('Processing superclass: ${cm.superclass!.simpleName}');
 
-      namedParams[Symbol(symbol)] = fieldValue;
+    if (cm.superclass != null && cm.superclass!.reflectedType != Object) {
+      populateNamedParams(cm.superclass as ClassMirror);
     }
-  });
+    // } catch (error) {
+    //   print("THE ERROR IS $error");
+    // }
+  }
+
+  populateNamedParams(classMirror);
 
   T instance = classMirror.newInstance('', [], namedParams) as T;
   return instance;

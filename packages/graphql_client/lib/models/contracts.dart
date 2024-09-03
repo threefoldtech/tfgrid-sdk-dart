@@ -93,6 +93,10 @@ class BaseContract {
     this.createdAt,
     this.solutionProviderID,
   });
+
+  factory BaseContract.fromJson(Map<String, dynamic> json) {
+    return fromJson<BaseContract>(json);
+  }
 }
 
 @reflector
@@ -134,7 +138,7 @@ class NameContract extends BaseContract {
   });
 
   factory NameContract.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return fromJson<NameContract>(json);
   }
 
   @override
@@ -185,6 +189,7 @@ class NodeContractReturnOptions extends BaseContractReturnOptions {
   }
 }
 
+@reflector
 class NodeContract extends BaseContract {
   int? nodeID;
   String? deploymentData;
@@ -370,6 +375,7 @@ class GetConsumptionOptions {
   });
 }
 
+@reflector
 class ContractBillReports {
   String? id;
   BigInt? contractID;
