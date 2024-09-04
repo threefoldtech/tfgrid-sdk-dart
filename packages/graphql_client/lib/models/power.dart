@@ -60,7 +60,7 @@ class NodePowerReturnOptions {
     return returnOptions;
   }
 }
-
+@reflector
 class NodePower {
   PowerState? state;
   Power? target;

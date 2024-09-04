@@ -36,6 +36,7 @@ class PublicConfigReturnOptions {
   }
 }
 
+@reflector
 class PublicConfig {
   String? id;
   Node? node;

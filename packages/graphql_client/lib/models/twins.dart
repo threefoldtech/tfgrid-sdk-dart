@@ -471,6 +471,7 @@ class TwinConnectionsReturnOptions {
   }
 }
 
+@reflector
 class TwinInfo {
   String? id;
   String? accountID;

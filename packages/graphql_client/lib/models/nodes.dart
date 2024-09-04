@@ -1315,6 +1315,7 @@ class NodeResourcesTotalReturnOptions {
   }
 }
 
+@reflector
 class NodeResourcesTotal {
   String? id;
   Node? node;

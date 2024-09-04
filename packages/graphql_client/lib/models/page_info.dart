@@ -1,5 +1,6 @@
 part of '../models.dart';
 
+@reflector
 class PageInfo {
   String? startCursor;
   String? endCursor;

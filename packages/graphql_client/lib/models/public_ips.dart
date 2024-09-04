@@ -1,5 +1,6 @@
 part of '../models.dart';
 
+@reflector
 class PublicIpsInfo {
   String? id;
   String? contractId;

@@ -1,5 +1,6 @@
 part of '../models.dart';
 
+@reflector
 class NodeInfo {
   String? id;
   String? certification;

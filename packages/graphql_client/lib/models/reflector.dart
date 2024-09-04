@@ -8,7 +8,6 @@ class Reflector extends Reflectable {
           typeCapability,
           reflectedTypeCapability,
           newInstanceCapability,
-          metadataCapability,
           subtypeQuantifyCapability,
           typeRelationsCapability,
           superclassQuantifyCapability,

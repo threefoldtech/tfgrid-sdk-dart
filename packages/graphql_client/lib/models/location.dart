@@ -21,6 +21,7 @@ class LocationReturnOptions {
   }
 }
 
+@reflector
 class Location {
   String? id;
   String? longitude;
