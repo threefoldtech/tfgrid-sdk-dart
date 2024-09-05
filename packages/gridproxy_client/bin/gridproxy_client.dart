@@ -1,10 +1,9 @@
 import 'package:gridproxy_client/gridproxy_client.dart';
 import 'package:gridproxy_client/models/farms.dart';
-import 'package:gridproxy_client/models/nodes.dart';
-import 'gridproxy_client.reflectable.dart';
+// import 'gridproxy_client.reflectable.dart';
 
 void main() async {
-  initializeReflectable();
+  // initializeReflectable();
 
   GridProxyClient client = GridProxyClient('https://gridproxy.dev.grid.tf/');
 

@@ -1,4 +1,5 @@
 import 'package:gridproxy_client/models/farms.dart';
+import 'package:gridproxy_client/models/nodes.dart';
 import 'package:gridproxy_client/models/reflector.dart';
 import 'package:reflectable/reflectable.dart';
 
@@ -37,11 +38,8 @@ T fromJson<T>(Map<String, dynamic> json) {
       if (fieldValue is Map<String, dynamic> &&
           !_isBasicType(declaration.reflectedType)) {
         fieldValue = _fromJsonNested(declaration.reflectedType, fieldValue);
-      }
-      // TODO: handle list of objects
-      else if (fieldValue is List) {
+      } else if (fieldValue is List) {
         final elementType = _getElementType(declaration.reflectedType);
-
         if (elementType != null && !_isBasicType(elementType)) {
           fieldValue = fieldValue.map((item) {
             if (item is Map<String, dynamic>) {
@@ -49,8 +47,7 @@ T fromJson<T>(Map<String, dynamic> json) {
             }
             return item;
           }).toList();
-
-          fieldValue = List.castFrom<dynamic, PublicIp>(fieldValue);
+          fieldValue = _castListToType(fieldValue, elementType);
         }
       }
       namedParams[Symbol(fieldName)] = fieldValue;
@@ -63,6 +60,22 @@ T fromJson<T>(Map<String, dynamic> json) {
 
 dynamic _getElementType(Type type) {
   return typeMapping[type.toString()];
+}
+
+List<dynamic> _castListToType(List<dynamic> list, Type elementType) {
+  if (elementType == PublicIp) {
+    return list.map((item) => item as PublicIp).toList();
+  } else if (elementType == Memory) {
+    if (list.isNotEmpty) {
+      return list.map((item) => item as Memory).toList();
+    }
+
+    return [];
+  } else if (elementType == Processor) {
+    return list.map((item) => item as Processor).toList();
+  } else {
+    throw ArgumentError("Unsupported element type: $elementType");
+  }
 }
 
 dynamic _getDefaultValue(Type type) {
@@ -105,4 +118,8 @@ dynamic _fromJsonNested(Type type, Map<String, dynamic> json) {
   return classMirror.newInstance('', [], namedParams);
 }
 
-final typeMapping = {'List<PublicIp>': PublicIp};
+final typeMapping = {
+  'List<PublicIp>': PublicIp,
+  'List<Memory>': Memory,
+  'List<Processor>': Processor
+};
