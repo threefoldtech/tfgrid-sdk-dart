@@ -38,4 +38,8 @@ class Twins extends QueryTwins {
         client.api.tx.tfgridModule.updateTwin(relay: relay, pk: pk);
     await client.apply(extrinsic);
   }
+
+  Future<int?> getMyTwinId() async {
+    return await getTwinIdByAccountId(address: client.address);
+  }
 }
