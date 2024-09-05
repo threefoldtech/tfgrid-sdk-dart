@@ -1,6 +1,7 @@
 library client;
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:stellar_client/models/balance.dart';
 import 'package:stellar_client/models/currency.dart' as currency;

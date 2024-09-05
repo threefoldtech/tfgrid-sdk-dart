@@ -10,6 +10,7 @@ class Client {
 
   String get accountId => _keyPair.accountId;
   String get secretSeed => _keyPair.secretSeed;
+  Uint8List? get privateKey => _keyPair.privateKey;
 
   Client(this._network, String secretSeed) {
     _keyPair = KeyPair.fromSecretSeed(secretSeed);
