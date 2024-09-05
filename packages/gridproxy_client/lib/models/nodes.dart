@@ -557,13 +557,7 @@ class NodeStatistics {
   });
 
   factory NodeStatistics.fromJson(Map<String, dynamic> json) {
-    return NodeStatistics(
-      system:
-          json['system'] != null ? Resources.fromJson(json['system']) : null,
-      total: json['total'] != null ? Resources.fromJson(json['total']) : null,
-      used: json['used'] != null ? Resources.fromJson(json['used']) : null,
-      users: json['users'] != null ? NodeUsers.fromJson(json['users']) : null,
-    );
+    return fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
