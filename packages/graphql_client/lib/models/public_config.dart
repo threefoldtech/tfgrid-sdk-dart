@@ -72,7 +72,7 @@ class PublicConfig {
 
   @override
   String toString() {
-    return 'PublicConfig(id: $id, node: $node, ipv4: ${ipv4 ?? "N/A"}, ipv6: $ipv6, gw4: $gw4, gw6: $gw6, domain: $domain)';
+    return generateToString(this);
   }
 }
 

@@ -143,7 +143,7 @@ class NameContract extends BaseContract {
 
   @override
   String toString() {
-    return 'NameContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, name: $name}';
+    return generateToString(this);
   }
 }
 
@@ -233,7 +233,7 @@ class NodeContract extends BaseContract {
 
   @override
   String toString() {
-    return 'NodeContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, nodeID: $nodeID, deploymentData: $deploymentData, deploymentHash: $deploymentHash, numberOfPublicIPs: $numberOfPublicIPs, resourcesUsed: $resourcesUsed}';
+    return generateToString(this);
   }
 }
 
@@ -281,7 +281,7 @@ class RentContract extends BaseContract {
 
   @override
   String toString() {
-    return 'RentContract{id: $id, gridVersion: $gridVersion, contractID: $contractID, twinID: $twinID, state: $state, createdAt: $createdAt, solutionProviderID: $solutionProviderID, nodeID: $nodeID}';
+    return generateToString(this);
   }
 }
 
@@ -335,7 +335,7 @@ class ContractUsedResources {
 
   @override
   String toString() {
-    return 'ContractUsedResources{hru: $hru, sru: $sru, cru: $cru, mru: $mru, id: $id}';
+    return generateToString(this);
   }
 }
 
@@ -403,7 +403,7 @@ class ContractBillReports {
 
   @override
   String toString() {
-    return 'ContractBillReports{id: $id, contractID: $contractID, discountLevel: $discountLevel, amountBilled: $amountBilled, timeStamp: $timeStamp}';
+    return generateToString(this);
   }
 }
 

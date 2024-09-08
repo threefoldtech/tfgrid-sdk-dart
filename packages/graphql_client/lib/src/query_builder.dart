@@ -92,3 +92,32 @@ dynamic _getDefaultValue(Type type) {
 
   return null;
 }
+
+String generateToString(Object obj) {
+  InstanceMirror instanceMirror = reflector.reflect(obj);
+  ClassMirror classMirror = instanceMirror.type;
+
+  List<String> collectFields(ClassMirror cm) {
+    List<String> fields = [];
+
+    cm.declarations.forEach((symbol, declaration) {
+      if (declaration is VariableMirror && !declaration.isStatic) {
+        String fieldName = declaration.simpleName.toString();
+        final fieldValue = instanceMirror.invokeGetter(declaration.simpleName);
+
+        fields.add('$fieldName: $fieldValue');
+      }
+    });
+
+    if (cm.superclass != null && cm.superclass!.reflectedType != Object) {
+      fields.addAll(collectFields(cm.superclass as ClassMirror));
+    }
+
+    return fields;
+  }
+
+  String className = classMirror.simpleName;
+  List<String> fields = collectFields(classMirror);
+
+  return '$className{${fields.join(', ')}}';
+}

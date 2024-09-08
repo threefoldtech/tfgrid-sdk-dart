@@ -1094,11 +1094,7 @@ class Node {
 
   @override
   String toString() {
-    return '''Node(id: $id, gridVersion: $gridVersion, nodeID: $nodeID, farmID: $farmID, twinID: $twinID, location: $location,
-     country: $country, city: $city, publicConfig: $publicConfig, resourcesTotal: $resourcesTotal, uptime: $uptime, created: $created,
-    farmingPolicyId: $farmingPolicyId, interfaces: $interfaces, certification: $certification, secure: $secure,
-    virtualized: $virtualized, serialNumber: $serialNumber, createdAt: $createdAt, updatedAt: $updatedAt,
-    connectionPrice: $connectionPrice, power: $power, dedicated: $dedicated, extraFee: $extraFee)''';
+    return generateToString(this);
   }
 }
 
@@ -1120,7 +1116,7 @@ class NodeEdgeInfo {
 
   @override
   String toString() {
-    return 'NodeEdgeInfo(cursor: $cursor, node: $node)';
+    return generateToString(this);
   }
 }
 
@@ -1151,7 +1147,7 @@ class NodeConnectionsInfo {
 
   @override
   String toString() {
-    return 'NodeConnectionsInfo(edges: $edges, pageInfo: $pageInfo, totalCount: $totalCount)';
+    return generateToString(this);
   }
 }
 
@@ -1348,7 +1344,7 @@ class NodeResourcesTotal {
 
   @override
   String toString() {
-    return 'NodeResourcesTotal(id: $id, node: $node, hru: $hru, sru: $sru, cru: $cru, mru: $mru)';
+    return generateToString(this);
   }
 }
 
@@ -1616,7 +1612,7 @@ class NodeResourcesTotalEdgeInfo {
 
   @override
   String toString() {
-    return 'NodeResourcesTotalEdgeInfo(cursor: $cursor, node: $node)';
+    return generateToString(this);
   }
 }
 
@@ -1649,7 +1645,7 @@ class NodeResourcesTotalsConnectionInfo {
 
   @override
   String toString() {
-    return 'NodeResourcesTotalsConnectionInfo(edges: $edges, pageInfo: $pageInfo, totalCount: $totalCount)';
+    return generateToString(this);
   }
 }
 

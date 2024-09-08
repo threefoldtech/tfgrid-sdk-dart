@@ -448,7 +448,7 @@ class FarmInfo {
 
   @override
   String toString() {
-    return 'FarmInfo(id: $id, gridVersion: $gridVersion, farmID: $farmID, name: $name, certification: $certification, dedicatedFarm: $dedicatedFarm, pricingPolicyID: $pricingPolicyID, stellarAddress: $stellarAddress, twinID: $twinID, publicIps: $publicIPs})';
+    return generateToString(this);
   }
 }
 
@@ -844,6 +844,6 @@ class FarmsConnectionInfo {
 
   @override
   String toString() {
-    return 'FarmsConnectionInfo{totalCount: $totalCount, pageInfo: $pageInfo, edges: $edges}';
+    return generateToString(this);
   }
 }

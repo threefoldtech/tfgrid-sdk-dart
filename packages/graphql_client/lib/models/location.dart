@@ -39,7 +39,7 @@ class Location {
 
   @override
   String toString() {
-    return 'Location(id: $id, longitude: $longitude, latitude: $latitude';
+    return generateToString(this);
   }
 }
 

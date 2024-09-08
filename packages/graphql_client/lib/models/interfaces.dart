@@ -30,7 +30,7 @@ class Interfaces {
 
   @override
   String toString() {
-    return 'Interfaces(id: $id, node: $node, name: $name, mac: $mac, ips: $ips)';
+    return generateToString(this);
   }
 }
 

@@ -20,7 +20,7 @@ class PublicIpsInfo {
 
   @override
   String toString() {
-    return 'PublicIpsInfo{id: $id, contractId: $contractId, ip: $ip, gateway: $gateway}';
+    return generateToString(this);
   }
 }
 

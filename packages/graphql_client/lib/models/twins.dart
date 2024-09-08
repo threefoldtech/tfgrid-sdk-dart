@@ -495,7 +495,7 @@ class TwinInfo {
 
   @override
   String toString() {
-    return 'TwinInfo(id: $id, accountID: $accountID, gridVersion: $gridVersion, publicKey: $publicKey, relay: $relay, twinID: $twinID)';
+    return generateToString(this);
   }
 }
 
@@ -519,7 +519,7 @@ class TwinConnectionsEdgeInfo {
 
   @override
   String toString() {
-    return 'TwinConnectionEdgeInfo(cursor: $cursor, node: $node)';
+    return generateToString(this);
   }
 }
 
@@ -551,6 +551,6 @@ class TwinConnectionsInfo {
 
   @override
   String toString() {
-    return 'TwinConnectionsInfo(edges: $edges, pageInfo: $pageInfo, totalCount: $totalCount)';
+    return generateToString(this);
   }
 }

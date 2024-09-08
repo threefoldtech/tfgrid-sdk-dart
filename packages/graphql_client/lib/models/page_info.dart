@@ -20,7 +20,7 @@ class PageInfo {
 
   @override
   String toString() {
-    return 'PageInfo{startCursor: $startCursor, endCursor: $endCursor, hasNextPage: $hasNextPage, hasPreviousPage: $hasPreviousPage}';
+    return generateToString(this);
   }
 }
 

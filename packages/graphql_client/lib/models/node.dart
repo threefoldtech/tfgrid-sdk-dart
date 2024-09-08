@@ -28,7 +28,7 @@ class NodeInfo {
 
   @override
   String toString() {
-    return 'NodeInfo{id: $id, certification: $certification, dedicatedFarm: $dedicatedFarm, farmID: $farmID, gridVersion: $gridVersion, name: $name, pricingPolicyID: $pricingPolicyID, stellarAddress: $stellarAddress, twinID: $twinID, publicIPs: $publicIPs}';
+    return generateToString(this);
   }
 
   factory NodeInfo.fromJson(Map<String, dynamic> json) {

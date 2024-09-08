@@ -19,7 +19,7 @@ class EdgesInfo {
 
   @override
   String toString() {
-    return 'EdgesInfo{cursor: $cursor, node: $node}';
+    return generateToString(this);
   }
 }
 

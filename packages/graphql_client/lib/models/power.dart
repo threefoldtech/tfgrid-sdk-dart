@@ -60,6 +60,7 @@ class NodePowerReturnOptions {
     return returnOptions;
   }
 }
+
 @reflector
 class NodePower {
   PowerState? state;
@@ -79,7 +80,7 @@ class NodePower {
 
   @override
   String toString() {
-    return 'NodePower(state: $state, target: $target)';
+    return generateToString(this);
   }
 }
 
