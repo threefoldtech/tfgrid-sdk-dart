@@ -6,7 +6,7 @@ class TFFarms {
 
   TFFarms(this.gqlClient);
 
-  Future<List<FarmInfo>> listFarms(FarmsQueryOptions? queryOptions,
+  Future<List<FarmInfo>> list(FarmsQueryOptions? queryOptions,
       FarmsReturnOptions? returnOptions) async {
     final queryString = queryOptions?.toString() ?? "";
     final String returnString;
@@ -74,7 +74,7 @@ class TFFarms {
 
   //sorts by id_ASC by default
   //return total count by default
-  Future<FarmsConnectionInfo> getFarmsConnection(
+  Future<FarmsConnectionInfo> Connection(
       FarmsConnectionQueryOptions? queryOptions,
       FarmsConnectionReturnOptions? returnOptions) async {
     final queryString = queryOptions?.toString() ?? "(orderBy: id_ASC)";

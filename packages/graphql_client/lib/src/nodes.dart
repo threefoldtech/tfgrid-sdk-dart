@@ -98,7 +98,7 @@ certification
         }
 ''';
 
-  Future<List<Node>> nodes(NodesReturnOptions? returnOptions,
+  Future<List<Node>> list(NodesReturnOptions? returnOptions,
       NodesQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
     final String returnString;
@@ -133,7 +133,7 @@ query Nodes {
     return nodes;
   }
 
-  Future<NodeConnectionsInfo> nodesConnection(
+  Future<NodeConnectionsInfo> Connection(
       NodesConnectionsReturnOptions? returnOptions,
       NodesConnectionsQueryOptions? queryOptions) async {
     queryOptions ??= NodesConnectionsQueryOptions();

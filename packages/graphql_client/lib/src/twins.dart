@@ -6,7 +6,7 @@ class TFTwins {
 
   TFTwins(this.gqlClient);
 
-  Future<List<TwinInfo>> twins(
+  Future<List<TwinInfo>> list(
       TwinReturnOptions? returnOptions, TwinQueryOptions? queryOptions) async {
     final queryString = queryOptions?.toString() ?? "";
     final String returnString;
