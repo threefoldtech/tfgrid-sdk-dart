@@ -447,3 +447,271 @@ class Consumption {
     required this.contractBillReports,
   });
 }
+
+class ContractsQueryOptions {
+  String? contractIDEq;
+  String? contractIDGt;
+  String? contractIDGte;
+  List<String>? contractIDIn;
+  bool? contractIDIsNull;
+  String? contractIDLt;
+  String? contractIDLte;
+  String? contractIDNotEq;
+  List<String>? contractIDNotIn;
+  String? createdAtEq;
+  String? createdAtGt;
+  String? createdAtGte;
+  List<String>? createdAtIn;
+  bool? createdAtIsNull;
+  String? createdAtLt;
+  String? createdAtLte;
+  String? createdAtNotEq;
+  List<String>? createdAtNotIn;
+  bool? gridVersionIsNull;
+  int? gridVersionEq;
+  int? gridVersionNotEq;
+  int? gridVersionGt;
+  int? gridVersionGte;
+  int? gridVersionLt;
+  int? gridVersionLte;
+  List<int>? gridVersionIn;
+  List<int>? gridVersionNotIn;
+  String? idEq;
+  String? idGt;
+  String? idGte;
+  String? idNotEq;
+  String? idLt;
+  String? idLte;
+  String? idContains;
+  String? idNotContains;
+  String? idContainsInsensitive;
+  String? idNotContainsInsensitive;
+  String? idStartsWith;
+  String? idNotStartsWith;
+  String? idEndsWith;
+  String? idNotEndsWith;
+  List<String>? idIn;
+  List<String>? idNotIn;
+  int? solutionProviderIDEq;
+  int? solutionProviderIDGt;
+  int? solutionProviderIDGte;
+  List<int>? solutionProviderIDIn;
+  bool? solutionProviderIDIsNull;
+  int? solutionProviderIDLt;
+  int? solutionProviderIDLte;
+  int? solutionProviderIDNotEq;
+  List<int>? solutionProviderIDNotIn;
+  ContractStates? stateEq;
+  List<ContractStates>? stateIn;
+  bool? stateIsNull;
+  ContractStates? stateNotEq;
+  List<ContractStates>? stateNotIn;
+  bool? twinIDIsNull;
+  int? twinIDEq;
+  int? twinIDNotEq;
+  int? twinIDGt;
+  int? twinIDGte;
+  int? twinIDLt;
+  int? twinIDLte;
+  List<int>? twinIDIn;
+  List<int>? twinIDNotIn;
+
+  int? limit;
+  int? offset;
+  ContractsOrderByOptions? orderBy;
+
+  ContractsQueryOptions({
+    this.contractIDEq,
+    this.contractIDGt,
+    this.contractIDGte,
+    this.contractIDIn,
+    this.contractIDIsNull,
+    this.contractIDLt,
+    this.contractIDLte,
+    this.contractIDNotEq,
+    this.contractIDNotIn,
+    this.createdAtEq,
+    this.createdAtGt,
+    this.createdAtGte,
+    this.createdAtIn,
+    this.createdAtIsNull,
+    this.createdAtLt,
+    this.createdAtLte,
+    this.createdAtNotEq,
+    this.createdAtNotIn,
+    this.gridVersionEq,
+    this.gridVersionGt,
+    this.gridVersionGte,
+    this.gridVersionIn,
+    this.gridVersionIsNull,
+    this.gridVersionLt,
+    this.gridVersionLte,
+    this.gridVersionNotEq,
+    this.gridVersionNotIn,
+    this.idEq,
+    this.idGt,
+    this.idGte,
+    this.idNotEq,
+    this.idLt,
+    this.idLte,
+    this.idContains,
+    this.idNotContains,
+    this.idContainsInsensitive,
+    this.idNotContainsInsensitive,
+    this.idStartsWith,
+    this.idNotStartsWith,
+    this.idEndsWith,
+    this.idNotEndsWith,
+    this.solutionProviderIDEq,
+    this.solutionProviderIDGt,
+    this.solutionProviderIDGte,
+    this.solutionProviderIDIn,
+    this.solutionProviderIDLt,
+    this.solutionProviderIDLte,
+    this.solutionProviderIDNotEq,
+    this.solutionProviderIDNotIn,
+    this.solutionProviderIDIsNull,
+    this.stateEq,
+    this.stateIn,
+    this.stateIsNull,
+    this.stateNotEq,
+    this.stateNotIn,
+    this.twinIDIsNull,
+    this.twinIDEq,
+    this.twinIDNotEq,
+    this.twinIDGt,
+    this.twinIDGte,
+    this.twinIDLt,
+    this.twinIDLte,
+    this.twinIDIn,
+    this.twinIDNotIn,
+    this.limit,
+    this.offset,
+    this.orderBy,
+  });
+
+  @override
+  String toString() {
+    List<String> queryOptions = [];
+    _addToQueryList(queryOptions, "contractID_eq", contractIDEq);
+    _addToQueryList(queryOptions, "contractID_gt", contractIDGt);
+    _addToQueryList(queryOptions, "contractID_gte", contractIDGte);
+    _addToQueryList(queryOptions, "contractID_in", contractIDIn);
+    _addToQueryList(queryOptions, "contractID_isNull", contractIDIsNull);
+    _addToQueryList(queryOptions, "contractID_lt", contractIDLt);
+    _addToQueryList(queryOptions, "contractID_lte", contractIDLte);
+    _addToQueryList(queryOptions, "contractID_not_eq", contractIDNotEq);
+    _addToQueryList(queryOptions, "contractID_not_in", contractIDNotIn);
+    _addToQueryList(queryOptions, "gridVersion_is_null", gridVersionIsNull);
+    _addToQueryList(queryOptions, "gridVersion_eq", gridVersionEq);
+    _addToQueryList(queryOptions, "gridVersion_not_eq", gridVersionNotEq);
+    _addToQueryList(queryOptions, "gridVersion_gt", gridVersionGt);
+    _addToQueryList(queryOptions, "gridVersion_gte", gridVersionGte);
+    _addToQueryList(queryOptions, "gridVersion_lt", gridVersionLt);
+    _addToQueryList(queryOptions, "gridVersion_lte", gridVersionLte);
+    _addToQueryList(queryOptions, "gridVersion_in", gridVersionIn);
+    _addToQueryList(queryOptions, "gridVersion_not_in", gridVersionNotIn);
+    _addToQueryList(queryOptions, "id_eq", idEq);
+    _addToQueryList(queryOptions, "id_gt", idGt);
+    _addToQueryList(queryOptions, "id_gte", idGte);
+    _addToQueryList(queryOptions, "id_not_eq", idNotEq);
+    _addToQueryList(queryOptions, "id_lt", idLt);
+    _addToQueryList(queryOptions, "id_lte", idLte);
+    _addToQueryList(queryOptions, "id_contains", idContains);
+    _addToQueryList(queryOptions, "id_not_contains", idNotContains);
+    _addToQueryList(
+        queryOptions, "id_containsInsensitive", idContainsInsensitive);
+    _addToQueryList(
+        queryOptions, "id_not_containsInsensitive", idNotContainsInsensitive);
+    _addToQueryList(queryOptions, "id_startsWith", idStartsWith);
+    _addToQueryList(queryOptions, "id_not_startsWith", idNotStartsWith);
+    _addToQueryList(queryOptions, "id_endsWith", idEndsWith);
+    _addToQueryList(queryOptions, "id_not_endsWith", idNotEndsWith);
+    _addToQueryList(queryOptions, "id_in", idIn);
+    _addToQueryList(queryOptions, "id_not_in", idNotIn);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_eq", solutionProviderIDEq);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_gt", solutionProviderIDGt);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_gte", solutionProviderIDGte);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_in", solutionProviderIDIn);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_isNull", solutionProviderIDIsNull);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_lt", solutionProviderIDLt);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_lte", solutionProviderIDLte);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_not_eq", solutionProviderIDNotEq);
+    _addToQueryList(
+        queryOptions, "solutionProviderID_not_in", solutionProviderIDNotIn);
+    _addToQueryList(queryOptions, "state_eq", stateEq);
+    _addToQueryList(queryOptions, "state_in", stateIn);
+    _addToQueryList(queryOptions, "state_isNull", stateIsNull);
+    _addToQueryList(queryOptions, "state_not_eq", stateNotEq);
+    _addToQueryList(queryOptions, "state_not_in", stateNotIn);
+    _addToQueryList(queryOptions, "twinID_isNull", twinIDIsNull);
+    _addToQueryList(queryOptions, "twinID_eq", twinIDEq);
+    _addToQueryList(queryOptions, "twinID_not_eq", twinIDNotEq);
+    _addToQueryList(queryOptions, "twinID_gt", twinIDGt);
+    _addToQueryList(queryOptions, "twinID_gte", twinIDGte);
+    _addToQueryList(queryOptions, "twinID_lt", twinIDLt);
+    _addToQueryList(queryOptions, "twinID_lte", twinIDLte);
+    _addToQueryList(queryOptions, "twinID_in", twinIDIn);
+    _addToQueryList(queryOptions, "twinID_not_in", twinIDNotIn);
+
+    String queryString = '';
+
+    if (queryOptions.isNotEmpty) {
+      queryString += 'where: {${queryOptions.join(', ')} }';
+    }
+
+    if (limit != null) {
+      if (queryString.isNotEmpty) {
+        queryString += ', ';
+      }
+      queryString += 'limit: $limit';
+    }
+
+    if (offset != null) {
+      if (queryString.isNotEmpty) {
+        queryString += ', ';
+      }
+      queryString += 'offset: $offset';
+    }
+
+    if (orderBy != null) {
+      if (queryString.isNotEmpty) {
+        queryString += ', ';
+      }
+      queryString += 'orderBy: ${orderBy.toString().split('.').last}';
+    }
+
+    if (queryString.isNotEmpty) {
+      queryString = '($queryString)';
+    }
+
+    return queryString;
+  }
+}
+
+enum ContractsOrderByOptions {
+  id_ASC,
+  id_DESC,
+  gridVersion_ASC,
+  gridVersion_DESC,
+  contractID_ASC,
+  contractID_DESC,
+  twinID_ASC,
+  twinID_DESC,
+  name_ASC,
+  name_DESC,
+  state_ASC,
+  state_DESC,
+  createdAt_ASC,
+  createdAt_DESC,
+  solutionProviderID_ASC,
+  solutionProviderID_DESC,
+}

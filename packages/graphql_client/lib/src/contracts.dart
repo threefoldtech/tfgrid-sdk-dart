@@ -6,6 +6,13 @@ class TFContracts {
 
   TFContracts(this.gqlClient);
 
+  // Future<List<NameContract>> listNameContract(
+
+
+  // ){
+
+  // }
+
   Future<List<NameContract>> listNameContractsByTwinId(
       int twinID,
       List<ContractStates> contractStates,
