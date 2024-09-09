@@ -1,6 +1,6 @@
 targets:
   $default:
     builders:
-      reflectable:
+      graphql_client:
         generate_for:
           - lib/**/*.dart

@@ -1,6 +1,7 @@
 targets:
   $default:
     builders:
-      reflectable:
+      gridproxy_client:
         generate_for:
           - lib/**/*.dart
+
