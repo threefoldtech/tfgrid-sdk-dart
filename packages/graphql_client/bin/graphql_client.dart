@@ -6,7 +6,7 @@ void main() async {
   // initializeReflectable();
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  final res = await graphQLClient.contracts.listNameContractsByTwinId(
-      214, [ContractStates.Deleted], NameContractReturnOptions());
+  final res = await graphQLClient.contracts.listNameContracts(
+      NameContractQueryOptions(), NameContractReturnOptions());
   print(res);
 }

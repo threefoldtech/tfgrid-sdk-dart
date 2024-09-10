@@ -6,19 +6,10 @@ class TFContracts {
 
   TFContracts(this.gqlClient);
 
-  // Future<List<NameContract>> listNameContract(
-
-
-  // ){
-
-  // }
-
-  Future<List<NameContract>> listNameContractsByTwinId(
-      int twinID,
-      List<ContractStates> contractStates,
+  Future<List<NameContract>> listNameContracts(
+      NameContractQueryOptions? queryOptions,
       NameContractReturnOptions? returnOptions) async {
-    final state = '[${contractStates.map((e) => e.name).join(', ')}]';
-    final opts = '(where: {twinID_eq: $twinID, state_in: $state})';
+    final queryString = queryOptions?.toString() ?? "";
     final String returnString;
 
     if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
@@ -38,7 +29,7 @@ class TFContracts {
 
     final body = '''
     query getNameContracts {
-      nameContracts $opts {
+      nameContracts $queryString {
         $returnString
       }
     }''';
@@ -65,12 +56,10 @@ class TFContracts {
     return nameContracts;
   }
 
-  Future<List<RentContract>> listRentContractsByTwinId(
-      int twinID,
-      List<ContractStates> contractStates,
+  Future<List<RentContract>> listRentContracts(
+      RentContractQueryOptions? queryOptions,
       RentContractReturnOptions? returnOptions) async {
-    final state = '[${contractStates.map((e) => e.name).join(', ')}]';
-    final opts = '(where: {twinID_eq: $twinID, state_in: $state})';
+    final queryString = queryOptions?.toString() ?? "";
     final String returnString;
 
     if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
@@ -90,7 +79,7 @@ class TFContracts {
 
     final body = '''
     query getRentContracts {
-      rentContracts $opts {
+      rentContracts $queryString {
         $returnString
       }
     }''';
@@ -117,12 +106,10 @@ class TFContracts {
     return rentContracts;
   }
 
-  Future<List<NodeContract>> listNodeContractsByTwinId(
-      int twinID,
-      List<ContractStates> contractStates,
+  Future<List<NodeContract>> listNodeContracts(
+      NodeContractQueryOptions? queryOptions,
       NodeContractReturnOptions? returnOptions) async {
-    final state = '[${contractStates.map((e) => e.name).join(', ')}]';
-    final opts = '(where: {twinID_eq: $twinID, state_in: $state})';
+    final queryString = queryOptions?.toString() ?? "";
     final String returnString;
 
     if (returnOptions == null || areAllBooleansFalse(returnOptions)) {
@@ -152,7 +139,7 @@ class TFContracts {
 
     final body = '''
     query getNodeContracts {
-      nodeContracts $opts {
+      nodeContracts $queryString {
         $returnString
       }
     }''';
