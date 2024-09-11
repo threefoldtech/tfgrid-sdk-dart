@@ -11,6 +11,7 @@ class Reflector extends Reflectable {
           subtypeQuantifyCapability,
           typeRelationsCapability,
           superclassQuantifyCapability,
+          instanceInvokeCapability,
         );
 }
 
