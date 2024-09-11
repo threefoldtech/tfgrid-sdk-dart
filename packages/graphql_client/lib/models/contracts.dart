@@ -685,7 +685,7 @@ class BaseContractQueryOptions {
     String queryString = '';
 
     if (queryOptions.isNotEmpty) {
-      queryString += 'where: {${queryOptions.join(', ')} }';
+      queryString += '${queryOptions.join(', ')}';
     }
 
     return queryString;
@@ -849,11 +849,14 @@ class NameContractQueryOptions extends BaseContractQueryOptions {
         queryOptions, "name_containsInsensitive", nameContainsInsensitive);
 
     if (queryOptions.isNotEmpty) {
-      if (queryString.endsWith('}')) {
-        queryString = queryString.substring(0, queryString.length - 1);
+      if (queryString.isNotEmpty) {
+        queryString += ', ' + queryOptions.join(', ');
+      } else {
+        queryString += queryOptions.join(', ');
       }
-      queryString += ', ' + queryOptions.join(', ') + '}';
     }
+
+    queryString = 'where: {$queryString}';
 
     if (limit != null) {
       if (queryString.isNotEmpty) {
@@ -1220,11 +1223,14 @@ class NodeContractQueryOptions extends BaseContractQueryOptions {
     }
 
     if (queryOptions.isNotEmpty) {
-      if (queryString.endsWith('}')) {
-        queryString = queryString.substring(0, queryString.length - 1);
+      if (queryString.isNotEmpty) {
+        queryString += ', ' + queryOptions.join(', ');
+      } else {
+        queryString += queryOptions.join(', ');
       }
-      queryString += ', ' + queryOptions.join(', ') + '}';
     }
+
+    queryString = 'where: {$queryString}';
 
     if (limit != null) {
       if (queryString.isNotEmpty) {
@@ -1610,11 +1616,14 @@ class RentContractQueryOptions extends BaseContractQueryOptions {
     _addToQueryList(queryOptions, "nodeID_not_in", nodeIDNotIn);
 
     if (queryOptions.isNotEmpty) {
-      if (queryString.endsWith('}')) {
-        queryString = queryString.substring(0, queryString.length - 1);
+      if (queryString.isNotEmpty) {
+        queryString += ', ' + queryOptions.join(', ');
+      } else {
+        queryString += queryOptions.join(', ');
       }
-      queryString += ', ' + queryOptions.join(', ') + '}';
     }
+
+    queryString = 'where: {$queryString}';
 
     if (limit != null) {
       if (queryString.isNotEmpty) {
