@@ -53,21 +53,7 @@ class TFFarms {
     }
     List<FarmInfo> farms =
         (response['data']['farms'] as List<dynamic>).map((farmsData) {
-      return FarmInfo(
-        id: farmsData['id'] ?? '',
-        farmID: farmsData['farmID'] ?? 0,
-        certification: farmsData['certification'] ?? '',
-        dedicatedFarm: farmsData['dedicatedFarm'] ?? false,
-        name: farmsData['name'] ?? '',
-        pricingPolicyID: farmsData['pricingPolicyID'] ?? 0,
-        stellarAddress: farmsData['stellarAddress'] ?? '',
-        twinID: farmsData['twinID'] ?? 0,
-        publicIPs: farmsData['publicIPs'] != null
-            ? (farmsData['publicIPs'] as List<dynamic>)
-                .map((item) => PublicIpsInfo.fromJson(item))
-                .toList()
-            : null,
-      );
+      return FarmInfo.fromJson(farmsData as Map<String, dynamic>);
     }).toList();
     return farms;
   }

@@ -421,6 +421,7 @@ class FarmsQueryOptions {
   }
 }
 
+@reflector
 class FarmInfo {
   String? id;
   String? gridVersion;
@@ -449,6 +450,24 @@ class FarmInfo {
   @override
   String toString() {
     return generateToString(this);
+  }
+
+  factory FarmInfo.fromJson(Map<String, dynamic> json) {
+    return FarmInfo(
+      id: json['id'] ?? '',
+      farmID: json['farmID'] ?? 0,
+      certification: json['certification'] ?? '',
+      dedicatedFarm: json['dedicatedFarm'] ?? false,
+      name: json['name'] ?? '',
+      pricingPolicyID: json['pricingPolicyID'] ?? 0,
+      stellarAddress: json['stellarAddress'] ?? '',
+      twinID: json['twinID'] ?? 0,
+      publicIPs: json['publicIPs'] != null
+          ? (json['publicIPs'] as List<dynamic>)
+              .map((item) => PublicIpsInfo.fromJson(item))
+              .toList()
+          : null,
+    );
   }
 }
 
