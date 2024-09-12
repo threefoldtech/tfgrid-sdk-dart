@@ -450,13 +450,16 @@ class Client {
     return balancesList;
   }
 
-  Future<AccountResponse?> checkVestingAccount() async {
+  Future<List<Map<String, dynamic>>?> checkVestingAccount() async {
     try {
       final response = await http.post(
         Uri.parse(
             '${_serviceUrls[_network.toString()]}/vesting_service/vesting_accounts'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'owner_address': accountId}),
+        body: jsonEncode({
+          'owner_address':
+              "GAM3NVKJQS5RWHEEHN5SAVGR4NBDUZAE7F4SF57PK5J4CEG6H72WLCOF"
+        }),
       );
 
       final body = jsonDecode(response.body);
@@ -464,11 +467,20 @@ class Client {
       if (body['vesting_accounts'] is List &&
           body['vesting_accounts'].isEmpty) {
         print("no vesting account found");
-        return null;
+        return [];
       } else {
-        AccountResponse account =
-            await _sdk.accounts.account(body['vesting_accounts']);
-        return account;
+        List<Map<String, dynamic>> accountsList = [];
+
+        for (var account in body['vesting_accounts']) {
+          String address = account['address'];
+          double tft = double.parse(account['TFT'].toString());
+
+          accountsList.add({
+            'address': address,
+            'TFT': tft,
+          });
+        }
+        return accountsList;
       }
     } catch (error) {
       throw Exception('Could not create vestingAccount due to $error');

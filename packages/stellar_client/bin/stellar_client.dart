@@ -1,10 +1,11 @@
 import 'package:stellar_client/stellar_client.dart';
 
 void main() async {
-  final stellarClient = Client.create(NetworkType.TESTNET);
+  final stellarClient = Client.create(NetworkType.PUBLIC);
   await stellarClient.activateThroughThreefoldService();
 
-  await stellarClient.checkVestingAccount();
+  final res = await stellarClient.checkVestingAccount();
+  print(res);
 
   // await stellarClient.transfer(
   //     destinationAddress: "destination-public-key",
