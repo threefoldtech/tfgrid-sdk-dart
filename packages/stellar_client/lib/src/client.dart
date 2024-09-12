@@ -22,7 +22,13 @@ class Client {
     return Client(network, keyPair.secretSeed);
   }
 
-  static Future<Client> createFromMnemonic(
+  factory Client.fromSecretSeedHex(NetworkType network, secretSeedHex) {
+    final seed = Uint8List.fromList(hex.decode(secretSeedHex));
+    final keyPair = KeyPair.fromSecretSeedList(seed);
+    return Client(network, keyPair.secretSeed);
+  }
+
+  static Future<Client> fromMnemonic(
       NetworkType network, String mnemonic) async {
     Wallet wallet = await Wallet.from(mnemonic);
     final keyPair = await wallet.getKeyPair();
