@@ -1,12 +1,17 @@
 import 'package:graphql_client/graphql_client.dart';
 import 'package:graphql_client/models.dart';
-// import 'graphql_client.reflectable.dart';
+import 'graphql_client.reflectable.dart';
 
 void main() async {
-  // initializeReflectable();
+  initializeReflectable();
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  final res = await graphQLClient.contracts.listNameContracts(
-      NameContractQueryOptions(), NameContractReturnOptions());
+  final res = await graphQLClient.twins.list(
+      TwinReturnOptions(),
+      TwinQueryOptions(
+          whereOptions: TwinQueryWhereOptions(
+        id_isNull: false,
+        id_eq: "214",
+      )));
   print(res);
 }

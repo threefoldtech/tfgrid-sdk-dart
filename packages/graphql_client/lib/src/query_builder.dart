@@ -121,3 +121,21 @@ String generateToString(Object obj) {
 
   return '$className{${fields.join(', ')}}';
 }
+
+List<String> buildQueryOptions(Object obj) {
+  InstanceMirror instanceMirror = reflector.reflect(obj);
+  ClassMirror classMirror = instanceMirror.type;
+
+  List<String> queryOptions = [];
+  for (var declaration in classMirror.declarations.values) {
+    if (declaration is VariableMirror && !declaration.isStatic) {
+      String fieldName = declaration.simpleName.toString();
+      final fieldValue = instanceMirror.invokeGetter(declaration.simpleName);
+      _addToQueryList(queryOptions, fieldName, fieldValue);
+    }
+  }
+  print("HELLO FROM New Function $queryOptions");
+  print(queryOptions);
+
+  return queryOptions;
+}

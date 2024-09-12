@@ -23,10 +23,11 @@ enum TwinOrderByOptions {
   }
 }
 
+@reflector
 class TwinQueryWhereOptions {
   //ids options
-  bool? idIsNull;
-  String? idEq;
+  bool? id_isNull;
+  String? id_eq;
   String? idNotEq;
   String? idGt;
   String? idGte;
@@ -124,8 +125,8 @@ class TwinQueryWhereOptions {
 
   TwinQueryWhereOptions({
     //ids
-    this.idIsNull,
-    this.idEq,
+    this.id_isNull,
+    this.id_eq,
     this.idNotEq,
     this.idGt,
     this.idGte,
@@ -224,10 +225,11 @@ class TwinQueryWhereOptions {
 
   @override
   String toString() {
+    final x = buildQueryOptions(this);
     List<String> queryOptions = [];
     //ids
-    _addToQueryList(queryOptions, "id_isNull", idIsNull);
-    _addToQueryList(queryOptions, "id_eq", idEq);
+    // _addToQueryList(queryOptions, "id_isNull", idIsNull);
+    // _addToQueryList(queryOptions, "id_eq", idEq);
     _addToQueryList(queryOptions, "id_not_eq", idNotEq);
     _addToQueryList(queryOptions, "id_gt", idGt);
     _addToQueryList(queryOptions, "id_gte", idGte);
