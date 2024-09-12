@@ -450,16 +450,13 @@ class Client {
     return balancesList;
   }
 
-  Future<List<Map<String, dynamic>>?> checkVestingAccount() async {
+  Future<List<VestingAccount>?> getVestingAccounts() async {
     try {
       final response = await http.post(
         Uri.parse(
             '${_serviceUrls[_network.toString()]}/vesting_service/vesting_accounts'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'owner_address':
-              "GAM3NVKJQS5RWHEEHN5SAVGR4NBDUZAE7F4SF57PK5J4CEG6H72WLCOF"
-        }),
+        body: jsonEncode({'owner_address': accountId}),
       );
 
       final body = jsonDecode(response.body);
@@ -468,16 +465,13 @@ class Client {
         print("no vesting account found");
         return [];
       } else {
-        List<Map<String, dynamic>> accountsList = [];
+        List<VestingAccount> accountsList = [];
 
         for (var account in body['vesting_accounts']) {
           String address = account['address'];
-          double tft = double.parse(account['TFT'].toString());
+          VestingAccount vestingAccount = VestingAccount.fromJson(account);
 
-          accountsList.add({
-            'address': address,
-            'TFT': tft,
-          });
+          accountsList.add(vestingAccount);
         }
         return accountsList;
       }
