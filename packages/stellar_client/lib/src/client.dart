@@ -463,7 +463,6 @@ class Client {
       );
 
       final body = jsonDecode(response.body);
-      print(body);
       if (body['vesting_accounts'] is List &&
           body['vesting_accounts'].isEmpty) {
         print("no vesting account found");
