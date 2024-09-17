@@ -1,6 +1,7 @@
 part of '../tfchain_client.dart';
 
 class QueryClient {
+  static Map<String, dynamic> connections = {};
   final String url;
   late Provider? provider;
   late polkadot.Dev api;
@@ -69,8 +70,19 @@ class QueryClient {
 
   Future<void> connect() async {
     _checkInputs();
-    provider = Provider.fromUri(Uri.parse(url));
-    api = polkadot.Dev(provider!);
+    print(connections);
+    if (connections.containsKey(url)) {
+      provider = connections[url]["provider"];
+      api = connections[url]["api"];
+      if (!provider!.isConnected()) {
+        api.connect();
+      }
+    } else {
+      provider = Provider.fromUri(Uri.parse(url));
+      api = polkadot.Dev(provider!);
+      final map = {"provider": provider, "api": api};
+      connections[url] = map;
+    }
   }
 
   Future<void> disconnect() async {
