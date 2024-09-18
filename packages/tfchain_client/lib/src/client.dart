@@ -70,7 +70,6 @@ class QueryClient {
 
   Future<void> connect() async {
     _checkInputs();
-    print(connections);
     if (connections.containsKey(url)) {
       provider = connections[url]["provider"];
       api = connections[url]["api"];
