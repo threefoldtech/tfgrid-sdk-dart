@@ -95,7 +95,7 @@ class Client extends QueryClient {
   final String mnemonicOrSecretSeed;
   late String address;
   final String _keypairType;
-  late final KeyPair? keypair;
+  late KeyPair? keypair;
   KVStore? _kvStore;
   Signer.KPType? _type;
   TermsAndConditions? _termsAndConditions;
