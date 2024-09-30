@@ -350,7 +350,7 @@ class Client {
         Uri.parse(
             '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'transaction': fundedTransaction.toXdr()}),
+        body: jsonEncode({'transaction': fundedTransaction.toEnvelopeXdrBase64()}),
       );
 
       print(response.body);
