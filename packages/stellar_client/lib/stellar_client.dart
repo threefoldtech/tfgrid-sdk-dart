@@ -10,6 +10,7 @@ import 'package:stellar_client/models/transactions.dart';
 import 'package:stellar_client/models/vesting_account.dart';
 import 'package:stellar_flutter_sdk/stellar_flutter_sdk.dart';
 import 'package:http/http.dart' as http;
+import 'package:convert/convert.dart';
 
 part 'src/client.dart';
 part 'src/network_types.dart';
