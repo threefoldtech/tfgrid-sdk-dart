@@ -376,9 +376,23 @@ class Client {
     if (payments.records != null && payments.records!.isNotEmpty) {
       for (OperationResponse response in payments.records!) {
         if (response is PaymentOperationResponse) {
+          final memoText = await this.getMemoText(response.links?.transaction?.toJson()["href"]);
           String assetCode = response.assetCode ?? 'XLM';
           if (assetCodeFilter == null || assetCode == assetCodeFilter) {
-            transactionDetails.add(response);
+            final details = ITransaction(
+              hash: response.transactionHash!,
+              from: response.from!.accountId,
+              to: response.to!.accountId,
+              asset: response.assetCode.toString(),
+              amount: response.amount!,
+              type: response.to!.accountId == this.accountId
+                  ? TransactionType.Receive
+                  : TransactionType.Payment,
+              status: response.transactionSuccessful!,
+              date: DateTime.parse(response.createdAt!).toLocal().toString(),
+              memo: memoText);
+            
+            transactionDetails.add(details);
           }
         } else if (response is CreateAccountOperationResponse) {
           if (assetCodeFilter == null) {
@@ -441,6 +455,19 @@ class Client {
       }
     } catch (error) {
       throw Exception('Could not create vestingAccount due to $error');
+    }
+  }
+
+  Future<String> getMemoText(String URL) async {
+    try {
+      final response = await http.get(
+          Uri.parse('${URL}'), headers: {'Content-Type': 'application/json'},
+      );
+      final body = jsonDecode(response.body);
+      final memoText = body['memo'] ?? "";
+      return memoText;
+    } catch (e) {
+      throw Exception("Couldn't get memo text due to ${e}");
     }
   }
 }
