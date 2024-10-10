@@ -2,8 +2,8 @@ import 'package:stellar_flutter_sdk/stellar_flutter_sdk.dart';
 
 enum TransactionType { Create, Payment, Receive }
 
-class ITransaction extends OperationResponse {
-  ITransaction({
+class PaymentTransaction extends OperationResponse {
+  PaymentTransaction({
     required this.hash,
     required this.from,
     required this.to,

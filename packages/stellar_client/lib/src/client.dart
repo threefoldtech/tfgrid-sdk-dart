@@ -379,7 +379,7 @@ class Client {
           final memoText = await this.getMemoText(response.links?.transaction?.toJson()["href"]);
           String assetCode = response.assetCode ?? 'XLM';
           if (assetCodeFilter == null || assetCode == assetCodeFilter) {
-            final details = ITransaction(
+            final details = PaymentTransaction(
               hash: response.transactionHash!,
               from: response.from!.accountId,
               to: response.to!.accountId,
@@ -458,10 +458,10 @@ class Client {
     }
   }
 
-  Future<String> getMemoText(String URL) async {
+  Future<String> getMemoText(String url) async {
     try {
       final response = await http.get(
-          Uri.parse('${URL}'), headers: {'Content-Type': 'application/json'},
+          Uri.parse('${url}'), headers: {'Content-Type': 'application/json'},
       );
       final body = jsonDecode(response.body);
       final memoText = body['memo'] ?? "";
