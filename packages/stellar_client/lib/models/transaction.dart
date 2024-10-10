@@ -1,8 +1,8 @@
-import 'package:stellar_flutter_sdk/stellar_flutter_sdk.dart';
-
 enum TransactionType { Create, Payment, Receive }
 
-class PaymentTransaction extends OperationResponse {
+class ITransaction {}
+
+class PaymentTransaction extends ITransaction {
   PaymentTransaction({
     required this.hash,
     required this.from,
@@ -11,17 +11,18 @@ class PaymentTransaction extends OperationResponse {
     required this.amount,
     required this.memo,
     required this.status,
-    required this.date, 
-    required TransactionType type,
+    required this.date,
+    required this.type,
   });
   final String hash;
   final String from;
   final String to;
   final String asset;
   final String amount;
-  final String? memo;
+  final String memo;
   final bool status;
   final String date;
+  final TransactionType type;
 
   @override
   String toString() {

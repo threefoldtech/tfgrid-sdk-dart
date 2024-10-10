@@ -343,6 +343,7 @@ class Client {
         destinationAddress: destinationAddress,
         amount: amount,
         currency: currency,
+        memoText: memoText,
         funded: true);
 
     fundedTransaction!.sign(_keyPair, _stellarNetwork);
@@ -365,13 +366,13 @@ class Client {
     }
   }
 
-  Future<List<OperationResponse>> getTransactions(
+  Future<List<ITransaction>> getTransactions(
       {String? assetCodeFilter}) async {
     Page<OperationResponse> payments = await _sdk.payments
         .forAccount(accountId)
         .order(RequestBuilderOrder.DESC)
         .execute();
-    List<OperationResponse> transactionDetails = [];
+    List<ITransaction> transactionDetails = [];
 
     if (payments.records != null && payments.records!.isNotEmpty) {
       for (OperationResponse response in payments.records!) {
@@ -393,10 +394,6 @@ class Client {
               memo: memoText);
             
             transactionDetails.add(details);
-          }
-        } else if (response is CreateAccountOperationResponse) {
-          if (assetCodeFilter == null) {
-            transactionDetails.add(response);
           }
         } else {
           print("Unhandled operation type: ${response.runtimeType}");
