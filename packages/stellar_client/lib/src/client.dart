@@ -461,7 +461,7 @@ class Client {
   Future<String> getMemoText(String url) async {
     try {
       final response = await http.get(
-          Uri.parse('${url}'), headers: {'Content-Type': 'application/json'},
+          Uri.parse(url), headers: {'Content-Type': 'application/json'},
       );
       final body = jsonDecode(response.body);
       final memoText = body['memo'] ?? "";
