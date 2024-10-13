@@ -40,12 +40,7 @@ class PublicIpsReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "id", id);
-    returnOptions = _addToReturnList(returnOptions, "contractId", contractId);
-    returnOptions = _addToReturnList(returnOptions, "ip", ip);
-    returnOptions = _addToReturnList(returnOptions, "gateway", gateway);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 

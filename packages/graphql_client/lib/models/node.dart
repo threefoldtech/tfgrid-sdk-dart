@@ -32,22 +32,7 @@ class NodeInfo {
   }
 
   factory NodeInfo.fromJson(Map<String, dynamic> json) {
-    return NodeInfo(
-      id: json['id'] ?? '',
-      certification: json['certification'] ?? '',
-      dedicatedFarm: json['dedicatedFarm'] ?? false,
-      farmID: json['farmID'] ?? 0,
-      gridVersion: json['gridVersion'] ?? 0,
-      name: json['name'] ?? '',
-      pricingPolicyID: json['pricingPolicyID'] ?? 0,
-      stellarAddress: json['stellarAddress'] ?? '',
-      twinID: json['twinID'] ?? 0,
-      publicIPs: json['publicIPs'] != null
-          ? (json['publicIPs'] as List<dynamic>)
-              .map((item) => PublicIpsInfo.fromJson(item))
-              .toList()
-          : null,
-    );
+    return fromJson(json);
   }
 }
 
@@ -79,26 +64,6 @@ class NodeReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "id", id);
-    returnOptions =
-        _addToReturnList(returnOptions, "certification", certification);
-    returnOptions =
-        _addToReturnList(returnOptions, "dedicatedFarm", dedicatedFarm);
-    returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
-    returnOptions = _addToReturnList(returnOptions, "gridVersion", gridVersion);
-    returnOptions = _addToReturnList(returnOptions, "name", name);
-    returnOptions =
-        _addToReturnList(returnOptions, "pricingPolicyID", pricingPolicyID);
-    returnOptions =
-        _addToReturnList(returnOptions, "stellarAddress", stellarAddress);
-    returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
-    returnOptions =
-        _addToReturnList(returnOptions, "publicIPs {", publicIPs != null);
-    returnOptions = _addToReturnList(
-        returnOptions, publicIPs.toString(), publicIPs != null);
-    returnOptions = _addToReturnList(returnOptions, "}", publicIPs != null);
-
-    return returnOptions;
+    return generateToString(this);
   }
 }

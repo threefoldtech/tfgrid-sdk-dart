@@ -78,19 +78,14 @@ class BaseContractReturnOptions {
     this.solutionProviderID = false,
   });
 
-  @override
-  String toString() {
-    String returnOptions = '';
-    returnOptions = _addToReturnList(returnOptions, 'id', id);
-    returnOptions = _addToReturnList(returnOptions, 'gridVersion', gridVersion);
-    returnOptions = _addToReturnList(returnOptions, 'contractID', contractID);
-    returnOptions = _addToReturnList(returnOptions, 'twinID', twinID);
-    returnOptions = _addToReturnList(returnOptions, 'state', state);
-    returnOptions = _addToReturnList(returnOptions, 'createdAt', createdAt);
-    returnOptions = _addToReturnList(
-        returnOptions, 'solutionProviderID', solutionProviderID);
-    return returnOptions;
-  }
+  factory BaseContractReturnOptions.fromJson(Map<String, dynamic> json) {  
+    return fromJson(json);  
+  }  
+
+  @override  
+  String toString() {  
+    return generateToString(this);  
+  }  
 }
 
 @reflector
@@ -191,20 +186,7 @@ class NodeContractReturnOptions extends BaseContractReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = super.toString();
-    returnOptions = _addToReturnList(returnOptions, 'nodeID', nodeID);
-    returnOptions =
-        _addToReturnList(returnOptions, 'deploymentData', deploymentData);
-    returnOptions =
-        _addToReturnList(returnOptions, 'deploymentHash', deploymentHash);
-    returnOptions =
-        _addToReturnList(returnOptions, 'numberOfPublicIPs', numberOfPublicIPs);
-    returnOptions = _addToReturnList(
-        returnOptions, 'resourcesUsed{', resourcesUsed != null);
-    returnOptions = _addToReturnList(
-        returnOptions, resourcesUsed.toString(), resourcesUsed != null);
-    returnOptions = _addToReturnList(returnOptions, '}', resourcesUsed != null);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -232,22 +214,7 @@ class NodeContract extends BaseContract {
   });
 
   factory NodeContract.fromJson(Map<String, dynamic> json) {
-    return NodeContract(
-      contractID: json['contractID'] ?? '',
-      twinID: json['twinID'] ?? 0,
-      state: json['state'] ?? '',
-      createdAt: json['createdAt'] ?? '',
-      solutionProviderID: json['solutionProviderID'] ?? 0,
-      nodeID: json['nodeID'] ?? 0,
-      deploymentData: json['deploymentData'] ?? '',
-      deploymentHash: json['deploymentHash'] ?? '',
-      numberOfPublicIPs: json['numberOfPublicIPs'] ?? 0,
-      gridVersion: json['gridVersion'] ?? 0,
-      id: json['id'] ?? '',
-      resourcesUsed: json['resourcesUsed'] != null
-          ? ContractUsedResources.fromJson(json['resourcesUsed'])
-          : null,
-    );
+    return fromJson(json);
   }
 
   @override
@@ -322,13 +289,7 @@ class ContractUsedResourcesReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = '';
-    returnOptions = _addToReturnList(returnOptions, 'hru', hru);
-    returnOptions = _addToReturnList(returnOptions, 'sru', sru);
-    returnOptions = _addToReturnList(returnOptions, 'cru', cru);
-    returnOptions = _addToReturnList(returnOptions, 'mru', mru);
-    returnOptions = _addToReturnList(returnOptions, 'id', id);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -411,13 +372,7 @@ class ContractBillReports {
   });
 
   factory ContractBillReports.fromJson(Map<String, dynamic> json) {
-    return ContractBillReports(
-      id: json['id'] ?? '',
-      contractID: BigInt.parse(json['contractID'] ?? 0),
-      discountLevel: parseDiscountLevel(json['discountReceived']),
-      amountBilled: json['amountBilled'] ?? '',
-      timeStamp: json['timestamp'] ?? '',
-    );
+    return fromJson(json);
   }
 
   @override
@@ -444,16 +399,7 @@ class ContractBillReportsReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = '';
-    returnOptions = _addToReturnList(returnOptions, 'id', id);
-    returnOptions = _addToReturnList(returnOptions, 'contractID', contractID);
-    returnOptions =
-        _addToReturnList(returnOptions, 'discountLevel', discountLevel);
-    returnOptions =
-        _addToReturnList(returnOptions, 'amountBilled', amountBilled);
-    returnOptions = _addToReturnList(returnOptions, 'timeStamp', timeStamp);
-
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -1376,7 +1322,7 @@ class ResourcesUsedQueryOptions {
 
   @override
   String toString() {
-    List<String> queryOptions = [];
+        List<String> queryOptions = [];
 
     _addToQueryList(queryOptions, "id_eq", idEq);
     _addToQueryList(queryOptions, "id_gt", idGt);
@@ -1604,16 +1550,16 @@ class RentContractQueryOptions extends BaseContractQueryOptions {
   String toString() {
     String queryString = super.toString();
 
-    List<String> queryOptions = [];
-    _addToQueryList(queryOptions, "nodeID_isNull", nodeIDIsNull);
-    _addToQueryList(queryOptions, "nodeID_eq", nodeIDEq);
-    _addToQueryList(queryOptions, "nodeID_not_eq", nodeIDNotEq);
-    _addToQueryList(queryOptions, "nodeID_gt", nodeIDGt);
-    _addToQueryList(queryOptions, "nodeID_gte", nodeIDGte);
-    _addToQueryList(queryOptions, "nodeID_lt", nodeIDLt);
-    _addToQueryList(queryOptions, "nodeID_lte", nodeIDLte);
-    _addToQueryList(queryOptions, "nodeID_in", nodeIDIn);
-    _addToQueryList(queryOptions, "nodeID_not_in", nodeIDNotIn);
+      List<String> queryOptions = [];
+      _addToQueryList(queryOptions, "nodeID_isNull", nodeIDIsNull);
+      _addToQueryList(queryOptions, "nodeID_eq", nodeIDEq);
+      _addToQueryList(queryOptions, "nodeID_not_eq", nodeIDNotEq);
+      _addToQueryList(queryOptions, "nodeID_gt", nodeIDGt);
+      _addToQueryList(queryOptions, "nodeID_gte", nodeIDGte);
+      _addToQueryList(queryOptions, "nodeID_lt", nodeIDLt);
+      _addToQueryList(queryOptions, "nodeID_lte", nodeIDLte);
+      _addToQueryList(queryOptions, "nodeID_in", nodeIDIn);
+      _addToQueryList(queryOptions, "nodeID_not_in", nodeIDNotIn);
 
     if (queryOptions.isNotEmpty) {
       if (queryString.isNotEmpty) {

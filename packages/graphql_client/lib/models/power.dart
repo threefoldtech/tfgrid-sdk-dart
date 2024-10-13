@@ -53,11 +53,7 @@ class NodePowerReturnOptions {
   });
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "state", state);
-    returnOptions = _addToReturnList(returnOptions, "target", target);
-    if (returnOptions != "") returnOptions = "power { \n $returnOptions } \n";
-    return returnOptions;
+    return generateToString(this);
   }
 }
 

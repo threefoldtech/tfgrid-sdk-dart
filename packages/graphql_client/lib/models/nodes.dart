@@ -953,44 +953,7 @@ class NodesReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "id", id);
-    returnOptions = _addToReturnList(returnOptions, "gridVersion", gridVersion);
-    returnOptions = _addToReturnList(returnOptions, "nodeID", nodeID);
-    returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
-    returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
-    if (location != null && location.toString() != "") {
-      returnOptions += "location { \n ${location.toString()} } \n";
-    }
-    returnOptions = _addToReturnList(returnOptions, "country", country);
-    returnOptions = _addToReturnList(returnOptions, "city", city);
-    if (publicConfig != null && publicConfig.toString() != "") {
-      returnOptions += "publicConfig { \n ${publicConfig.toString()} } \n";
-    }
-    if (resourcesTotal != null && resourcesTotal.toString() != "") {
-      returnOptions += "resourcesTotal { \n ${resourcesTotal.toString()} } \n";
-    }
-    returnOptions = _addToReturnList(returnOptions, "uptime", uptime);
-    returnOptions = _addToReturnList(returnOptions, "created", created);
-    returnOptions =
-        _addToReturnList(returnOptions, "farmingPolicyId", farmingPolicyId);
-    if (interfaces != null && interfaces.toString() != "") {
-      returnOptions += "interfaces { \n ${interfaces.toString()} } \n";
-    }
-    returnOptions =
-        _addToReturnList(returnOptions, "certification", certification);
-    returnOptions = _addToReturnList(returnOptions, "secure", secure);
-    returnOptions = _addToReturnList(returnOptions, "virtualized", virtualized);
-    returnOptions =
-        _addToReturnList(returnOptions, "serialNumber", serialNumber);
-    returnOptions = _addToReturnList(returnOptions, "createdAt", createdAt);
-    returnOptions = _addToReturnList(returnOptions, "updatedAt", updatedAt);
-    returnOptions =
-        _addToReturnList(returnOptions, "connectionPrice", connectionPrice);
-    if (power != null) returnOptions += power.toString();
-    returnOptions = _addToReturnList(returnOptions, "dedicated", dedicated);
-    returnOptions = _addToReturnList(returnOptions, "extraFee", extraFee);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -1049,47 +1012,7 @@ class Node {
   });
 
   factory Node.fromJson(Map<String, dynamic> json) {
-    return Node(
-      id: json['id'] ?? "",
-      gridVersion: json['gridVersion'] ?? 0,
-      nodeID: json['nodeID'] ?? 0,
-      farmID: json['farmID'] ?? 0,
-      twinID: json['twinID'] ?? 0,
-      location: json['location'] != null
-          ? Location.fromJson(json['location'] as Map<String, dynamic>)
-          : null,
-      country: json['country'] ?? "",
-      city: json['city'] ?? "",
-      publicConfig: json['publicConfig'] != null
-          ? PublicConfig.fromJson(json['publicConfig'] as Map<String, dynamic>)
-          : null,
-      resourcesTotal: json['resourcesTotal'] != null
-          ? NodeResourcesTotal.fromJson(
-              json['resourcesTotal'] as Map<String, dynamic>)
-          : null,
-      uptime: BigInt.parse(json['uptime'] ?? '0'),
-      created: json['created'] ?? 0,
-      farmingPolicyId: json['farmingPolicyId'] ?? 0,
-      interfaces: json['interfaces'] != null
-          ? (json['interfaces'] as List)
-              .map((i) => Interfaces.fromJson(i as Map<String, dynamic>))
-              .toList()
-          : null,
-      certification: json['certification'] != null
-          ? certificationFromJson(json['certification'])
-          : null,
-      secure: json['secure'] ?? false,
-      virtualized: json['virtualized'] ?? false,
-      serialNumber: json['serialNumber'] ?? "",
-      createdAt: BigInt.parse(json['createdAt'] ?? '0'),
-      updatedAt: BigInt.parse(json['updatedAt'] ?? '0'),
-      connectionPrice: json['connectionPrice'] ?? 0,
-      power: json['power'] != null
-          ? NodePower.fromJson(json['power'] as Map<String, dynamic>)
-          : null,
-      dedicated: json['dedicated'] ?? false,
-      extraFee: BigInt.parse(json['extraFee'] ?? '0'),
-    );
+    return fromJson(json);
   }
 
   @override
@@ -1108,10 +1031,7 @@ class NodeEdgeInfo {
   });
 
   factory NodeEdgeInfo.fromJson(Map<String, dynamic> json) {
-    return NodeEdgeInfo(
-      cursor: json['cursor'] ?? '',
-      node: json['node'] != null ? Node.fromJson(json['node']) : null,
-    );
+    return fromJson(json);
   }
 
   @override
@@ -1132,17 +1052,7 @@ class NodeConnectionsInfo {
   });
 
   factory NodeConnectionsInfo.fromJson(Map<String, dynamic> json) {
-    return NodeConnectionsInfo(
-      edges: json['edges'] != null
-          ? (json['edges'] as List)
-              .map((i) => NodeEdgeInfo.fromJson(i as Map<String, dynamic>))
-              .toList()
-          : null,
-      pageInfo: json['pageInfo'] != null
-          ? PageInfo.fromJson(json['pageInfo'] as Map<String, dynamic>)
-          : null,
-      totalCount: json['totalCount'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   @override
@@ -1165,14 +1075,7 @@ class NodesConnectionsQueryOptions {
   });
   @override
   String toString() {
-    List<String> queryString = [];
-    if (whereOptions != null && whereOptions.toString() != " ") {
-      queryString.add("where: {${whereOptions.toString()}}");
-    }
-    queryString.add("orderBy: $orderby");
-    if (first != null) queryString.add("first: $first");
-    if (after != null) queryString.add('after: "$after"');
-    return queryString.isNotEmpty ? "(${queryString.join(', ')})" : "";
+    return generateToString(this);
   }
 }
 
@@ -1188,14 +1091,7 @@ class NodeEdgeReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "cursor", cursor);
-    returnOptions = _addToReturnList(returnOptions, "node {", node != null);
-    returnOptions =
-        _addToReturnList(returnOptions, node.toString(), node != null);
-    returnOptions = _addToReturnList(returnOptions, "} ", node != null);
-    if (returnOptions != "") returnOptions = "edges { \n $returnOptions } \n";
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -1213,11 +1109,7 @@ class NodesConnectionsReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    if (edges != null) returnOptions += edges.toString();
-    if (pageInfo != null) returnOptions += pageInfo.toString();
-    returnOptions = _addToReturnList(returnOptions, "totalCount", totalCount);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -1297,17 +1189,7 @@ class NodeResourcesTotalReturnOptions {
   });
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "id", id);
-    returnOptions = _addToReturnList(returnOptions, "cru", cru);
-    returnOptions = _addToReturnList(returnOptions, "hru", hru);
-    returnOptions = _addToReturnList(returnOptions, "mru", mru);
-    returnOptions = _addToReturnList(returnOptions, "sru", sru);
-    returnOptions = _addToReturnList(returnOptions, "node {", node != null);
-    returnOptions =
-        _addToReturnList(returnOptions, node.toString(), node != null);
-    returnOptions = _addToReturnList(returnOptions, "} ", node != null);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -1330,16 +1212,7 @@ class NodeResourcesTotal {
   });
 
   factory NodeResourcesTotal.fromJson(Map<String, dynamic> json) {
-    return NodeResourcesTotal(
-      id: json['id'] ?? "",
-      node: json['node'] != null
-          ? Node.fromJson(json['node'] as Map<String, dynamic>)
-          : null,
-      hru: BigInt.parse(json['hru'] ?? '0'),
-      sru: BigInt.parse(json['sru'] ?? '0'),
-      cru: BigInt.parse(json['cru'] ?? '0'),
-      mru: BigInt.parse(json['mru'] ?? '0'),
-    );
+    return fromJson(json);
   }
 
   @override
@@ -1602,12 +1475,7 @@ class NodeResourcesTotalEdgeInfo {
   });
 
   factory NodeResourcesTotalEdgeInfo.fromJson(Map<String, dynamic> json) {
-    return NodeResourcesTotalEdgeInfo(
-      cursor: json['cursor'] ?? '',
-      node: json['node'] != null
-          ? NodeResourcesTotal.fromJson(json['node'] as Map<String, dynamic>)
-          : null,
-    );
+    return fromJson(json);
   }
 
   @override
@@ -1629,18 +1497,7 @@ class NodeResourcesTotalsConnectionInfo {
 
   factory NodeResourcesTotalsConnectionInfo.fromJson(
       Map<String, dynamic> json) {
-    return NodeResourcesTotalsConnectionInfo(
-      edges: json['edges'] != null
-          ? (json['edges'] as List)
-              .map((i) => NodeResourcesTotalEdgeInfo.fromJson(
-                  i as Map<String, dynamic>))
-              .toList()
-          : null,
-      pageInfo: json['pageInfo'] != null
-          ? PageInfo.fromJson(json['pageInfo'] as Map<String, dynamic>)
-          : null,
-      totalCount: json['totalCount'] ?? 0,
-    );
+    return fromJson(json);
   }
 
   @override
@@ -1686,14 +1543,7 @@ class NodeResourcesTotalEdgeReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "cursor", cursor);
-    returnOptions = _addToReturnList(returnOptions, "node {", node != null);
-    returnOptions =
-        _addToReturnList(returnOptions, node.toString(), node != null);
-    returnOptions = _addToReturnList(returnOptions, "} ", node != null);
-    if (returnOptions != "") returnOptions = "edges { \n $returnOptions } \n";
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -1711,10 +1561,6 @@ class NodeResourcesTotalsConnectionReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    if (edges != null) returnOptions += edges.toString();
-    if (pageInfo != null) returnOptions += pageInfo.toString();
-    returnOptions = _addToReturnList(returnOptions, "totalCount", totalCount);
-    return returnOptions;
+    return generateToString(this);
   }
 }

@@ -21,18 +21,7 @@ class PublicConfigReturnOptions {
   });
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "id", id);
-    returnOptions = _addToReturnList(returnOptions, "ipv4", ipv4);
-    returnOptions = _addToReturnList(returnOptions, "ipv6", ipv6);
-    returnOptions = _addToReturnList(returnOptions, "gw4", gw4);
-    returnOptions = _addToReturnList(returnOptions, "gw6", gw6);
-    returnOptions = _addToReturnList(returnOptions, "domain", domain);
-    returnOptions = _addToReturnList(returnOptions, "node {", node != null);
-    returnOptions =
-        _addToReturnList(returnOptions, node.toString(), node != null);
-    returnOptions = _addToReturnList(returnOptions, "} ", node != null);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
@@ -57,17 +46,7 @@ class PublicConfig {
   });
 
   factory PublicConfig.fromJson(Map<String, dynamic> json) {
-    return PublicConfig(
-      id: json['id'] ?? "",
-      node: json['node'] != null
-          ? Node.fromJson(json['node'] as Map<String, dynamic>)
-          : null,
-      ipv4: json['ipv4'] ?? "",
-      ipv6: json['ipv6'] ?? "",
-      gw4: json['gw4'] ?? "",
-      gw6: json['gw6'] ?? "",
-      domain: json['domain'] ?? "",
-    );
+    return fromJson(json);
   }
 
   @override

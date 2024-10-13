@@ -225,7 +225,6 @@ class TwinQueryWhereOptions {
 
   @override
   String toString() {
-    final x = buildQueryOptions(this);
     List<String> queryOptions = [];
     //ids
     _addToQueryList(queryOptions, "id_isNull", idIsNull);

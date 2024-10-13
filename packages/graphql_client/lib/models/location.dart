@@ -13,11 +13,7 @@ class LocationReturnOptions {
   });
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "id", id);
-    returnOptions = _addToReturnList(returnOptions, "longitude", longitude);
-    returnOptions = _addToReturnList(returnOptions, "latitude", latitude);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 

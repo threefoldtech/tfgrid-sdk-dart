@@ -17,15 +17,7 @@ class Interfaces {
   });
 
   factory Interfaces.fromJson(Map<String, dynamic> json) {
-    return Interfaces(
-      id: json['id'] ?? "",
-      node: json['node'] != null
-          ? Node.fromJson(json['node'] as Map<String, dynamic>)
-          : null,
-      name: json['name'] ?? "",
-      mac: json['mac'] ?? "",
-      ips: json['ips'] ?? "",
-    );
+    return fromJson(json);
   }
 
   @override
@@ -52,16 +44,7 @@ class InterfacesReturnOptions {
 
   @override
   String toString() {
-    String returnOptions = "";
-    returnOptions = _addToReturnList(returnOptions, "id", id);
-    returnOptions = _addToReturnList(returnOptions, "name", name);
-    returnOptions = _addToReturnList(returnOptions, "mac", mac);
-    returnOptions = _addToReturnList(returnOptions, "ips", ips);
-    returnOptions = _addToReturnList(returnOptions, "node {", node != null);
-    returnOptions =
-        _addToReturnList(returnOptions, node.toString(), node != null);
-    returnOptions = _addToReturnList(returnOptions, "} ", node != null);
-    return returnOptions;
+    return generateToString(this);
   }
 }
 
