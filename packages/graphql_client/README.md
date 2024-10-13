@@ -38,7 +38,7 @@ void main() async {
     idEq: "farm-id",
   );
 
-  Future<List<FarmInfo>> farms = await graphQLClient.farms.listFarms(farmsQueryOptions, farmsReturnOptions);
+  Future<List<FarmInfo>> farms = await graphQLClient.farms.list(farmsQueryOptions, farmsReturnOptions);
 
   for (var farm in farms) {
     print(farm);
