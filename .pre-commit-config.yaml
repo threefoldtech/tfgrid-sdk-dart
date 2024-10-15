@@ -1,0 +1,18 @@
+repos:
+  - repo: https://github.com/dart-lang/linter
+    hooks:
+      - id: dart
+        name: Dart linter
+        entry: dartanalyzer --dart-sdk=dart-sdk/bin --exclude-paths=test/
+        language: system
+        types: [dart]
+      - id: format
+        name: Dart formatter
+        language: system
+        types: [dart]
+        entry: dartfmt -n
+      - id: fix
+        name: Apply fixes (optional)
+        entry: dart fix --apply
+        language: system
+        types: [dart]
