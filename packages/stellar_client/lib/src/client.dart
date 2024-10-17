@@ -297,7 +297,10 @@ class Client {
     final accountBalances = await this.getBalance();
     accountBalances.firstWhere((b) => b.assetCode == currency && double.parse(b.balance) > double.parse(amount),
       orElse: () {
-        throw Exception('Balance is not enough.');
+        if (accountBalances.contains(currency)) {
+          throw Exception('Balance is not enough.');
+        }
+          throw Exception('Balance with asset code ${currency} not found.');
       }
     );
     // check that receiver account exists
@@ -473,10 +476,5 @@ class Client {
     } catch (e) {
       throw Exception("Couldn't get memo text due to ${e}");
     }
-  }
-
-  @override
-  String toString() {
-    return 'StellarClient:(_network: $_network,_sdk: ${this._sdk}, _keyPair: $_keyPair, _currencies: $_currencies)';
   }
 }
