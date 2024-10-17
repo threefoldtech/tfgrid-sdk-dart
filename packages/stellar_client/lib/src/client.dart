@@ -292,9 +292,19 @@ class Client {
       required String currency,
       String? memoText,
       required bool funded}) async {
+
+    // check if I have enough balance
+    final accountBalances = await this.getBalance();
+    accountBalances.firstWhere((b) => b.assetCode == currency && double.parse(b.balance) > double.parse(amount),
+      orElse: () {
+        if (accountBalances.contains(currency)) {
+          throw Exception('Balance is not enough.');
+        }
+          throw Exception('Balance with asset code ${currency} not found.');
+      }
+    );
     // check that receiver account exists
     final receiver = await _sdk.accounts.account(accountId);
-
     // check that asset exists
     var specificBalance = receiver.balances.firstWhere(
       (balance) => balance.assetCode == currency,
