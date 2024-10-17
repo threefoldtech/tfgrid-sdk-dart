@@ -1040,7 +1040,6 @@ class NodeEdgeInfo {
   }
 }
 
-
 @reflector
 class NodeConnectionsInfo {
   List<NodeEdgeInfo>? edges;

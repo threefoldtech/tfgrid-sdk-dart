@@ -357,7 +357,8 @@ class Client {
         Uri.parse(
             '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'transaction': fundedTransaction.toEnvelopeXdrBase64()}),
+        body: jsonEncode(
+            {'transaction': fundedTransaction.toEnvelopeXdrBase64()}),
       );
 
       print(response.body);
@@ -366,8 +367,7 @@ class Client {
     }
   }
 
-  Future<List<ITransaction>> getTransactions(
-      {String? assetCodeFilter}) async {
+  Future<List<ITransaction>> getTransactions({String? assetCodeFilter}) async {
     Page<OperationResponse> payments = await _sdk.payments
         .forAccount(accountId)
         .order(RequestBuilderOrder.DESC)
@@ -377,22 +377,23 @@ class Client {
     if (payments.records != null && payments.records!.isNotEmpty) {
       for (OperationResponse response in payments.records!) {
         if (response is PaymentOperationResponse) {
-          final memoText = await this.getMemoText(response.links?.transaction?.toJson()["href"]);
+          final memoText = await this
+              .getMemoText(response.links?.transaction?.toJson()["href"]);
           String assetCode = response.assetCode ?? 'XLM';
           if (assetCodeFilter == null || assetCode == assetCodeFilter) {
             final details = PaymentTransaction(
-              hash: response.transactionHash!,
-              from: response.from!.accountId,
-              to: response.to!.accountId,
-              asset: response.assetCode.toString(),
-              amount: response.amount!,
-              type: response.to!.accountId == this.accountId
-                  ? TransactionType.Receive
-                  : TransactionType.Payment,
-              status: response.transactionSuccessful!,
-              date: DateTime.parse(response.createdAt!).toLocal().toString(),
-              memo: memoText);
-            
+                hash: response.transactionHash!,
+                from: response.from!.accountId,
+                to: response.to!.accountId,
+                asset: response.assetCode.toString(),
+                amount: response.amount!,
+                type: response.to!.accountId == this.accountId
+                    ? TransactionType.Receive
+                    : TransactionType.Payment,
+                status: response.transactionSuccessful!,
+                date: DateTime.parse(response.createdAt!).toLocal().toString(),
+                memo: memoText);
+
             transactionDetails.add(details);
           }
         } else {
@@ -458,7 +459,8 @@ class Client {
   Future<String> getMemoText(String url) async {
     try {
       final response = await http.get(
-          Uri.parse(url), headers: {'Content-Type': 'application/json'},
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
       );
       final body = jsonDecode(response.body);
       final memoText = body['memo'] ?? "";

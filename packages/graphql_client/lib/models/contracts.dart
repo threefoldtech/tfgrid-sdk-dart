@@ -78,14 +78,14 @@ class BaseContractReturnOptions {
     this.solutionProviderID = false,
   });
 
-  factory BaseContractReturnOptions.fromJson(Map<String, dynamic> json) {  
-    return fromJson(json);  
-  }  
+  factory BaseContractReturnOptions.fromJson(Map<String, dynamic> json) {
+    return fromJson(json);
+  }
 
-  @override  
-  String toString() {  
-    return generateToString(this);  
-  }  
+  @override
+  String toString() {
+    return generateToString(this);
+  }
 }
 
 @reflector
@@ -1322,7 +1322,7 @@ class ResourcesUsedQueryOptions {
 
   @override
   String toString() {
-        List<String> queryOptions = [];
+    List<String> queryOptions = [];
 
     _addToQueryList(queryOptions, "id_eq", idEq);
     _addToQueryList(queryOptions, "id_gt", idGt);
@@ -1550,16 +1550,16 @@ class RentContractQueryOptions extends BaseContractQueryOptions {
   String toString() {
     String queryString = super.toString();
 
-      List<String> queryOptions = [];
-      _addToQueryList(queryOptions, "nodeID_isNull", nodeIDIsNull);
-      _addToQueryList(queryOptions, "nodeID_eq", nodeIDEq);
-      _addToQueryList(queryOptions, "nodeID_not_eq", nodeIDNotEq);
-      _addToQueryList(queryOptions, "nodeID_gt", nodeIDGt);
-      _addToQueryList(queryOptions, "nodeID_gte", nodeIDGte);
-      _addToQueryList(queryOptions, "nodeID_lt", nodeIDLt);
-      _addToQueryList(queryOptions, "nodeID_lte", nodeIDLte);
-      _addToQueryList(queryOptions, "nodeID_in", nodeIDIn);
-      _addToQueryList(queryOptions, "nodeID_not_in", nodeIDNotIn);
+    List<String> queryOptions = [];
+    _addToQueryList(queryOptions, "nodeID_isNull", nodeIDIsNull);
+    _addToQueryList(queryOptions, "nodeID_eq", nodeIDEq);
+    _addToQueryList(queryOptions, "nodeID_not_eq", nodeIDNotEq);
+    _addToQueryList(queryOptions, "nodeID_gt", nodeIDGt);
+    _addToQueryList(queryOptions, "nodeID_gte", nodeIDGte);
+    _addToQueryList(queryOptions, "nodeID_lt", nodeIDLt);
+    _addToQueryList(queryOptions, "nodeID_lte", nodeIDLte);
+    _addToQueryList(queryOptions, "nodeID_in", nodeIDIn);
+    _addToQueryList(queryOptions, "nodeID_not_in", nodeIDNotIn);
 
     if (queryOptions.isNotEmpty) {
       if (queryString.isNotEmpty) {
