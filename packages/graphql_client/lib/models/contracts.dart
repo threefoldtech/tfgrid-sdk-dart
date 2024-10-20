@@ -372,7 +372,13 @@ class ContractBillReports {
   });
 
   factory ContractBillReports.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return ContractBillReports(
+      id: json['id'] ?? '',
+      contractID: BigInt.parse(json['contractID'] ?? 0),
+      discountLevel: parseDiscountLevel(json['discountReceived']),
+      amountBilled: json['amountBilled'] ?? '',
+      timeStamp: json['timestamp'] ?? '',
+    );
   }
 
   @override
