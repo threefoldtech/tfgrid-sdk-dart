@@ -11,6 +11,6 @@ void main() async {
           stateIn: [ContractStates.Created],
           limit: 5,
           orderBy: ContractsOrderByOptions.contractID_ASC),
-      NameContractReturnOptions());
+      NameContractReturnOptions(id: true));
   print(res);
 }
