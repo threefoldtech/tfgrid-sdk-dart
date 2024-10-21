@@ -20,12 +20,22 @@ enum FarmsOrderByOptions {
   stellarAddress_ASC,
   stellarAddress_DESC,
   dedicatedFarm_ASC,
-  dedicatedFarm_DESC,
+  dedicatedFarm_DESC;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 enum Certification {
   NotCertified,
-  Gold,
+  Gold;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 @reflector

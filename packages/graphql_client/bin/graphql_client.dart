@@ -6,6 +6,11 @@ void main() async {
   initializeReflectable();
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  final res = new NodeConnectionsInfo(pageInfo: PageInfo(hasNextPage: true));
+  final res = await graphQLClient.contracts.listNameContracts(
+      NameContractQueryOptions(
+          stateIn: [ContractStates.Created],
+          limit: 5,
+          orderBy: ContractsOrderByOptions.contractID_ASC),
+      NameContractReturnOptions());
   print(res);
 }

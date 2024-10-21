@@ -6,7 +6,12 @@ enum ContractStates {
   Created,
   Deleted,
   OutOfFunds,
-  GracePeriod,
+  GracePeriod;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 enum DiscountLevel {
@@ -38,7 +43,12 @@ enum ContractsOrderByOptions {
   createdAt_ASC,
   createdAt_DESC,
   solutionProviderID_ASC,
-  solutionProviderID_DESC,
+  solutionProviderID_DESC;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 DiscountLevel parseDiscountLevel(String level) {
