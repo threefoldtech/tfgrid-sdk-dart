@@ -196,7 +196,20 @@ class NodeContractReturnOptions extends BaseContractReturnOptions {
 
   @override
   String toString() {
-    return generateToString(this);
+    String returnOptions = super.toString();
+    returnOptions = _addToReturnList(returnOptions, 'nodeID', nodeID);
+    returnOptions =
+        _addToReturnList(returnOptions, 'deploymentData', deploymentData);
+    returnOptions =
+        _addToReturnList(returnOptions, 'deploymentHash', deploymentHash);
+    returnOptions =
+        _addToReturnList(returnOptions, 'numberOfPublicIPs', numberOfPublicIPs);
+    returnOptions = _addToReturnList(
+        returnOptions, 'resourcesUsed{', resourcesUsed != null);
+    returnOptions = _addToReturnList(
+        returnOptions, resourcesUsed.toString(), resourcesUsed != null);
+    returnOptions = _addToReturnList(returnOptions, '}', resourcesUsed != null);
+    return returnOptions;
   }
 }
 

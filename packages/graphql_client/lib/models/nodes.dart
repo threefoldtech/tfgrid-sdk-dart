@@ -953,7 +953,44 @@ class NodesReturnOptions {
 
   @override
   String toString() {
-    return generateToString(this);
+    String returnOptions = "";
+    returnOptions = _addToReturnList(returnOptions, "id", id);
+    returnOptions = _addToReturnList(returnOptions, "gridVersion", gridVersion);
+    returnOptions = _addToReturnList(returnOptions, "nodeID", nodeID);
+    returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
+    returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
+    if (location != null && location.toString() != "") {
+      returnOptions += "location { \n ${location.toString()} } \n";
+    }
+    returnOptions = _addToReturnList(returnOptions, "country", country);
+    returnOptions = _addToReturnList(returnOptions, "city", city);
+    if (publicConfig != null && publicConfig.toString() != "") {
+      returnOptions += "publicConfig { \n ${publicConfig.toString()} } \n";
+    }
+    if (resourcesTotal != null && resourcesTotal.toString() != "") {
+      returnOptions += "resourcesTotal { \n ${resourcesTotal.toString()} } \n";
+    }
+    returnOptions = _addToReturnList(returnOptions, "uptime", uptime);
+    returnOptions = _addToReturnList(returnOptions, "created", created);
+    returnOptions =
+        _addToReturnList(returnOptions, "farmingPolicyId", farmingPolicyId);
+    if (interfaces != null && interfaces.toString() != "") {
+      returnOptions += "interfaces { \n ${interfaces.toString()} } \n";
+    }
+    returnOptions =
+        _addToReturnList(returnOptions, "certification", certification);
+    returnOptions = _addToReturnList(returnOptions, "secure", secure);
+    returnOptions = _addToReturnList(returnOptions, "virtualized", virtualized);
+    returnOptions =
+        _addToReturnList(returnOptions, "serialNumber", serialNumber);
+    returnOptions = _addToReturnList(returnOptions, "createdAt", createdAt);
+    returnOptions = _addToReturnList(returnOptions, "updatedAt", updatedAt);
+    returnOptions =
+        _addToReturnList(returnOptions, "connectionPrice", connectionPrice);
+    if (power != null) returnOptions += power.toString();
+    returnOptions = _addToReturnList(returnOptions, "dedicated", dedicated);
+    returnOptions = _addToReturnList(returnOptions, "extraFee", extraFee);
+    return returnOptions;
   }
 }
 

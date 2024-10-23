@@ -21,7 +21,18 @@ class PublicConfigReturnOptions {
   });
   @override
   String toString() {
-    return generateToString(this);
+    String returnOptions = "";
+    returnOptions = _addToReturnList(returnOptions, "id", id);
+    returnOptions = _addToReturnList(returnOptions, "ipv4", ipv4);
+    returnOptions = _addToReturnList(returnOptions, "ipv6", ipv6);
+    returnOptions = _addToReturnList(returnOptions, "gw4", gw4);
+    returnOptions = _addToReturnList(returnOptions, "gw6", gw6);
+    returnOptions = _addToReturnList(returnOptions, "domain", domain);
+    returnOptions = _addToReturnList(returnOptions, "node {", node != null);
+    returnOptions =
+        _addToReturnList(returnOptions, node.toString(), node != null);
+    returnOptions = _addToReturnList(returnOptions, "} ", node != null);
+    return returnOptions;
   }
 }
 

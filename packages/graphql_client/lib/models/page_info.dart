@@ -40,6 +40,15 @@ class PageInfoReturnOptions {
 
   @override
   String toString() {
-    return generateToString(this);
+    String returnOptions = "";
+    returnOptions = _addToReturnList(returnOptions, "endCursor", endCursor);
+    returnOptions = _addToReturnList(returnOptions, "hasNextPage", hasNextPage);
+    returnOptions =
+        _addToReturnList(returnOptions, "hasPreviousPage", hasPreviousPage);
+    returnOptions = _addToReturnList(returnOptions, "startCursor", startCursor);
+    if (returnOptions != "") {
+      returnOptions = "pageInfo { \n $returnOptions } \n";
+    }
+    return returnOptions;
   }
 }

@@ -79,6 +79,25 @@ class NodeReturnOptions {
 
   @override
   String toString() {
-    return generateToString(this);
+    String returnOptions = "";
+    returnOptions = _addToReturnList(returnOptions, "id", id);
+    returnOptions =
+        _addToReturnList(returnOptions, "certification", certification);
+    returnOptions =
+        _addToReturnList(returnOptions, "dedicatedFarm", dedicatedFarm);
+    returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
+    returnOptions = _addToReturnList(returnOptions, "gridVersion", gridVersion);
+    returnOptions = _addToReturnList(returnOptions, "name", name);
+    returnOptions =
+        _addToReturnList(returnOptions, "pricingPolicyID", pricingPolicyID);
+    returnOptions =
+        _addToReturnList(returnOptions, "stellarAddress", stellarAddress);
+    returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
+    returnOptions =
+        _addToReturnList(returnOptions, "publicIPs {", publicIPs != null);
+    returnOptions = _addToReturnList(
+        returnOptions, publicIPs.toString(), publicIPs != null);
+    returnOptions = _addToReturnList(returnOptions, "}", publicIPs != null);
+    return returnOptions;
   }
 }
