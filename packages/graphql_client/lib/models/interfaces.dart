@@ -17,7 +17,15 @@ class Interfaces {
   });
 
   factory Interfaces.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return Interfaces(
+      id: json['id'] ?? "",
+      node: json['node'] != null
+          ? Node.fromJson(json['node'] as Map<String, dynamic>)
+          : null,
+      name: json['name'] ?? "",
+      mac: json['mac'] ?? "",
+      ips: json['ips'] ?? "",
+    );
   }
 
   @override
