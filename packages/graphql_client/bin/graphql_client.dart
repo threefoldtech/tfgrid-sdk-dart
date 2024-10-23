@@ -6,7 +6,10 @@ void main() async {
   // initializeReflectable();
   final graphQLClient = GraphQLClient('https://graphql.dev.grid.tf/graphql');
 
-  final res = await graphQLClient.contracts.listNameContracts(
-      NameContractQueryOptions(), NameContractReturnOptions());
+  final res = await graphQLClient.twins.twinsConnections(
+      TwinConnectionsReturnOptions(),
+      TwinConnectionsQueryOptions(
+          whereOptions: TwinQueryWhereOptions(idEq: "89")));
+
   print(res);
 }

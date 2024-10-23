@@ -32,7 +32,22 @@ class NodeInfo {
   }
 
   factory NodeInfo.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return NodeInfo(
+      id: json['id'] ?? '',
+      certification: json['certification'] ?? '',
+      dedicatedFarm: json['dedicatedFarm'] ?? false,
+      farmID: json['farmID'] ?? 0,
+      gridVersion: json['gridVersion'] ?? 0,
+      name: json['name'] ?? '',
+      pricingPolicyID: json['pricingPolicyID'] ?? 0,
+      stellarAddress: json['stellarAddress'] ?? '',
+      twinID: json['twinID'] ?? 0,
+      publicIPs: json['publicIPs'] != null
+          ? (json['publicIPs'] as List<dynamic>)
+              .map((item) => PublicIpsInfo.fromJson(item))
+              .toList()
+          : null,
+    );
   }
 }
 

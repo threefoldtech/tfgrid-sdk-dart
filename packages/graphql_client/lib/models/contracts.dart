@@ -6,7 +6,12 @@ enum ContractStates {
   Created,
   Deleted,
   OutOfFunds,
-  GracePeriod,
+  GracePeriod;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 enum DiscountLevel {
@@ -38,7 +43,12 @@ enum ContractsOrderByOptions {
   createdAt_ASC,
   createdAt_DESC,
   solutionProviderID_ASC,
-  solutionProviderID_DESC,
+  solutionProviderID_DESC;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 DiscountLevel parseDiscountLevel(String level) {
@@ -214,7 +224,22 @@ class NodeContract extends BaseContract {
   });
 
   factory NodeContract.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return NodeContract(
+      contractID: json['contractID'] ?? '',
+      twinID: json['twinID'] ?? 0,
+      state: json['state'] ?? '',
+      createdAt: json['createdAt'] ?? '',
+      solutionProviderID: json['solutionProviderID'] ?? 0,
+      nodeID: json['nodeID'] ?? 0,
+      deploymentData: json['deploymentData'] ?? '',
+      deploymentHash: json['deploymentHash'] ?? '',
+      numberOfPublicIPs: json['numberOfPublicIPs'] ?? 0,
+      gridVersion: json['gridVersion'] ?? 0,
+      id: json['id'] ?? '',
+      resourcesUsed: json['resourcesUsed'] != null
+          ? ContractUsedResources.fromJson(json['resourcesUsed'])
+          : null,
+    );
   }
 
   @override
@@ -372,7 +397,13 @@ class ContractBillReports {
   });
 
   factory ContractBillReports.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return ContractBillReports(
+      id: json['id'] ?? '',
+      contractID: BigInt.parse(json['contractID'] ?? 0),
+      discountLevel: parseDiscountLevel(json['discountReceived']),
+      amountBilled: json['amountBilled'] ?? '',
+      timeStamp: json['timestamp'] ?? '',
+    );
   }
 
   @override
