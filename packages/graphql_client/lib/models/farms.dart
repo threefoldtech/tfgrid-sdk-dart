@@ -64,7 +64,25 @@ class FarmsReturnOptions {
 
   @override
   String toString() {
-    return generateToString(this);
+    String returnOptions = "";
+    returnOptions = _addToReturnList(returnOptions, "id", id);
+    returnOptions = _addToReturnList(returnOptions, "farmID", farmID);
+    returnOptions = _addToReturnList(returnOptions, "name", name);
+    returnOptions =
+        _addToReturnList(returnOptions, "certification", certification);
+    returnOptions =
+        _addToReturnList(returnOptions, "dedicatedFarm", dedicatedFarm);
+    returnOptions =
+        _addToReturnList(returnOptions, "pricingPolicyID", pricingPolicyID);
+    returnOptions =
+        _addToReturnList(returnOptions, "stellarAddress", stellarAddress);
+    returnOptions = _addToReturnList(returnOptions, "twinID", twinID);
+    returnOptions =
+        _addToReturnList(returnOptions, "publicIPs {", publicIps != null);
+    returnOptions = _addToReturnList(
+        returnOptions, publicIps.toString(), publicIps != null);
+    returnOptions = _addToReturnList(returnOptions, "}", publicIps != null);
+    return returnOptions;
   }
 }
 
@@ -843,7 +861,14 @@ class FarmsConnectionInfo {
   });
 
   factory FarmsConnectionInfo.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return FarmsConnectionInfo(
+      totalCount: json['totalCount'] ?? 0,
+      pageInfo:
+          json['pageInfo'] != null ? PageInfo.fromJson(json['pageInfo']) : null,
+      edges: json['edges'] != null
+          ? (json['edges'] as List).map((e) => EdgesInfo.fromJson(e)).toList()
+          : null,
+    );
   }
 
   @override

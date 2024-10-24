@@ -196,7 +196,20 @@ class NodeContractReturnOptions extends BaseContractReturnOptions {
 
   @override
   String toString() {
-    return generateToString(this);
+    String returnOptions = super.toString();
+    returnOptions = _addToReturnList(returnOptions, 'nodeID', nodeID);
+    returnOptions =
+        _addToReturnList(returnOptions, 'deploymentData', deploymentData);
+    returnOptions =
+        _addToReturnList(returnOptions, 'deploymentHash', deploymentHash);
+    returnOptions =
+        _addToReturnList(returnOptions, 'numberOfPublicIPs', numberOfPublicIPs);
+    returnOptions = _addToReturnList(
+        returnOptions, 'resourcesUsed{', resourcesUsed != null);
+    returnOptions = _addToReturnList(
+        returnOptions, resourcesUsed.toString(), resourcesUsed != null);
+    returnOptions = _addToReturnList(returnOptions, '}', resourcesUsed != null);
+    return returnOptions;
   }
 }
 
@@ -224,7 +237,22 @@ class NodeContract extends BaseContract {
   });
 
   factory NodeContract.fromJson(Map<String, dynamic> json) {
-    return fromJson(json);
+    return NodeContract(
+      contractID: json['contractID'] ?? '',
+      twinID: json['twinID'] ?? 0,
+      state: json['state'] ?? '',
+      createdAt: json['createdAt'] ?? '',
+      solutionProviderID: json['solutionProviderID'] ?? 0,
+      nodeID: json['nodeID'] ?? 0,
+      deploymentData: json['deploymentData'] ?? '',
+      deploymentHash: json['deploymentHash'] ?? '',
+      numberOfPublicIPs: json['numberOfPublicIPs'] ?? 0,
+      gridVersion: json['gridVersion'] ?? 0,
+      id: json['id'] ?? '',
+      resourcesUsed: json['resourcesUsed'] != null
+          ? ContractUsedResources.fromJson(json['resourcesUsed'])
+          : null,
+    );
   }
 
   @override

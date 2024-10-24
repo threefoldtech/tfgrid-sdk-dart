@@ -500,6 +500,7 @@ class TwinInfo {
   }
 }
 
+@reflector
 class TwinConnectionsEdgeInfo {
   String? cursor;
   TwinInfo? node;
@@ -524,6 +525,7 @@ class TwinConnectionsEdgeInfo {
   }
 }
 
+@reflector
 class TwinConnectionsInfo {
   List<TwinConnectionsEdgeInfo>? edges;
   PageInfo? pageInfo;

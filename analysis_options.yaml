@@ -5,4 +5,3 @@ analyzer:
     - packages/tfchain_client/lib/generated/**
     - packages/tfchain_client/pubspec.yaml
     - pubspec.yaml
-    - packages/graphql_client/bin/graphql_client.dart
