@@ -11,23 +11,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dart: [3.4.0]
 
     steps:
       - name: Set up Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Set up Dart
-        uses: dart-lang/setup-dart@v1.6.5
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1.6.0
         with:
-          sdk: ${{ matrix.dart }}
-
-      - name: Set up Flutter
+          sdk: "3.4.0"
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.16.4" 
+          flutter-version: "3.16.4"
 
       - name: Install Melos
         run: dart pub global activate melos
