@@ -17,21 +17,37 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up FVM
-        id: fvm-config-action
+        id: fvm
         uses: kuhnroyal/flutter-fvm-config-action/config@v3
-        env:
-          DART_SDK_PATH: /home/runner/work/tfgrid-sdk-dart/tfgrid-sdk-dart/.fvm/flutter_sdk/bin/dart
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+          flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm.outputs.FLUTTER_CHANNEL }}
+
+      - name: Create flutter symbolic link
+        run: |
+            echo "FLUTTER_ROOT is set to: $FLUTTER_ROOT"
+            echo "BUILD_DIR is set to: $BUILD_DIR"
+
+            if [ -d "$BUILD_DIR/.fvm/" ]; then
+              echo "$BUILD_DIR/.fvm/ exists."
+            else
+              echo "$BUILD_DIR/.fvm/ does not exist, creating it now."
+              mkdir -p $BUILD_DIR/.fvm/
+            fi
+
+            ln -s $FLUTTER_ROOT $BUILD_DIR/.fvm/flutter_sdk
+            echo "Symbolic link created."
+            echo "Verifying symbolic link..."
+            ls -l $BUILD_DIR/.fvm/flutter_sdk
+            $BUILD_DIR/.fvm/flutter_sdk/bin/flutter --version
 
       - name: Install Melos
-        run: $DART_SDK_PATH/bin/dart pub global activate melos
+        run: dart pub global activate melos
 
       - name: Install dependencies
-        run: $DART_SDK_PATH/bin/dart pub global run melos bootstrap
+        run: melos bootstrap
 
       - name: Analyze
-        run: $DART_SDK_PATH/bin/dart analyze .
+        run: dart analyze .
