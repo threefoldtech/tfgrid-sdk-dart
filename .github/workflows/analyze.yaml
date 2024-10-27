@@ -25,10 +25,11 @@ jobs:
           flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
           channel: ${{ steps.fvm.outputs.FLUTTER_CHANNEL }}
 
-      - name: Echo flutter envs
+      - name: Echo flutter outputs
         run: |
-          echo ${{ steps.fvm.outputs.FLUTTER_VERSION }}
-          echo ${{ steps.fvm.outputs.FLUTTER_CHANNEL }}
+          echo ${{ steps.fvm.outputs }}
+          echo ${{ steps.fvm.outcome }}
+          echo ${{ steps.fvm.conclusion }}
 
       - name: Install Melos
         run: /home/runner/work/tfgrid-sdk-dart/.fvm/flutter_sdk/bin/dart pub global activate melos
