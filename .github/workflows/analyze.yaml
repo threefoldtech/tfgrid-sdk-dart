@@ -18,11 +18,17 @@ jobs:
     steps:
       - name: Set up Repository
         uses: actions/checkout@v3
+
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1.6.5
         with:
           sdk: ${{ matrix.dart }}
-   
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.16.4" 
+
       - name: Install Melos
         run: dart pub global activate melos
 
