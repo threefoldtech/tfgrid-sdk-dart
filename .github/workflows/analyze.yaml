@@ -19,8 +19,8 @@ jobs:
       - name: Set up FVM
         id: fvm-config-action
         uses: kuhnroyal/flutter-fvm-config-action/config@v3
-        with:
-          path: "./.fvmrc"
+        env:
+          DART_SDK_PATH: /home/runner/work/tfgrid-sdk-dart/tfgrid-sdk-dart/.fvm/flutter_sdk/bin/dart
 
       - uses: subosito/flutter-action@v2
         with:
@@ -28,10 +28,10 @@ jobs:
           channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
 
       - name: Install Melos
-        run: dart pub global activate melos
+        run: $DART_SDK_PATH/bin/dart pub global activate melos
 
       - name: Install dependencies
-        run: dart pub global run melos bootstrap
+        run: $DART_SDK_PATH/bin/dart pub global run melos bootstrap
 
       - name: Analyze
-        run: dart analyze .
+        run: $DART_SDK_PATH/bin/dart analyze .
