@@ -16,30 +16,9 @@ jobs:
       - name: Set up Repository
         uses: actions/checkout@v3
 
-      - name: Set up FVM
-        id: fvm
-        uses: kuhnroyal/flutter-fvm-config-action/config@v3
-
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
-          channel: ${{ steps.fvm.outputs.FLUTTER_CHANNEL }}
-
-      - name: Create Flutter symbolic link
-        run: |
-          echo "FLUTTER_ROOT is set to: $FLUTTER_ROOT"
-          if [ -d "/tmp/.fvm/" ]; then
-          echo "/tmp/.fvm/ exists."
-          else
-          echo "/tmp/.fvm/ does not exist, creating it now."
-          mkdir -p /tmp/.fvm/
-          fi
-
-          ln -s $FLUTTER_ROOT /tmp/.fvm/flutter_sdk
-          echo "Symbolic link created."
-          echo "Verifying symbolic link..."
-          ls -l /tmp/.fvm/flutter_sdk
-          /tmp/.fvm/flutter_sdk/bin/flutter --version
+          flutter-version: "3.22.0"
 
       - name: Install Melos
         run: dart pub global activate melos

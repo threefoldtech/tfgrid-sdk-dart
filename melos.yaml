@@ -1,5 +1,4 @@
 name: tfgrid_sdk_dart_monorepo
-sdkPath: .fvm/flutter_sdk
 packages:
   - packages/**
 

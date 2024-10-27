@@ -384,24 +384,24 @@ class Client {
         .execute();
     List<ITransaction> transactionDetails = [];
 
-    if (payments.records != null && payments.records!.isNotEmpty) {
-      for (OperationResponse response in payments.records!) {
+    if (payments.records.isNotEmpty) {
+      for (OperationResponse response in payments.records) {
         if (response is PaymentOperationResponse) {
           final memoText = await this
-              .getMemoText(response.links?.transaction?.toJson()["href"]);
+              .getMemoText(response.links.transaction.toJson()["href"]);
           String assetCode = response.assetCode ?? 'XLM';
           if (assetCodeFilter == null || assetCode == assetCodeFilter) {
             final details = PaymentTransaction(
-                hash: response.transactionHash!,
-                from: response.from!,
-                to: response.to!,
+                hash: response.transactionHash,
+                from: response.from,
+                to: response.to,
                 asset: response.assetCode.toString(),
-                amount: response.amount!,
-                type: response.to! == this.accountId
+                amount: response.amount,
+                type: response.to == this.accountId
                     ? TransactionType.Receive
                     : TransactionType.Payment,
-                status: response.transactionSuccessful!,
-                date: DateTime.parse(response.createdAt!).toLocal().toString(),
+                status: response.transactionSuccessful,
+                date: DateTime.parse(response.createdAt).toLocal().toString(),
                 memo: memoText);
 
             transactionDetails.add(details);
