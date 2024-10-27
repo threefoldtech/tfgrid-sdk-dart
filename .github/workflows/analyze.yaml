@@ -25,14 +25,24 @@ jobs:
           flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
           channel: ${{ steps.fvm.outputs.FLUTTER_CHANNEL }}
 
-      - name: Echo flutter outputs
+      - name: Create Flutter symbolic link
         run: |
-          echo ${{ steps.fvm.outputs }}
-          echo ${{ steps.fvm.outcome }}
-          echo ${{ steps.fvm.conclusion }}
+          echo "FLUTTER_ROOT is set to: $FLUTTER_ROOT"
+          if [ -d "/tmp/.fvm/" ]; then
+          echo "/tmp/.fvm/ exists."
+          else
+          echo "/tmp/.fvm/ does not exist, creating it now."
+          mkdir -p /tmp/.fvm/
+          fi
+
+          ln -s $FLUTTER_ROOT /tmp/.fvm/flutter_sdk
+          echo "Symbolic link created."
+          echo "Verifying symbolic link..."
+          ls -l /tmp/.fvm/flutter_sdk
+          /tmp/.fvm/flutter_sdk/bin/flutter --version
 
       - name: Install Melos
-        run: /home/runner/work/tfgrid-sdk-dart/.fvm/flutter_sdk/bin/dart pub global activate melos
+        run: dart pub global activate melos
 
       - name: Install dependencies
         run: melos bootstrap
