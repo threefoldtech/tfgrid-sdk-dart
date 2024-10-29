@@ -1,16 +1,10 @@
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_tfgrid/types/twin.dart';
 
-import 'setup_manager.dart';
+import 'globals.dart';
 
 void main() {
   group("Twins Test", () {
-    final setupManager = SetupManager();
-    setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-    });
-
     test('Test Get Twin with id', () async {
       final twin =
           await setupManager.client.twins.get(id: setupManager.twinId!);

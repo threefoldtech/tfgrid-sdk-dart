@@ -1,16 +1,12 @@
 import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/tfchain_support/types/farm.dart';
 
+import 'globals.dart';
 import 'setup_manager.dart';
 
 void main() {
   group("Farms Test", () {
     Map<int, String> farmsIps = {};
-    final setupManager = SetupManager();
-    setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-    });
     test('Test Get Farm by Id', () async {
       int? farmId = await setupManager.client.farms
           .create(name: generateRandomString(6), publicIps: []);

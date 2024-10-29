@@ -2,15 +2,10 @@ import 'dart:math';
 
 import 'package:test/test.dart';
 
-import 'setup_manager.dart';
+import 'globals.dart';
 
 void main() {
   group("Bridge Tests", () {
-    final setupManager = SetupManager();
-    setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-    });
     test('Test Get Withdraw fee', () async {
       BigInt? fee = await setupManager.client.bridge.getWithdrawFee();
       expect(fee, isNotNull);

@@ -2,15 +2,11 @@ import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 
+import 'globals.dart';
 import 'setup_manager.dart';
 
 void main() {
   group("Contracts Tests", () {
-    final setupManager = SetupManager();
-    setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-    });
     List<BigInt> contractIds = [];
 
     test('Test Get Contract with wrong id', () async {

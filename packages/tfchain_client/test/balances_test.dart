@@ -5,18 +5,13 @@ import 'package:tfchain_client/generated/dev/types/frame_system/account_info.dar
 import 'package:tfchain_client/tfchain_client.dart';
 import 'package:bip39/bip39.dart' as bip39;
 
-import 'setup_manager.dart';
+import 'globals.dart';
 
 void main() {
   group("Balances Tests", () {
-    final setupManager = SetupManager();
     late final String recipientAddress;
     late final Client alice;
-
     setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
-
       final mnemonic = bip39.generateMnemonic();
       final recipientClient =
           Client(setupManager.url, mnemonic, setupManager.type);
