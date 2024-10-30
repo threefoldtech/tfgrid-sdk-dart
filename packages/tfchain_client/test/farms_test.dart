@@ -7,15 +7,20 @@ import 'setup_manager.dart';
 void main() {
   group("Farms Test", () {
     Map<int, String> farmsIps = {};
-    test('Test Get Farm by Id', () async {
+    late SetupManager setupManager;
+
+    setUpAll(() async {
+      setupManager = await getSetupManager();
+    });
+    test('Get Farm by Id', () async {
       int? farmId = await setupManager.client.farms
           .create(name: generateRandomString(6), publicIps: []);
 
       Farm? farm = await setupManager.client.farms.get(id: farmId!);
-      expect(farm!.id, farmId);
+      expect(farm?.id, farmId);
     });
 
-    test('Test Get Farm by invalid Id', () async {
+    test('Get Farm by invalid Id', () async {
       try {
         Farm? farm = await setupManager.client.farms.get(id: -2);
       } catch (e) {
@@ -23,13 +28,13 @@ void main() {
       }
     });
 
-    test('Test create farm', () async {
+    test('Create farm', () async {
       final farmId = await setupManager.client.farms
           .create(name: generateRandomString(6), publicIps: []);
       expect(farmId, isNotNull);
     });
 
-    test('Test get farmId by name', () async {
+    test('Get farmId by name', () async {
       final name = generateRandomString(6);
       int? farmId =
           await setupManager.client.farms.create(name: name, publicIps: []);
@@ -37,7 +42,7 @@ void main() {
       expect(res, farmId!);
     });
 
-    test('Test create farm with existing name', () async {
+    test('Create farm with existing name', () async {
       try {
         final name = generateRandomString(6);
         await setupManager.client.farms.create(name: name, publicIps: []);
@@ -48,7 +53,7 @@ void main() {
       }
     }, timeout: Timeout(Duration(seconds: 50)));
 
-    test('Test adding farm ip with equal ip and gateway', () async {
+    test('Add farm IP with equal IP and gateway', () async {
       try {
         final randomIp = generateRandomCIDRIPv4();
         final gatewayIp = randomIp.split('/')[0];
@@ -61,7 +66,7 @@ void main() {
       }
     }, timeout: Timeout(Duration(seconds: 50)));
 
-    test('Test adding valid IPs to farm,', () async {
+    test('Add valid IPs to farm,', () async {
       try {
         final randomIp = generateRandomCIDRIPv4();
         final ip = randomIp.split('/')[0];
@@ -77,7 +82,7 @@ void main() {
       }
     }, timeout: Timeout(Duration(seconds: 50)));
 
-    test('Test adding existing ips to farm', () async {
+    test('Add existing IPs to farm', () async {
       try {
         int? farmId1 = await setupManager.client.farms
             .create(name: generateRandomString(5), publicIps: []);
@@ -101,7 +106,7 @@ void main() {
       }
     }, timeout: Timeout(Duration(seconds: 80)));
 
-    test('Test removing farm IP', () async {
+    test('removing farm IP', () async {
       try {
         final randomIp = generateRandomCIDRIPv4();
         final ip = randomIp.split('/')[0];
@@ -120,7 +125,7 @@ void main() {
       }
     }, timeout: Timeout(Duration(seconds: 60)));
 
-    test('Test adding Stellar Address', () async {
+    test('Add Stellar Address', () async {
       try {
         final farmId = await setupManager.client.farms
             .create(name: generateRandomString(6), publicIps: []);

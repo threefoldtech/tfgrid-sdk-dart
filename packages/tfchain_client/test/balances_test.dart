@@ -6,12 +6,15 @@ import 'package:tfchain_client/tfchain_client.dart';
 import 'package:bip39/bip39.dart' as bip39;
 
 import 'globals.dart';
+import 'setup_manager.dart';
 
 void main() {
   group("Balances Tests", () {
+    late SetupManager setupManager;
     late final String recipientAddress;
     late final Client alice;
     setUpAll(() async {
+      setupManager = await getSetupManager();
       final mnemonic = bip39.generateMnemonic();
       final recipientClient =
           Client(setupManager.url, mnemonic, setupManager.type);
@@ -25,13 +28,13 @@ void main() {
           address: setupManager.client.address, amount: setupManager.myBalance);
     });
 
-    test('Test Get Balance', () async {
+    test('Get balance', () async {
       AccountInfo? accountInfo = await setupManager.client.balances
           .get(address: setupManager.myAddress);
       expect(accountInfo, isNotNull);
     });
 
-    test('Test Get Balance with Invalid address', () async {
+    test('Get balance with invalid address', () async {
       try {
         AccountInfo? accountInfo =
             await setupManager.client.balances.get(address: "invalidAddress");
@@ -41,7 +44,7 @@ void main() {
       }
     });
 
-    test('Test Transfer TFTs with invalid amount', () async {
+    test('Transfer TFTs with invalid amount', () async {
       try {
         await setupManager.client.balances
             .transfer(address: recipientAddress, amount: BigInt.zero);
@@ -50,7 +53,7 @@ void main() {
       }
     });
 
-    test('Test Transfer TFTs', () async {
+    test('Transfer TFTs', () async {
       try {
         var random = Random();
         var randomNumber = random.nextInt(1000) + 1;
@@ -70,7 +73,7 @@ void main() {
       }
     });
 
-    test('Test get my balance', () async {
+    test('Get my balance', () async {
       AccountInfo? info = await setupManager.client.balances.getMyBalance();
       expect(info, isNotNull);
     });

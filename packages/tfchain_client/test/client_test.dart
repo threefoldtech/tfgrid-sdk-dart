@@ -13,9 +13,15 @@ import 'package:tfchain_client/src/tft_price.dart';
 import 'package:tfchain_client/src/twins.dart';
 
 import 'globals.dart';
+import 'setup_manager.dart';
 
 void main() {
   group('Client Tests', () {
+    late SetupManager setupManager;
+    setUpAll(() async {
+      setupManager = await getSetupManager();
+    });
+
     test('Initialization', () {
       expect(setupManager.queryClient.url, equals(setupManager.url));
       expect(setupManager.queryClient.contracts, isA<QueryContracts>());
