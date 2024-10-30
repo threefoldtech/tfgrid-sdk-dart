@@ -12,14 +12,14 @@ import 'package:tfchain_client/src/tft_bridge.dart';
 import 'package:tfchain_client/src/tft_price.dart';
 import 'package:tfchain_client/src/twins.dart';
 
+import 'globals.dart';
 import 'setup_manager.dart';
 
 void main() {
   group('Client Tests', () {
-    final setupManager = SetupManager();
+    late SetupManager setupManager;
     setUpAll(() async {
-      setupManager.setInitializationFlags(queryClient: true, client: true);
-      await setupManager.setup();
+      setupManager = await getSetupManager();
     });
 
     test('Initialization', () {
