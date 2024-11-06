@@ -21,8 +21,8 @@ class Balances extends QueryBalances {
   final Client client;
 
   Future<void> transfer(
-      {required String address, required BigInt amount}) async {
-    if (amount <= BigInt.zero) {
+      {required String address, required double amount}) async {
+    if (amount <= 0) {
       throw Exception("Amount must be a positive numeric value");
     }
 
@@ -30,8 +30,12 @@ class Balances extends QueryBalances {
     final publicKey = keyring.decodeAddress(address);
     MultiAddress multiAddress = Id(publicKey);
 
+    final scaleFactor = BigInt.from(10).pow(7);
+    final scaledAmount = (amount * scaleFactor.toDouble()).round();
+    final bigIntAmount = BigInt.from(scaledAmount);
+
     final extrinsic = client.api.tx.balances
-        .transfer(dest: multiAddress, value: amount * BigInt.from(10).pow(7));
+        .transfer(dest: multiAddress, value: bigIntAmount);
     await client.apply(extrinsic);
   }
 
