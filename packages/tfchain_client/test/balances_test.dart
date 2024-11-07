@@ -27,7 +27,7 @@ void main() {
       await alice.connect();
 
       await alice.balances.transfer(
-          address: setupManager.client.address, amount: setupManager.balance);
+          address: setupManager.client.address, amount: setupManager.myBalance);
     });
 
     test('Test Get Balance', () async {
