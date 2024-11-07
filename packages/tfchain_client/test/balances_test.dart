@@ -27,7 +27,7 @@ void main() {
       await alice.connect();
 
       await alice.balances.transfer(
-          address: setupManager.client.address, amount: setupManager.myBalance);
+          address: setupManager.client.address, amount: setupManager.balance);
     });
 
     test('Test Get Balance', () async {
@@ -49,7 +49,7 @@ void main() {
     test('Test Transfer TFTs with invalid amount', () async {
       try {
         await setupManager.client.balances
-            .transfer(address: recipientAddress, amount: BigInt.zero);
+            .transfer(address: recipientAddress, amount: 0);
       } catch (error) {
         expect(error, isNotNull);
       }
@@ -62,7 +62,7 @@ void main() {
         AccountInfo? before =
             await setupManager.client.balances.get(address: recipientAddress);
         await setupManager.client.balances.transfer(
-            address: recipientAddress, amount: BigInt.from(randomNumber));
+            address: recipientAddress, amount: randomNumber);
 
         AccountInfo? after =
             await setupManager.client.balances.get(address: recipientAddress);

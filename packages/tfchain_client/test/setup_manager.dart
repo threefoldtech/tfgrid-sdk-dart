@@ -98,6 +98,7 @@ class SetupManager {
   late String _type;
   late String _myAddress;
   BigInt myBalance = BigInt.from(5000);
+  double balance = 5000;
   late int? _twinId;
   late String _relay;
   late Client _client2;
