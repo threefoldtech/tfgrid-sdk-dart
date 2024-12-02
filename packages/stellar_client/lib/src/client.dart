@@ -6,6 +6,7 @@ class Client {
   late KeyPair _keyPair;
   late currency.Currencies _currencies;
   late Map<String, String> _serviceUrls;
+  late Map<String, String> _horizonServerUrls;
   late Network _stellarNetwork;
 
   String get accountId => _keyPair.accountId;
@@ -37,10 +38,16 @@ class Client {
 
   void _initialize() {
     late final currency.Currency tft;
+    late final currency.Currency usdc;
     _serviceUrls = {
       'PUBLIC': 'https://tokenservices.threefold.io/threefoldfoundation',
       'TESTNET': 'https://testnet.threefold.io/threefoldfoundation'
     };
+    _horizonServerUrls = {
+      'PUBLIC': 'https://horizon.stellar.org/',
+      'TESTNET': 'https://horizon-testnet.stellar.org/'
+    };
+
     switch (_network) {
       case NetworkType.TESTNET:
         _sdk = StellarSDK.TESTNET;
@@ -49,6 +56,9 @@ class Client {
           assetCode: 'TFT',
           issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
         );
+        usdc = currency.Currency(
+            assetCode: 'USDC',
+            issuer: 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5');
         break;
       case NetworkType.PUBLIC:
         _sdk = StellarSDK.PUBLIC;
@@ -57,12 +67,15 @@ class Client {
           assetCode: 'TFT',
           issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
         );
+        usdc = currency.Currency(
+            assetCode: 'USDC',
+            issuer: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN');
         break;
       default:
         throw Exception('Unsupported network type');
     }
 
-    _currencies = currency.Currencies({'TFT': tft});
+    _currencies = currency.Currencies({'TFT': tft, 'USDC': usdc});
   }
 
   Future<bool> activateThroughThreefoldService() async {
@@ -121,38 +134,41 @@ class Client {
   }
 
   Future<bool> addTrustLine() async {
-    for (var entry in _currencies.currencies.entries) {
-      String currencyCode = entry.key;
-      currency.Currency currentCurrency = entry.value;
+    try {
+      for (var entry in _currencies.currencies.entries) {
+        String currencyCode = entry.key;
+        currency.Currency currentCurrency = entry.value;
 
-      String issuerAccountId = currentCurrency.issuer;
-      Asset currencyAsset =
-          AssetTypeCreditAlphaNum4(currentCurrency.assetCode, issuerAccountId);
+        String issuerAccountId = currentCurrency.issuer;
+        Asset currencyAsset = AssetTypeCreditAlphaNum4(
+            currentCurrency.assetCode, issuerAccountId);
 
-      ChangeTrustOperationBuilder changeTrustOperation =
-          ChangeTrustOperationBuilder(currencyAsset, "300000");
+        ChangeTrustOperationBuilder changeTrustOperation =
+            ChangeTrustOperationBuilder(currencyAsset, "300000");
 
-      final account = await _sdk.accounts.account(accountId);
+        final account = await _sdk.accounts.account(accountId);
 
-      Transaction transaction = TransactionBuilder(account)
-          .addOperation(changeTrustOperation.build())
-          .build();
-      transaction.sign(_keyPair, _stellarNetwork);
+        Transaction transaction = TransactionBuilder(account)
+            .addOperation(changeTrustOperation.build())
+            .build();
+        transaction.sign(_keyPair, _stellarNetwork);
 
-      SubmitTransactionResponse response =
-          await _sdk.submitTransaction(transaction);
+        SubmitTransactionResponse response =
+            await _sdk.submitTransaction(transaction);
 
-      if (!response.success) {
-        print("Failed to add trustline for $currencyCode");
-        return false;
-      } else {
-        print("trustline for $currencyCode was added successfully");
-        return true;
+        if (!response.success) {
+          print("Failed to add trustline for $currencyCode");
+          return false;
+        } else {
+          print("trustline for $currencyCode was added successfully");
+        }
       }
-    }
 
-    print("No trustlines were processed");
-    return false;
+      return true;
+    } catch (error) {
+      print("An error occurred while adding trustlines: $error");
+      return false;
+    }
   }
 
   Future<bool> transfer(
@@ -477,6 +493,122 @@ class Client {
       return memoText;
     } catch (e) {
       throw Exception("Couldn't get memo text due to ${e}");
+    }
+  }
+
+  Future<SubmitTransactionResponse> createOrder(
+      {required String fromAssetCode,
+      required String toAssetCode,
+      required String amount,
+      required String price,
+      String? memo}) async {
+    if (!_currencies.currencies.containsKey(fromAssetCode)) {
+      throw Exception('Sell asset $fromAssetCode is not available.');
+    }
+    if (!_currencies.currencies.containsKey(toAssetCode)) {
+      throw Exception('Buy asset $toAssetCode is not available.');
+    }
+
+    final Asset buyAsset = AssetTypeCreditAlphaNum12(
+        _currencies.currencies[fromAssetCode]!.assetCode,
+        _currencies.currencies[fromAssetCode]!.issuer);
+    final Asset sellAsset = AssetTypeCreditAlphaNum12(
+        _currencies.currencies[toAssetCode]!.assetCode,
+        _currencies.currencies[toAssetCode]!.issuer);
+    final ManageBuyOfferOperation buyOfferOperation =
+        ManageBuyOfferOperationBuilder(buyAsset, sellAsset, amount, price)
+            .build();
+
+    final account = await _sdk.accounts.account(accountId);
+
+    final balances = account.balances;
+    final sellAssetBalance = balances.firstWhere(
+      (balance) => balance.assetCode == fromAssetCode,
+      orElse: () => throw Exception('Insufficient balance in $fromAssetCode'),
+    );
+
+    final double sellAmount = double.parse(amount);
+    final double availableBalance = double.parse(sellAssetBalance.balance);
+    if (sellAmount > availableBalance) {
+      throw Exception(
+          'Insufficient balance in $fromAssetCode. Available: $availableBalance');
+    }
+    final Transaction transaction = TransactionBuilder(account)
+        .addOperation(buyOfferOperation)
+        .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+        .build();
+    transaction.sign(_keyPair, _stellarNetwork);
+    try {
+      final SubmitTransactionResponse response =
+          await _sdk.submitTransaction(transaction);
+      return response;
+    } catch (error) {
+      throw Exception('Transaction failed due to: ${error.toString()}');
+    }
+  }
+
+  // native --> Represents the Stellar native asset (XLM)
+  // credit_alphanum4: Represents a credit asset with a 4-character code.
+  // credit_alphanum12: Represents a credit asset with a 12-character code.
+  Future<void> getOrderBook({
+    // required String sellingAssetType,
+    required String sellingAssetCode,
+    // required String buyingAssetType,
+    required String buyingAssetCode,
+    int limit = 200,
+  }) async {
+    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
+      throw Exception('Sell asset $sellingAssetCode is not available.');
+    }
+    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
+      throw Exception('Buy asset $buyingAssetCode is not available.');
+    }
+
+    final sellingAssetIssuer = _currencies.currencies[sellingAssetCode]!.issuer;
+    final buyingAssetIssuer = _currencies.currencies[buyingAssetCode]!.issuer;
+
+    final String horizonUrl = _horizonServerUrls[_network.toString()]!;
+
+    final String endpoint =
+        '/order_book?selling_asset_type=credit_alphanum4&selling_asset_code=$sellingAssetCode&selling_asset_issuer=$sellingAssetIssuer&buying_asset_type=credit_alphanum4&buying_asset_code=$buyingAssetCode&buying_asset_issuer=$buyingAssetIssuer&limit=$limit';
+
+    final Uri uri = Uri.parse(horizonUrl + endpoint);
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        print(data);
+
+      } else {
+        print('Failed to load order book. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching order book: $e');
+    }
+  }
+
+  Future<void> listOffers() async {
+    try {
+      final offers = await _sdk.offers.forAccount(accountId).execute();
+      print(offers);
+
+      if (offers.records.isEmpty) {
+        print('No offers found for account: $accountId');
+        return;
+      }
+
+      for (var offer in offers.records) {
+        print('Offer ID: ${offer.id}');
+        print('Selling Asset: ${offer.selling}');
+        print('Buying Asset: ${offer.buying}');
+        print('Amount: ${offer.amount}');
+        print('Price: ${offer.price}');
+        print('-----------------------------------');
+      }
+    } catch (error) {
+      print('Error listing offers for account $accountId: $error');
     }
   }
 }
