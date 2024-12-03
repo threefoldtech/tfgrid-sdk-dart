@@ -742,10 +742,10 @@ packages:
     dependency: "direct dev"
     description:
       name: test
-      sha256: f2a018e2baa6fce7c8daa55b8bdf4b3d7d165f82caac269e4cbe5edd666c0e4c
+      sha256: "7afaf571fe4476e3cf7c5f822daa5a295dbbca227b52cb246d6ed3216e282f44"
       url: "https://pub.dev"
     source: hosted
-    version: "1.25.9"
+    version: "1.25.10"
   test_api:
     dependency: transitive
     description:
@@ -758,10 +758,10 @@ packages:
     dependency: transitive
     description:
       name: test_core
-      sha256: "60ff490bb383858015df7b7a0d883301a426edf9033989f55f091d91efb9dfaf"
+      sha256: "3e47cac78f28a4dd71ea232db15fda6345934f472c2f70f97d35476809e045ca"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.6"
+    version: "0.6.7"
   tfchain_client:
     dependency: "direct main"
     description:
