@@ -1,6 +1,4 @@
-import 'package:stellar_client/models/balance.dart';
-import 'package:stellar_client/stellar_client.dart';
-import 'package:stellar_flutter_sdk/stellar_flutter_sdk.dart';
+part of '../stellar_client.dart';
 
 Future<List<BalanceInfo>> getBalanceByAccountID(
     {required NetworkType network, required String accountId}) async {
