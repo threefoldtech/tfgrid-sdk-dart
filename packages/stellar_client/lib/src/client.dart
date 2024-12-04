@@ -433,23 +433,13 @@ class Client {
   }
 
   Future<List<BalanceInfo>> getBalance() async {
-    List<BalanceInfo> balancesList = [];
-    AccountResponse account = await _sdk.accounts.account(accountId);
-
-    for (Balance balance in account.balances) {
-      BalanceData balanceData;
-      switch (balance.assetType) {
-        case Asset.TYPE_NATIVE:
-          balanceData = BalanceData(assetCode: 'XLM', balance: balance.balance);
-          break;
-        default:
-          balanceData = BalanceData(
-              assetCode: balance.assetCode!, balance: balance.balance);
-      }
-      balancesList.add(balanceData);
+    try {
+      List<BalanceInfo> balancesList =
+          await getBalanceByAccountID(network: _network, accountId: accountId);
+      return balancesList;
+    } catch (error) {
+      throw Exception('Could not get balance due to $error');
     }
-
-    return balancesList;
   }
 
   Future<List<VestingAccount>?> getVestingAccounts() async {

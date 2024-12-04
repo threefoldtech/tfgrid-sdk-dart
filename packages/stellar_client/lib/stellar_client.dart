@@ -14,3 +14,4 @@ import 'package:convert/convert.dart';
 
 part 'src/client.dart';
 part 'src/network_types.dart';
+part 'src/helpers.dart';
