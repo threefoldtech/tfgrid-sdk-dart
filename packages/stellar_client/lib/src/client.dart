@@ -487,42 +487,87 @@ class Client {
   }
 
   Future<SubmitTransactionResponse> createOrder(
-      {required String fromAssetCode,
-      required String toAssetCode,
+      {required String sellingAsset,
+      required String buyingAsset,
       required String amount,
       required String price,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(fromAssetCode)) {
-      throw Exception('Sell asset $fromAssetCode is not available.');
+    if (!_currencies.currencies.containsKey(sellingAsset)) {
+      throw Exception('Sell asset $sellingAsset is not available.');
     }
-    if (!_currencies.currencies.containsKey(toAssetCode)) {
-      throw Exception('Buy asset $toAssetCode is not available.');
+    if (!_currencies.currencies.containsKey(buyingAsset)) {
+      throw Exception('Buy asset $buyingAsset is not available.');
     }
 
-    final Asset buyAsset = AssetTypeCreditAlphaNum12(
-        _currencies.currencies[fromAssetCode]!.assetCode,
-        _currencies.currencies[fromAssetCode]!.issuer);
-    final Asset sellAsset = AssetTypeCreditAlphaNum12(
-        _currencies.currencies[toAssetCode]!.assetCode,
-        _currencies.currencies[toAssetCode]!.issuer);
+    final Asset sellAsset = AssetTypeCreditAlphaNum4(
+        _currencies.currencies[sellingAsset]!.assetCode,
+        _currencies.currencies[sellingAsset]!.issuer);
+    final Asset buyAsset = AssetTypeCreditAlphaNum4(
+        _currencies.currencies[buyingAsset]!.assetCode,
+        _currencies.currencies[buyingAsset]!.issuer);
+
     final ManageBuyOfferOperation buyOfferOperation =
-        ManageBuyOfferOperationBuilder(buyAsset, sellAsset, amount, price)
+        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
             .build();
 
     final account = await _sdk.accounts.account(accountId);
 
     final balances = account.balances;
     final sellAssetBalance = balances.firstWhere(
-      (balance) => balance.assetCode == fromAssetCode,
-      orElse: () => throw Exception('Insufficient balance in $fromAssetCode'),
+      (balance) => balance.assetCode == sellingAsset,
+      orElse: () => throw Exception('Insufficient balance in $sellingAsset'),
     );
 
     final double sellAmount = double.parse(amount);
     final double availableBalance = double.parse(sellAssetBalance.balance);
     if (sellAmount > availableBalance) {
       throw Exception(
-          'Insufficient balance in $fromAssetCode. Available: $availableBalance');
+          'Insufficient balance in $sellingAsset. Available: $availableBalance');
     }
+    final Transaction transaction = TransactionBuilder(account)
+        .addOperation(buyOfferOperation)
+        .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+        .build();
+    print('Transaction XDR: ${transaction.toEnvelopeXdrBase64()}');
+
+    transaction.sign(_keyPair, _stellarNetwork);
+    try {
+      final SubmitTransactionResponse response =
+          await _sdk.submitTransaction(transaction);
+      if (!response.success) {
+        print('Transaction failed with result: ${response.resultXdr}');
+      }
+      return response;
+    } catch (error) {
+      throw Exception('Transaction failed due to: ${error.toString()}');
+    }
+  }
+
+  Future<SubmitTransactionResponse> cancelOrder(
+      {required String sellingAsset,
+      required String buyingAsset,
+      required String offerId,
+      String? memo}) async {
+    if (!_currencies.currencies.containsKey(sellingAsset)) {
+      throw Exception('Sell asset $sellingAsset is not available.');
+    }
+    if (!_currencies.currencies.containsKey(buyingAsset)) {
+      throw Exception('Buy asset $buyingAsset is not available.');
+    }
+
+    final Asset sellAsset = AssetTypeCreditAlphaNum12(
+        _currencies.currencies[sellingAsset]!.assetCode,
+        _currencies.currencies[sellingAsset]!.issuer);
+    final Asset buyAsset = AssetTypeCreditAlphaNum12(
+        _currencies.currencies[buyingAsset]!.assetCode,
+        _currencies.currencies[buyingAsset]!.issuer);
+
+    final ManageBuyOfferOperation buyOfferOperation =
+        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, '0', '0')
+            .setOfferId(offerId)
+            .build();
+
+    final account = await _sdk.accounts.account(accountId);
     final Transaction transaction = TransactionBuilder(account)
         .addOperation(buyOfferOperation)
         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
@@ -539,54 +584,63 @@ class Client {
 
   // native --> Represents the Stellar native asset (XLM)
   // credit_alphanum4: Represents a credit asset with a 4-character code.
-  // credit_alphanum12: Represents a credit asset with a 12-character code.
-  Future<void> getOrderBook({
-    // required String sellingAssetType,
-    required String sellingAssetCode,
-    // required String buyingAssetType,
-    required String buyingAssetCode,
-    int limit = 200,
-  }) async {
+  // credit_alphanum12: Represents a credit asset with a 12-character code
+
+  Future<void> getOrderBook(
+      {required String sellingAssetCode,
+      required String buyingAssetCode}) async {
     if (!_currencies.currencies.containsKey(sellingAssetCode)) {
       throw Exception('Sell asset $sellingAssetCode is not available.');
     }
     if (!_currencies.currencies.containsKey(buyingAssetCode)) {
       throw Exception('Buy asset $buyingAssetCode is not available.');
     }
+    http.Client httpClient = http.Client();
+    Uri serverURI = Uri.parse(_horizonServerUrls[_network.toString()]!);
 
-    final sellingAssetIssuer = _currencies.currencies[sellingAssetCode]!.issuer;
-    final buyingAssetIssuer = _currencies.currencies[buyingAssetCode]!.issuer;
+    Asset sellingAsset = Asset.createNonNativeAsset(
+        sellingAssetCode, _currencies.currencies[sellingAssetCode]!.issuer);
+    Asset buyingAsset = Asset.createNonNativeAsset(
+        buyingAssetCode, _currencies.currencies[buyingAssetCode]!.issuer);
 
-    final String horizonUrl = _horizonServerUrls[_network.toString()]!;
+    OrderBookRequestBuilder orderBookRequest =
+        OrderBookRequestBuilder(httpClient, serverURI)
+          ..sellingAsset(sellingAsset)
+          ..buyingAsset(buyingAsset);
 
-    final String endpoint =
-        '/order_book?selling_asset_type=credit_alphanum4&selling_asset_code=$sellingAssetCode&selling_asset_issuer=$sellingAssetIssuer&buying_asset_type=credit_alphanum4&buying_asset_code=$buyingAssetCode&buying_asset_issuer=$buyingAssetIssuer&limit=$limit';
+    Stream<OrderBookResponse> orderBookStream = orderBookRequest.stream();
+    orderBookStream.listen((orderBookResponse) {
+      print("Received OrderBookResponse:");
+      print("Base: ${orderBookResponse.base}");
+      print("Counter: ${orderBookResponse.counter}");
 
-    final Uri uri = Uri.parse(horizonUrl + endpoint);
-
-    try {
-      final response = await http.get(uri);
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        print(data);
-
-      } else {
-        print('Failed to load order book. Status code: ${response.statusCode}');
+      print("\nBids:");
+      for (var offer in orderBookResponse.bids) {
+        // priceR  numerator/denominator
+        print(
+            'Bid - Amount: ${offer.amount}, Price: ${offer.price}, PriceR: ${offer.priceR}');
       }
-    } catch (e) {
-      print('Error fetching order book: $e');
-    }
+
+      print("\nAsks:");
+      for (var offer in orderBookResponse.asks) {
+        print(
+            'Ask - Amount: ${offer.amount}, Price: ${offer.price}, PriceR: ${offer.priceR}');
+      }
+    }, onError: (error) {
+      print("Error while listening to order book stream: $error");
+    }, onDone: () {
+      print("Order book stream is closed.");
+    });
   }
 
-  Future<void> listOffers() async {
+  Future<List<OfferResponse>> listMyOffers() async {
     try {
       final offers = await _sdk.offers.forAccount(accountId).execute();
       print(offers);
 
       if (offers.records.isEmpty) {
         print('No offers found for account: $accountId');
-        return;
+        return [];
       }
 
       for (var offer in offers.records) {
@@ -597,8 +651,9 @@ class Client {
         print('Price: ${offer.price}');
         print('-----------------------------------');
       }
+      return offers.records;
     } catch (error) {
-      print('Error listing offers for account $accountId: $error');
+      throw Exception('Error listing offers for account $accountId: $error');
     }
   }
 }
