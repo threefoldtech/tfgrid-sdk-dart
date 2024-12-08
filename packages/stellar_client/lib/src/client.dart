@@ -491,19 +491,32 @@ class Client {
       required String amount,
       required String price,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAsset)) {
+    if (!_currencies.currencies.containsKey(sellingAsset) ||
+        sellingAsset == 'XLM') {
       throw Exception('Sell asset $sellingAsset is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAsset)) {
+    if (!_currencies.currencies.containsKey(buyingAsset) ||
+        buyingAsset == 'XLM') {
       throw Exception('Buy asset $buyingAsset is not available.');
     }
 
-    final Asset sellAsset = AssetTypeCreditAlphaNum4(
-        _currencies.currencies[sellingAsset]!.assetCode,
-        _currencies.currencies[sellingAsset]!.issuer);
-    final Asset buyAsset = AssetTypeCreditAlphaNum4(
-        _currencies.currencies[buyingAsset]!.assetCode,
-        _currencies.currencies[buyingAsset]!.issuer);
+    late final Asset sellAsset;
+    late final Asset buyAsset;
+
+    if (sellingAsset == 'XLM') {
+      sellAsset = AssetTypeNative();
+    } else {
+      sellAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAsset]!.assetCode,
+          _currencies.currencies[sellingAsset]!.issuer);
+    }
+    if (sellingAsset == 'XLM') {
+      buyAsset = AssetTypeNative();
+    } else {
+      buyAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAsset]!.assetCode,
+          _currencies.currencies[buyingAsset]!.issuer);
+    }
 
     final ManageBuyOfferOperation buyOfferOperation =
         ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
@@ -547,10 +560,12 @@ class Client {
       required String buyingAsset,
       required String offerId,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAsset)) {
+    if (!_currencies.currencies.containsKey(sellingAsset) ||
+        sellingAsset == 'XLM') {
       throw Exception('Sell asset $sellingAsset is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAsset)) {
+    if (!_currencies.currencies.containsKey(buyingAsset) ||
+        buyingAsset == 'XLM') {
       throw Exception('Buy asset $buyingAsset is not available.');
     }
 
@@ -561,12 +576,23 @@ class Client {
           'Offer with ID $offerId not found in user\'s account.'),
     );
 
-    final Asset sellAsset = AssetTypeCreditAlphaNum4(
-        _currencies.currencies[sellingAsset]!.assetCode,
-        _currencies.currencies[sellingAsset]!.issuer);
-    final Asset buyAsset = AssetTypeCreditAlphaNum4(
-        _currencies.currencies[buyingAsset]!.assetCode,
-        _currencies.currencies[buyingAsset]!.issuer);
+    late final Asset sellAsset;
+    late final Asset buyAsset;
+
+    if (sellingAsset == 'XLM') {
+      sellAsset = AssetTypeNative();
+    } else {
+      sellAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAsset]!.assetCode,
+          _currencies.currencies[sellingAsset]!.issuer);
+    }
+    if (sellingAsset == 'XLM') {
+      buyAsset = AssetTypeNative();
+    } else {
+      buyAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAsset]!.assetCode,
+          _currencies.currencies[buyingAsset]!.issuer);
+    }
 
     final ManageBuyOfferOperation cancelOfferOperation =
         ManageBuyOfferOperationBuilder(sellAsset, buyAsset, '0', '1')
@@ -591,26 +617,36 @@ class Client {
     }
   }
 
-  // native --> Represents the Stellar native asset (XLM)
-  // credit_alphanum4: Represents a credit asset with a 4-character code.
-  // credit_alphanum12: Represents a credit asset with a 12-character code
-
   Future<void> getOrderBook(
       {required String sellingAssetCode,
       required String buyingAssetCode}) async {
-    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
+    if (!_currencies.currencies.containsKey(sellingAssetCode) ||
+        sellingAssetCode == 'XLM') {
       throw Exception('Sell asset $sellingAssetCode is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
+    if (!_currencies.currencies.containsKey(buyingAssetCode) ||
+        buyingAssetCode == 'XLM') {
       throw Exception('Buy asset $buyingAssetCode is not available.');
     }
     http.Client httpClient = http.Client();
     Uri serverURI = Uri.parse(_horizonServerUrls[_network.toString()]!);
+    late final Asset sellingAsset;
+    late final Asset buyingAsset;
 
-    Asset sellingAsset = Asset.createNonNativeAsset(
-        sellingAssetCode, _currencies.currencies[sellingAssetCode]!.issuer);
-    Asset buyingAsset = Asset.createNonNativeAsset(
-        buyingAssetCode, _currencies.currencies[buyingAssetCode]!.issuer);
+    if (sellingAssetCode == 'XLM') {
+      sellingAsset = AssetTypeNative();
+    } else {
+      sellingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAssetCode]!.assetCode,
+          _currencies.currencies[sellingAssetCode]!.issuer);
+    }
+    if (buyingAssetCode == 'XLM') {
+      buyingAsset = AssetTypeNative();
+    } else {
+      buyingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAssetCode]!.assetCode,
+          _currencies.currencies[buyingAssetCode]!.issuer);
+    }
 
     OrderBookRequestBuilder orderBookRequest =
         OrderBookRequestBuilder(httpClient, serverURI)
@@ -666,93 +702,93 @@ class Client {
     }
   }
 
-  Future<Transaction?> _buildOrderTransaction(
-      {required String sellingAsset,
-      required String buyingAsset,
-      required String amount,
-      required String price,
-      String? memo,
-      required bool funded}) async {
-    if (!_currencies.currencies.containsKey(sellingAsset)) {
-      throw Exception('Sell asset $sellingAsset is not available.');
-    }
-    if (!_currencies.currencies.containsKey(buyingAsset)) {
-      throw Exception('Buy asset $buyingAsset is not available.');
-    }
+  // Future<Transaction?> _buildOrderTransaction(
+  //     {required String sellingAsset,
+  //     required String buyingAsset,
+  //     required String amount,
+  //     required String price,
+  //     String? memo,
+  //     required bool funded}) async {
+  //   if (!_currencies.currencies.containsKey(sellingAsset)) {
+  //     throw Exception('Sell asset $sellingAsset is not available.');
+  //   }
+  //   if (!_currencies.currencies.containsKey(buyingAsset)) {
+  //     throw Exception('Buy asset $buyingAsset is not available.');
+  //   }
 
-    final Asset sellAsset = AssetTypeCreditAlphaNum4(
-        _currencies.currencies[sellingAsset]!.assetCode,
-        _currencies.currencies[sellingAsset]!.issuer);
-    final Asset buyAsset = AssetTypeCreditAlphaNum4(
-        _currencies.currencies[buyingAsset]!.assetCode,
-        _currencies.currencies[buyingAsset]!.issuer);
+  //   final Asset sellAsset = AssetTypeCreditAlphaNum4(
+  //       _currencies.currencies[sellingAsset]!.assetCode,
+  //       _currencies.currencies[sellingAsset]!.issuer);
+  //   final Asset buyAsset = AssetTypeCreditAlphaNum4(
+  //       _currencies.currencies[buyingAsset]!.assetCode,
+  //       _currencies.currencies[buyingAsset]!.issuer);
 
-    final ManageBuyOfferOperation buyOfferOperation =
-        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
-            .build();
+  //   final ManageBuyOfferOperation buyOfferOperation =
+  //       ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
+  //           .build();
 
-    final account = await _sdk.accounts.account(accountId);
+  //   final account = await _sdk.accounts.account(accountId);
 
-    final balances = account.balances;
-    final sellAssetBalance = balances.firstWhere(
-      (balance) => balance.assetCode == sellingAsset,
-      orElse: () => throw Exception('Insufficient balance in $sellingAsset'),
-    );
+  //   final balances = account.balances;
+  //   final sellAssetBalance = balances.firstWhere(
+  //     (balance) => balance.assetCode == sellingAsset,
+  //     orElse: () => throw Exception('Insufficient balance in $sellingAsset'),
+  //   );
 
-    final double sellAmount = double.parse(amount);
-    final double availableBalance = double.parse(sellAssetBalance.balance);
-    if (sellAmount > availableBalance) {
-      throw Exception(
-          'Insufficient balance in $sellingAsset. Available: $availableBalance');
-    }
-    Transaction? transaction;
-    if (funded) {
-      Operation? operation = await _makeFundPaymentOperation(
-          assetCode: sellingAsset,
-          issuer: _currencies.currencies[sellingAsset]!.issuer);
-      transaction = TransactionBuilder(account)
-          .addOperation(operation!)
-          .addOperation(buyOfferOperation)
-          .addMemo(memo != null ? Memo.text(memo) : Memo.none())
-          .build();
-    } else {
-      transaction = TransactionBuilder(account)
-          .addOperation(buyOfferOperation)
-          .addMemo(memo != null ? Memo.text(memo) : Memo.none())
-          .build();
-    }
-    return transaction;
-  }
+  //   final double sellAmount = double.parse(amount);
+  //   final double availableBalance = double.parse(sellAssetBalance.balance);
+  //   if (sellAmount > availableBalance) {
+  //     throw Exception(
+  //         'Insufficient balance in $sellingAsset. Available: $availableBalance');
+  //   }
+  //   Transaction? transaction;
+  //   if (funded) {
+  //     // Operation? operation = await _makeFundPaymentOperation(
+  //     //     assetCode: sellingAsset,
+  //     //     issuer: _currencies.currencies[sellingAsset]!.issuer);
+  //     transaction = TransactionBuilder(account)
+  //         .addOperation(buyOfferOperation)
+  //         .addOperation(buyOfferOperation)
+  //         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+  //         .build();
+  //   } else {
+  //     transaction = TransactionBuilder(account)
+  //         .addOperation(buyOfferOperation)
+  //         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+  //         .build();
+  //   }
+  //   return transaction;
+  // }
 
-  Future<void> createOrderThroughThreefoldService(
-      {required String sellingAsset,
-      required String buyingAsset,
-      required String amount,
-      required String price,
-      String? memo}) async {
-    Transaction? fundedOrder = await _buildOrderTransaction(
-        sellingAsset: sellingAsset,
-        buyingAsset: buyingAsset,
-        amount: amount,
-        price: price,
-        funded: true);
+  // Future<void> createOrderThroughThreefoldService(
+  //     {required String sellingAsset,
+  //     required String buyingAsset,
+  //     required String amount,
+  //     required String price,
+  //     String? memo}) async {
+  //   Transaction? fundedOrder = await _buildOrderTransaction(
+  //       sellingAsset: sellingAsset,
+  //       buyingAsset: buyingAsset,
+  //       amount: amount,
+  //       price: price,
+  //       funded: true);
 
-    fundedOrder!.sign(_keyPair, _stellarNetwork);
+  //   fundedOrder!.sign(_keyPair, _stellarNetwork);
 
-    print('Sending to');
-    print(
-        '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction');
-    try {
-      final response = await http.post(
-        Uri.parse(
-            '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'transaction': fundedOrder.toEnvelopeXdrBase64()}),
-      );
+  //   print('Sending to');
+  //   print(
+  //       '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction');
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(
+  //           '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({'transaction': fundedOrder.toEnvelopeXdrBase64()}),
+  //     );
 
-      print(response.body);
-    } catch (error) {
-      throw Exception('Something went wrong! $error');
-    }
-  }
+  //     print(response.body);
+  //   } catch (error) {
+  //     throw Exception('Something went wrong! $error');
+  //   }
+  // }
 }
