@@ -6,6 +6,7 @@ class Client {
   late KeyPair _keyPair;
   late currency.Currencies _currencies;
   late Map<String, String> _serviceUrls;
+  late Map<String, String> _horizonServerUrls;
   late Network _stellarNetwork;
 
   String get accountId => _keyPair.accountId;
@@ -37,10 +38,16 @@ class Client {
 
   void _initialize() {
     late final currency.Currency tft;
+    late final currency.Currency usdc;
     _serviceUrls = {
       'PUBLIC': 'https://tokenservices.threefold.io/threefoldfoundation',
       'TESTNET': 'https://testnet.threefold.io/threefoldfoundation'
     };
+    _horizonServerUrls = {
+      'PUBLIC': 'https://horizon.stellar.org/',
+      'TESTNET': 'https://horizon-testnet.stellar.org/'
+    };
+
     switch (_network) {
       case NetworkType.TESTNET:
         _sdk = StellarSDK.TESTNET;
@@ -49,6 +56,9 @@ class Client {
           assetCode: 'TFT',
           issuer: "GA47YZA3PKFUZMPLQ3B5F2E3CJIB57TGGU7SPCQT2WAEYKN766PWIMB3",
         );
+        usdc = currency.Currency(
+            assetCode: 'USDC',
+            issuer: 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5');
         break;
       case NetworkType.PUBLIC:
         _sdk = StellarSDK.PUBLIC;
@@ -57,12 +67,15 @@ class Client {
           assetCode: 'TFT',
           issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
         );
+        usdc = currency.Currency(
+            assetCode: 'USDC',
+            issuer: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN');
         break;
       default:
         throw Exception('Unsupported network type');
     }
 
-    _currencies = currency.Currencies({'TFT': tft});
+    _currencies = currency.Currencies({'TFT': tft, 'USDC': usdc});
   }
 
   Future<bool> activateThroughThreefoldService() async {
@@ -121,38 +134,41 @@ class Client {
   }
 
   Future<bool> addTrustLine() async {
-    for (var entry in _currencies.currencies.entries) {
-      String currencyCode = entry.key;
-      currency.Currency currentCurrency = entry.value;
+    try {
+      for (var entry in _currencies.currencies.entries) {
+        String currencyCode = entry.key;
+        currency.Currency currentCurrency = entry.value;
 
-      String issuerAccountId = currentCurrency.issuer;
-      Asset currencyAsset =
-          AssetTypeCreditAlphaNum4(currentCurrency.assetCode, issuerAccountId);
+        String issuerAccountId = currentCurrency.issuer;
+        Asset currencyAsset = AssetTypeCreditAlphaNum4(
+            currentCurrency.assetCode, issuerAccountId);
 
-      ChangeTrustOperationBuilder changeTrustOperation =
-          ChangeTrustOperationBuilder(currencyAsset, "300000");
+        ChangeTrustOperationBuilder changeTrustOperation =
+            ChangeTrustOperationBuilder(currencyAsset, "300000");
 
-      final account = await _sdk.accounts.account(accountId);
+        final account = await _sdk.accounts.account(accountId);
 
-      Transaction transaction = TransactionBuilder(account)
-          .addOperation(changeTrustOperation.build())
-          .build();
-      transaction.sign(_keyPair, _stellarNetwork);
+        Transaction transaction = TransactionBuilder(account)
+            .addOperation(changeTrustOperation.build())
+            .build();
+        transaction.sign(_keyPair, _stellarNetwork);
 
-      SubmitTransactionResponse response =
-          await _sdk.submitTransaction(transaction);
+        SubmitTransactionResponse response =
+            await _sdk.submitTransaction(transaction);
 
-      if (!response.success) {
-        print("Failed to add trustline for $currencyCode");
-        return false;
-      } else {
-        print("trustline for $currencyCode was added successfully");
-        return true;
+        if (!response.success) {
+          print("Failed to add trustline for $currencyCode");
+          return false;
+        } else {
+          print("trustline for $currencyCode was added successfully");
+        }
       }
-    }
 
-    print("No trustlines were processed");
-    return false;
+      return true;
+    } catch (error) {
+      print("An error occurred while adding trustlines: $error");
+      return false;
+    }
   }
 
   Future<bool> transfer(
@@ -218,7 +234,6 @@ class Client {
       );
 
       final data = jsonDecode(response.body);
-
       String trustlineTransaction = data['addtrustline_transaction'];
       XdrTransactionEnvelope xdrTxEnvelope =
           XdrTransactionEnvelope.fromEnvelopeXdrString(trustlineTransaction);
@@ -469,4 +484,311 @@ class Client {
       throw Exception("Couldn't get memo text due to ${e}");
     }
   }
+
+  Future<SubmitTransactionResponse> createOrder(
+      {required String sellingAsset,
+      required String buyingAsset,
+      required String amount,
+      required String price,
+      String? memo}) async {
+    if (!_currencies.currencies.containsKey(sellingAsset) ||
+        sellingAsset == 'XLM') {
+      throw Exception('Sell asset $sellingAsset is not available.');
+    }
+    if (!_currencies.currencies.containsKey(buyingAsset) ||
+        buyingAsset == 'XLM') {
+      throw Exception('Buy asset $buyingAsset is not available.');
+    }
+
+    late final Asset sellAsset;
+    late final Asset buyAsset;
+
+    if (sellingAsset == 'XLM') {
+      sellAsset = AssetTypeNative();
+    } else {
+      sellAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAsset]!.assetCode,
+          _currencies.currencies[sellingAsset]!.issuer);
+    }
+    if (sellingAsset == 'XLM') {
+      buyAsset = AssetTypeNative();
+    } else {
+      buyAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAsset]!.assetCode,
+          _currencies.currencies[buyingAsset]!.issuer);
+    }
+
+    final ManageBuyOfferOperation buyOfferOperation =
+        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
+            .build();
+
+    final account = await _sdk.accounts.account(accountId);
+
+    final balances = account.balances;
+    final sellAssetBalance = balances.firstWhere(
+      (balance) => balance.assetCode == sellingAsset,
+      orElse: () => throw Exception('Insufficient balance in $sellingAsset'),
+    );
+
+    final double sellAmount = double.parse(amount);
+    final double availableBalance = double.parse(sellAssetBalance.balance);
+    if (sellAmount > availableBalance) {
+      throw Exception(
+          'Insufficient balance in $sellingAsset. Available: $availableBalance');
+    }
+    final Transaction transaction = TransactionBuilder(account)
+        .addOperation(buyOfferOperation)
+        .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+        .build();
+    print('Transaction XDR: ${transaction.toEnvelopeXdrBase64()}');
+
+    transaction.sign(_keyPair, _stellarNetwork);
+    try {
+      final SubmitTransactionResponse response =
+          await _sdk.submitTransaction(transaction);
+      if (!response.success) {
+        print('Transaction failed with result: ${response.resultXdr}');
+      }
+      return response;
+    } catch (error) {
+      throw Exception('Transaction failed due to: ${error.toString()}');
+    }
+  }
+
+  Future<SubmitTransactionResponse> cancelOrder(
+      {required String sellingAsset,
+      required String buyingAsset,
+      required String offerId,
+      String? memo}) async {
+    if (!_currencies.currencies.containsKey(sellingAsset) ||
+        sellingAsset == 'XLM') {
+      throw Exception('Sell asset $sellingAsset is not available.');
+    }
+    if (!_currencies.currencies.containsKey(buyingAsset) ||
+        buyingAsset == 'XLM') {
+      throw Exception('Buy asset $buyingAsset is not available.');
+    }
+
+    final offers = (await _sdk.offers.forAccount(accountId).execute()).records;
+    final OfferResponse? targetOffer = offers.firstWhere(
+      (offer) => offer.id == offerId,
+      orElse: () => throw Exception(
+          'Offer with ID $offerId not found in user\'s account.'),
+    );
+
+    late final Asset sellAsset;
+    late final Asset buyAsset;
+
+    if (sellingAsset == 'XLM') {
+      sellAsset = AssetTypeNative();
+    } else {
+      sellAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAsset]!.assetCode,
+          _currencies.currencies[sellingAsset]!.issuer);
+    }
+    if (sellingAsset == 'XLM') {
+      buyAsset = AssetTypeNative();
+    } else {
+      buyAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAsset]!.assetCode,
+          _currencies.currencies[buyingAsset]!.issuer);
+    }
+
+    final ManageBuyOfferOperation cancelOfferOperation =
+        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, '0', '1')
+            .setOfferId(offerId)
+            .build();
+
+    final account = await _sdk.accounts.account(accountId);
+    final Transaction transaction = TransactionBuilder(account)
+        .addOperation(cancelOfferOperation)
+        .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+        .build();
+    transaction.sign(_keyPair, _stellarNetwork);
+    try {
+      final SubmitTransactionResponse response =
+          await _sdk.submitTransaction(transaction);
+      if (!response.success) {
+        print('Transaction failed with result: ${response.resultXdr}');
+      }
+      return response;
+    } catch (error) {
+      throw Exception('Transaction failed due to: ${error.toString()}');
+    }
+  }
+
+  Future<void> getOrderBook(
+      {required String sellingAssetCode,
+      required String buyingAssetCode}) async {
+    if (!_currencies.currencies.containsKey(sellingAssetCode) ||
+        sellingAssetCode == 'XLM') {
+      throw Exception('Sell asset $sellingAssetCode is not available.');
+    }
+    if (!_currencies.currencies.containsKey(buyingAssetCode) ||
+        buyingAssetCode == 'XLM') {
+      throw Exception('Buy asset $buyingAssetCode is not available.');
+    }
+    http.Client httpClient = http.Client();
+    Uri serverURI = Uri.parse(_horizonServerUrls[_network.toString()]!);
+    late final Asset sellingAsset;
+    late final Asset buyingAsset;
+
+    if (sellingAssetCode == 'XLM') {
+      sellingAsset = AssetTypeNative();
+    } else {
+      sellingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAssetCode]!.assetCode,
+          _currencies.currencies[sellingAssetCode]!.issuer);
+    }
+    if (buyingAssetCode == 'XLM') {
+      buyingAsset = AssetTypeNative();
+    } else {
+      buyingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAssetCode]!.assetCode,
+          _currencies.currencies[buyingAssetCode]!.issuer);
+    }
+
+    OrderBookRequestBuilder orderBookRequest =
+        OrderBookRequestBuilder(httpClient, serverURI)
+          ..sellingAsset(sellingAsset)
+          ..buyingAsset(buyingAsset);
+
+    Stream<OrderBookResponse> orderBookStream = orderBookRequest.stream();
+    orderBookStream.listen((orderBookResponse) {
+      print("Received OrderBookResponse:");
+      print("Base: ${orderBookResponse.base}");
+      print("Counter: ${orderBookResponse.counter}");
+
+      print("\nBids:");
+      for (var offer in orderBookResponse.bids) {
+        // priceR  numerator/denominator
+        print(
+            'Bid - Amount: ${offer.amount}, Price: ${offer.price}, PriceR: ${offer.priceR}');
+      }
+
+      print("\nAsks:");
+      for (var offer in orderBookResponse.asks) {
+        print(
+            'Ask - Amount: ${offer.amount}, Price: ${offer.price}, PriceR: ${offer.priceR}');
+      }
+    }, onError: (error) {
+      print("Error while listening to order book stream: $error");
+    }, onDone: () {
+      print("Order book stream is closed.");
+    });
+  }
+
+  Future<List<OfferResponse>> listMyOffers() async {
+    try {
+      final offers = await _sdk.offers.forAccount(accountId).execute();
+      print(offers);
+
+      if (offers.records.isEmpty) {
+        print('No offers found for account: $accountId');
+        return [];
+      }
+
+      for (var offer in offers.records) {
+        print('Offer ID: ${offer.id}');
+        print('Selling Asset: ${offer.selling}');
+        print('Buying Asset: ${offer.buying}');
+        print('Amount: ${offer.amount}');
+        print('Price: ${offer.price}');
+        print('-----------------------------------');
+      }
+      return offers.records;
+    } catch (error) {
+      throw Exception('Error listing offers for account $accountId: $error');
+    }
+  }
+
+  // Future<Transaction?> _buildOrderTransaction(
+  //     {required String sellingAsset,
+  //     required String buyingAsset,
+  //     required String amount,
+  //     required String price,
+  //     String? memo,
+  //     required bool funded}) async {
+  //   if (!_currencies.currencies.containsKey(sellingAsset)) {
+  //     throw Exception('Sell asset $sellingAsset is not available.');
+  //   }
+  //   if (!_currencies.currencies.containsKey(buyingAsset)) {
+  //     throw Exception('Buy asset $buyingAsset is not available.');
+  //   }
+
+  //   final Asset sellAsset = AssetTypeCreditAlphaNum4(
+  //       _currencies.currencies[sellingAsset]!.assetCode,
+  //       _currencies.currencies[sellingAsset]!.issuer);
+  //   final Asset buyAsset = AssetTypeCreditAlphaNum4(
+  //       _currencies.currencies[buyingAsset]!.assetCode,
+  //       _currencies.currencies[buyingAsset]!.issuer);
+
+  //   final ManageBuyOfferOperation buyOfferOperation =
+  //       ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
+  //           .build();
+
+  //   final account = await _sdk.accounts.account(accountId);
+
+  //   final balances = account.balances;
+  //   final sellAssetBalance = balances.firstWhere(
+  //     (balance) => balance.assetCode == sellingAsset,
+  //     orElse: () => throw Exception('Insufficient balance in $sellingAsset'),
+  //   );
+
+  //   final double sellAmount = double.parse(amount);
+  //   final double availableBalance = double.parse(sellAssetBalance.balance);
+  //   if (sellAmount > availableBalance) {
+  //     throw Exception(
+  //         'Insufficient balance in $sellingAsset. Available: $availableBalance');
+  //   }
+  //   Transaction? transaction;
+  //   if (funded) {
+  //     // Operation? operation = await _makeFundPaymentOperation(
+  //     //     assetCode: sellingAsset,
+  //     //     issuer: _currencies.currencies[sellingAsset]!.issuer);
+  //     transaction = TransactionBuilder(account)
+  //         .addOperation(buyOfferOperation)
+  //         .addOperation(buyOfferOperation)
+  //         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+  //         .build();
+  //   } else {
+  //     transaction = TransactionBuilder(account)
+  //         .addOperation(buyOfferOperation)
+  //         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+  //         .build();
+  //   }
+  //   return transaction;
+  // }
+
+  // Future<void> createOrderThroughThreefoldService(
+  //     {required String sellingAsset,
+  //     required String buyingAsset,
+  //     required String amount,
+  //     required String price,
+  //     String? memo}) async {
+  //   Transaction? fundedOrder = await _buildOrderTransaction(
+  //       sellingAsset: sellingAsset,
+  //       buyingAsset: buyingAsset,
+  //       amount: amount,
+  //       price: price,
+  //       funded: true);
+
+  //   fundedOrder!.sign(_keyPair, _stellarNetwork);
+
+  //   print('Sending to');
+  //   print(
+  //       '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction');
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(
+  //           '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({'transaction': fundedOrder.toEnvelopeXdrBase64()}),
+  //     );
+
+  //     print(response.body);
+  //   } catch (error) {
+  //     throw Exception('Something went wrong! $error');
+  //   }
+  // }
 }
