@@ -234,7 +234,6 @@ class Client {
       );
 
       final data = jsonDecode(response.body);
-
       String trustlineTransaction = data['addtrustline_transaction'];
       XdrTransactionEnvelope xdrTxEnvelope =
           XdrTransactionEnvelope.fromEnvelopeXdrString(trustlineTransaction);
@@ -555,27 +554,37 @@ class Client {
       throw Exception('Buy asset $buyingAsset is not available.');
     }
 
-    final Asset sellAsset = AssetTypeCreditAlphaNum12(
+    final offers = (await _sdk.offers.forAccount(accountId).execute()).records;
+    final OfferResponse? targetOffer = offers.firstWhere(
+      (offer) => offer.id == offerId,
+      orElse: () => throw Exception(
+          'Offer with ID $offerId not found in user\'s account.'),
+    );
+
+    final Asset sellAsset = AssetTypeCreditAlphaNum4(
         _currencies.currencies[sellingAsset]!.assetCode,
         _currencies.currencies[sellingAsset]!.issuer);
-    final Asset buyAsset = AssetTypeCreditAlphaNum12(
+    final Asset buyAsset = AssetTypeCreditAlphaNum4(
         _currencies.currencies[buyingAsset]!.assetCode,
         _currencies.currencies[buyingAsset]!.issuer);
 
-    final ManageBuyOfferOperation buyOfferOperation =
-        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, '0', '0')
+    final ManageBuyOfferOperation cancelOfferOperation =
+        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, '0', '1')
             .setOfferId(offerId)
             .build();
 
     final account = await _sdk.accounts.account(accountId);
     final Transaction transaction = TransactionBuilder(account)
-        .addOperation(buyOfferOperation)
+        .addOperation(cancelOfferOperation)
         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
         .build();
     transaction.sign(_keyPair, _stellarNetwork);
     try {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
+      if (!response.success) {
+        print('Transaction failed with result: ${response.resultXdr}');
+      }
       return response;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
@@ -654,6 +663,96 @@ class Client {
       return offers.records;
     } catch (error) {
       throw Exception('Error listing offers for account $accountId: $error');
+    }
+  }
+
+  Future<Transaction?> _buildOrderTransaction(
+      {required String sellingAsset,
+      required String buyingAsset,
+      required String amount,
+      required String price,
+      String? memo,
+      required bool funded}) async {
+    if (!_currencies.currencies.containsKey(sellingAsset)) {
+      throw Exception('Sell asset $sellingAsset is not available.');
+    }
+    if (!_currencies.currencies.containsKey(buyingAsset)) {
+      throw Exception('Buy asset $buyingAsset is not available.');
+    }
+
+    final Asset sellAsset = AssetTypeCreditAlphaNum4(
+        _currencies.currencies[sellingAsset]!.assetCode,
+        _currencies.currencies[sellingAsset]!.issuer);
+    final Asset buyAsset = AssetTypeCreditAlphaNum4(
+        _currencies.currencies[buyingAsset]!.assetCode,
+        _currencies.currencies[buyingAsset]!.issuer);
+
+    final ManageBuyOfferOperation buyOfferOperation =
+        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
+            .build();
+
+    final account = await _sdk.accounts.account(accountId);
+
+    final balances = account.balances;
+    final sellAssetBalance = balances.firstWhere(
+      (balance) => balance.assetCode == sellingAsset,
+      orElse: () => throw Exception('Insufficient balance in $sellingAsset'),
+    );
+
+    final double sellAmount = double.parse(amount);
+    final double availableBalance = double.parse(sellAssetBalance.balance);
+    if (sellAmount > availableBalance) {
+      throw Exception(
+          'Insufficient balance in $sellingAsset. Available: $availableBalance');
+    }
+    Transaction? transaction;
+    if (funded) {
+      Operation? operation = await _makeFundPaymentOperation(
+          assetCode: sellingAsset,
+          issuer: _currencies.currencies[sellingAsset]!.issuer);
+      transaction = TransactionBuilder(account)
+          .addOperation(operation!)
+          .addOperation(buyOfferOperation)
+          .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+          .build();
+    } else {
+      transaction = TransactionBuilder(account)
+          .addOperation(buyOfferOperation)
+          .addMemo(memo != null ? Memo.text(memo) : Memo.none())
+          .build();
+    }
+    return transaction;
+  }
+
+  Future<void> createOrderThroughThreefoldService(
+      {required String sellingAsset,
+      required String buyingAsset,
+      required String amount,
+      required String price,
+      String? memo}) async {
+    Transaction? fundedOrder = await _buildOrderTransaction(
+        sellingAsset: sellingAsset,
+        buyingAsset: buyingAsset,
+        amount: amount,
+        price: price,
+        funded: true);
+
+    fundedOrder!.sign(_keyPair, _stellarNetwork);
+
+    print('Sending to');
+    print(
+        '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction');
+    try {
+      final response = await http.post(
+        Uri.parse(
+            '${_serviceUrls[_network.toString()]}/transactionfunding_service/fund_transaction'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'transaction': fundedOrder.toEnvelopeXdrBase64()}),
+      );
+
+      print(response.body);
+    } catch (error) {
+      throw Exception('Something went wrong! $error');
     }
   }
 }
