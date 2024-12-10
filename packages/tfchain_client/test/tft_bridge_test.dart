@@ -2,26 +2,26 @@ import 'dart:math';
 
 import 'package:test/test.dart';
 
+import 'globals.dart';
 import 'setup_manager.dart';
 
 void main() {
   group("Bridge Tests", () {
-    final setupManager = SetupManager();
+    late SetupManager setupManager;
     setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
+      setupManager = await getSetupManager();
     });
-    test('Test Get Withdraw fee', () async {
+    test('Get Withdraw fee', () async {
       BigInt? fee = await setupManager.client.bridge.getWithdrawFee();
       expect(fee, isNotNull);
     });
 
-    test('Test Get Deposit fee', () async {
+    test('Get Deposit fee', () async {
       BigInt? fee = await setupManager.client.bridge.getDepositFee();
       expect(fee, isNotNull);
     });
 
-    test('Test swap to stellar zero TFTs', () async {
+    test('Swap to stellar zero TFTs', () async {
       try {
         await setupManager.client.bridge.swapToStellar(
             target: "GDHJP6TF3UXYXTNEZ2P36J5FH7W4BJJQ4AYYAXC66I2Q2AH5B6O6BCFG",
@@ -31,7 +31,7 @@ void main() {
       }
     });
 
-    test('Test swap to stellar', () async {
+    test('Swap to stellar', () async {
       try {
         var random = Random();
         var randomNumber = random.nextInt(100) + 1;

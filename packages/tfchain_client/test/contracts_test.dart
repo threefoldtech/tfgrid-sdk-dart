@@ -2,18 +2,18 @@ import 'package:test/test.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_smart_contract/types/contract_lock.dart';
 
+import 'globals.dart';
 import 'setup_manager.dart';
 
 void main() {
   group("Contracts Tests", () {
-    final setupManager = SetupManager();
+    late SetupManager setupManager;
     setUpAll(() async {
-      setupManager.setInitializationFlags(client: true);
-      await setupManager.setup();
+      setupManager = await getSetupManager();
     });
     List<BigInt> contractIds = [];
 
-    test('Test Get Contract with wrong id', () async {
+    test('Get Contract with wrong id', () async {
       try {
         Contract? contract = await setupManager.client.contracts
             .get(contractId: BigInt.from(-100));
@@ -23,7 +23,7 @@ void main() {
       }
     });
 
-    test('Test Get Contract Id by active rent for invalid node id', () async {
+    test('Get Contract Id by active rent for invalid node id', () async {
       try {
         BigInt? contractId = await setupManager.client.contracts
             .getContractIdByActiveRentForNode(nodeId: -21);
@@ -33,7 +33,7 @@ void main() {
       }
     });
 
-    test('Test Get Active Contracts by wrong node Id', () async {
+    test('Get active contracts by wrong node id', () async {
       try {
         List<int> contracts =
             await setupManager.client.contracts.getActiveContracts(nodeId: -21);
@@ -43,7 +43,7 @@ void main() {
       }
     });
 
-    test('Test Get Contract Lock by deleted Contract Id', () async {
+    test('Get contract lock by deleted contract id', () async {
       try {
         final name = generateRandomString(7);
         BigInt? contractId =
@@ -58,7 +58,7 @@ void main() {
       }
     }, timeout: Timeout(Duration(seconds: 50)));
 
-    test('Test Update Node Contract with wrong data', () async {
+    test('Update node contract with wrong data', () async {
       try {
         await setupManager.client.contracts.updateNode(
             contractId: BigInt.from(-200),
@@ -69,7 +69,7 @@ void main() {
       }
     });
 
-    test('Test Create Name Contract', () async {
+    test('Create name contract', () async {
       final name = generateRandomString(6);
       final contractId =
           await setupManager.client.contracts.createName(name: name);
