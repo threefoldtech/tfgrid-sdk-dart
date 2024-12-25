@@ -138,27 +138,26 @@ class Client {
   }
 
   Future<bool> addTrustLine() async {
-    try {
-      for (var entry in _currencies.currencies.entries) {
-        String currencyCode = entry.key;
-        currency.Currency currentCurrency = entry.value;
+    for (var entry in _currencies.currencies.entries) {
+      String currencyCode = entry.key;
+      currency.Currency currentCurrency = entry.value;
 
-        String issuerAccountId = currentCurrency.issuer;
-        Asset currencyAsset = AssetTypeCreditAlphaNum4(
-            currentCurrency.assetCode, issuerAccountId);
+      String issuerAccountId = currentCurrency.issuer;
+      Asset currencyAsset =
+          AssetTypeCreditAlphaNum4(currentCurrency.assetCode, issuerAccountId);
 
-        ChangeTrustOperationBuilder changeTrustOperation =
-            ChangeTrustOperationBuilder(currencyAsset, "300000");
+      ChangeTrustOperationBuilder changeTrustOperation =
+          ChangeTrustOperationBuilder(currencyAsset, "300000");
 
-        final account = await _sdk.accounts.account(accountId);
+      final account = await _sdk.accounts.account(accountId);
 
-        Transaction transaction = TransactionBuilder(account)
-            .addOperation(changeTrustOperation.build())
-            .build();
-        transaction.sign(_keyPair, _stellarNetwork);
+      Transaction transaction = TransactionBuilder(account)
+          .addOperation(changeTrustOperation.build())
+          .build();
+      transaction.sign(_keyPair, _stellarNetwork);
 
-        SubmitTransactionResponse response =
-            await _sdk.submitTransaction(transaction);
+      SubmitTransactionResponse response =
+          await _sdk.submitTransaction(transaction);
 
       if (!response.success) {
         logger.e("Failed to add trustline for $currencyCode");
@@ -167,6 +166,7 @@ class Client {
         logger.i("trustline for $currencyCode was added successfully");
         return true;
       }
+    }
 
     logger.i("No trustlines were processed");
     return false;
