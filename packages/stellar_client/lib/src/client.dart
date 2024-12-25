@@ -79,7 +79,11 @@ class Client {
         throw Exception('Unsupported network type');
     }
 
-    _currencies = currency.Currencies({'TFT': tft, 'USDC': usdc});
+    _currencies = currency.Currencies({
+      'TFT': tft,
+      'USDC': usdc,
+      'XLM': currency.Currency(assetCode: 'XLM', issuer: "")
+    });
   }
 
   Future<bool> activateThroughThreefoldService() async {
@@ -492,12 +496,10 @@ class Client {
       required String amount,
       required String price,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAsset) ||
-        sellingAsset == 'XLM') {
+    if (!_currencies.currencies.containsKey(sellingAsset)) {
       throw Exception('Sell asset $sellingAsset is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAsset) ||
-        buyingAsset == 'XLM') {
+    if (!_currencies.currencies.containsKey(buyingAsset)) {
       throw Exception('Buy asset $buyingAsset is not available.');
     }
 
@@ -541,14 +543,13 @@ class Client {
         .addOperation(buyOfferOperation)
         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
         .build();
-    print('Transaction XDR: ${transaction.toEnvelopeXdrBase64()}');
 
     transaction.sign(_keyPair, _stellarNetwork);
     try {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        print('Transaction failed with result: ${response.resultXdr}');
+        logger.e('Transaction failed with result: ${response.resultXdr}');
       }
       return response;
     } catch (error) {
@@ -561,12 +562,10 @@ class Client {
       required String buyingAsset,
       required String offerId,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAsset) ||
-        sellingAsset == 'XLM') {
+    if (!_currencies.currencies.containsKey(sellingAsset)) {
       throw Exception('Sell asset $sellingAsset is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAsset) ||
-        buyingAsset == 'XLM') {
+    if (!_currencies.currencies.containsKey(buyingAsset)) {
       throw Exception('Buy asset $buyingAsset is not available.');
     }
 
@@ -610,7 +609,7 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        print('Transaction failed with result: ${response.resultXdr}');
+        logger.e('Transaction failed with result: ${response.resultXdr}');
       }
       return response;
     } catch (error) {
@@ -618,15 +617,13 @@ class Client {
     }
   }
 
-  Future<void> getOrderBook(
+  Future<Stream<OrderBookResponse>> getOrderBook(
       {required String sellingAssetCode,
       required String buyingAssetCode}) async {
-    if (!_currencies.currencies.containsKey(sellingAssetCode) ||
-        sellingAssetCode == 'XLM') {
+    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
       throw Exception('Sell asset $sellingAssetCode is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAssetCode) ||
-        buyingAssetCode == 'XLM') {
+    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
       throw Exception('Buy asset $buyingAssetCode is not available.');
     }
     http.Client httpClient = http.Client();
@@ -654,49 +651,18 @@ class Client {
           ..sellingAsset(sellingAsset)
           ..buyingAsset(buyingAsset);
 
-    Stream<OrderBookResponse> orderBookStream = orderBookRequest.stream();
-    orderBookStream.listen((orderBookResponse) {
-      print("Received OrderBookResponse:");
-      print("Base: ${orderBookResponse.base}");
-      print("Counter: ${orderBookResponse.counter}");
-
-      print("\nBids:");
-      for (var offer in orderBookResponse.bids) {
-        // priceR  numerator/denominator
-        print(
-            'Bid - Amount: ${offer.amount}, Price: ${offer.price}, PriceR: ${offer.priceR}');
-      }
-
-      print("\nAsks:");
-      for (var offer in orderBookResponse.asks) {
-        print(
-            'Ask - Amount: ${offer.amount}, Price: ${offer.price}, PriceR: ${offer.priceR}');
-      }
-    }, onError: (error) {
-      print("Error while listening to order book stream: $error");
-    }, onDone: () {
-      print("Order book stream is closed.");
-    });
+    return await orderBookRequest.stream();
   }
 
   Future<List<OfferResponse>> listMyOffers() async {
     try {
       final offers = await _sdk.offers.forAccount(accountId).execute();
-      print(offers);
 
       if (offers.records.isEmpty) {
-        print('No offers found for account: $accountId');
+        logger.i('No offers found for account: $accountId');
         return [];
       }
 
-      for (var offer in offers.records) {
-        print('Offer ID: ${offer.id}');
-        print('Selling Asset: ${offer.selling}');
-        print('Buying Asset: ${offer.buying}');
-        print('Amount: ${offer.amount}');
-        print('Price: ${offer.price}');
-        print('-----------------------------------');
-      }
       return offers.records;
     } catch (error) {
       throw Exception('Error listing offers for account $accountId: $error');
