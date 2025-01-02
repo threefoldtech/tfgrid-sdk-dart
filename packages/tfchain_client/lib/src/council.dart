@@ -74,7 +74,9 @@ class Council extends QueryCouncil {
   Future<Votes> vote({required String hash, required bool approve}) async {
     final votes = await getProposalVotes(hash: hash);
     final extrinsic = client.api.tx.council.vote(
-        index: votes.index, proposal: hash.hexToListInt(), approve: approve);
+        index: BigInt.from(votes.index),
+        proposal: hash.hexToListInt(),
+        approve: approve);
     await client.apply(extrinsic);
 
     return getProposalVotes(hash: hash);
