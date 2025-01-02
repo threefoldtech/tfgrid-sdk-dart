@@ -1,7 +1,8 @@
+import 'package:moment_dart/moment_dart.dart';
 import 'package:polkadart/multisig/multisig_base.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_collective/votes.dart';
-import 'package:tfchain_client/models/dao.dart';
+import 'package:tfchain_client/models/council.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryCouncil {
@@ -10,7 +11,6 @@ class QueryCouncil {
 
   Future<List<String>> getProposals() async {
     final hashesJson = await client.api.query.council.proposals();
-    print(hashesJson);
     List<String> hashes =
         hashesJson.map((hashList) => hashList.toHex()).toList();
     return hashes;
@@ -37,6 +37,33 @@ class QueryCouncil {
     final keyring = Keyring();
     final members = await client.api.query.council.members();
     return members.map((member) => keyring.encodeAddress(member)).toList();
+  }
+
+  Future<List<CouncilProposal>> get() async {
+    List<String> hashes = await getProposals();
+
+    List<CouncilProposal> proposals = [];
+
+    for (int i = 0; i < hashes.length; i++) {
+      final proposal = await getProposal(hash: hashes[i]);
+      final proposalVotes = await getProposalVotes(hash: hashes[i]);
+      final nowBlock = await client.api.query.system.number();
+      final timeUntilEnd = (proposalVotes.end - nowBlock) * 6;
+      if (proposal != null) {
+        final p = CouncilProposal(
+            index: proposalVotes.index,
+            threshold: proposalVotes.threshold,
+            end: Moment(DateTime.now()).add(Duration(seconds: timeUntilEnd)),
+            hash: hashes[i],
+            module: proposal.module,
+            method: proposal.method,
+            args: proposal.args,
+            active: proposalVotes.end > nowBlock);
+        proposals.add(p);
+      }
+    }
+
+    return proposals;
   }
 }
 
