@@ -3,6 +3,7 @@ import 'package:polkadart/multisig/multisig_base.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:tfchain_client/generated/dev/types/pallet_collective/votes.dart';
 import 'package:tfchain_client/models/council.dart';
+import 'package:tfchain_client/models/dao.dart';
 import 'package:tfchain_client/tfchain_client.dart';
 
 class QueryCouncil {
