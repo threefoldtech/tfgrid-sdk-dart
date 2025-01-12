@@ -14,7 +14,15 @@ class Client {
   Uint8List? get privateKey => _keyPair.privateKey;
 
   var logger = Logger(
-    printer: PrettyPrinter(),
+    printer: PrettyPrinter(
+        methodCount: 2,
+        errorMethodCount: 8,
+        lineLength: 120,
+        colors: true,
+        printEmojis: true,
+        printTime: true),
+    level: Level.debug,
+    filter: ProductionFilter(),
   );
 
   Client(this._network, String secretSeed) {
@@ -142,9 +150,17 @@ class Client {
   }
 
   Future<bool> addTrustLine() async {
+    bool allTrustlinesAdded = true;
+
     for (var entry in _currencies.currencies.entries) {
       String currencyCode = entry.key;
       currency.Currency currentCurrency = entry.value;
+      if (currencyCode == 'XLM') {
+        logger.i("Skipping trustline for native asset $currencyCode");
+        continue;
+      }
+      logger.i(
+          "Processing trustline for ${entry.key} with issuer ${entry.value.issuer}");
 
       String issuerAccountId = currentCurrency.issuer;
       Asset currencyAsset =
@@ -165,15 +181,19 @@ class Client {
 
       if (!response.success) {
         logger.e("Failed to add trustline for $currencyCode");
-        return false;
+        allTrustlinesAdded = false;
       } else {
-        logger.i("trustline for $currencyCode was added successfully");
-        return true;
+        logger.i("Trustline for $currencyCode was added successfully");
       }
     }
 
-    logger.i("No trustlines were processed");
-    return false;
+    if (allTrustlinesAdded) {
+      logger.i("All trustlines were added successfully");
+      return true;
+    } else {
+      logger.e("One or more trustlines failed to be added");
+      return false;
+    }
   }
 
   Future<bool> transfer(
