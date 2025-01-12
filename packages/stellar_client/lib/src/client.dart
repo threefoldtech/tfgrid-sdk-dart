@@ -654,6 +654,69 @@ class Client {
     }
   }
 
+  Future<SubmitTransactionResponse> updateOrder(
+      {required String sellingAssetCode,
+      required String buyingAssetCode,
+      required String amount,
+      required String price,
+      required String offerId,
+      String? memo}) async {
+    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
+      throw Exception('Sell asset $sellingAssetCode is not available.');
+    }
+    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
+      throw Exception('Buy asset $buyingAssetCode is not available.');
+    }
+
+    final offers = (await _sdk.offers.forAccount(accountId).execute()).records;
+    final OfferResponse? targetOffer = offers.firstWhere(
+      (offer) => offer.id == offerId,
+      orElse: () => throw Exception(
+          'Offer with ID $offerId not found in user\'s account.'),
+    );
+
+    late final Asset sellingAsset;
+    late final Asset buyingAsset;
+
+    if (sellingAssetCode == 'XLM') {
+      sellingAsset = AssetTypeNative();
+    } else {
+      sellingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAssetCode]!.assetCode,
+          _currencies.currencies[sellingAssetCode]!.issuer);
+    }
+    if (buyingAssetCode == 'XLM') {
+      buyingAsset = AssetTypeNative();
+    } else {
+      buyingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAssetCode]!.assetCode,
+          _currencies.currencies[buyingAssetCode]!.issuer);
+    }
+
+    ManageBuyOfferOperation updateOfferOperation = ManageBuyOfferOperationBuilder(
+      sellingAsset,
+      buyingAsset,
+      amount,
+      price,
+    ).setOfferId(offerId).build();
+
+    final account = await _sdk.accounts.account(accountId);
+    final Transaction transaction = TransactionBuilder(account)
+        .addOperation(updateOfferOperation)
+        .build();
+    transaction.sign(_keyPair, _stellarNetwork);
+    try {
+      final SubmitTransactionResponse response =
+          await _sdk.submitTransaction(transaction);
+      if (!response.success) {
+        logger.e('Transaction failed with result: ${response.resultXdr}');
+      }
+      return response;
+    } catch (error) {
+      throw Exception('Transaction failed due to: ${error.toString()}');
+    }
+  }
+
   Future<Stream<OrderBookResponse>> getOrderBook(
       {required String sellingAssetCode,
       required String buyingAssetCode}) async {
