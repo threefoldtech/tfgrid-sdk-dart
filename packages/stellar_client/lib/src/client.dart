@@ -511,34 +511,34 @@ class Client {
   }
 
   Future<SubmitTransactionResponse> createOrder(
-      {required String sellingAsset,
-      required String buyingAsset,
+      {required String sellingAssetCode,
+      required String buyingAssetCode,
       required String amount,
       required String price,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAsset)) {
-      throw Exception('Sell asset $sellingAsset is not available.');
+    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
+      throw Exception('Sell asset $sellingAssetCode is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAsset)) {
-      throw Exception('Buy asset $buyingAsset is not available.');
+    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
+      throw Exception('Buy asset $buyingAssetCode is not available.');
     }
 
     late final Asset sellAsset;
     late final Asset buyAsset;
 
-    if (sellingAsset == 'XLM') {
+    if (sellingAssetCode == 'XLM') {
       sellAsset = AssetTypeNative();
     } else {
       sellAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[sellingAsset]!.assetCode,
-          _currencies.currencies[sellingAsset]!.issuer);
+          _currencies.currencies[sellingAssetCode]!.assetCode,
+          _currencies.currencies[sellingAssetCode]!.issuer);
     }
-    if (sellingAsset == 'XLM') {
+    if (buyingAssetCode == 'XLM') {
       buyAsset = AssetTypeNative();
     } else {
       buyAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[buyingAsset]!.assetCode,
-          _currencies.currencies[buyingAsset]!.issuer);
+          _currencies.currencies[buyingAssetCode]!.assetCode,
+          _currencies.currencies[buyingAssetCode]!.issuer);
     }
 
     final ManageBuyOfferOperation buyOfferOperation =
@@ -546,19 +546,36 @@ class Client {
             .build();
 
     final account = await _sdk.accounts.account(accountId);
-
     final balances = account.balances;
-    final sellAssetBalance = balances.firstWhere(
-      (balance) => balance.assetCode == sellingAsset,
-      orElse: () => throw Exception('Insufficient balance in $sellingAsset'),
-    );
 
-    final double sellAmount = double.parse(amount);
-    final double availableBalance = double.parse(sellAssetBalance.balance);
-    if (sellAmount > availableBalance) {
-      throw Exception(
-          'Insufficient balance in $sellingAsset. Available: $availableBalance');
+    try {
+      final sellAssetBalance = balances.firstWhere(
+        (balance) {
+          if (sellingAssetCode == 'XLM' && balance.assetCode == null) {
+            // Special case for XLM
+            return true;
+          } else {
+            return balance.assetCode == sellingAssetCode;
+          }
+        },
+        orElse: () {
+          logger.e("Sell asset $sellingAssetCode not found in balances.");
+          throw Exception('Insufficient balance in $sellingAssetCode');
+        },
+      );
+
+      final double sellAmount = double.parse(amount);
+      final double availableBalance = double.parse(sellAssetBalance.balance);
+
+      if (sellAmount > availableBalance) {
+        throw Exception(
+            'Insufficient balance in $sellingAssetCode. Available: $availableBalance');
+      }
+    } catch (e) {
+      logger.e("Error: ${e.toString()}");
+      rethrow;
     }
+
     final Transaction transaction = TransactionBuilder(account)
         .addOperation(buyOfferOperation)
         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
@@ -578,15 +595,15 @@ class Client {
   }
 
   Future<SubmitTransactionResponse> cancelOrder(
-      {required String sellingAsset,
-      required String buyingAsset,
+      {required String sellingAssetCode,
+      required String buyingAssetCode,
       required String offerId,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAsset)) {
-      throw Exception('Sell asset $sellingAsset is not available.');
+    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
+      throw Exception('Sell asset $sellingAssetCode is not available.');
     }
-    if (!_currencies.currencies.containsKey(buyingAsset)) {
-      throw Exception('Buy asset $buyingAsset is not available.');
+    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
+      throw Exception('Buy asset $buyingAssetCode is not available.');
     }
 
     final offers = (await _sdk.offers.forAccount(accountId).execute()).records;
@@ -596,26 +613,26 @@ class Client {
           'Offer with ID $offerId not found in user\'s account.'),
     );
 
-    late final Asset sellAsset;
-    late final Asset buyAsset;
+    late final Asset sellingAsset;
+    late final Asset buyingAsset;
 
-    if (sellingAsset == 'XLM') {
-      sellAsset = AssetTypeNative();
+    if (sellingAssetCode == 'XLM') {
+      sellingAsset = AssetTypeNative();
     } else {
-      sellAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[sellingAsset]!.assetCode,
-          _currencies.currencies[sellingAsset]!.issuer);
+      sellingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[sellingAssetCode]!.assetCode,
+          _currencies.currencies[sellingAssetCode]!.issuer);
     }
-    if (sellingAsset == 'XLM') {
-      buyAsset = AssetTypeNative();
+    if (buyingAssetCode == 'XLM') {
+      buyingAsset = AssetTypeNative();
     } else {
-      buyAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[buyingAsset]!.assetCode,
-          _currencies.currencies[buyingAsset]!.issuer);
+      buyingAsset = AssetTypeCreditAlphaNum4(
+          _currencies.currencies[buyingAssetCode]!.assetCode,
+          _currencies.currencies[buyingAssetCode]!.issuer);
     }
 
     final ManageBuyOfferOperation cancelOfferOperation =
-        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, '0', '1')
+        ManageBuyOfferOperationBuilder(sellingAsset, buyingAsset, '0', '1')
             .setOfferId(offerId)
             .build();
 
