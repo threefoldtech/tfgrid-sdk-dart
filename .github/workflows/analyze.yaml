@@ -3,10 +3,10 @@ name: Analyze
 on:
   pull_request:
     branches:
-      - main
+      - development
   push:
     branches:
-      - main
+      - development
 
 jobs:
   build:

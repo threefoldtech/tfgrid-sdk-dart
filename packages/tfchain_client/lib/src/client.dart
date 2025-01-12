@@ -14,6 +14,7 @@ class QueryClient {
   QueryBridge? _bridge;
   QueryTFTPrice? _price;
   Dao.QueryDao? _dao;
+  Council.QueryCouncil? _council;
 
   QueryClient(this.url) {}
 
@@ -60,6 +61,11 @@ class QueryClient {
   Dao.QueryDao get dao {
     if (_dao == null) _dao = Dao.QueryDao(this);
     return _dao!;
+  }
+
+  Council.QueryCouncil get council {
+    if (_council == null) _council = Council.QueryCouncil(this);
+    return _council!;
   }
 
   void _checkInputs() {
@@ -144,6 +150,12 @@ class Client extends QueryClient {
   Dao.Dao get dao {
     if (_dao == null) _dao = Dao.Dao(this);
     return _dao as Dao.Dao;
+  }
+
+  @override
+  Council.Council get council {
+    if (_council == null) _council = Council.Council(this);
+    return _council as Council.Council;
   }
 
   KVStore get kvStore {
