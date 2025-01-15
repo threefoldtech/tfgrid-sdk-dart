@@ -381,43 +381,68 @@ class Client {
     }
   }
 
-  Future<List<ITransaction>> getTransactions({String? assetCodeFilter}) async {
-    Page<OperationResponse> payments = await _sdk.payments
-        .forAccount(accountId)
-        .order(RequestBuilderOrder.DESC)
-        .execute();
-    List<ITransaction> transactionDetails = [];
+  Future<List<ITransaction>> getTransactions(
+      {String? assetCodeFilter, int? limit, int? offset}) async {
+    try {
+      var paymentsRequest =
+          _sdk.payments.forAccount(accountId).order(RequestBuilderOrder.DESC);
 
-    if (payments.records.isNotEmpty) {
-      for (OperationResponse response in payments.records) {
-        if (response is PaymentOperationResponse) {
-          final memoText = await this
-              .getMemoText(response.links.transaction.toJson()["href"]);
-          String assetCode = response.assetCode ?? 'XLM';
-          if (assetCodeFilter == null || assetCode == assetCodeFilter) {
-            final details = PaymentTransaction(
-                hash: response.transactionHash,
-                from: response.from,
-                to: response.to,
-                asset: response.assetCode.toString(),
-                amount: response.amount,
-                type: response.to == this.accountId
-                    ? TransactionType.Receive
-                    : TransactionType.Payment,
-                status: response.transactionSuccessful,
-                date: DateTime.parse(response.createdAt).toLocal().toString(),
-                memo: memoText);
+      // Add pagination
+      if (limit != null) {
+        paymentsRequest = paymentsRequest.limit(limit);
+      }
 
-            transactionDetails.add(details);
-          }
-        } else {
-          logger.i("Unhandled operation type: ${response.runtimeType}");
+      // get first page
+      if (offset != null && offset > 0) {
+        var initialPage = await _sdk.payments
+            .forAccount(accountId)
+            .order(RequestBuilderOrder.DESC)
+            .limit(offset)
+            .execute();
+
+        if (initialPage.records.isNotEmpty) {
+          // Use the last record's paging token as cursor
+          paymentsRequest =
+              paymentsRequest.cursor(initialPage.records.last.pagingToken);
         }
       }
-    } else {
-      logger.i("No payment records found.");
+
+      Page<OperationResponse> payments = await paymentsRequest.execute();
+      List<ITransaction> transactionDetails = [];
+
+      if (payments.records.isNotEmpty) {
+        for (OperationResponse response in payments.records) {
+          if (response is PaymentOperationResponse) {
+            final memoText = await this
+                .getMemoText(response.links.transaction.toJson()["href"]);
+            String assetCode = response.assetCode ?? 'XLM';
+            if (assetCodeFilter == null || assetCode == assetCodeFilter) {
+              final details = PaymentTransaction(
+                  hash: response.transactionHash,
+                  from: response.from,
+                  to: response.to,
+                  asset: response.assetCode.toString(),
+                  amount: response.amount,
+                  type: response.to == this.accountId
+                      ? TransactionType.Receive
+                      : TransactionType.Payment,
+                  status: response.transactionSuccessful,
+                  date: DateTime.parse(response.createdAt).toLocal().toString(),
+                  memo: memoText);
+
+              transactionDetails.add(details);
+            }
+          } else {
+            logger.i("Unhandled operation type: ${response.runtimeType}");
+          }
+        }
+      }
+
+      return transactionDetails;
+    } catch (e) {
+      logger.e('Failed to get transactions: $e');
+      throw Exception('Could not get transactions due to $e');
     }
-    return transactionDetails;
   }
 
   Future<List<BalanceInfo>> getBalance() async {

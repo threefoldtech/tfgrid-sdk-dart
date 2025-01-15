@@ -1,14 +1,8 @@
 import 'package:stellar_client/stellar_client.dart';
 
 void main() async {
-  final stellarClient = Client.create(NetworkType.PUBLIC);
-  await stellarClient.activateThroughThreefoldService();
-
-  await stellarClient.transfer(
-      destinationAddress: "destination-public-key",
-      amount: "20",
-      currency: "TFT",
-      memoText: "Memo Text");
+  final stellarClient = await Client(NetworkType.PUBLIC,
+      'SCVWI4TCVUPB7EN4I5X5DQ56RV5E3JNFWDY2NHJCBXOMH5WKVCJ4RSGG');
 
   await stellarClient.getTransactions();
 }
