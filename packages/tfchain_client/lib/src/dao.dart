@@ -101,10 +101,10 @@ class QueryDao {
     final total = totalAyeWeight + totalNayeWeight;
     if (total > 0) {
       if (typeAye) {
-        return ((totalAyeWeight / total) * 100).toInt();
+        return ((totalAyeWeight / total) * 100).round();
       }
 
-      return ((totalNayeWeight / total) * 100).toInt();
+      return ((totalNayeWeight / total) * 100).round();
     }
     return 0;
   }
