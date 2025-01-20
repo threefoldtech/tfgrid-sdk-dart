@@ -516,11 +516,9 @@ packages:
   signer:
     dependency: "direct main"
     description:
-      path: "packages/signer"
-      ref: main_fix_urls
-      resolved-ref: d5204d4a5af4f1fbf80334db8039e17f9e323161
-      url: "https://github.com/threefoldtech/tfgrid-sdk-dart.git"
-    source: git
+      path: "../signer"
+      relative: true
+    source: path
     version: "0.1.0"
   source_map_stack_trace:
     dependency: transitive
