@@ -62,8 +62,6 @@ class Client {
           issuer: "GBOVQKJYHXRR3DX6NOX2RRYFRCUMSADGDESTDNBDS6CDVLGVESRTAC47",
         );
         break;
-      default:
-        throw Exception('Unsupported network type');
     }
 
     _currencies = currency.Currencies({'TFT': tft});
