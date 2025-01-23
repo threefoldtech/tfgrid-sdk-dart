@@ -117,8 +117,6 @@ class ContractInfo {
         case ContractTypes.rent:
           details = RentContract.fromJson(detailsJson);
           break;
-        default:
-          print("Unhandled type: $type");
       }
     }
 

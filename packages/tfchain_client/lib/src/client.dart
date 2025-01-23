@@ -13,8 +13,8 @@ class QueryClient {
   QueryPricingPolicies? _policies;
   QueryBridge? _bridge;
   QueryTFTPrice? _price;
-  Dao.QueryDao? _dao;
-  Council.QueryCouncil? _council;
+  ClientDao.QueryDao? _dao;
+  ClientCouncil.QueryCouncil? _council;
 
   QueryClient(this.url) {}
 
@@ -58,13 +58,13 @@ class QueryClient {
     return _price!;
   }
 
-  Dao.QueryDao get dao {
-    if (_dao == null) _dao = Dao.QueryDao(this);
+  ClientDao.QueryDao get dao {
+    if (_dao == null) _dao = ClientDao.QueryDao(this);
     return _dao!;
   }
 
-  Council.QueryCouncil get council {
-    if (_council == null) _council = Council.QueryCouncil(this);
+  ClientCouncil.QueryCouncil get council {
+    if (_council == null) _council = ClientCouncil.QueryCouncil(this);
     return _council!;
   }
 
@@ -147,15 +147,15 @@ class Client extends QueryClient {
   }
 
   @override
-  Dao.Dao get dao {
-    if (_dao == null) _dao = Dao.Dao(this);
-    return _dao as Dao.Dao;
+  ClientDao.Dao get dao {
+    if (_dao == null) _dao = ClientDao.Dao(this);
+    return _dao as ClientDao.Dao;
   }
 
   @override
-  Council.Council get council {
-    if (_council == null) _council = Council.Council(this);
-    return _council as Council.Council;
+  ClientCouncil.Council get council {
+    if (_council == null) _council = ClientCouncil.Council(this);
+    return _council as ClientCouncil.Council;
   }
 
   KVStore get kvStore {
