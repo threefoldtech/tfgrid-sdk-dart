@@ -514,8 +514,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/signer"
-      ref: development_upgrade
-      resolved-ref: a22ed9880ff46e3d15f7cdb996f71fc7afd99210
+      ref: development
+      resolved-ref: "5fb661e64da43a277caa0ad58a9551e176238222"
       url: "https://github.com/threefoldtech/tfgrid-sdk-dart.git"
     source: git
     version: "0.1.0"
