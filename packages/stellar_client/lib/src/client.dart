@@ -13,8 +13,15 @@ class Client {
   Uint8List? get privateKey => _keyPair.privateKey;
 
   var logger = Logger(
-    printer: PrettyPrinter(),
-  );
+      printer: PrettyPrinter(
+    methodCount: 2, // Number of method calls to be displayed
+    errorMethodCount: 8, // Number of method calls if stacktrace is provided
+    lineLength: 120, // Width of the output
+    colors: true, // Colorful log messages
+    printEmojis: true, // Print an emoji for each log message
+    // Should each log print contain a timestamp
+    dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
+  ));
 
   Client(this._network, String secretSeed) {
     _keyPair = KeyPair.fromSecretSeed(secretSeed);
@@ -161,12 +168,15 @@ class Client {
       {required String destinationAddress,
       required String amount,
       required String currency,
-      String? memoText}) async {
+      String? memoText,
+      Uint8List? memoHash}) async {
     try {
       Transaction? transaction = await _buildTransaction(
           destinationAddress: destinationAddress,
           amount: amount,
           currency: currency,
+          memoText: memoText,
+          memoHash: memoHash,
           funded: false);
 
       transaction!.sign(_keyPair, _stellarNetwork);
@@ -293,6 +303,7 @@ class Client {
       required String amount,
       required String currency,
       String? memoText,
+      Uint8List? memoHash,
       required bool funded}) async {
     // check if I have enough balance
     final accountBalances = await this.getBalance();
@@ -332,14 +343,22 @@ class Client {
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .addMemo(memoText != null
+              ? Memo.text(memoText)
+              : memoHash != null
+                  ? Memo.hash(memoHash)
+                  : Memo.none())
           .build();
     } else {
       transaction = TransactionBuilder(sender)
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .addMemo(memoText != null
+              ? Memo.text(memoText)
+              : memoHash != null
+                  ? Memo.hash(memoHash)
+                  : Memo.none())
           .build();
     }
 
@@ -350,12 +369,14 @@ class Client {
       {required String destinationAddress,
       required String amount,
       required String currency,
-      String? memoText}) async {
+      String? memoText,
+      Uint8List? memoHash}) async {
     Transaction? fundedTransaction = await _buildTransaction(
         destinationAddress: destinationAddress,
         amount: amount,
         currency: currency,
         memoText: memoText,
+        memoHash: memoHash,
         funded: true);
 
     fundedTransaction!.sign(_keyPair, _stellarNetwork);
