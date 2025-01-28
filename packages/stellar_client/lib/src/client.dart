@@ -13,15 +13,16 @@ class Client {
   Uint8List? get privateKey => _keyPair.privateKey;
 
   var logger = Logger(
-      printer: PrettyPrinter(
-    methodCount: 2, // Number of method calls to be displayed
-    errorMethodCount: 8, // Number of method calls if stacktrace is provided
-    lineLength: 120, // Width of the output
-    colors: true, // Colorful log messages
-    printEmojis: true, // Print an emoji for each log message
-    // Should each log print contain a timestamp
-    dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
-  ));
+    printer: PrettyPrinter(
+        methodCount: 2,
+        errorMethodCount: 8,
+        lineLength: 120,
+        colors: true,
+        printEmojis: true,
+        printTime: true),
+    level: Level.debug,
+    filter: ProductionFilter(),
+  );
 
   Client(this._network, String secretSeed) {
     _keyPair = KeyPair.fromSecretSeed(secretSeed);
