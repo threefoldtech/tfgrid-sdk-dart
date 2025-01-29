@@ -308,6 +308,14 @@ class Client {
       required bool funded}) async {
     // check if I have enough balance
     final accountBalances = await this.getBalance();
+    Memo memo = Memo.none();
+
+    if (memoText != null) {
+      memo = Memo.text(memoText);
+    } else if (memoHash != null) {
+      memo = Memo.hash(memoHash);
+    }
+
     accountBalances.firstWhere(
         (b) =>
             b.assetCode == currency &&
@@ -344,22 +352,14 @@ class Client {
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null
-              ? Memo.text(memoText)
-              : memoHash != null
-                  ? Memo.hash(memoHash)
-                  : Memo.none())
+          .addMemo(memo)
           .build();
     } else {
       transaction = TransactionBuilder(sender)
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null
-              ? Memo.text(memoText)
-              : memoHash != null
-                  ? Memo.hash(memoHash)
-                  : Memo.none())
+          .addMemo(memo)
           .build();
     }
 
