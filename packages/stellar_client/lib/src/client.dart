@@ -13,7 +13,15 @@ class Client {
   Uint8List? get privateKey => _keyPair.privateKey;
 
   var logger = Logger(
-    printer: PrettyPrinter(),
+    printer: PrettyPrinter(
+        methodCount: 2,
+        errorMethodCount: 8,
+        lineLength: 120,
+        colors: true,
+        printEmojis: true,
+        printTime: true),
+    level: Level.debug,
+    filter: ProductionFilter(),
   );
 
   Client(this._network, String secretSeed) {
@@ -161,12 +169,15 @@ class Client {
       {required String destinationAddress,
       required String amount,
       required String currency,
-      String? memoText}) async {
+      String? memoText,
+      Uint8List? memoHash}) async {
     try {
       Transaction? transaction = await _buildTransaction(
           destinationAddress: destinationAddress,
           amount: amount,
           currency: currency,
+          memoText: memoText,
+          memoHash: memoHash,
           funded: false);
 
       transaction!.sign(_keyPair, _stellarNetwork);
@@ -293,6 +304,7 @@ class Client {
       required String amount,
       required String currency,
       String? memoText,
+      Uint8List? memoHash,
       required bool funded}) async {
     // check if I have enough balance
     final accountBalances = await this.getBalance();
@@ -332,14 +344,22 @@ class Client {
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .addMemo(memoText != null
+              ? Memo.text(memoText)
+              : memoHash != null
+                  ? Memo.hash(memoHash)
+                  : Memo.none())
           .build();
     } else {
       transaction = TransactionBuilder(sender)
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .addMemo(memoText != null
+              ? Memo.text(memoText)
+              : memoHash != null
+                  ? Memo.hash(memoHash)
+                  : Memo.none())
           .build();
     }
 
@@ -350,12 +370,14 @@ class Client {
       {required String destinationAddress,
       required String amount,
       required String currency,
-      String? memoText}) async {
+      String? memoText,
+      Uint8List? memoHash}) async {
     Transaction? fundedTransaction = await _buildTransaction(
         destinationAddress: destinationAddress,
         amount: amount,
         currency: currency,
         memoText: memoText,
+        memoHash: memoHash,
         funded: true);
 
     fundedTransaction!.sign(_keyPair, _stellarNetwork);
