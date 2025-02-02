@@ -45,7 +45,11 @@ class ProposalInfo {
         if (entry.value == null) {
           args[entry.key] = entry.value;
         } else {
-          args[entry.key] = String.fromCharCodes(entry.value);
+          try {
+            args[entry.key] = String.fromCharCodes(entry.value);
+          } catch (e) {
+            args[entry.key] = entry.value;
+          }
         }
       }
     }

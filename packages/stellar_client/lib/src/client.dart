@@ -83,8 +83,6 @@ class Client {
             assetCode: 'USDC',
             issuer: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN');
         break;
-      default:
-        throw Exception('Unsupported network type');
     }
 
     _currencies = currency.Currencies({
@@ -200,12 +198,15 @@ class Client {
       {required String destinationAddress,
       required String amount,
       required String currency,
-      String? memoText}) async {
+      String? memoText,
+      Uint8List? memoHash}) async {
     try {
       Transaction? transaction = await _buildTransaction(
           destinationAddress: destinationAddress,
           amount: amount,
           currency: currency,
+          memoText: memoText,
+          memoHash: memoHash,
           funded: false);
 
       transaction!.sign(_keyPair, _stellarNetwork);
@@ -331,9 +332,18 @@ class Client {
       required String amount,
       required String currency,
       String? memoText,
+      Uint8List? memoHash,
       required bool funded}) async {
     // check if I have enough balance
     final accountBalances = await this.getBalance();
+    Memo memo = Memo.none();
+
+    if (memoText != null) {
+      memo = Memo.text(memoText);
+    } else if (memoHash != null) {
+      memo = Memo.hash(memoHash);
+    }
+
     accountBalances.firstWhere(
         (b) =>
             b.assetCode == currency &&
@@ -370,14 +380,14 @@ class Client {
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .addMemo(memo)
           .build();
     } else {
       transaction = TransactionBuilder(sender)
           .addOperation(
               PaymentOperationBuilder(destinationAddress, tftAsset, amount)
                   .build())
-          .addMemo(memoText != null ? Memo.text(memoText) : Memo.none())
+          .addMemo(memo)
           .build();
     }
 
@@ -388,12 +398,14 @@ class Client {
       {required String destinationAddress,
       required String amount,
       required String currency,
-      String? memoText}) async {
+      String? memoText,
+      Uint8List? memoHash}) async {
     Transaction? fundedTransaction = await _buildTransaction(
         destinationAddress: destinationAddress,
         amount: amount,
         currency: currency,
         memoText: memoText,
+        memoHash: memoHash,
         funded: true);
 
     fundedTransaction!.sign(_keyPair, _stellarNetwork);
@@ -417,43 +429,68 @@ class Client {
     }
   }
 
-  Future<List<ITransaction>> getTransactions({String? assetCodeFilter}) async {
-    Page<OperationResponse> payments = await _sdk.payments
-        .forAccount(accountId)
-        .order(RequestBuilderOrder.DESC)
-        .execute();
-    List<ITransaction> transactionDetails = [];
+  Future<List<ITransaction>> getTransactions(
+      {String? assetCodeFilter, int? limit, int? offset}) async {
+    try {
+      var paymentsRequest =
+          _sdk.payments.forAccount(accountId).order(RequestBuilderOrder.DESC);
 
-    if (payments.records.isNotEmpty) {
-      for (OperationResponse response in payments.records) {
-        if (response is PaymentOperationResponse) {
-          final memoText = await this
-              .getMemoText(response.links.transaction.toJson()["href"]);
-          String assetCode = response.assetCode ?? 'XLM';
-          if (assetCodeFilter == null || assetCode == assetCodeFilter) {
-            final details = PaymentTransaction(
-                hash: response.transactionHash,
-                from: response.from,
-                to: response.to,
-                asset: response.assetCode.toString(),
-                amount: response.amount,
-                type: response.to == this.accountId
-                    ? TransactionType.Receive
-                    : TransactionType.Payment,
-                status: response.transactionSuccessful,
-                date: DateTime.parse(response.createdAt).toLocal().toString(),
-                memo: memoText);
+      // Add pagination
+      if (limit != null) {
+        paymentsRequest = paymentsRequest.limit(limit);
+      }
 
-            transactionDetails.add(details);
-          }
-        } else {
-          logger.i("Unhandled operation type: ${response.runtimeType}");
+      // get first page
+      if (offset != null && offset > 0) {
+        var initialPage = await _sdk.payments
+            .forAccount(accountId)
+            .order(RequestBuilderOrder.DESC)
+            .limit(offset)
+            .execute();
+
+        if (initialPage.records.isNotEmpty) {
+          // Use the last record's paging token as cursor
+          paymentsRequest =
+              paymentsRequest.cursor(initialPage.records.last.pagingToken);
         }
       }
-    } else {
-      logger.i("No payment records found.");
+
+      Page<OperationResponse> payments = await paymentsRequest.execute();
+      List<ITransaction> transactionDetails = [];
+
+      if (payments.records.isNotEmpty) {
+        for (OperationResponse response in payments.records) {
+          if (response is PaymentOperationResponse) {
+            final memoText = await this
+                .getMemoText(response.links.transaction.toJson()["href"]);
+            String assetCode = response.assetCode ?? 'XLM';
+            if (assetCodeFilter == null || assetCode == assetCodeFilter) {
+              final details = PaymentTransaction(
+                  hash: response.transactionHash,
+                  from: response.from,
+                  to: response.to,
+                  asset: response.assetCode.toString(),
+                  amount: response.amount,
+                  type: response.to == this.accountId
+                      ? TransactionType.Receive
+                      : TransactionType.Payment,
+                  status: response.transactionSuccessful,
+                  date: DateTime.parse(response.createdAt).toLocal().toString(),
+                  memo: memoText);
+
+              transactionDetails.add(details);
+            }
+          } else {
+            logger.i("Unhandled operation type: ${response.runtimeType}");
+          }
+        }
+      }
+
+      return transactionDetails;
+    } catch (e) {
+      logger.e('Failed to get transactions: $e');
+      throw Exception('Could not get transactions due to $e');
     }
-    return transactionDetails;
   }
 
   Future<List<BalanceInfo>> getBalance() async {
