@@ -147,6 +147,17 @@ class Client {
     }
   }
 
+  /// Adds trustline for all non-native assets in the `_currencies.currencies` map.
+  ///
+  /// Trustlines are required to hold non-native assets on a Stellar account.
+  /// This function iterates over all available currencies and attempts to
+  /// establish trustlines for each, except for the native asset (`XLM`).
+  ///
+  /// **Note:** Adding trustline requires having XLM in the account
+  ///
+  /// ### Returns:
+  /// - `true` if all trustlines were successfully added.
+  /// - `false` if one or more trustlines failed.
   Future<bool> addTrustLine() async {
     bool allTrustlinesAdded = true;
 
@@ -194,6 +205,11 @@ class Client {
     }
   }
 
+  /// Transfers a specified amount of currency to a destination address.
+  ///
+  /// This function builds a Stellar transaction to send funds from the current account
+  /// to a given recipient. It supports optional memo fields for additional transaction details.
+  /// **Note:** Transfer requires having XLM in the account
   Future<bool> transfer(
       {required String destinationAddress,
       required String amount,
@@ -547,6 +563,32 @@ class Client {
     }
   }
 
+  Asset _getAsset(String assetCode) {
+    if (assetCode == 'XLM') {
+      return AssetTypeNative();
+    }
+
+    final asset = _currencies.currencies[assetCode];
+    if (asset == null) {
+      throw Exception('Asset $assetCode is not available');
+    }
+
+    return AssetTypeCreditAlphaNum4(asset.assetCode, asset.issuer);
+  }
+
+  /// Creates a DEX order by submitting a `ManageBuyOfferOperation` transaction.
+  ///
+  /// This function allows user to create an order to buy a specified asset
+  /// using another asset on Stellar network.
+  ///
+  /// **Note:** Creating an order requires having XLM in the account
+  /// to cover transaction fees and reserve requirements.
+  ///
+  /// **Price Format:**
+  /// - The `price` should always include a leading zero for decimal values.
+  /// - For example, instead of writing `.1`, the price should be written as `0.1`.
+  ///   - **Correct format**: `0.1`
+  ///   - **Incorrect format**: `.1`
   Future<SubmitTransactionResponse> createOrder(
       {required String sellingAssetCode,
       required String buyingAssetCode,
@@ -560,26 +602,11 @@ class Client {
       throw Exception('Buy asset $buyingAssetCode is not available.');
     }
 
-    late final Asset sellAsset;
-    late final Asset buyAsset;
-
-    if (sellingAssetCode == 'XLM') {
-      sellAsset = AssetTypeNative();
-    } else {
-      sellAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[sellingAssetCode]!.assetCode,
-          _currencies.currencies[sellingAssetCode]!.issuer);
-    }
-    if (buyingAssetCode == 'XLM') {
-      buyAsset = AssetTypeNative();
-    } else {
-      buyAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[buyingAssetCode]!.assetCode,
-          _currencies.currencies[buyingAssetCode]!.issuer);
-    }
+    final Asset sellingAsset = _getAsset(sellingAssetCode);
+    final Asset buyingAsset = _getAsset(buyingAssetCode);
 
     final ManageBuyOfferOperation buyOfferOperation =
-        ManageBuyOfferOperationBuilder(sellAsset, buyAsset, amount, price)
+        ManageBuyOfferOperationBuilder(sellingAsset, buyingAsset, amount, price)
             .build();
 
     final account = await _sdk.accounts.account(accountId);
@@ -631,6 +658,12 @@ class Client {
     }
   }
 
+  /// Cancels a DEX order by submitting a `ManageBuyOfferOperation` transaction with zero amount.
+  ///
+  /// This function allows user to cancel previously created order with its offerId.
+  ///
+  /// **Note:** Cancelling an order requires having XLM in the account
+  /// to cover transaction fees and reserve requirements.
   Future<SubmitTransactionResponse> cancelOrder(
       {required String sellingAssetCode,
       required String buyingAssetCode,
@@ -650,23 +683,8 @@ class Client {
           'Offer with ID $offerId not found in user\'s account.'),
     );
 
-    late final Asset sellingAsset;
-    late final Asset buyingAsset;
-
-    if (sellingAssetCode == 'XLM') {
-      sellingAsset = AssetTypeNative();
-    } else {
-      sellingAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[sellingAssetCode]!.assetCode,
-          _currencies.currencies[sellingAssetCode]!.issuer);
-    }
-    if (buyingAssetCode == 'XLM') {
-      buyingAsset = AssetTypeNative();
-    } else {
-      buyingAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[buyingAssetCode]!.assetCode,
-          _currencies.currencies[buyingAssetCode]!.issuer);
-    }
+    final Asset sellingAsset = _getAsset(sellingAssetCode);
+    final Asset buyingAsset = _getAsset(buyingAssetCode);
 
     final ManageBuyOfferOperation cancelOfferOperation =
         ManageBuyOfferOperationBuilder(sellingAsset, buyingAsset, '0', '1')
@@ -691,6 +709,18 @@ class Client {
     }
   }
 
+  /// Updating a DEX order by submitting a `ManageBuyOfferOperation` transaction.
+  ///
+  /// This function allows user to update previously created order by its offerId.
+  ///
+  /// **Note:** Updating an order requires having XLM in the account
+  /// to cover transaction fees and reserve requirements.
+  ///
+  /// **Price Format:**
+  /// - The `price` should always include a leading zero for decimal values.
+  /// - For example, instead of writing `.1`, the price should be written as `0.1`.
+  ///   - **Correct format**: `0.1`
+  ///   - **Incorrect format**: `.1`
   Future<SubmitTransactionResponse> updateOrder(
       {required String sellingAssetCode,
       required String buyingAssetCode,
@@ -712,25 +742,11 @@ class Client {
           'Offer with ID $offerId not found in user\'s account.'),
     );
 
-    late final Asset sellingAsset;
-    late final Asset buyingAsset;
+    final Asset sellingAsset = _getAsset(sellingAssetCode);
+    final Asset buyingAsset = _getAsset(buyingAssetCode);
 
-    if (sellingAssetCode == 'XLM') {
-      sellingAsset = AssetTypeNative();
-    } else {
-      sellingAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[sellingAssetCode]!.assetCode,
-          _currencies.currencies[sellingAssetCode]!.issuer);
-    }
-    if (buyingAssetCode == 'XLM') {
-      buyingAsset = AssetTypeNative();
-    } else {
-      buyingAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[buyingAssetCode]!.assetCode,
-          _currencies.currencies[buyingAssetCode]!.issuer);
-    }
-
-    ManageBuyOfferOperation updateOfferOperation = ManageBuyOfferOperationBuilder(
+    ManageBuyOfferOperation updateOfferOperation =
+        ManageBuyOfferOperationBuilder(
       sellingAsset,
       buyingAsset,
       amount,
@@ -738,9 +754,8 @@ class Client {
     ).setOfferId(offerId).build();
 
     final account = await _sdk.accounts.account(accountId);
-    final Transaction transaction = TransactionBuilder(account)
-        .addOperation(updateOfferOperation)
-        .build();
+    final Transaction transaction =
+        TransactionBuilder(account).addOperation(updateOfferOperation).build();
     transaction.sign(_keyPair, _stellarNetwork);
     try {
       final SubmitTransactionResponse response =
@@ -754,6 +769,29 @@ class Client {
     }
   }
 
+  /// Retrieves the order book for a given asset pair on the Stellar network.
+  ///
+  /// This function returns a stream of `OrderBookResponse`, which provides
+  /// real-time updates on buy and sell orders for the specified asset pair.
+  ///
+  /// ### Example:
+  /// **Creating an Order**
+  /// ```dart
+  /// await stellarClient.createOrder(
+  ///     sellingAssetCode: 'XLM',
+  ///     buyingAssetCode: 'TFT',
+  ///     amount: '2',
+  ///     price: '0.1'); // Meaning 1 XLM = 0.1 TFT
+  /// ```
+  ///
+  /// **Retrieved Offer:**
+  /// ```dart
+  /// OfferResponse {
+  ///   amount: "0.2",  // Because 2 * 0.1 = 0.2 TFT
+  ///   price: "10.0"   // Because 1 / 0.1 = 10 XLM per TFT
+  /// }
+  /// ```
+  ///
   Future<Stream<OrderBookResponse>> getOrderBook(
       {required String sellingAssetCode,
       required String buyingAssetCode}) async {
@@ -765,23 +803,9 @@ class Client {
     }
     http.Client httpClient = http.Client();
     Uri serverURI = Uri.parse(_horizonServerUrls[_network.toString()]!);
-    late final Asset sellingAsset;
-    late final Asset buyingAsset;
 
-    if (sellingAssetCode == 'XLM') {
-      sellingAsset = AssetTypeNative();
-    } else {
-      sellingAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[sellingAssetCode]!.assetCode,
-          _currencies.currencies[sellingAssetCode]!.issuer);
-    }
-    if (buyingAssetCode == 'XLM') {
-      buyingAsset = AssetTypeNative();
-    } else {
-      buyingAsset = AssetTypeCreditAlphaNum4(
-          _currencies.currencies[buyingAssetCode]!.assetCode,
-          _currencies.currencies[buyingAssetCode]!.issuer);
-    }
+    final Asset sellingAsset = _getAsset(sellingAssetCode);
+    final Asset buyingAsset = _getAsset(buyingAssetCode);
 
     OrderBookRequestBuilder orderBookRequest =
         OrderBookRequestBuilder(httpClient, serverURI)
@@ -791,6 +815,37 @@ class Client {
     return await orderBookRequest.stream();
   }
 
+  /// Lists all active offers created by the current account.
+  ///
+  /// This function fetches a list of `OfferResponse` objects representing
+  /// open orders created by the account.
+  ///
+  /// ### Understanding Stellar Order Representation:
+  /// - **Price (`OfferResponse.price`)**: Stellar stores price as `buying / selling`,
+  ///   which means the displayed value is the **inverse** of the price provided
+  ///   when creating an order.
+  /// - **Amount (`OfferResponse.amount`)**: The amount reflects how much of the
+  ///   **buying asset** is available for trade, rather than the original selling
+  ///   amount provided when placing the order.
+  ///
+  /// ### Example:
+  /// **Creating an Order**
+  /// ```dart
+  /// await stellarClient.createOrder(
+  ///     sellingAssetCode: 'XLM',
+  ///     buyingAssetCode: 'TFT',
+  ///     amount: '2',
+  ///     price: '0.1'); // Meaning 1 XLM = 0.1 TFT
+  /// ```
+  ///
+  /// **Retrieved Offer:**
+  /// ```dart
+  /// OfferResponse {
+  ///   amount: "0.2",  // Because 2 * 0.1 = 0.2 TFT
+  ///   price: "10.0"   // Because 1 / 0.1 = 10 XLM per TFT
+  /// }
+  /// ```
+  ///
   Future<List<OfferResponse>> listMyOffers() async {
     try {
       final offers = await _sdk.offers.forAccount(accountId).execute();
