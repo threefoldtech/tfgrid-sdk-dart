@@ -774,24 +774,44 @@ class Client {
   /// This function returns a stream of `OrderBookResponse`, which provides
   /// real-time updates on buy and sell orders for the specified asset pair.
   ///
+  /// ### Understanding Stellar Order Representation:
+  /// - **Price (`OrderBookResponse.asks[].price` & `OrderBookResponse.bids[].price`)**:
+  ///   Stellar stores price as `buying / selling`, meaning the displayed price
+  ///   is the **inverse** of the price provided when creating an order.
+  /// - **Amount (`OrderBookResponse.asks[].amount`)**:
+  ///   This represents the total amount of the **selling asset** available in the order book.
+  ///
+  /// ### Conversion Formula:
+  /// ```
+  /// Total selling amount = Buying amount * Price
+  /// Stored price = 1 / Provided price
+  /// ```
+  ///
   /// ### Example:
-  /// **Creating an Order**
+  /// #### **Creating an Order**
   /// ```dart
   /// await stellarClient.createOrder(
   ///     sellingAssetCode: 'XLM',
   ///     buyingAssetCode: 'TFT',
-  ///     amount: '2',
-  ///     price: '0.1'); // Meaning 1 XLM = 0.1 TFT
+  ///     amount: '2',     // Buying 2 TFT
+  ///     price: '0.1');   // 1 XLM = 0.1 TFT
   /// ```
   ///
-  /// **Retrieved Offer:**
+  /// #### **Retrieved Order Book Entry**
   /// ```dart
-  /// OfferResponse {
-  ///   amount: "0.2",  // Because 2 * 0.1 = 0.2 TFT
-  ///   price: "10.0"   // Because 1 / 0.1 = 10 XLM per TFT
+  /// OrderBookResponse {
+  ///   asks: [
+  ///     {
+  ///       amount: "0.2",   // Total selling amount = 2 * 0.1 = 0.2 XLM
+  ///       price: "10.0"    // Inverted: 1 / 0.1 = 10 XLM per TFT
+  ///     }
+  ///   ]
   /// }
   /// ```
   ///
+  /// **Key Takeaways:**
+  /// - `OrderBookResponse.asks[].amount` = **Total amount of the selling asset**.
+  /// - `OrderBookResponse.asks[].price` = **Inverse of the provided price**.
   Future<Stream<OrderBookResponse>> getOrderBook(
       {required String sellingAssetCode,
       required String buyingAssetCode}) async {
@@ -822,30 +842,44 @@ class Client {
   ///
   /// ### Understanding Stellar Order Representation:
   /// - **Price (`OfferResponse.price`)**: Stellar stores price as `buying / selling`,
-  ///   which means the displayed value is the **inverse** of the price provided
+  ///   meaning the displayed price is the **inverse** of the price provided
   ///   when creating an order.
-  /// - **Amount (`OfferResponse.amount`)**: The amount reflects how much of the
-  ///   **buying asset** is available for trade, rather than the original selling
-  ///   amount provided when placing the order.
+  /// - **Amount (`OfferResponse.amount`)**: This represents the amount of the
+  ///   **buying asset** still available for trade, not the original amount
+  ///   of the selling asset.
   ///
-  /// ### Example:
-  /// **Creating an Order**
-  /// ```dart
-  /// await stellarClient.createOrder(
-  ///     sellingAssetCode: 'XLM',
-  ///     buyingAssetCode: 'TFT',
-  ///     amount: '2',
-  ///     price: '0.1'); // Meaning 1 XLM = 0.1 TFT
+  /// ### Conversion Formula:
+  /// When placing an order:
+  /// ```
+  /// Total selling amount = Buying amount * Price
   /// ```
   ///
-  /// **Retrieved Offer:**
+  /// Stellar inverts the price when storing the offer:
+  /// ```
+  /// Stored price = 1 / Provided price
+  /// ```
+  ///
+  /// ### Example:
+  /// #### **Creating an Order**
+  /// ```dart
+  /// await stellarClient.createOrder(
+  ///     sellingAssetCode: 'USDC',
+  ///     buyingAssetCode: 'TFT',
+  ///     amount: '5',     // Buying 5 TFT
+  ///     price: '0.02');  // 1 USDC = 0.02 TFT
+  /// ```
+  ///
+  /// #### **Retrieved Offer (from Stellar Order Book)**
   /// ```dart
   /// OfferResponse {
-  ///   amount: "0.2",  // Because 2 * 0.1 = 0.2 TFT
-  ///   price: "10.0"   // Because 1 / 0.1 = 10 XLM per TFT
+  ///   amount: "0.2",    // Total selling amount = 5 * 0.02 = 0.2 USDC
+  ///   price: "50.0"     // Inverted: 1 / 0.02 = 50 USDC per TFT
   /// }
   /// ```
   ///
+  /// **Key Takeaways:**
+  /// - `OfferResponse.amount` = **Total amount of the selling asset left**.
+  /// - `OfferResponse.price` = **Inverse of the provided price**.
   Future<List<OfferResponse>> listMyOffers() async {
     try {
       final offers = await _sdk.offers.forAccount(accountId).execute();
