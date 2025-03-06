@@ -80,7 +80,13 @@ class QueryClient {
       provider = connections[url]["provider"];
       api = connections[url]["api"];
       if (!provider!.isConnected()) {
-        api.connect();
+        try {
+          await api.connect();
+        } catch (e) {
+          if (e.toString() != "Exception: Already connected") {
+            throw e;
+          }
+        }
       }
     } else {
       provider = Provider.fromUri(Uri.parse(url));
