@@ -894,4 +894,15 @@ class Client {
       throw Exception('Error listing offers for account $accountId: $error');
     }
   }
+
+  Future<List<TradeResponse>> getTradingHistory(String accountId) async {
+    try {
+      Page<TradeResponse> tradesPage =
+          await _sdk.trades.forAccount(accountId).execute();
+
+      return tradesPage.records;
+    } catch (e) {
+      throw Exception('Failed to fetch trading history: ${e.toString()}');
+    }
+  }
 }
