@@ -589,7 +589,7 @@ class Client {
   /// - For example, instead of writing `.1`, the price should be written as `0.1`.
   ///   - **Correct format**: `0.1`
   ///   - **Incorrect format**: `.1`
-  Future<SubmitTransactionResponse> createOrder(
+  Future<bool> createOrder(
       {required String sellingAssetCode,
       required String buyingAssetCode,
       required String amount,
@@ -651,8 +651,9 @@ class Client {
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
         logger.e('Transaction failed with result: ${response.resultXdr}');
+        return false;
       }
-      return response;
+      return true;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
     }
@@ -664,7 +665,7 @@ class Client {
   ///
   /// **Note:** Cancelling an order requires having XLM in the account
   /// to cover transaction fees and reserve requirements.
-  Future<SubmitTransactionResponse> cancelOrder(
+  Future<bool> cancelOrder(
       {required String sellingAssetCode,
       required String buyingAssetCode,
       required String offerId,
@@ -702,8 +703,9 @@ class Client {
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
         logger.e('Transaction failed with result: ${response.resultXdr}');
+        return false;
       }
-      return response;
+      return true;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
     }
@@ -721,7 +723,7 @@ class Client {
   /// - For example, instead of writing `.1`, the price should be written as `0.1`.
   ///   - **Correct format**: `0.1`
   ///   - **Incorrect format**: `.1`
-  Future<SubmitTransactionResponse> updateOrder(
+  Future<bool> updateOrder(
       {required String sellingAssetCode,
       required String buyingAssetCode,
       required String amount,
@@ -762,8 +764,9 @@ class Client {
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
         logger.e('Transaction failed with result: ${response.resultXdr}');
+        return false;
       }
-      return response;
+      return true;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
     }
