@@ -1,9 +1,10 @@
 part of '../stellar_client.dart';
 
-Future<List<BalanceInfo>> getBalanceByAccountID(
-    {required NetworkType network, required String accountId}) async {
+Future<List<BalanceInfo>> getBalanceByAccountID({
+  required NetworkType network,
+  required String accountId,
+}) async {
   late StellarSDK _sdk;
-
   switch (network) {
     case NetworkType.TESTNET:
       _sdk = StellarSDK.TESTNET;
@@ -12,22 +13,29 @@ Future<List<BalanceInfo>> getBalanceByAccountID(
       _sdk = StellarSDK.PUBLIC;
       break;
   }
-
-  List<BalanceInfo> balancesList = [];
-  AccountResponse account = await _sdk.accounts.account(accountId);
-
-  for (Balance balance in account.balances) {
-    BalanceData balanceData;
-    switch (balance.assetType) {
-      case Asset.TYPE_NATIVE:
-        balanceData = BalanceData(assetCode: 'XLM', balance: balance.balance);
-        break;
-      default:
-        balanceData = BalanceData(
-            assetCode: balance.assetCode!, balance: balance.balance);
+  try {
+    List<BalanceInfo> balancesList = [];
+    AccountResponse account = await _sdk.accounts.account(accountId);
+    for (Balance balance in account.balances) {
+      switch (balance.assetType) {
+        case Asset.TYPE_NATIVE:
+          balancesList.add(
+            BalanceData(assetCode: 'XLM', balance: balance.balance),
+          );
+          break;
+        case Asset.TYPE_POOL_SHARE:
+          break;
+        default:
+          balancesList.add(
+            BalanceData(
+              assetCode: balance.assetCode!,
+              balance: balance.balance,
+            ),
+          );
+      }
     }
-    balancesList.add(balanceData);
+    return balancesList;
+  } catch (e) {
+    throw Exception(e);
   }
-
-  return balancesList;
 }
