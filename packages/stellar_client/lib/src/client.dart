@@ -589,12 +589,13 @@ class Client {
   /// - For example, instead of writing `.1`, the price should be written as `0.1`.
   ///   - **Correct format**: `0.1`
   ///   - **Incorrect format**: `.1`
-  Future<bool> createOrder(
-      {required String sellingAssetCode,
-      required String buyingAssetCode,
-      required String amount,
-      required String price,
-      String? memo}) async {
+  Future<bool> createOrder({
+    required String sellingAssetCode,
+    required String buyingAssetCode,
+    required String amount,
+    required String price,
+    String? memo,
+  }) async {
     if (!_currencies.currencies.containsKey(sellingAssetCode)) {
       throw Exception('Sell asset $sellingAssetCode is not available.');
     }
@@ -605,8 +606,9 @@ class Client {
     final Asset sellingAsset = _getAsset(sellingAssetCode);
     final Asset buyingAsset = _getAsset(buyingAssetCode);
 
-    final ManageBuyOfferOperation buyOfferOperation =
-        ManageBuyOfferOperationBuilder(sellingAsset, buyingAsset, amount, price)
+    final ManageSellOfferOperation sellOfferOperation =
+        ManageSellOfferOperationBuilder(
+                sellingAsset, buyingAsset, amount, price)
             .build();
 
     final account = await _sdk.accounts.account(accountId);
@@ -616,8 +618,7 @@ class Client {
       final sellAssetBalance = balances.firstWhere(
         (balance) {
           if (sellingAssetCode == 'XLM' && balance.assetCode == null) {
-            // Special case for XLM
-            return true;
+            return true; // Special case for XLM
           } else {
             return balance.assetCode == sellingAssetCode;
           }
@@ -641,7 +642,7 @@ class Client {
     }
 
     final Transaction transaction = TransactionBuilder(account)
-        .addOperation(buyOfferOperation)
+        .addOperation(sellOfferOperation)
         .addMemo(memo != null ? Memo.text(memo) : Memo.none())
         .build();
 
@@ -900,10 +901,22 @@ class Client {
 
   Future<List<TradeResponse>> getTradingHistory(String accountId) async {
     try {
-      Page<TradeResponse> tradesPage =
+      List<TradeResponse> allTrades = [];
+      Page<TradeResponse>? tradesPage =
           await _sdk.trades.forAccount(accountId).execute();
-
-      return tradesPage.records;
+      final httpClient = http.Client();
+      try {
+        while (tradesPage != null) {
+          allTrades.addAll(tradesPage.records);
+          tradesPage = await tradesPage.getNextPage(httpClient);
+          if (tradesPage == null || tradesPage.records.isEmpty) {
+            break;
+          }
+        }
+      } finally {
+        httpClient.close();
+      }
+      return allTrades;
     } catch (e) {
       throw Exception('Failed to fetch trading history: ${e.toString()}');
     }
