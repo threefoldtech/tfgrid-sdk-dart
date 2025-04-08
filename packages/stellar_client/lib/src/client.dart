@@ -407,60 +407,62 @@ class Client {
     String? pagingToken,
   }) async {
     try {
-      var paymentsRequest = _sdk.payments
-          .forAccount(accountId)
-          .order(RequestBuilderOrder.DESC)
-          .limit(limit);
+      List<ITransaction> transactionDetails = [];
+      String? currentCursor = pagingToken;
 
-      if (pagingToken != null) {
-        paymentsRequest = paymentsRequest.cursor(pagingToken);
-      }
+      while (transactionDetails.length < limit) {
+        var request = _sdk.payments
+            .forAccount(accountId)
+            .order(RequestBuilderOrder.DESC)
+            .limit(limit);
 
-      final Page<OperationResponse> payments = await paymentsRequest.execute();
-      final List<ITransaction> transactionDetails = [];
-
-      // Keep track of the last raw paging token (even if filtered out later)
-      String? lastRawPagingToken;
-
-      for (final response in payments.records) {
-        // Save the last raw paging token no matter what.
-        lastRawPagingToken = response.pagingToken;
-
-        if (response is! PaymentOperationResponse) {
-          logger.i("Skipping non-payment operation: ${response.runtimeType}");
-          continue;
+        if (currentCursor != null) {
+          request = request.cursor(currentCursor);
         }
 
-        final memoText =
-            await getMemoText(response.links.transaction.toJson()["href"]);
-        final assetCode = response.assetCode ?? 'XLM';
+        final Page<OperationResponse> page = await request.execute();
 
-        // Only include if it meets the asset code filter.
-        if (assetCodeFilter != null && assetCode != assetCodeFilter) {
-          continue;
+        if (page.records.isEmpty) {
+          break;
         }
 
-        transactionDetails.add(PaymentTransaction(
-          pagingToken: response.pagingToken,
-          hash: response.transactionHash,
-          from: response.from,
-          to: response.to,
-          asset: assetCode,
-          amount: response.amount,
-          type: response.to == accountId
-              ? TransactionType.Receive
-              : TransactionType.Payment,
-          status: response.transactionSuccessful,
-          date: DateTime.parse(response.createdAt).toLocal().toString(),
-          memo: memoText,
-        ));
+        for (final response in page.records) {
+          currentCursor = response.pagingToken;
+
+          if (response is! PaymentOperationResponse) continue;
+
+          final assetCode = response.assetCode ?? 'XLM';
+          if (assetCodeFilter != null && assetCode != assetCodeFilter) {
+            continue;
+          }
+
+          final memo =
+              await getMemoText(response.links.transaction.toJson()["href"]);
+
+          transactionDetails.add(PaymentTransaction(
+            pagingToken: response.pagingToken,
+            hash: response.transactionHash,
+            from: response.from,
+            to: response.to,
+            asset: assetCode,
+            amount: response.amount,
+            type: response.to == accountId
+                ? TransactionType.Receive
+                : TransactionType.Payment,
+            status: response.transactionSuccessful,
+            date: DateTime.parse(response.createdAt).toLocal().toString(),
+            memo: memo,
+          ));
+
+          if (transactionDetails.length >= limit) break;
+        }
       }
 
       logger.i('Fetched ${transactionDetails.length} transactions');
       return transactionDetails;
     } catch (e) {
       logger.e('Failed to get transactions: $e');
-      throw Exception('Could not get transactions: ${e.toString()}');
+      throw Exception('Failed to get transactions');
     }
   }
 
