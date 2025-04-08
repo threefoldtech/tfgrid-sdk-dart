@@ -401,67 +401,66 @@ class Client {
     }
   }
 
-  Future<List<ITransaction>> getTransactions(
-      {String? assetCodeFilter, int? limit, int? offset}) async {
+  Future<List<ITransaction>> getTransactions({
+    String? assetCodeFilter,
+    int limit = 10,
+    String? pagingToken,
+  }) async {
     try {
-      var paymentsRequest =
-          _sdk.payments.forAccount(accountId).order(RequestBuilderOrder.DESC);
+      var paymentsRequest = _sdk.payments
+          .forAccount(accountId)
+          .order(RequestBuilderOrder.DESC)
+          .limit(limit);
 
-      // Add pagination
-      if (limit != null) {
-        paymentsRequest = paymentsRequest.limit(limit);
+      if (pagingToken != null) {
+        paymentsRequest = paymentsRequest.cursor(pagingToken);
       }
 
-      // get first page
-      if (offset != null && offset > 0) {
-        var initialPage = await _sdk.payments
-            .forAccount(accountId)
-            .order(RequestBuilderOrder.DESC)
-            .limit(offset)
-            .execute();
+      final Page<OperationResponse> payments = await paymentsRequest.execute();
+      final List<ITransaction> transactionDetails = [];
 
-        if (initialPage.records.isNotEmpty) {
-          // Use the last record's paging token as cursor
-          paymentsRequest =
-              paymentsRequest.cursor(initialPage.records.last.pagingToken);
+      // Keep track of the last raw paging token (even if filtered out later)
+      String? lastRawPagingToken;
+
+      for (final response in payments.records) {
+        // Save the last raw paging token no matter what.
+        lastRawPagingToken = response.pagingToken;
+
+        if (response is! PaymentOperationResponse) {
+          logger.i("Skipping non-payment operation: ${response.runtimeType}");
+          continue;
         }
-      }
 
-      Page<OperationResponse> payments = await paymentsRequest.execute();
-      List<ITransaction> transactionDetails = [];
+        final memoText =
+            await getMemoText(response.links.transaction.toJson()["href"]);
+        final assetCode = response.assetCode ?? 'XLM';
 
-      if (payments.records.isNotEmpty) {
-        for (OperationResponse response in payments.records) {
-          if (response is PaymentOperationResponse) {
-            final memoText = await this
-                .getMemoText(response.links.transaction.toJson()["href"]);
-            String assetCode = response.assetCode ?? 'XLM';
-            if (assetCodeFilter == null || assetCode == assetCodeFilter) {
-              final details = PaymentTransaction(
-                  hash: response.transactionHash,
-                  from: response.from,
-                  to: response.to,
-                  asset: response.assetCode.toString(),
-                  amount: response.amount,
-                  type: response.to == this.accountId
-                      ? TransactionType.Receive
-                      : TransactionType.Payment,
-                  status: response.transactionSuccessful,
-                  date: DateTime.parse(response.createdAt).toLocal().toString(),
-                  memo: memoText);
-
-              transactionDetails.add(details);
-            }
-          } else {
-            logger.i("Unhandled operation type: ${response.runtimeType}");
-          }
+        // Only include if it meets the asset code filter.
+        if (assetCodeFilter != null && assetCode != assetCodeFilter) {
+          continue;
         }
+
+        transactionDetails.add(PaymentTransaction(
+          pagingToken: response.pagingToken,
+          hash: response.transactionHash,
+          from: response.from,
+          to: response.to,
+          asset: assetCode,
+          amount: response.amount,
+          type: response.to == accountId
+              ? TransactionType.Receive
+              : TransactionType.Payment,
+          status: response.transactionSuccessful,
+          date: DateTime.parse(response.createdAt).toLocal().toString(),
+          memo: memoText,
+        ));
       }
 
+      logger.i('Fetched ${transactionDetails.length} transactions');
       return transactionDetails;
     } catch (e) {
       logger.e('Failed to get transactions: $e');
-      throw Exception('Could not get transactions due to $e');
+      throw Exception('Could not get transactions: ${e.toString()}');
     }
   }
 
