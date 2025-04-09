@@ -401,65 +401,65 @@ class Client {
     }
   }
 
-  Future<List<ITransaction>> getTransactions({
+  Stream<ITransaction> getTransactions({
     String? assetCodeFilter,
     int limit = 10,
     String? pagingToken,
-  }) async {
-    try {
-      List<ITransaction> transactionDetails = [];
-      String? currentCursor = pagingToken;
+  }) async* {
+    String? currentCursor = pagingToken;
+    int count = 0;
 
-      while (transactionDetails.length < limit) {
-        var request = _sdk.payments
+    try {
+      while (count < limit) {
+        final request = _sdk.payments
             .forAccount(accountId)
             .order(RequestBuilderOrder.DESC)
-            .limit(limit);
+            .limit(limit)
+            .cursor(currentCursor ?? '');
 
-        if (currentCursor != null) {
-          request = request.cursor(currentCursor);
-        }
+        final page = await request.execute();
+        if (page.records.isEmpty) break;
 
-        final Page<OperationResponse> page = await request.execute();
-
-        if (page.records.isEmpty) {
-          break;
-        }
+        final tempList = <_TempTx>[];
 
         for (final response in page.records) {
-          currentCursor = response.pagingToken;
-
-          if (response is! PaymentOperationResponse) continue;
-
-          final assetCode = response.assetCode ?? 'XLM';
-          if (assetCodeFilter != null && assetCode != assetCodeFilter) {
-            continue;
+          if (response is PaymentOperationResponse &&
+              (assetCodeFilter == null ||
+                  response.assetCode == assetCodeFilter)) {
+            tempList.add(_TempTx(
+              response.links.transaction.toJson()["href"],
+              response,
+            ));
+            if (++count >= limit) break;
           }
+        }
 
-          final memo =
-              await getMemoText(response.links.transaction.toJson()["href"]);
+        if (tempList.isEmpty) break;
 
-          transactionDetails.add(PaymentTransaction(
-            pagingToken: response.pagingToken,
-            hash: response.transactionHash,
-            from: response.from,
-            to: response.to,
-            asset: assetCode,
-            amount: response.amount,
-            type: response.to == accountId
+        currentCursor = tempList.last.response.pagingToken;
+
+        final memoList = await Future.wait(
+          tempList.map((tx) => getMemoText(tx.href)),
+        );
+
+        for (var i = 0; i < tempList.length; i++) {
+          final tx = tempList[i].response;
+          yield PaymentTransaction(
+            pagingToken: tx.pagingToken,
+            hash: tx.transactionHash,
+            from: tx.from,
+            to: tx.to,
+            asset: tx.assetCode ?? 'XLM',
+            amount: tx.amount,
+            type: tx.to == accountId
                 ? TransactionType.Receive
                 : TransactionType.Payment,
-            status: response.transactionSuccessful,
-            date: DateTime.parse(response.createdAt).toLocal().toString(),
-            memo: memo,
-          ));
-
-          if (transactionDetails.length >= limit) break;
+            status: tx.transactionSuccessful,
+            date: DateTime.parse(tx.createdAt).toLocal().toString(),
+            memo: memoList[i],
+          );
         }
       }
-
-      logger.i('Fetched ${transactionDetails.length} transactions');
-      return transactionDetails;
     } catch (e) {
       logger.e('Failed to get transactions: $e');
       throw Exception('Failed to get transactions');
