@@ -4,6 +4,7 @@ class ITransaction {}
 
 class PaymentTransaction extends ITransaction {
   PaymentTransaction({
+    required this.pagingToken,
     required this.hash,
     required this.from,
     required this.to,
@@ -14,6 +15,7 @@ class PaymentTransaction extends ITransaction {
     required this.date,
     required this.type,
   });
+  final String pagingToken;
   final String hash;
   final String from;
   final String to;
@@ -26,6 +28,6 @@ class PaymentTransaction extends ITransaction {
 
   @override
   String toString() {
-    return 'ITransaction(hash: $hash, from: $from, to: $to, asset: $asset, amount: $amount, memo: $memo, status: $status, date: $date)';
+    return 'ITransaction(pagingToken: $pagingToken, hash: $hash, from: $from, to: $to, asset: $asset, amount: $amount, memo: $memo, status: $status, date: $date)';
   }
 }

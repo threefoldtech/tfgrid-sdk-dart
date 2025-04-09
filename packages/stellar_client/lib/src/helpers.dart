@@ -39,3 +39,9 @@ Future<List<BalanceInfo>> getBalanceByAccountID({
     throw Exception(e);
   }
 }
+
+class _TempTx {
+  final String href;
+  final PaymentOperationResponse response;
+  _TempTx(this.href, this.response);
+}

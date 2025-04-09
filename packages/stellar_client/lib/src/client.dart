@@ -401,67 +401,68 @@ class Client {
     }
   }
 
-  Future<List<ITransaction>> getTransactions(
-      {String? assetCodeFilter, int? limit, int? offset}) async {
+  Stream<ITransaction> getTransactions({
+    String? assetCodeFilter,
+    int limit = 10,
+    String? pagingToken,
+  }) async* {
+    String? currentCursor = pagingToken;
+    int count = 0;
+
     try {
-      var paymentsRequest =
-          _sdk.payments.forAccount(accountId).order(RequestBuilderOrder.DESC);
-
-      // Add pagination
-      if (limit != null) {
-        paymentsRequest = paymentsRequest.limit(limit);
-      }
-
-      // get first page
-      if (offset != null && offset > 0) {
-        var initialPage = await _sdk.payments
+      while (count < limit) {
+        final request = _sdk.payments
             .forAccount(accountId)
             .order(RequestBuilderOrder.DESC)
-            .limit(offset)
-            .execute();
+            .limit(limit)
+            .cursor(currentCursor ?? '');
 
-        if (initialPage.records.isNotEmpty) {
-          // Use the last record's paging token as cursor
-          paymentsRequest =
-              paymentsRequest.cursor(initialPage.records.last.pagingToken);
-        }
-      }
+        final page = await request.execute();
+        if (page.records.isEmpty) break;
 
-      Page<OperationResponse> payments = await paymentsRequest.execute();
-      List<ITransaction> transactionDetails = [];
+        final tempList = <_TempTx>[];
 
-      if (payments.records.isNotEmpty) {
-        for (OperationResponse response in payments.records) {
-          if (response is PaymentOperationResponse) {
-            final memoText = await this
-                .getMemoText(response.links.transaction.toJson()["href"]);
-            String assetCode = response.assetCode ?? 'XLM';
-            if (assetCodeFilter == null || assetCode == assetCodeFilter) {
-              final details = PaymentTransaction(
-                  hash: response.transactionHash,
-                  from: response.from,
-                  to: response.to,
-                  asset: response.assetCode.toString(),
-                  amount: response.amount,
-                  type: response.to == this.accountId
-                      ? TransactionType.Receive
-                      : TransactionType.Payment,
-                  status: response.transactionSuccessful,
-                  date: DateTime.parse(response.createdAt).toLocal().toString(),
-                  memo: memoText);
-
-              transactionDetails.add(details);
-            }
-          } else {
-            logger.i("Unhandled operation type: ${response.runtimeType}");
+        for (final response in page.records) {
+          if (response is PaymentOperationResponse &&
+              (assetCodeFilter == null ||
+                  response.assetCode == assetCodeFilter)) {
+            tempList.add(_TempTx(
+              response.links.transaction.toJson()["href"],
+              response,
+            ));
+            if (++count >= limit) break;
           }
         }
-      }
 
-      return transactionDetails;
+        if (tempList.isEmpty) break;
+
+        currentCursor = tempList.last.response.pagingToken;
+
+        final memoList = await Future.wait(
+          tempList.map((tx) => getMemoText(tx.href)),
+        );
+
+        for (var i = 0; i < tempList.length; i++) {
+          final tx = tempList[i].response;
+          yield PaymentTransaction(
+            pagingToken: tx.pagingToken,
+            hash: tx.transactionHash,
+            from: tx.from,
+            to: tx.to,
+            asset: tx.assetCode ?? 'XLM',
+            amount: tx.amount,
+            type: tx.to == accountId
+                ? TransactionType.Receive
+                : TransactionType.Payment,
+            status: tx.transactionSuccessful,
+            date: DateTime.parse(tx.createdAt).toLocal().toString(),
+            memo: memoList[i],
+          );
+        }
+      }
     } catch (e) {
       logger.e('Failed to get transactions: $e');
-      throw Exception('Could not get transactions due to $e');
+      throw Exception('Failed to get transactions');
     }
   }
 
