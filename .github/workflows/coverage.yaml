@@ -46,10 +46,8 @@ jobs:
       - name: Run unit tests and generate coverage
         run: |
           melos exec rm -rf coverage
-          melos run unit_test
-
-      - name: Create coverage directory
-        run: mkdir -p coverage
+          mkdir -p coverage
+          melos exec --dir-exists="test" -- dart test --coverage=coverage
 
       - name: Calculate and merge coverage
         if: success()
@@ -59,7 +57,7 @@ jobs:
 
       - name: Debug Coverage Directory
         run: ls -R coverage
-        
+
       - name: Upload coverage to Codecov
         if: success()
         uses: codecov/codecov-action@v3
