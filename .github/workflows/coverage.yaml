@@ -52,8 +52,9 @@ jobs:
       - name: Calculate and merge coverage
         if: success()
         run: |
-          melos exec --dir-exists="coverage" -- bash -c 'dart pub global run coverde filter --input coverage/lcov.info --output coverage/filtered.lcov.info --filters .g.dart'
-          melos exec --dir-exists="coverage" -- bash -c 'dart pub global run coverde value -i coverage/filtered.lcov.info > coverage/result.txt'
+          dart pub global run coverage:format_coverage --lcov --in=packages --out=coverage/lcov.info --report-on=lib
+          dart pub global run coverde filter --input coverage/lcov.info --output coverage/filtered.lcov.info --filters .g.dart
+          dart pub global run coverde value -i coverage/filtered.lcov.info > coverage/result.txt
 
       - name: Debug Coverage Directory
         run: ls -R coverage
