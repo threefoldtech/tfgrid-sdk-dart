@@ -14,7 +14,18 @@ scripts:
     run: |
       mkdir -p coverage
       melos exec --dir-exists="test" -- dart test --coverage=coverage --concurrency=1
-      dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
-      dart pub global run coverde filter --input coverage/lcov.info --output coverage/filtered.lcov.info --filters .g.dart
-      dart pub global run coverde value -i coverage/filtered.lcov.info > coverage/result.txt
+      find . -name "*.json" -path "*/coverage/*.json" > coverage/input_files.txt
+      dart pub global run coverage:format_coverage \
+        --lcov \
+        --out=coverage/lcov.info \
+        --report-on=lib \
+        --input=coverage/input_files.txt
+      dart pub global run coverde filter \
+        --input coverage/lcov.info \
+        --output coverage/filtered.lcov.info \
+        --filters .g.dart
+      dart pub global run coverde value \
+        -i coverage/filtered.lcov.info \
+        > coverage/result.txt
+
 
