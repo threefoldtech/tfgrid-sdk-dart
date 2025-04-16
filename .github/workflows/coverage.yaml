@@ -47,7 +47,7 @@ jobs:
         run: |
           melos exec rm -rf coverage
           mkdir -p coverage
-          melos exec --dir-exists="test" -- dart test --coverage=coverage
+          melos exec --dir-exists="test" -- dart test --coverage=coverage --concurrency=1
 
       - name: Calculate and merge coverage
         if: success()
