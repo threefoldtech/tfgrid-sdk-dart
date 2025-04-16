@@ -50,7 +50,7 @@ jobs:
           melos run unit_test_and_coverage
     
       - name: Debug Coverage Directory
-        run: ls -R coverage
+        run: ls -lh coverage && head -n 20 coverage/lcov.info || true
 
       - name: Upload coverage to Codecov
         if: success()
