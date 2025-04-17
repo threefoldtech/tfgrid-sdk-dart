@@ -20,7 +20,8 @@ scripts:
       dart pub global run coverage:format_coverage \
         --lcov \
         --in=coverage \
-        --out=coverage/lcov.info
+        --out=coverage/lcov.info \
+        --report-on=packages/tfchain_client/lib/generated
       # Filter out generated files
       dart pub global run coverde filter \
         --input coverage/lcov.info \
