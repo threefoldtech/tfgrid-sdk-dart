@@ -158,7 +158,7 @@ class Client {
   /// ### Returns:
   /// - `true` if all trustlines were successfully added.
   /// - `false` if one or more trustlines failed.
-  Future<bool> addTrustLine() async {
+  Future<bool> addConfiguredTrustlines() async {
     bool allTrustlinesAdded = true;
 
     for (var entry in _currencies.currencies.entries) {
@@ -628,7 +628,16 @@ class Client {
           throw Exception('Insufficient balance in $sellingAssetCode');
         },
       );
-
+      // Check if we have a trustline for the buying asset (except for XLM)
+      if (buyingAssetCode != 'XLM') {
+        final buyingAssetBalance = balances.firstWhere(
+          (balance) => balance.assetCode == buyingAssetCode,
+          orElse: () {
+            logger.e("Buy asset $buyingAssetCode not found in balances.");
+            throw Exception('No trustline for $buyingAssetCode');
+          },
+        );
+      }
       final double sellAmount = double.parse(amount);
       final double availableBalance = double.parse(sellAssetBalance.balance);
 
@@ -666,27 +675,16 @@ class Client {
   ///
   /// **Note:** Cancelling an order requires having XLM in the account
   /// to cover transaction fees and reserve requirements.
-  Future<bool> cancelOrder(
-      {required String sellingAssetCode,
-      required String buyingAssetCode,
-      required String offerId,
-      String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
-      throw Exception('Sell asset $sellingAssetCode is not available.');
-    }
-    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
-      throw Exception('Buy asset $buyingAssetCode is not available.');
-    }
-
+  Future<bool> cancelOrder({required String offerId, String? memo}) async {
     final offers = (await _sdk.offers.forAccount(accountId).execute()).records;
-    final OfferResponse? targetOffer = offers.firstWhere(
+    final OfferResponse targetOffer = offers.firstWhere(
       (offer) => offer.id == offerId,
       orElse: () => throw Exception(
           'Offer with ID $offerId not found in user\'s account.'),
     );
 
-    final Asset sellingAsset = _getAsset(sellingAssetCode);
-    final Asset buyingAsset = _getAsset(buyingAssetCode);
+    final Asset sellingAsset = targetOffer.selling;
+    final Asset buyingAsset = targetOffer.buying;
 
     final ManageBuyOfferOperation cancelOfferOperation =
         ManageBuyOfferOperationBuilder(sellingAsset, buyingAsset, '0', '1')
@@ -725,19 +723,10 @@ class Client {
   ///   - **Correct format**: `0.1`
   ///   - **Incorrect format**: `.1`
   Future<bool> updateOrder(
-      {required String sellingAssetCode,
-      required String buyingAssetCode,
-      required String amount,
+      {required String amount,
       required String price,
       required String offerId,
       String? memo}) async {
-    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
-      throw Exception('Sell asset $sellingAssetCode is not available.');
-    }
-    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
-      throw Exception('Buy asset $buyingAssetCode is not available.');
-    }
-
     final offers = (await _sdk.offers.forAccount(accountId).execute()).records;
     final OfferResponse? targetOffer = offers.firstWhere(
       (offer) => offer.id == offerId,
@@ -745,13 +734,10 @@ class Client {
           'Offer with ID $offerId not found in user\'s account.'),
     );
 
-    final Asset sellingAsset = _getAsset(sellingAssetCode);
-    final Asset buyingAsset = _getAsset(buyingAssetCode);
-
     ManageBuyOfferOperation updateOfferOperation =
         ManageBuyOfferOperationBuilder(
-      sellingAsset,
-      buyingAsset,
+      targetOffer!.selling,
+      targetOffer!.buying,
       amount,
       price,
     ).setOfferId(offerId).build();
@@ -771,72 +757,6 @@ class Client {
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
     }
-  }
-
-  /// Retrieves the order book for a given asset pair on the Stellar network.
-  ///
-  /// This function returns a stream of `OrderBookResponse`, which provides
-  /// real-time updates on buy and sell orders for the specified asset pair.
-  ///
-  /// ### Understanding Stellar Order Representation:
-  /// - **Price (`OrderBookResponse.asks[].price` & `OrderBookResponse.bids[].price`)**:
-  ///   Stellar stores price as `buying / selling`, meaning the displayed price
-  ///   is the **inverse** of the price provided when creating an order.
-  /// - **Amount (`OrderBookResponse.asks[].amount`)**:
-  ///   This represents the total amount of the **selling asset** available in the order book.
-  ///
-  /// ### Conversion Formula:
-  /// ```
-  /// Total selling amount = Buying amount * Price
-  /// Stored price = 1 / Provided price
-  /// ```
-  ///
-  /// ### Example:
-  /// #### **Creating an Order**
-  /// ```dart
-  /// await stellarClient.createOrder(
-  ///     sellingAssetCode: 'XLM',
-  ///     buyingAssetCode: 'TFT',
-  ///     amount: '2',     // Buying 2 TFT
-  ///     price: '0.1');   // 1 XLM = 0.1 TFT
-  /// ```
-  ///
-  /// #### **Retrieved Order Book Entry**
-  /// ```dart
-  /// OrderBookResponse {
-  ///   asks: [
-  ///     {
-  ///       amount: "0.2",   // Total selling amount = 2 * 0.1 = 0.2 XLM
-  ///       price: "10.0"    // Inverted: 1 / 0.1 = 10 XLM per TFT
-  ///     }
-  ///   ]
-  /// }
-  /// ```
-  ///
-  /// **Key Takeaways:**
-  /// - `OrderBookResponse.asks[].amount` = **Total amount of the selling asset**.
-  /// - `OrderBookResponse.asks[].price` = **Inverse of the provided price**.
-  Future<Stream<OrderBookResponse>> getOrderBook(
-      {required String sellingAssetCode,
-      required String buyingAssetCode}) async {
-    if (!_currencies.currencies.containsKey(sellingAssetCode)) {
-      throw Exception('Sell asset $sellingAssetCode is not available.');
-    }
-    if (!_currencies.currencies.containsKey(buyingAssetCode)) {
-      throw Exception('Buy asset $buyingAssetCode is not available.');
-    }
-    http.Client httpClient = http.Client();
-    Uri serverURI = Uri.parse(_horizonServerUrls[_network.toString()]!);
-
-    final Asset sellingAsset = _getAsset(sellingAssetCode);
-    final Asset buyingAsset = _getAsset(buyingAssetCode);
-
-    OrderBookRequestBuilder orderBookRequest =
-        OrderBookRequestBuilder(httpClient, serverURI)
-          ..sellingAsset(sellingAsset)
-          ..buyingAsset(buyingAsset);
-
-    return await orderBookRequest.stream();
   }
 
   /// Lists all active offers created by the current account.
@@ -896,29 +816,6 @@ class Client {
       return offers.records;
     } catch (error) {
       throw Exception('Error listing offers for account $accountId: $error');
-    }
-  }
-
-  Future<List<TradeResponse>> getTradingHistory(String accountId) async {
-    try {
-      List<TradeResponse> allTrades = [];
-      Page<TradeResponse>? tradesPage =
-          await _sdk.trades.forAccount(accountId).execute();
-      final httpClient = http.Client();
-      try {
-        while (tradesPage != null) {
-          allTrades.addAll(tradesPage.records);
-          tradesPage = await tradesPage.getNextPage(httpClient);
-          if (tradesPage == null || tradesPage.records.isEmpty) {
-            break;
-          }
-        }
-      } finally {
-        httpClient.close();
-      }
-      return allTrades;
-    } catch (e) {
-      throw Exception('Failed to fetch trading history: ${e.toString()}');
     }
   }
 }
