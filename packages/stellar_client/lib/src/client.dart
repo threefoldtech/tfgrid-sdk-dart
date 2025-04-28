@@ -6,7 +6,6 @@ class Client {
   late KeyPair _keyPair;
   late currency.Currencies _currencies;
   late Map<String, String> _serviceUrls;
-  late Map<String, String> _horizonServerUrls;
   late Network _stellarNetwork;
 
   String get accountId => _keyPair.accountId;
@@ -54,10 +53,6 @@ class Client {
     _serviceUrls = {
       'PUBLIC': 'https://tokenservices.threefold.io/threefoldfoundation',
       'TESTNET': 'https://testnet.threefold.io/threefoldfoundation'
-    };
-    _horizonServerUrls = {
-      'PUBLIC': 'https://horizon.stellar.org/',
-      'TESTNET': 'https://horizon-testnet.stellar.org/'
     };
 
     switch (_network) {
@@ -737,7 +732,7 @@ class Client {
     ManageBuyOfferOperation updateOfferOperation =
         ManageBuyOfferOperationBuilder(
       targetOffer!.selling,
-      targetOffer!.buying,
+      targetOffer.buying,
       amount,
       price,
     ).setOfferId(offerId).build();
