@@ -610,29 +610,40 @@ class Client {
     final balances = account.balances;
 
     try {
-      final sellAssetBalance = balances.firstWhere(
-        (balance) {
+      Balance? sellAssetBalance;
+      Balance? buyAssetBalance;
+
+      for (final balance in balances) {
+        if (sellAssetBalance == null) {
           if (sellingAssetCode == 'XLM' && balance.assetCode == null) {
-            return true; // Special case for XLM
-          } else {
-            return balance.assetCode == sellingAssetCode;
+            sellAssetBalance = balance;
+          } else if (balance.assetCode == sellingAssetCode) {
+            sellAssetBalance = balance;
           }
-        },
-        orElse: () {
-          logger.e("Sell asset $sellingAssetCode not found in balances.");
-          throw Exception('Insufficient balance in $sellingAssetCode');
-        },
-      );
-      // Check if we have a trustline for the buying asset (except for XLM)
-      if (buyingAssetCode != 'XLM') {
-        final buyingAssetBalance = balances.firstWhere(
-          (balance) => balance.assetCode == buyingAssetCode,
-          orElse: () {
-            logger.e("Buy asset $buyingAssetCode not found in balances.");
-            throw Exception('No trustline for $buyingAssetCode');
-          },
-        );
+        }
+
+        if (buyingAssetCode != 'XLM' && buyAssetBalance == null) {
+          if (balance.assetCode == buyingAssetCode) {
+            buyAssetBalance = balance;
+          }
+        }
+
+        if (sellAssetBalance != null &&
+            (buyingAssetCode == 'XLM' || buyAssetBalance != null)) {
+          break;
+        }
       }
+
+      if (sellAssetBalance == null) {
+        logger.e("Sell asset $sellingAssetCode not found in balances.");
+        throw Exception('Insufficient balance in $sellingAssetCode');
+      }
+
+      if (buyingAssetCode != 'XLM' && buyAssetBalance == null) {
+        logger.e("Buy asset $buyingAssetCode not found in balances.");
+        throw Exception('No trustline for $buyingAssetCode');
+      }
+
       final double sellAmount = double.parse(amount);
       final double availableBalance = double.parse(sellAssetBalance.balance);
 
@@ -670,7 +681,7 @@ class Client {
   ///
   /// **Note:** Cancelling an order requires having XLM in the account
   /// to cover transaction fees and reserve requirements.
-  Future<bool> cancelOrder({required String offerId, String? memo}) async {
+  Future<bool> cancelOrder({required String offerId}) async {
     final offers = (await _sdk.offers.forAccount(accountId).execute()).records;
     final OfferResponse targetOffer = offers.firstWhere(
       (offer) => offer.id == offerId,
@@ -687,10 +698,8 @@ class Client {
             .build();
 
     final account = await _sdk.accounts.account(accountId);
-    final Transaction transaction = TransactionBuilder(account)
-        .addOperation(cancelOfferOperation)
-        .addMemo(memo != null ? Memo.text(memo) : Memo.none())
-        .build();
+    final Transaction transaction =
+        TransactionBuilder(account).addOperation(cancelOfferOperation).build();
     transaction.sign(_keyPair, _stellarNetwork);
     try {
       final SubmitTransactionResponse response =
