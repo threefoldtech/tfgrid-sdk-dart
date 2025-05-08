@@ -40,6 +40,22 @@ Future<List<BalanceInfo>> getBalanceByAccountID({
   }
 }
 
+Future<AccountResponse> getAccount({
+  required NetworkType network,
+  required String accountId,
+}) async {
+  late StellarSDK _sdk;
+  switch (network) {
+    case NetworkType.TESTNET:
+      _sdk = StellarSDK.TESTNET;
+      break;
+    case NetworkType.PUBLIC:
+      _sdk = StellarSDK.PUBLIC;
+      break;
+  }
+  return await _sdk.accounts.account(accountId);
+}
+
 class _TempTx {
   final String href;
   final PaymentOperationResponse response;
