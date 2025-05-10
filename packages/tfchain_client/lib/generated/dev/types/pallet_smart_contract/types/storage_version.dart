@@ -14,7 +14,8 @@ enum StorageVersion {
   v8('V8', 7),
   v9('V9', 8),
   v10('V10', 9),
-  v11('V11', 10);
+  v11('V11', 10),
+  v12('V12', 11);
 
   const StorageVersion(
     this.variantName,
@@ -66,6 +67,8 @@ class $StorageVersionCodec with _i1.Codec<StorageVersion> {
         return StorageVersion.v10;
       case 10:
         return StorageVersion.v11;
+      case 11:
+        return StorageVersion.v12;
       default:
         throw Exception('StorageVersion: Invalid variant index: "$index"');
     }

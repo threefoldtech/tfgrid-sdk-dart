@@ -1,12 +1,14 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:typed_data' as _i5;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_membership/pallet/call.dart' as _i6;
+import '../types/pallet_membership/pallet/call.dart' as _i8;
 import '../types/sp_core/crypto/account_id32.dart' as _i2;
-import '../types/tfchain_runtime/runtime_call.dart' as _i5;
+import '../types/sp_runtime/multiaddress/multi_address.dart' as _i7;
+import '../types/tfchain_runtime/runtime_call.dart' as _i6;
 
 class Queries {
   const Queries(this.__api);
@@ -52,75 +54,61 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `members`.
+  _i5.Uint8List membersKey() {
+    final hashedKey = _members.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `prime`.
+  _i5.Uint8List primeKey() {
+    final hashedKey = _prime.hashedKey();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Add a member `who` to the set.
-  ///
-  /// May only be called from `T::AddOrigin`.
-  _i5.RuntimeCall addMember({required who}) {
-    final _call = _i6.Call.values.addMember(who: who);
-    return _i5.RuntimeCall.values.councilMembership(_call);
+  /// See [`Pallet::add_member`].
+  _i6.CouncilMembership addMember({required _i7.MultiAddress who}) {
+    return _i6.CouncilMembership(_i8.AddMember(who: who));
   }
 
-  /// Remove a member `who` from the set.
-  ///
-  /// May only be called from `T::RemoveOrigin`.
-  _i5.RuntimeCall removeMember({required who}) {
-    final _call = _i6.Call.values.removeMember(who: who);
-    return _i5.RuntimeCall.values.councilMembership(_call);
+  /// See [`Pallet::remove_member`].
+  _i6.CouncilMembership removeMember({required _i7.MultiAddress who}) {
+    return _i6.CouncilMembership(_i8.RemoveMember(who: who));
   }
 
-  /// Swap out one member `remove` for another `add`.
-  ///
-  /// May only be called from `T::SwapOrigin`.
-  ///
-  /// Prime membership is *not* passed from `remove` to `add`, if extant.
-  _i5.RuntimeCall swapMember({
-    required remove,
-    required add,
+  /// See [`Pallet::swap_member`].
+  _i6.CouncilMembership swapMember({
+    required _i7.MultiAddress remove,
+    required _i7.MultiAddress add,
   }) {
-    final _call = _i6.Call.values.swapMember(
+    return _i6.CouncilMembership(_i8.SwapMember(
       remove: remove,
       add: add,
-    );
-    return _i5.RuntimeCall.values.councilMembership(_call);
+    ));
   }
 
-  /// Change the membership to a new set, disregarding the existing membership. Be nice and
-  /// pass `members` pre-sorted.
-  ///
-  /// May only be called from `T::ResetOrigin`.
-  _i5.RuntimeCall resetMembers({required members}) {
-    final _call = _i6.Call.values.resetMembers(members: members);
-    return _i5.RuntimeCall.values.councilMembership(_call);
+  /// See [`Pallet::reset_members`].
+  _i6.CouncilMembership resetMembers({required List<_i2.AccountId32> members}) {
+    return _i6.CouncilMembership(_i8.ResetMembers(members: members));
   }
 
-  /// Swap out the sending member for some other key `new`.
-  ///
-  /// May only be called from `Signed` origin of a current member.
-  ///
-  /// Prime membership is passed from the origin account to `new`, if extant.
-  _i5.RuntimeCall changeKey({required new_}) {
-    final _call = _i6.Call.values.changeKey(new_: new_);
-    return _i5.RuntimeCall.values.councilMembership(_call);
+  /// See [`Pallet::change_key`].
+  _i6.CouncilMembership changeKey({required _i7.MultiAddress new_}) {
+    return _i6.CouncilMembership(_i8.ChangeKey(new_: new_));
   }
 
-  /// Set the prime member. Must be a current member.
-  ///
-  /// May only be called from `T::PrimeOrigin`.
-  _i5.RuntimeCall setPrime({required who}) {
-    final _call = _i6.Call.values.setPrime(who: who);
-    return _i5.RuntimeCall.values.councilMembership(_call);
+  /// See [`Pallet::set_prime`].
+  _i6.CouncilMembership setPrime({required _i7.MultiAddress who}) {
+    return _i6.CouncilMembership(_i8.SetPrime(who: who));
   }
 
-  /// Remove the prime member if it exists.
-  ///
-  /// May only be called from `T::PrimeOrigin`.
-  _i5.RuntimeCall clearPrime() {
-    final _call = _i6.Call.values.clearPrime();
-    return _i5.RuntimeCall.values.councilMembership(_call);
+  /// See [`Pallet::clear_prime`].
+  _i6.CouncilMembership clearPrime() {
+    return _i6.CouncilMembership(_i8.ClearPrime());
   }
 }

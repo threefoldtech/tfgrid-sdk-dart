@@ -22,7 +22,7 @@ class QueryContracts {
     return res;
   }
 
-  Future<List<int>> getActiveContracts({required int nodeId}) async {
+  Future<List<BigInt>> getActiveContracts({required int nodeId}) async {
     final res =
         await client.api.query.smartContractModule.activeNodeContracts(nodeId);
     return res;

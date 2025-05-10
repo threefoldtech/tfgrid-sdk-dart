@@ -3,17 +3,16 @@ import 'dart:typed_data' as _i2;
 
 import 'package:polkadart/scale_codec.dart' as _i1;
 
-enum Cause {
-  canceledByUser('CanceledByUser', 0),
-  outOfFunds('OutOfFunds', 1),
-  canceledByCollective('CanceledByCollective', 2);
+enum StorageVersion {
+  v1('V1', 0),
+  v2('V2', 1);
 
-  const Cause(
+  const StorageVersion(
     this.variantName,
     this.codecIndex,
   );
 
-  factory Cause.decode(_i1.Input input) {
+  factory StorageVersion.decode(_i1.Input input) {
     return codec.decode(input);
   }
 
@@ -21,7 +20,7 @@ enum Cause {
 
   final int codecIndex;
 
-  static const $CauseCodec codec = $CauseCodec();
+  static const $StorageVersionCodec codec = $StorageVersionCodec();
 
   String toJson() => variantName;
   _i2.Uint8List encode() {
@@ -29,27 +28,25 @@ enum Cause {
   }
 }
 
-class $CauseCodec with _i1.Codec<Cause> {
-  const $CauseCodec();
+class $StorageVersionCodec with _i1.Codec<StorageVersion> {
+  const $StorageVersionCodec();
 
   @override
-  Cause decode(_i1.Input input) {
+  StorageVersion decode(_i1.Input input) {
     final index = _i1.U8Codec.codec.decode(input);
     switch (index) {
       case 0:
-        return Cause.canceledByUser;
+        return StorageVersion.v1;
       case 1:
-        return Cause.outOfFunds;
-      case 2:
-        return Cause.canceledByCollective;
+        return StorageVersion.v2;
       default:
-        throw Exception('Cause: Invalid variant index: "$index"');
+        throw Exception('StorageVersion: Invalid variant index: "$index"');
     }
   }
 
   @override
   void encodeTo(
-    Cause value,
+    StorageVersion value,
     _i1.Output output,
   ) {
     _i1.U8Codec.codec.encodeTo(

@@ -3,10 +3,7 @@ import 'dart:typed_data' as _i2;
 
 import 'package:polkadart/scale_codec.dart' as _i1;
 
-///
-///			Custom [dispatch errors](https://docs.substrate.io/main-docs/build/events-errors/)
-///			of this pallet.
-///
+/// The `Error` enum of this pallet.
 enum Error {
   /// The requested user has not stored a value yet
   noValueStored('NoValueStored', 0),

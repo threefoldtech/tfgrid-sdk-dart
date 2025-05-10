@@ -18,10 +18,7 @@ import '../types/farming_policy.dart' as _i10;
 import '../types/pricing_policy.dart' as _i9;
 import '../types/twin.dart' as _i7;
 
-///
-///			The [event](https://docs.substrate.io/main-docs/build/events-errors/) emitted
-///			by this pallet.
-///
+/// The `Event` enum of this pallet
 abstract class Event {
   const Event();
 
@@ -1423,7 +1420,7 @@ class FarmingPolicyStored extends Event {
     return FarmingPolicyStored(_i10.FarmingPolicy.codec.decode(input));
   }
 
-  /// types::FarmingPolicy<T::BlockNumber>
+  /// types::FarmingPolicy<BlockNumberFor<T>>
   final _i10.FarmingPolicy value0;
 
   @override
@@ -1777,7 +1774,7 @@ class FarmingPolicyUpdated extends Event {
     return FarmingPolicyUpdated(_i10.FarmingPolicy.codec.decode(input));
   }
 
-  /// types::FarmingPolicy<T::BlockNumber>
+  /// types::FarmingPolicy<BlockNumberFor<T>>
   final _i10.FarmingPolicy value0;
 
   @override
@@ -2099,7 +2096,7 @@ class PowerStateChanged extends Event {
   /// u32
   final int nodeId;
 
-  /// PowerState<T::BlockNumber>
+  /// PowerState<BlockNumberFor<T>>
   final _i15.PowerState powerState;
 
   @override

@@ -5,8 +5,8 @@ import '../types/tfchain_runtime/runtime_call.dart' as _i1;
 class Txs {
   const Txs();
 
-  _i1.RuntimeCall setCode({required code}) {
-    final _call = _i2.Call.values.setCode(code: code);
-    return _i1.RuntimeCall.values.runtimeUpgrade(_call);
+  /// See [`Pallet::set_code`].
+  _i1.RuntimeUpgrade setCode({required List<int> code}) {
+    return _i1.RuntimeUpgrade(_i2.SetCode(code: code));
   }
 }

@@ -3,10 +3,7 @@ import 'dart:typed_data' as _i2;
 
 import 'package:polkadart/scale_codec.dart' as _i1;
 
-///
-///			Custom [dispatch errors](https://docs.substrate.io/main-docs/build/events-errors/)
-///			of this pallet.
-///
+/// The `Error` enum of this pallet.
 enum Error {
   /// Account is not a member
   notMember('NotMember', 0),
@@ -36,7 +33,10 @@ enum Error {
   wrongProposalWeight('WrongProposalWeight', 8),
 
   /// The given length bound for the proposal was too low.
-  wrongProposalLength('WrongProposalLength', 9);
+  wrongProposalLength('WrongProposalLength', 9),
+
+  /// Prime account is not a member
+  primeAccountNotMember('PrimeAccountNotMember', 10);
 
   const Error(
     this.variantName,
@@ -86,6 +86,8 @@ class $ErrorCodec with _i1.Codec<Error> {
         return Error.wrongProposalWeight;
       case 9:
         return Error.wrongProposalLength;
+      case 10:
+        return Error.primeAccountNotMember;
       default:
         throw Exception('Error: Invalid variant index: "$index"');
     }

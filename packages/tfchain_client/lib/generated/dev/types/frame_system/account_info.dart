@@ -18,7 +18,7 @@ class AccountInfo {
     return codec.decode(input);
   }
 
-  /// Index
+  /// Nonce
   final int nonce;
 
   /// RefCount

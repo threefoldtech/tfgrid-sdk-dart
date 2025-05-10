@@ -1,14 +1,15 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
+import 'dart:typed_data' as _i8;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_session/pallet/call.dart' as _i9;
+import '../types/pallet_session/pallet/call.dart' as _i10;
 import '../types/sp_core/crypto/account_id32.dart' as _i2;
 import '../types/sp_core/crypto/key_type_id.dart' as _i6;
 import '../types/tfchain_runtime/opaque/session_keys.dart' as _i5;
-import '../types/tfchain_runtime/runtime_call.dart' as _i8;
+import '../types/tfchain_runtime/runtime_call.dart' as _i9;
 import '../types/tuples.dart' as _i4;
 
 class Queries {
@@ -182,45 +183,78 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `validators`.
+  _i8.Uint8List validatorsKey() {
+    final hashedKey = _validators.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `currentIndex`.
+  _i8.Uint8List currentIndexKey() {
+    final hashedKey = _currentIndex.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `queuedChanged`.
+  _i8.Uint8List queuedChangedKey() {
+    final hashedKey = _queuedChanged.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `queuedKeys`.
+  _i8.Uint8List queuedKeysKey() {
+    final hashedKey = _queuedKeys.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `disabledValidators`.
+  _i8.Uint8List disabledValidatorsKey() {
+    final hashedKey = _disabledValidators.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nextKeys`.
+  _i8.Uint8List nextKeysKey(_i2.AccountId32 key1) {
+    final hashedKey = _nextKeys.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `keyOwner`.
+  _i8.Uint8List keyOwnerKey(_i4.Tuple2<_i6.KeyTypeId, List<int>> key1) {
+    final hashedKey = _keyOwner.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `nextKeys`.
+  _i8.Uint8List nextKeysMapPrefix() {
+    final hashedKey = _nextKeys.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `keyOwner`.
+  _i8.Uint8List keyOwnerMapPrefix() {
+    final hashedKey = _keyOwner.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Sets the session key(s) of the function caller to `keys`.
-  /// Allows an account to set its session key prior to becoming a validator.
-  /// This doesn't take effect until the next session.
-  ///
-  /// The dispatch origin of this function must be signed.
-  ///
-  /// ## Complexity
-  /// - `O(1)`. Actual cost depends on the number of length of `T::Keys::key_ids()` which is
-  ///  fixed.
-  _i8.RuntimeCall setKeys({
-    required keys,
-    required proof,
+  /// See [`Pallet::set_keys`].
+  _i9.Session setKeys({
+    required _i5.SessionKeys keys,
+    required List<int> proof,
   }) {
-    final _call = _i9.Call.values.setKeys(
+    return _i9.Session(_i10.SetKeys(
       keys: keys,
       proof: proof,
-    );
-    return _i8.RuntimeCall.values.session(_call);
+    ));
   }
 
-  /// Removes any session key(s) of the function caller.
-  ///
-  /// This doesn't take effect until the next session.
-  ///
-  /// The dispatch origin of this function must be Signed and the account must be either be
-  /// convertible to a validator ID using the chain's typical addressing system (this usually
-  /// means being a controller account) or directly convertible into a validator ID (which
-  /// usually means being a stash account).
-  ///
-  /// ## Complexity
-  /// - `O(1)` in number of key types. Actual cost depends on the number of length of
-  ///  `T::Keys::key_ids()` which is fixed.
-  _i8.RuntimeCall purgeKeys() {
-    final _call = _i9.Call.values.purgeKeys();
-    return _i8.RuntimeCall.values.session(_call);
+  /// See [`Pallet::purge_keys`].
+  _i9.Session purgeKeys() {
+    return _i9.Session(_i10.PurgeKeys());
   }
 }

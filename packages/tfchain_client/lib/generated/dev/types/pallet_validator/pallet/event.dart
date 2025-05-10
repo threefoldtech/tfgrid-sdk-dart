@@ -7,10 +7,7 @@ import 'package:quiver/collection.dart' as _i5;
 import '../../sp_core/crypto/account_id32.dart' as _i3;
 import '../types/validator.dart' as _i4;
 
-///
-///			The [event](https://docs.substrate.io/main-docs/build/events-errors/) emitted
-///			by this pallet.
-///
+/// The `Event` enum of this pallet
 abstract class Event {
   const Event();
 

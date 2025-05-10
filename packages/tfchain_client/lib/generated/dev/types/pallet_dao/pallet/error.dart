@@ -3,10 +3,7 @@ import 'dart:typed_data' as _i2;
 
 import 'package:polkadart/scale_codec.dart' as _i1;
 
-///
-///			Custom [dispatch errors](https://docs.substrate.io/main-docs/build/events-errors/)
-///			of this pallet.
-///
+/// The `Error` enum of this pallet.
 enum Error {
   noneValue('NoneValue', 0),
   storageOverflow('StorageOverflow', 1),
@@ -24,7 +21,8 @@ enum Error {
   timeLimitReached('TimeLimitReached', 13),
   ongoingVoteAndTresholdStillNotMet('OngoingVoteAndTresholdStillNotMet', 14),
   farmHasNoNodes('FarmHasNoNodes', 15),
-  invalidProposalDuration('InvalidProposalDuration', 16);
+  invalidProposalDuration('InvalidProposalDuration', 16),
+  thresholdTooLow('ThresholdTooLow', 17);
 
   const Error(
     this.variantName,
@@ -88,6 +86,8 @@ class $ErrorCodec with _i1.Codec<Error> {
         return Error.farmHasNoNodes;
       case 16:
         return Error.invalidProposalDuration;
+      case 17:
+        return Error.thresholdTooLow;
       default:
         throw Exception('Error: Invalid variant index: "$index"');
     }

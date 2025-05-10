@@ -21,7 +21,7 @@ class Farms extends QueryFarms {
   final Client client;
 
   Future<int?> create(
-      {required String name, required List<Ip4>? publicIps}) async {
+      {required String name, required List<Ip4> publicIps}) async {
     final extrinsic = client.api.tx.tfgridModule
         .createFarm(name: name.codeUnits, publicIps: publicIps);
     await client.apply(extrinsic);

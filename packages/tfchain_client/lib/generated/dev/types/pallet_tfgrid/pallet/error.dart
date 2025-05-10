@@ -3,10 +3,7 @@ import 'dart:typed_data' as _i2;
 
 import 'package:polkadart/scale_codec.dart' as _i1;
 
-///
-///			Custom [dispatch errors](https://docs.substrate.io/main-docs/build/events-errors/)
-///			of this pallet.
-///
+/// The `Error` enum of this pallet.
 enum Error {
   noneValue('NoneValue', 0),
   storageOverflow('StorageOverflow', 1),
@@ -120,8 +117,10 @@ enum Error {
   invalidDocumentHashInput('InvalidDocumentHashInput', 109),
   invalidPublicConfig('InvalidPublicConfig', 110),
   unauthorizedToChangePowerTarget('UnauthorizedToChangePowerTarget', 111),
-  invalidRelayAddress('InvalidRelayAddress', 112),
-  invalidTimestampHint('InvalidTimestampHint', 113);
+  nodeHasActiveContracts('NodeHasActiveContracts', 112),
+  invalidRelayAddress('InvalidRelayAddress', 113),
+  invalidTimestampHint('InvalidTimestampHint', 114),
+  invalidStorageInput('InvalidStorageInput', 115);
 
   const Error(
     this.variantName,
@@ -376,9 +375,13 @@ class $ErrorCodec with _i1.Codec<Error> {
       case 111:
         return Error.unauthorizedToChangePowerTarget;
       case 112:
-        return Error.invalidRelayAddress;
+        return Error.nodeHasActiveContracts;
       case 113:
+        return Error.invalidRelayAddress;
+      case 114:
         return Error.invalidTimestampHint;
+      case 115:
+        return Error.invalidStorageInput;
       default:
         throw Exception('Error: Invalid variant index: "$index"');
     }

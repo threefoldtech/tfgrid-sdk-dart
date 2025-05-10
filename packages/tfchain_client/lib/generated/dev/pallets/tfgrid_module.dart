@@ -1,25 +1,33 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i13;
+import 'dart:typed_data' as _i18;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_tfgrid/pallet/call.dart' as _i19;
+import '../types/pallet_tfgrid/pallet/call.dart' as _i20;
 import '../types/pallet_tfgrid/terms_cond/terms_and_conditions.dart' as _i10;
 import '../types/pallet_tfgrid/types/entity.dart' as _i5;
 import '../types/pallet_tfgrid/types/farming_policy.dart' as _i9;
+import '../types/pallet_tfgrid/types/location_input.dart' as _i23;
+import '../types/pallet_tfgrid/types/policy.dart' as _i26;
 import '../types/pallet_tfgrid/types/pricing_policy.dart' as _i8;
 import '../types/pallet_tfgrid/types/storage_version.dart' as _i11;
 import '../types/pallet_tfgrid/types/twin.dart' as _i7;
 import '../types/sp_core/crypto/account_id32.dart' as _i6;
-import '../types/tfchain_runtime/runtime_call.dart' as _i18;
+import '../types/tfchain_runtime/runtime_call.dart' as _i19;
+import '../types/tfchain_support/resources/resources.dart' as _i22;
 import '../types/tfchain_support/types/farm.dart' as _i2;
 import '../types/tfchain_support/types/farm_certification.dart' as _i15;
+import '../types/tfchain_support/types/farming_policy_limit.dart' as _i27;
+import '../types/tfchain_support/types/interface_2.dart' as _i24;
+import '../types/tfchain_support/types/ip4.dart' as _i21;
 import '../types/tfchain_support/types/node.dart' as _i4;
 import '../types/tfchain_support/types/node_certification.dart' as _i14;
 import '../types/tfchain_support/types/node_power.dart' as _i12;
 import '../types/tfchain_support/types/power.dart' as _i17;
 import '../types/tfchain_support/types/power_state.dart' as _i16;
+import '../types/tfchain_support/types/public_config.dart' as _i25;
 
 class Queries {
   const Queries(this.__api);
@@ -636,94 +644,359 @@ class Queries {
       target: _i17.Power.up,
     ); /* Default */
   }
+
+  /// Returns the storage key for `farms`.
+  _i18.Uint8List farmsKey(int key1) {
+    final hashedKey = _farms.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nodesByFarmID`.
+  _i18.Uint8List nodesByFarmIDKey(int key1) {
+    final hashedKey = _nodesByFarmID.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `farmIdByName`.
+  _i18.Uint8List farmIdByNameKey(List<int> key1) {
+    final hashedKey = _farmIdByName.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `farmPayoutV2AddressByFarmID`.
+  _i18.Uint8List farmPayoutV2AddressByFarmIDKey(int key1) {
+    final hashedKey = _farmPayoutV2AddressByFarmID.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nodes`.
+  _i18.Uint8List nodesKey(int key1) {
+    final hashedKey = _nodes.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nodeIdByTwinID`.
+  _i18.Uint8List nodeIdByTwinIDKey(int key1) {
+    final hashedKey = _nodeIdByTwinID.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `entities`.
+  _i18.Uint8List entitiesKey(int key1) {
+    final hashedKey = _entities.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `entityIdByAccountID`.
+  _i18.Uint8List entityIdByAccountIDKey(_i6.AccountId32 key1) {
+    final hashedKey = _entityIdByAccountID.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `entityIdByName`.
+  _i18.Uint8List entityIdByNameKey(List<int> key1) {
+    final hashedKey = _entityIdByName.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `twins`.
+  _i18.Uint8List twinsKey(int key1) {
+    final hashedKey = _twins.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `twinIdByAccountID`.
+  _i18.Uint8List twinIdByAccountIDKey(_i6.AccountId32 key1) {
+    final hashedKey = _twinIdByAccountID.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `twinBoundedAccountID`.
+  _i18.Uint8List twinBoundedAccountIDKey(int key1) {
+    final hashedKey = _twinBoundedAccountID.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `pricingPolicies`.
+  _i18.Uint8List pricingPoliciesKey(int key1) {
+    final hashedKey = _pricingPolicies.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `pricingPolicyIdByName`.
+  _i18.Uint8List pricingPolicyIdByNameKey(List<int> key1) {
+    final hashedKey = _pricingPolicyIdByName.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `farmingPoliciesMap`.
+  _i18.Uint8List farmingPoliciesMapKey(int key1) {
+    final hashedKey = _farmingPoliciesMap.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `usersTermsAndConditions`.
+  _i18.Uint8List usersTermsAndConditionsKey(_i6.AccountId32 key1) {
+    final hashedKey = _usersTermsAndConditions.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `allowedNodeCertifiers`.
+  _i18.Uint8List allowedNodeCertifiersKey() {
+    final hashedKey = _allowedNodeCertifiers.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `connectionPrice`.
+  _i18.Uint8List connectionPriceKey() {
+    final hashedKey = _connectionPrice.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `farmID`.
+  _i18.Uint8List farmIDKey() {
+    final hashedKey = _farmID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nodeID`.
+  _i18.Uint8List nodeIDKey() {
+    final hashedKey = _nodeID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `entityID`.
+  _i18.Uint8List entityIDKey() {
+    final hashedKey = _entityID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `twinID`.
+  _i18.Uint8List twinIDKey() {
+    final hashedKey = _twinID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `pricingPolicyID`.
+  _i18.Uint8List pricingPolicyIDKey() {
+    final hashedKey = _pricingPolicyID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `farmingPolicyID`.
+  _i18.Uint8List farmingPolicyIDKey() {
+    final hashedKey = _farmingPolicyID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `palletVersion`.
+  _i18.Uint8List palletVersionKey() {
+    final hashedKey = _palletVersion.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `zosVersion`.
+  _i18.Uint8List zosVersionKey() {
+    final hashedKey = _zosVersion.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nodePower`.
+  _i18.Uint8List nodePowerKey(int key1) {
+    final hashedKey = _nodePower.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `farms`.
+  _i18.Uint8List farmsMapPrefix() {
+    final hashedKey = _farms.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `nodesByFarmID`.
+  _i18.Uint8List nodesByFarmIDMapPrefix() {
+    final hashedKey = _nodesByFarmID.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `farmIdByName`.
+  _i18.Uint8List farmIdByNameMapPrefix() {
+    final hashedKey = _farmIdByName.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `farmPayoutV2AddressByFarmID`.
+  _i18.Uint8List farmPayoutV2AddressByFarmIDMapPrefix() {
+    final hashedKey = _farmPayoutV2AddressByFarmID.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `nodes`.
+  _i18.Uint8List nodesMapPrefix() {
+    final hashedKey = _nodes.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `nodeIdByTwinID`.
+  _i18.Uint8List nodeIdByTwinIDMapPrefix() {
+    final hashedKey = _nodeIdByTwinID.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `entities`.
+  _i18.Uint8List entitiesMapPrefix() {
+    final hashedKey = _entities.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `entityIdByAccountID`.
+  _i18.Uint8List entityIdByAccountIDMapPrefix() {
+    final hashedKey = _entityIdByAccountID.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `entityIdByName`.
+  _i18.Uint8List entityIdByNameMapPrefix() {
+    final hashedKey = _entityIdByName.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `twins`.
+  _i18.Uint8List twinsMapPrefix() {
+    final hashedKey = _twins.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `twinIdByAccountID`.
+  _i18.Uint8List twinIdByAccountIDMapPrefix() {
+    final hashedKey = _twinIdByAccountID.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `twinBoundedAccountID`.
+  _i18.Uint8List twinBoundedAccountIDMapPrefix() {
+    final hashedKey = _twinBoundedAccountID.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `pricingPolicies`.
+  _i18.Uint8List pricingPoliciesMapPrefix() {
+    final hashedKey = _pricingPolicies.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `pricingPolicyIdByName`.
+  _i18.Uint8List pricingPolicyIdByNameMapPrefix() {
+    final hashedKey = _pricingPolicyIdByName.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `farmingPoliciesMap`.
+  _i18.Uint8List farmingPoliciesMapMapPrefix() {
+    final hashedKey = _farmingPoliciesMap.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `usersTermsAndConditions`.
+  _i18.Uint8List usersTermsAndConditionsMapPrefix() {
+    final hashedKey = _usersTermsAndConditions.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `nodePower`.
+  _i18.Uint8List nodePowerMapPrefix() {
+    final hashedKey = _nodePower.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  _i18.RuntimeCall setStorageVersion({required version}) {
-    final _call = _i19.Call.values.setStorageVersion(version: version);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::set_storage_version`].
+  _i19.TfgridModule setStorageVersion({required _i11.StorageVersion version}) {
+    return _i19.TfgridModule(_i20.SetStorageVersion(version: version));
   }
 
-  _i18.RuntimeCall createFarm({
-    required name,
-    required publicIps,
+  /// See [`Pallet::create_farm`].
+  _i19.TfgridModule createFarm({
+    required List<int> name,
+    required List<_i21.Ip4> publicIps,
   }) {
-    final _call = _i19.Call.values.createFarm(
+    return _i19.TfgridModule(_i20.CreateFarm(
       name: name,
       publicIps: publicIps,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall updateFarm({
-    required farmId,
-    required name,
+  /// See [`Pallet::update_farm`].
+  _i19.TfgridModule updateFarm({
+    required int farmId,
+    required List<int> name,
   }) {
-    final _call = _i19.Call.values.updateFarm(
+    return _i19.TfgridModule(_i20.UpdateFarm(
       farmId: farmId,
       name: name,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall addStellarPayoutV2address({
-    required farmId,
-    required stellarAddress,
+  /// See [`Pallet::add_stellar_payout_v2address`].
+  _i19.TfgridModule addStellarPayoutV2address({
+    required int farmId,
+    required List<int> stellarAddress,
   }) {
-    final _call = _i19.Call.values.addStellarPayoutV2address(
+    return _i19.TfgridModule(_i20.AddStellarPayoutV2address(
       farmId: farmId,
       stellarAddress: stellarAddress,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall setFarmCertification({
-    required farmId,
-    required certification,
+  /// See [`Pallet::set_farm_certification`].
+  _i19.TfgridModule setFarmCertification({
+    required int farmId,
+    required _i15.FarmCertification certification,
   }) {
-    final _call = _i19.Call.values.setFarmCertification(
+    return _i19.TfgridModule(_i20.SetFarmCertification(
       farmId: farmId,
       certification: certification,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall addFarmIp({
-    required farmId,
-    required ip,
-    required gw,
+  /// See [`Pallet::add_farm_ip`].
+  _i19.TfgridModule addFarmIp({
+    required int farmId,
+    required List<int> ip,
+    required List<int> gw,
   }) {
-    final _call = _i19.Call.values.addFarmIp(
+    return _i19.TfgridModule(_i20.AddFarmIp(
       farmId: farmId,
       ip: ip,
       gw: gw,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall removeFarmIp({
-    required farmId,
-    required ip,
+  /// See [`Pallet::remove_farm_ip`].
+  _i19.TfgridModule removeFarmIp({
+    required int farmId,
+    required List<int> ip,
   }) {
-    final _call = _i19.Call.values.removeFarmIp(
+    return _i19.TfgridModule(_i20.RemoveFarmIp(
       farmId: farmId,
       ip: ip,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall createNode({
-    required farmId,
-    required resources,
-    required location,
-    required interfaces,
-    required secureBoot,
-    required virtualized,
-    serialNumber,
+  /// See [`Pallet::create_node`].
+  _i19.TfgridModule createNode({
+    required int farmId,
+    required _i22.Resources resources,
+    required _i23.LocationInput location,
+    required List<_i24.Interface> interfaces,
+    required bool secureBoot,
+    required bool virtualized,
+    List<int>? serialNumber,
   }) {
-    final _call = _i19.Call.values.createNode(
+    return _i19.TfgridModule(_i20.CreateNode(
       farmId: farmId,
       resources: resources,
       location: location,
@@ -731,21 +1004,21 @@ class Txs {
       secureBoot: secureBoot,
       virtualized: virtualized,
       serialNumber: serialNumber,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall updateNode({
-    required nodeId,
-    required farmId,
-    required resources,
-    required location,
-    required interfaces,
-    required secureBoot,
-    required virtualized,
-    serialNumber,
+  /// See [`Pallet::update_node`].
+  _i19.TfgridModule updateNode({
+    required int nodeId,
+    required int farmId,
+    required _i22.Resources resources,
+    required _i23.LocationInput location,
+    required List<_i24.Interface> interfaces,
+    required bool secureBoot,
+    required bool virtualized,
+    List<int>? serialNumber,
   }) {
-    final _call = _i19.Call.values.updateNode(
+    return _i19.TfgridModule(_i20.UpdateNode(
       nodeId: nodeId,
       farmId: farmId,
       resources: resources,
@@ -754,138 +1027,138 @@ class Txs {
       secureBoot: secureBoot,
       virtualized: virtualized,
       serialNumber: serialNumber,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall setNodeCertification({
-    required nodeId,
-    required nodeCertification,
+  /// See [`Pallet::set_node_certification`].
+  _i19.TfgridModule setNodeCertification({
+    required int nodeId,
+    required _i14.NodeCertification nodeCertification,
   }) {
-    final _call = _i19.Call.values.setNodeCertification(
+    return _i19.TfgridModule(_i20.SetNodeCertification(
       nodeId: nodeId,
       nodeCertification: nodeCertification,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall reportUptime({required uptime}) {
-    final _call = _i19.Call.values.reportUptime(uptime: uptime);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::report_uptime`].
+  _i19.TfgridModule reportUptime({required BigInt uptime}) {
+    return _i19.TfgridModule(_i20.ReportUptime(uptime: uptime));
   }
 
-  _i18.RuntimeCall addNodePublicConfig({
-    required farmId,
-    required nodeId,
-    publicConfig,
+  /// See [`Pallet::add_node_public_config`].
+  _i19.TfgridModule addNodePublicConfig({
+    required int farmId,
+    required int nodeId,
+    _i25.PublicConfig? publicConfig,
   }) {
-    final _call = _i19.Call.values.addNodePublicConfig(
+    return _i19.TfgridModule(_i20.AddNodePublicConfig(
       farmId: farmId,
       nodeId: nodeId,
       publicConfig: publicConfig,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall deleteNode({required nodeId}) {
-    final _call = _i19.Call.values.deleteNode(nodeId: nodeId);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::delete_node`].
+  _i19.TfgridModule deleteNode({required int nodeId}) {
+    return _i19.TfgridModule(_i20.DeleteNode(nodeId: nodeId));
   }
 
-  _i18.RuntimeCall createEntity({
-    required target,
-    required name,
-    required country,
-    required city,
-    required signature,
+  /// See [`Pallet::create_entity`].
+  _i19.TfgridModule createEntity({
+    required _i6.AccountId32 target,
+    required List<int> name,
+    required List<int> country,
+    required List<int> city,
+    required List<int> signature,
   }) {
-    final _call = _i19.Call.values.createEntity(
+    return _i19.TfgridModule(_i20.CreateEntity(
       target: target,
       name: name,
       country: country,
       city: city,
       signature: signature,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall updateEntity({
-    required name,
-    required country,
-    required city,
+  /// See [`Pallet::update_entity`].
+  _i19.TfgridModule updateEntity({
+    required List<int> name,
+    required List<int> country,
+    required List<int> city,
   }) {
-    final _call = _i19.Call.values.updateEntity(
+    return _i19.TfgridModule(_i20.UpdateEntity(
       name: name,
       country: country,
       city: city,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall deleteEntity() {
-    final _call = _i19.Call.values.deleteEntity();
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::delete_entity`].
+  _i19.TfgridModule deleteEntity() {
+    return _i19.TfgridModule(_i20.DeleteEntity());
   }
 
-  _i18.RuntimeCall createTwin({
-    relay,
-    pk,
+  /// See [`Pallet::create_twin`].
+  _i19.TfgridModule createTwin({
+    List<int>? relay,
+    List<int>? pk,
   }) {
-    final _call = _i19.Call.values.createTwin(
+    return _i19.TfgridModule(_i20.CreateTwin(
       relay: relay,
       pk: pk,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall updateTwin({
-    relay,
-    pk,
+  /// See [`Pallet::update_twin`].
+  _i19.TfgridModule updateTwin({
+    List<int>? relay,
+    List<int>? pk,
   }) {
-    final _call = _i19.Call.values.updateTwin(
+    return _i19.TfgridModule(_i20.UpdateTwin(
       relay: relay,
       pk: pk,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall addTwinEntity({
-    required twinId,
-    required entityId,
-    required signature,
+  /// See [`Pallet::add_twin_entity`].
+  _i19.TfgridModule addTwinEntity({
+    required int twinId,
+    required int entityId,
+    required List<int> signature,
   }) {
-    final _call = _i19.Call.values.addTwinEntity(
+    return _i19.TfgridModule(_i20.AddTwinEntity(
       twinId: twinId,
       entityId: entityId,
       signature: signature,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall deleteTwinEntity({
-    required twinId,
-    required entityId,
+  /// See [`Pallet::delete_twin_entity`].
+  _i19.TfgridModule deleteTwinEntity({
+    required int twinId,
+    required int entityId,
   }) {
-    final _call = _i19.Call.values.deleteTwinEntity(
+    return _i19.TfgridModule(_i20.DeleteTwinEntity(
       twinId: twinId,
       entityId: entityId,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall createPricingPolicy({
-    required name,
-    required su,
-    required cu,
-    required nu,
-    required ipu,
-    required uniqueName,
-    required domainName,
-    required foundationAccount,
-    required certifiedSalesAccount,
-    required discountForDedicationNodes,
+  /// See [`Pallet::create_pricing_policy`].
+  _i19.TfgridModule createPricingPolicy({
+    required List<int> name,
+    required _i26.Policy su,
+    required _i26.Policy cu,
+    required _i26.Policy nu,
+    required _i26.Policy ipu,
+    required _i26.Policy uniqueName,
+    required _i26.Policy domainName,
+    required _i6.AccountId32 foundationAccount,
+    required _i6.AccountId32 certifiedSalesAccount,
+    required int discountForDedicationNodes,
   }) {
-    final _call = _i19.Call.values.createPricingPolicy(
+    return _i19.TfgridModule(_i20.CreatePricingPolicy(
       name: name,
       su: su,
       cu: cu,
@@ -896,24 +1169,24 @@ class Txs {
       foundationAccount: foundationAccount,
       certifiedSalesAccount: certifiedSalesAccount,
       discountForDedicationNodes: discountForDedicationNodes,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall updatePricingPolicy({
-    required pricingPolicyId,
-    required name,
-    required su,
-    required cu,
-    required nu,
-    required ipu,
-    required uniqueName,
-    required domainName,
-    required foundationAccount,
-    required certifiedSalesAccount,
-    required discountForDedicationNodes,
+  /// See [`Pallet::update_pricing_policy`].
+  _i19.TfgridModule updatePricingPolicy({
+    required int pricingPolicyId,
+    required List<int> name,
+    required _i26.Policy su,
+    required _i26.Policy cu,
+    required _i26.Policy nu,
+    required _i26.Policy ipu,
+    required _i26.Policy uniqueName,
+    required _i26.Policy domainName,
+    required _i6.AccountId32 foundationAccount,
+    required _i6.AccountId32 certifiedSalesAccount,
+    required int discountForDedicationNodes,
   }) {
-    final _call = _i19.Call.values.updatePricingPolicy(
+    return _i19.TfgridModule(_i20.UpdatePricingPolicy(
       pricingPolicyId: pricingPolicyId,
       name: name,
       su: su,
@@ -925,24 +1198,24 @@ class Txs {
       foundationAccount: foundationAccount,
       certifiedSalesAccount: certifiedSalesAccount,
       discountForDedicationNodes: discountForDedicationNodes,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall createFarmingPolicy({
-    required name,
-    required su,
-    required cu,
-    required nu,
-    required ipv4,
-    required minimalUptime,
-    required policyEnd,
-    required immutable,
-    required default_,
-    required nodeCertification,
-    required farmCertification,
+  /// See [`Pallet::create_farming_policy`].
+  _i19.TfgridModule createFarmingPolicy({
+    required List<int> name,
+    required int su,
+    required int cu,
+    required int nu,
+    required int ipv4,
+    required int minimalUptime,
+    required int policyEnd,
+    required bool immutable,
+    required bool default_,
+    required _i14.NodeCertification nodeCertification,
+    required _i15.FarmCertification farmCertification,
   }) {
-    final _call = _i19.Call.values.createFarmingPolicy(
+    return _i19.TfgridModule(_i20.CreateFarmingPolicy(
       name: name,
       su: su,
       cu: cu,
@@ -954,77 +1227,77 @@ class Txs {
       default_: default_,
       nodeCertification: nodeCertification,
       farmCertification: farmCertification,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall userAcceptTc({
-    required documentLink,
-    required documentHash,
+  /// See [`Pallet::user_accept_tc`].
+  _i19.TfgridModule userAcceptTc({
+    required List<int> documentLink,
+    required List<int> documentHash,
   }) {
-    final _call = _i19.Call.values.userAcceptTc(
+    return _i19.TfgridModule(_i20.UserAcceptTc(
       documentLink: documentLink,
       documentHash: documentHash,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall deleteNodeFarm({required nodeId}) {
-    final _call = _i19.Call.values.deleteNodeFarm(nodeId: nodeId);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::delete_node_farm`].
+  _i19.TfgridModule deleteNodeFarm({required int nodeId}) {
+    return _i19.TfgridModule(_i20.DeleteNodeFarm(nodeId: nodeId));
   }
 
-  _i18.RuntimeCall setFarmDedicated({
-    required farmId,
-    required dedicated,
+  /// See [`Pallet::set_farm_dedicated`].
+  _i19.TfgridModule setFarmDedicated({
+    required int farmId,
+    required bool dedicated,
   }) {
-    final _call = _i19.Call.values.setFarmDedicated(
+    return _i19.TfgridModule(_i20.SetFarmDedicated(
       farmId: farmId,
       dedicated: dedicated,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall forceResetFarmIp({
-    required farmId,
-    required ip,
+  /// See [`Pallet::force_reset_farm_ip`].
+  _i19.TfgridModule forceResetFarmIp({
+    required int farmId,
+    required List<int> ip,
   }) {
-    final _call = _i19.Call.values.forceResetFarmIp(
+    return _i19.TfgridModule(_i20.ForceResetFarmIp(
       farmId: farmId,
       ip: ip,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall setConnectionPrice({required price}) {
-    final _call = _i19.Call.values.setConnectionPrice(price: price);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::set_connection_price`].
+  _i19.TfgridModule setConnectionPrice({required int price}) {
+    return _i19.TfgridModule(_i20.SetConnectionPrice(price: price));
   }
 
-  _i18.RuntimeCall addNodeCertifier({required certifier}) {
-    final _call = _i19.Call.values.addNodeCertifier(certifier: certifier);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::add_node_certifier`].
+  _i19.TfgridModule addNodeCertifier({required _i6.AccountId32 certifier}) {
+    return _i19.TfgridModule(_i20.AddNodeCertifier(certifier: certifier));
   }
 
-  _i18.RuntimeCall removeNodeCertifier({required certifier}) {
-    final _call = _i19.Call.values.removeNodeCertifier(certifier: certifier);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::remove_node_certifier`].
+  _i19.TfgridModule removeNodeCertifier({required _i6.AccountId32 certifier}) {
+    return _i19.TfgridModule(_i20.RemoveNodeCertifier(certifier: certifier));
   }
 
-  _i18.RuntimeCall updateFarmingPolicy({
-    required farmingPolicyId,
-    required name,
-    required su,
-    required cu,
-    required nu,
-    required ipv4,
-    required minimalUptime,
-    required policyEnd,
-    required default_,
-    required nodeCertification,
-    required farmCertification,
+  /// See [`Pallet::update_farming_policy`].
+  _i19.TfgridModule updateFarmingPolicy({
+    required int farmingPolicyId,
+    required List<int> name,
+    required int su,
+    required int cu,
+    required int nu,
+    required int ipv4,
+    required int minimalUptime,
+    required int policyEnd,
+    required bool default_,
+    required _i14.NodeCertification nodeCertification,
+    required _i15.FarmCertification farmCertification,
   }) {
-    final _call = _i19.Call.values.updateFarmingPolicy(
+    return _i19.TfgridModule(_i20.UpdateFarmingPolicy(
       farmingPolicyId: farmingPolicyId,
       name: name,
       su: su,
@@ -1036,56 +1309,55 @@ class Txs {
       default_: default_,
       nodeCertification: nodeCertification,
       farmCertification: farmCertification,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall attachPolicyToFarm({
-    required farmId,
-    limits,
+  /// See [`Pallet::attach_policy_to_farm`].
+  _i19.TfgridModule attachPolicyToFarm({
+    required int farmId,
+    _i27.FarmingPolicyLimit? limits,
   }) {
-    final _call = _i19.Call.values.attachPolicyToFarm(
+    return _i19.TfgridModule(_i20.AttachPolicyToFarm(
       farmId: farmId,
       limits: limits,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall setZosVersion({required zosVersion}) {
-    final _call = _i19.Call.values.setZosVersion(zosVersion: zosVersion);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::set_zos_version`].
+  _i19.TfgridModule setZosVersion({required List<int> zosVersion}) {
+    return _i19.TfgridModule(_i20.SetZosVersion(zosVersion: zosVersion));
   }
 
-  _i18.RuntimeCall changePowerState({required powerState}) {
-    final _call = _i19.Call.values.changePowerState(powerState: powerState);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::change_power_state`].
+  _i19.TfgridModule changePowerState({required _i17.Power powerState}) {
+    return _i19.TfgridModule(_i20.ChangePowerState(powerState: powerState));
   }
 
-  _i18.RuntimeCall changePowerTarget({
-    required nodeId,
-    required powerTarget,
+  /// See [`Pallet::change_power_target`].
+  _i19.TfgridModule changePowerTarget({
+    required int nodeId,
+    required _i17.Power powerTarget,
   }) {
-    final _call = _i19.Call.values.changePowerTarget(
+    return _i19.TfgridModule(_i20.ChangePowerTarget(
       nodeId: nodeId,
       powerTarget: powerTarget,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 
-  _i18.RuntimeCall bondTwinAccount({required twinId}) {
-    final _call = _i19.Call.values.bondTwinAccount(twinId: twinId);
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+  /// See [`Pallet::bond_twin_account`].
+  _i19.TfgridModule bondTwinAccount({required int twinId}) {
+    return _i19.TfgridModule(_i20.BondTwinAccount(twinId: twinId));
   }
 
-  _i18.RuntimeCall reportUptimeV2({
-    required uptime,
-    required timestampHint,
+  /// See [`Pallet::report_uptime_v2`].
+  _i19.TfgridModule reportUptimeV2({
+    required BigInt uptime,
+    required BigInt timestampHint,
   }) {
-    final _call = _i19.Call.values.reportUptimeV2(
+    return _i19.TfgridModule(_i20.ReportUptimeV2(
       uptime: uptime,
       timestampHint: timestampHint,
-    );
-    return _i18.RuntimeCall.values.tfgridModule(_call);
+    ));
   }
 }
 

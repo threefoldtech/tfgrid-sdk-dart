@@ -1,12 +1,13 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:typed_data' as _i5;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_burning/pallet/call.dart' as _i6;
+import '../types/pallet_burning/pallet/call.dart' as _i7;
 import '../types/pallet_burning/types/burn.dart' as _i2;
-import '../types/tfchain_runtime/runtime_call.dart' as _i5;
+import '../types/tfchain_runtime/runtime_call.dart' as _i6;
 
 class Queries {
   const Queries(this.__api);
@@ -31,19 +32,25 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `burns`.
+  _i5.Uint8List burnsKey() {
+    final hashedKey = _burns.hashedKey();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  _i5.RuntimeCall burnTft({
-    required amount,
-    required message,
+  /// See [`Pallet::burn_tft`].
+  _i6.BurningModule burnTft({
+    required BigInt amount,
+    required List<int> message,
   }) {
-    final _call = _i6.Call.values.burnTft(
+    return _i6.BurningModule(_i7.BurnTft(
       amount: amount,
       message: message,
-    );
-    return _i5.RuntimeCall.values.burningModule(_call);
+    ));
   }
 }

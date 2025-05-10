@@ -1,10 +1,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
+import 'dart:typed_data' as _i8;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_dao/pallet/call.dart' as _i8;
+import '../types/pallet_dao/pallet/call.dart' as _i9;
 import '../types/pallet_dao/proposal/dao_proposal.dart' as _i4;
 import '../types/pallet_dao/proposal/dao_votes.dart' as _i6;
 import '../types/primitive_types/h256.dart' as _i2;
@@ -147,54 +148,114 @@ class Queries {
     }
     return BigInt.zero; /* Default */
   }
+
+  /// Returns the storage key for `proposalList`.
+  _i8.Uint8List proposalListKey() {
+    final hashedKey = _proposalList.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `proposals`.
+  _i8.Uint8List proposalsKey(_i2.H256 key1) {
+    final hashedKey = _proposals.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `proposalOf`.
+  _i8.Uint8List proposalOfKey(_i2.H256 key1) {
+    final hashedKey = _proposalOf.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `voting`.
+  _i8.Uint8List votingKey(_i2.H256 key1) {
+    final hashedKey = _voting.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `proposalCount`.
+  _i8.Uint8List proposalCountKey() {
+    final hashedKey = _proposalCount.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `farmWeight`.
+  _i8.Uint8List farmWeightKey(int key1) {
+    final hashedKey = _farmWeight.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `proposals`.
+  _i8.Uint8List proposalsMapPrefix() {
+    final hashedKey = _proposals.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `proposalOf`.
+  _i8.Uint8List proposalOfMapPrefix() {
+    final hashedKey = _proposalOf.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `voting`.
+  _i8.Uint8List votingMapPrefix() {
+    final hashedKey = _voting.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `farmWeight`.
+  _i8.Uint8List farmWeightMapPrefix() {
+    final hashedKey = _farmWeight.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  _i5.RuntimeCall propose({
-    required threshold,
-    required action,
-    required description,
-    required link,
-    duration,
+  /// See [`Pallet::propose`].
+  _i5.Dao propose({
+    required BigInt threshold,
+    required _i5.RuntimeCall action,
+    required List<int> description,
+    required List<int> link,
+    int? duration,
   }) {
-    final _call = _i8.Call.values.propose(
+    return _i5.Dao(_i9.Propose(
       threshold: threshold,
       action: action,
       description: description,
       link: link,
       duration: duration,
-    );
-    return _i5.RuntimeCall.values.dao(_call);
+    ));
   }
 
-  _i5.RuntimeCall vote({
-    required farmId,
-    required proposalHash,
-    required approve,
+  /// See [`Pallet::vote`].
+  _i5.Dao vote({
+    required int farmId,
+    required _i2.H256 proposalHash,
+    required bool approve,
   }) {
-    final _call = _i8.Call.values.vote(
+    return _i5.Dao(_i9.Vote(
       farmId: farmId,
       proposalHash: proposalHash,
       approve: approve,
-    );
-    return _i5.RuntimeCall.values.dao(_call);
+    ));
   }
 
-  _i5.RuntimeCall veto({required proposalHash}) {
-    final _call = _i8.Call.values.veto(proposalHash: proposalHash);
-    return _i5.RuntimeCall.values.dao(_call);
+  /// See [`Pallet::veto`].
+  _i5.Dao veto({required _i2.H256 proposalHash}) {
+    return _i5.Dao(_i9.Veto(proposalHash: proposalHash));
   }
 
-  _i5.RuntimeCall close({
-    required proposalHash,
-    required proposalIndex,
+  /// See [`Pallet::close`].
+  _i5.Dao close({
+    required _i2.H256 proposalHash,
+    required BigInt proposalIndex,
   }) {
-    final _call = _i8.Call.values.close(
+    return _i5.Dao(_i9.Close(
       proposalHash: proposalHash,
       proposalIndex: proposalIndex,
-    );
-    return _i5.RuntimeCall.values.dao(_call);
+    ));
   }
 }

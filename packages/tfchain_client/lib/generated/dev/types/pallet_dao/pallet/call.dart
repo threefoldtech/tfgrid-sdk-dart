@@ -7,7 +7,7 @@ import 'package:quiver/collection.dart' as _i5;
 import '../../primitive_types/h256.dart' as _i4;
 import '../../tfchain_runtime/runtime_call.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -140,6 +140,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
+/// See [`Pallet::propose`].
 class Propose extends Call {
   const Propose({
     required this.threshold,
@@ -171,7 +172,7 @@ class Propose extends Call {
   /// Vec<u8>
   final List<int> link;
 
-  /// Option<T::BlockNumber>
+  /// Option<BlockNumberFor<T>>
   final int? duration;
 
   @override
@@ -252,6 +253,7 @@ class Propose extends Call {
       );
 }
 
+/// See [`Pallet::vote`].
 class Vote extends Call {
   const Vote({
     required this.farmId,
@@ -334,6 +336,7 @@ class Vote extends Call {
       );
 }
 
+/// See [`Pallet::veto`].
 class Veto extends Call {
   const Veto({required this.proposalHash});
 
@@ -382,6 +385,7 @@ class Veto extends Call {
   int get hashCode => proposalHash.hashCode;
 }
 
+/// See [`Pallet::close`].
 class Close extends Call {
   const Close({
     required this.proposalHash,

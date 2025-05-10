@@ -1,11 +1,12 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:typed_data' as _i5;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i2;
 
-import '../types/pallet_tft_price/pallet/call.dart' as _i6;
-import '../types/tfchain_runtime/runtime_call.dart' as _i5;
+import '../types/pallet_tft_price/pallet/call.dart' as _i7;
+import '../types/tfchain_runtime/runtime_call.dart' as _i6;
 import '../types/tuples.dart' as _i3;
 
 class Queries {
@@ -150,29 +151,77 @@ class Queries {
     }
     return 0; /* Default */
   }
+
+  /// Returns the storage key for `tftPrice`.
+  _i5.Uint8List tftPriceKey() {
+    final hashedKey = _tftPrice.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `lastBlockSet`.
+  _i5.Uint8List lastBlockSetKey() {
+    final hashedKey = _lastBlockSet.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `averageTftPrice`.
+  _i5.Uint8List averageTftPriceKey() {
+    final hashedKey = _averageTftPrice.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `tftPriceHistory`.
+  _i5.Uint8List tftPriceHistoryKey(int key1) {
+    final hashedKey = _tftPriceHistory.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `bufferRange`.
+  _i5.Uint8List bufferRangeKey() {
+    final hashedKey = _bufferRange.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `minTftPrice`.
+  _i5.Uint8List minTftPriceKey() {
+    final hashedKey = _minTftPrice.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `maxTftPrice`.
+  _i5.Uint8List maxTftPriceKey() {
+    final hashedKey = _maxTftPrice.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `tftPriceHistory`.
+  _i5.Uint8List tftPriceHistoryMapPrefix() {
+    final hashedKey = _tftPriceHistory.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  _i5.RuntimeCall setPrices({
-    required price,
-    required blockNumber,
+  /// See [`Pallet::set_prices`].
+  _i6.TFTPriceModule setPrices({
+    required int price,
+    required int blockNumber,
   }) {
-    final _call = _i6.Call.values.setPrices(
+    return _i6.TFTPriceModule(_i7.SetPrices(
       price: price,
       blockNumber: blockNumber,
-    );
-    return _i5.RuntimeCall.values.tFTPriceModule(_call);
+    ));
   }
 
-  _i5.RuntimeCall setMinTftPrice({required price}) {
-    final _call = _i6.Call.values.setMinTftPrice(price: price);
-    return _i5.RuntimeCall.values.tFTPriceModule(_call);
+  /// See [`Pallet::set_min_tft_price`].
+  _i6.TFTPriceModule setMinTftPrice({required int price}) {
+    return _i6.TFTPriceModule(_i7.SetMinTftPrice(price: price));
   }
 
-  _i5.RuntimeCall setMaxTftPrice({required price}) {
-    final _call = _i6.Call.values.setMaxTftPrice(price: price);
-    return _i5.RuntimeCall.values.tFTPriceModule(_call);
+  /// See [`Pallet::set_max_tft_price`].
+  _i6.TFTPriceModule setMaxTftPrice({required int price}) {
+    return _i6.TFTPriceModule(_i7.SetMaxTftPrice(price: price));
   }
 }

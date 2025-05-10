@@ -1,29 +1,30 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i12;
+import 'dart:typed_data' as _i15;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i4;
 
 import '../types/frame_support/dispatch/per_dispatch_class_1.dart' as _i5;
-import '../types/frame_support/dispatch/per_dispatch_class_2.dart' as _i18;
-import '../types/frame_support/dispatch/per_dispatch_class_3.dart' as _i21;
+import '../types/frame_support/dispatch/per_dispatch_class_2.dart' as _i20;
+import '../types/frame_support/dispatch/per_dispatch_class_3.dart' as _i23;
 import '../types/frame_system/account_info.dart' as _i3;
 import '../types/frame_system/event_record.dart' as _i8;
 import '../types/frame_system/last_runtime_upgrade_info.dart' as _i10;
-import '../types/frame_system/limits/block_length.dart' as _i20;
-import '../types/frame_system/limits/block_weights.dart' as _i17;
-import '../types/frame_system/limits/weights_per_class.dart' as _i19;
-import '../types/frame_system/pallet/call.dart' as _i16;
+import '../types/frame_system/limits/block_length.dart' as _i22;
+import '../types/frame_system/limits/block_weights.dart' as _i19;
+import '../types/frame_system/limits/weights_per_class.dart' as _i21;
+import '../types/frame_system/pallet/call.dart' as _i17;
 import '../types/frame_system/phase.dart' as _i11;
 import '../types/pallet_balances/types/account_data.dart' as _i13;
 import '../types/primitive_types/h256.dart' as _i6;
 import '../types/sp_core/crypto/account_id32.dart' as _i2;
 import '../types/sp_runtime/generic/digest/digest.dart' as _i7;
-import '../types/sp_version/runtime_version.dart' as _i23;
-import '../types/sp_weights/runtime_db_weight.dart' as _i22;
+import '../types/sp_version/runtime_version.dart' as _i25;
+import '../types/sp_weights/runtime_db_weight.dart' as _i24;
 import '../types/sp_weights/weight_v2/weight.dart' as _i14;
-import '../types/tfchain_runtime/runtime_call.dart' as _i15;
-import '../types/tuples.dart' as _i24;
+import '../types/tfchain_runtime/runtime_call.dart' as _i16;
+import '../types/tuples.dart' as _i18;
 import '../types/tuples_1.dart' as _i9;
 
 class Queries {
@@ -351,7 +352,7 @@ class Queries {
   /// allows light-clients to leverage the changes trie storage tracking mechanism and
   /// in case of changes fetch the list of events of interest.
   ///
-  /// The value has the type `(T::BlockNumber, EventIndex)` because if we used only just
+  /// The value has the type `(BlockNumberFor<T>, EventIndex)` because if we used only just
   /// the `EventIndex` then in case if the topic has the same contents on the next block
   /// no notification will be triggered thus the event might be lost.
   _i12.Future<List<_i9.Tuple2<int, int>>> eventTopics(
@@ -422,75 +423,176 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `account`.
+  _i15.Uint8List accountKey(_i2.AccountId32 key1) {
+    final hashedKey = _account.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `extrinsicCount`.
+  _i15.Uint8List extrinsicCountKey() {
+    final hashedKey = _extrinsicCount.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `blockWeight`.
+  _i15.Uint8List blockWeightKey() {
+    final hashedKey = _blockWeight.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `allExtrinsicsLen`.
+  _i15.Uint8List allExtrinsicsLenKey() {
+    final hashedKey = _allExtrinsicsLen.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `blockHash`.
+  _i15.Uint8List blockHashKey(int key1) {
+    final hashedKey = _blockHash.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `extrinsicData`.
+  _i15.Uint8List extrinsicDataKey(int key1) {
+    final hashedKey = _extrinsicData.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `number`.
+  _i15.Uint8List numberKey() {
+    final hashedKey = _number.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `parentHash`.
+  _i15.Uint8List parentHashKey() {
+    final hashedKey = _parentHash.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `digest`.
+  _i15.Uint8List digestKey() {
+    final hashedKey = _digest.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `events`.
+  _i15.Uint8List eventsKey() {
+    final hashedKey = _events.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `eventCount`.
+  _i15.Uint8List eventCountKey() {
+    final hashedKey = _eventCount.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `eventTopics`.
+  _i15.Uint8List eventTopicsKey(_i6.H256 key1) {
+    final hashedKey = _eventTopics.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `lastRuntimeUpgrade`.
+  _i15.Uint8List lastRuntimeUpgradeKey() {
+    final hashedKey = _lastRuntimeUpgrade.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `upgradedToU32RefCount`.
+  _i15.Uint8List upgradedToU32RefCountKey() {
+    final hashedKey = _upgradedToU32RefCount.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `upgradedToTripleRefCount`.
+  _i15.Uint8List upgradedToTripleRefCountKey() {
+    final hashedKey = _upgradedToTripleRefCount.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `executionPhase`.
+  _i15.Uint8List executionPhaseKey() {
+    final hashedKey = _executionPhase.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `account`.
+  _i15.Uint8List accountMapPrefix() {
+    final hashedKey = _account.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `blockHash`.
+  _i15.Uint8List blockHashMapPrefix() {
+    final hashedKey = _blockHash.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `extrinsicData`.
+  _i15.Uint8List extrinsicDataMapPrefix() {
+    final hashedKey = _extrinsicData.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `eventTopics`.
+  _i15.Uint8List eventTopicsMapPrefix() {
+    final hashedKey = _eventTopics.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Make some on-chain remark.
-  ///
-  /// ## Complexity
-  /// - `O(1)`
-  _i15.RuntimeCall remark({required remark}) {
-    final _call = _i16.Call.values.remark(remark: remark);
-    return _i15.RuntimeCall.values.system(_call);
+  /// See [`Pallet::remark`].
+  _i16.System remark({required List<int> remark}) {
+    return _i16.System(_i17.Remark(remark: remark));
   }
 
-  /// Set the number of pages in the WebAssembly environment's heap.
-  _i15.RuntimeCall setHeapPages({required pages}) {
-    final _call = _i16.Call.values.setHeapPages(pages: pages);
-    return _i15.RuntimeCall.values.system(_call);
+  /// See [`Pallet::set_heap_pages`].
+  _i16.System setHeapPages({required BigInt pages}) {
+    return _i16.System(_i17.SetHeapPages(pages: pages));
   }
 
-  /// Set the new runtime code.
-  ///
-  /// ## Complexity
-  /// - `O(C + S)` where `C` length of `code` and `S` complexity of `can_set_code`
-  _i15.RuntimeCall setCode({required code}) {
-    final _call = _i16.Call.values.setCode(code: code);
-    return _i15.RuntimeCall.values.system(_call);
+  /// See [`Pallet::set_code`].
+  _i16.System setCode({required List<int> code}) {
+    return _i16.System(_i17.SetCode(code: code));
   }
 
-  /// Set the new runtime code without doing any checks of the given `code`.
-  ///
-  /// ## Complexity
-  /// - `O(C)` where `C` length of `code`
-  _i15.RuntimeCall setCodeWithoutChecks({required code}) {
-    final _call = _i16.Call.values.setCodeWithoutChecks(code: code);
-    return _i15.RuntimeCall.values.system(_call);
+  /// See [`Pallet::set_code_without_checks`].
+  _i16.System setCodeWithoutChecks({required List<int> code}) {
+    return _i16.System(_i17.SetCodeWithoutChecks(code: code));
   }
 
-  /// Set some items of storage.
-  _i15.RuntimeCall setStorage({required items}) {
-    final _call = _i16.Call.values.setStorage(items: items);
-    return _i15.RuntimeCall.values.system(_call);
+  /// See [`Pallet::set_storage`].
+  _i16.System setStorage(
+      {required List<_i18.Tuple2<List<int>, List<int>>> items}) {
+    return _i16.System(_i17.SetStorage(items: items));
   }
 
-  /// Kill some items from storage.
-  _i15.RuntimeCall killStorage({required keys}) {
-    final _call = _i16.Call.values.killStorage(keys: keys);
-    return _i15.RuntimeCall.values.system(_call);
+  /// See [`Pallet::kill_storage`].
+  _i16.System killStorage({required List<List<int>> keys}) {
+    return _i16.System(_i17.KillStorage(keys: keys));
   }
 
-  /// Kill all storage items with a key that starts with the given prefix.
-  ///
-  /// **NOTE:** We rely on the Root origin to provide us the number of subkeys under
-  /// the prefix we are removing to accurately calculate the weight of this function.
-  _i15.RuntimeCall killPrefix({
-    required prefix,
-    required subkeys,
+  /// See [`Pallet::kill_prefix`].
+  _i16.System killPrefix({
+    required List<int> prefix,
+    required int subkeys,
   }) {
-    final _call = _i16.Call.values.killPrefix(
+    return _i16.System(_i17.KillPrefix(
       prefix: prefix,
       subkeys: subkeys,
-    );
-    return _i15.RuntimeCall.values.system(_call);
+    ));
   }
 
-  /// Make some on-chain remark and emit event.
-  _i15.RuntimeCall remarkWithEvent({required remark}) {
-    final _call = _i16.Call.values.remarkWithEvent(remark: remark);
-    return _i15.RuntimeCall.values.system(_call);
+  /// See [`Pallet::remark_with_event`].
+  _i16.System remarkWithEvent({required List<int> remark}) {
+    return _i16.System(_i17.RemarkWithEvent(remark: remark));
   }
 }
 
@@ -498,9 +600,9 @@ class Constants {
   Constants();
 
   /// Block & extrinsics weights: base values and limits.
-  final _i17.BlockWeights blockWeights = _i17.BlockWeights(
+  final _i19.BlockWeights blockWeights = _i19.BlockWeights(
     baseBlock: _i14.Weight(
-      refTime: BigInt.from(392184000),
+      refTime: BigInt.from(390584000),
       proofSize: BigInt.zero,
     ),
     maxBlock: _i14.Weight(
@@ -510,14 +612,14 @@ class Constants {
         radix: 10,
       ),
     ),
-    perClass: _i18.PerDispatchClass(
-      normal: _i19.WeightsPerClass(
+    perClass: _i20.PerDispatchClass(
+      normal: _i21.WeightsPerClass(
         baseExtrinsic: _i14.Weight(
-          refTime: BigInt.from(113638000),
+          refTime: BigInt.from(124414000),
           proofSize: BigInt.zero,
         ),
         maxExtrinsic: _i14.Weight(
-          refTime: BigInt.from(1299886362000),
+          refTime: BigInt.from(1299875586000),
           proofSize: BigInt.parse(
             '11990383647911208550',
             radix: 10,
@@ -535,13 +637,13 @@ class Constants {
           proofSize: BigInt.zero,
         ),
       ),
-      operational: _i19.WeightsPerClass(
+      operational: _i21.WeightsPerClass(
         baseExtrinsic: _i14.Weight(
-          refTime: BigInt.from(113638000),
+          refTime: BigInt.from(124414000),
           proofSize: BigInt.zero,
         ),
         maxExtrinsic: _i14.Weight(
-          refTime: BigInt.from(1799886362000),
+          refTime: BigInt.from(1799875586000),
           proofSize: BigInt.parse(
             '16602069666338596454',
             radix: 10,
@@ -562,9 +664,9 @@ class Constants {
           ),
         ),
       ),
-      mandatory: _i19.WeightsPerClass(
+      mandatory: _i21.WeightsPerClass(
         baseExtrinsic: _i14.Weight(
-          refTime: BigInt.from(113638000),
+          refTime: BigInt.from(124414000),
           proofSize: BigInt.zero,
         ),
         maxExtrinsic: null,
@@ -575,8 +677,8 @@ class Constants {
   );
 
   /// The maximum length of a block (in bytes).
-  final _i20.BlockLength blockLength = const _i20.BlockLength(
-      max: _i21.PerDispatchClass(
+  final _i22.BlockLength blockLength = const _i22.BlockLength(
+      max: _i23.PerDispatchClass(
     normal: 3932160,
     operational: 5242880,
     mandatory: 5242880,
@@ -586,20 +688,20 @@ class Constants {
   final int blockHashCount = 2400;
 
   /// The weight of runtime database operations the runtime can invoke.
-  final _i22.RuntimeDbWeight dbWeight = _i22.RuntimeDbWeight(
+  final _i24.RuntimeDbWeight dbWeight = _i24.RuntimeDbWeight(
     read: BigInt.from(25000000),
     write: BigInt.from(100000000),
   );
 
   /// Get the chain's current version.
-  final _i23.RuntimeVersion version = const _i23.RuntimeVersion(
+  final _i25.RuntimeVersion version = const _i25.RuntimeVersion(
     specName: 'substrate-threefold',
     implName: 'substrate-threefold',
     authoringVersion: 1,
-    specVersion: 146,
+    specVersion: 153,
     implVersion: 1,
     apis: [
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           223,
           106,
@@ -612,7 +714,7 @@ class Constants {
         ],
         4,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           55,
           227,
@@ -625,7 +727,7 @@ class Constants {
         ],
         2,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           64,
           254,
@@ -638,7 +740,7 @@ class Constants {
         ],
         6,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           210,
           188,
@@ -651,7 +753,7 @@ class Constants {
         ],
         3,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           247,
           139,
@@ -664,7 +766,7 @@ class Constants {
         ],
         2,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           221,
           113,
@@ -677,7 +779,7 @@ class Constants {
         ],
         1,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           171,
           60,
@@ -690,7 +792,7 @@ class Constants {
         ],
         1,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           237,
           153,
@@ -703,7 +805,7 @@ class Constants {
         ],
         3,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           188,
           157,
@@ -716,7 +818,7 @@ class Constants {
         ],
         1,
       ),
-      _i24.Tuple2<List<int>, int>(
+      _i18.Tuple2<List<int>, int>(
         <int>[
           55,
           200,

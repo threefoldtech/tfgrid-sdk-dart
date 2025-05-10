@@ -4,7 +4,7 @@ import 'dart:typed_data' as _i2;
 import 'package:polkadart/scale_codec.dart' as _i1;
 import 'package:quiver/collection.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -78,6 +78,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
+/// See [`Pallet::set_code`].
 class SetCode extends Call {
   const SetCode({required this.code});
 

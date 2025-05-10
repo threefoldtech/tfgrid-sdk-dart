@@ -1,13 +1,14 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
+import 'dart:typed_data' as _i6;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i2;
 
-import '../types/pallet_scheduler/pallet/call.dart' as _i7;
+import '../types/pallet_scheduler/pallet/call.dart' as _i8;
 import '../types/pallet_scheduler/scheduled.dart' as _i3;
-import '../types/sp_weights/weight_v2/weight.dart' as _i8;
-import '../types/tfchain_runtime/runtime_call.dart' as _i6;
+import '../types/sp_weights/weight_v2/weight.dart' as _i9;
+import '../types/tfchain_runtime/runtime_call.dart' as _i7;
 import '../types/tuples_1.dart' as _i4;
 
 class Queries {
@@ -87,95 +88,119 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `incompleteSince`.
+  _i6.Uint8List incompleteSinceKey() {
+    final hashedKey = _incompleteSince.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `agenda`.
+  _i6.Uint8List agendaKey(int key1) {
+    final hashedKey = _agenda.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `lookup`.
+  _i6.Uint8List lookupKey(List<int> key1) {
+    final hashedKey = _lookup.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `agenda`.
+  _i6.Uint8List agendaMapPrefix() {
+    final hashedKey = _agenda.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `lookup`.
+  _i6.Uint8List lookupMapPrefix() {
+    final hashedKey = _lookup.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Anonymously schedule a task.
-  _i6.RuntimeCall schedule({
-    required when,
-    maybePeriodic,
-    required priority,
-    required call,
+  /// See [`Pallet::schedule`].
+  _i7.Scheduler schedule({
+    required int when,
+    _i4.Tuple2<int, int>? maybePeriodic,
+    required int priority,
+    required _i7.RuntimeCall call,
   }) {
-    final _call = _i7.Call.values.schedule(
+    return _i7.Scheduler(_i8.Schedule(
       when: when,
       maybePeriodic: maybePeriodic,
       priority: priority,
       call: call,
-    );
-    return _i6.RuntimeCall.values.scheduler(_call);
+    ));
   }
 
-  /// Cancel an anonymously scheduled task.
-  _i6.RuntimeCall cancel({
-    required when,
-    required index,
+  /// See [`Pallet::cancel`].
+  _i7.Scheduler cancel({
+    required int when,
+    required int index,
   }) {
-    final _call = _i7.Call.values.cancel(
+    return _i7.Scheduler(_i8.Cancel(
       when: when,
       index: index,
-    );
-    return _i6.RuntimeCall.values.scheduler(_call);
+    ));
   }
 
-  /// Schedule a named task.
-  _i6.RuntimeCall scheduleNamed({
-    required id,
-    required when,
-    maybePeriodic,
-    required priority,
-    required call,
+  /// See [`Pallet::schedule_named`].
+  _i7.Scheduler scheduleNamed({
+    required List<int> id,
+    required int when,
+    _i4.Tuple2<int, int>? maybePeriodic,
+    required int priority,
+    required _i7.RuntimeCall call,
   }) {
-    final _call = _i7.Call.values.scheduleNamed(
+    return _i7.Scheduler(_i8.ScheduleNamed(
       id: id,
       when: when,
       maybePeriodic: maybePeriodic,
       priority: priority,
       call: call,
-    );
-    return _i6.RuntimeCall.values.scheduler(_call);
+    ));
   }
 
-  /// Cancel a named scheduled task.
-  _i6.RuntimeCall cancelNamed({required id}) {
-    final _call = _i7.Call.values.cancelNamed(id: id);
-    return _i6.RuntimeCall.values.scheduler(_call);
+  /// See [`Pallet::cancel_named`].
+  _i7.Scheduler cancelNamed({required List<int> id}) {
+    return _i7.Scheduler(_i8.CancelNamed(id: id));
   }
 
-  /// Anonymously schedule a task after a delay.
-  _i6.RuntimeCall scheduleAfter({
-    required after,
-    maybePeriodic,
-    required priority,
-    required call,
+  /// See [`Pallet::schedule_after`].
+  _i7.Scheduler scheduleAfter({
+    required int after,
+    _i4.Tuple2<int, int>? maybePeriodic,
+    required int priority,
+    required _i7.RuntimeCall call,
   }) {
-    final _call = _i7.Call.values.scheduleAfter(
+    return _i7.Scheduler(_i8.ScheduleAfter(
       after: after,
       maybePeriodic: maybePeriodic,
       priority: priority,
       call: call,
-    );
-    return _i6.RuntimeCall.values.scheduler(_call);
+    ));
   }
 
-  /// Schedule a named task after a delay.
-  _i6.RuntimeCall scheduleNamedAfter({
-    required id,
-    required after,
-    maybePeriodic,
-    required priority,
-    required call,
+  /// See [`Pallet::schedule_named_after`].
+  _i7.Scheduler scheduleNamedAfter({
+    required List<int> id,
+    required int after,
+    _i4.Tuple2<int, int>? maybePeriodic,
+    required int priority,
+    required _i7.RuntimeCall call,
   }) {
-    final _call = _i7.Call.values.scheduleNamedAfter(
+    return _i7.Scheduler(_i8.ScheduleNamedAfter(
       id: id,
       after: after,
       maybePeriodic: maybePeriodic,
       priority: priority,
       call: call,
-    );
-    return _i6.RuntimeCall.values.scheduler(_call);
+    ));
   }
 }
 
@@ -183,7 +208,7 @@ class Constants {
   Constants();
 
   /// The maximum weight that may be scheduled per block for any dispatchables.
-  final _i8.Weight maximumWeight = _i8.Weight(
+  final _i9.Weight maximumWeight = _i9.Weight(
     refTime: BigInt.from(1600000000000),
     proofSize: BigInt.parse(
       '14757395258967641292',

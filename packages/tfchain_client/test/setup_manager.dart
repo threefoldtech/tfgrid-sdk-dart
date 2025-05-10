@@ -84,6 +84,7 @@ String generateGatewayIPv4FromIp(String ip) {
 
 class SetupManager {
   static final SetupManager _instance = SetupManager._internal();
+  static bool isInitialized = false;
 
   factory SetupManager() {
     return _instance;
@@ -120,6 +121,13 @@ class SetupManager {
   }
 
   Future<void> setup() async {
+    // Return early if setup is already done
+    if (isInitialized) {
+      print("Setup is already complete. Skipping setup.");
+      return;
+    }
+
+    print("Starting setup...");
     _url = Platform.environment['URL'] ?? 'ws://0.0.0.0:9944';
     _type = Platform.environment['KEYPAIR_TYPE'] ?? 'sr25519';
     _relay = "relay.dev.grid.tf";
@@ -152,13 +160,15 @@ class SetupManager {
           documentLink: "https://library.threefold.me/info/legal/",
           documentHash: hashString.codeUnits);
       _twinId = await _client.twins.create(relay: _relay, pk: []);
-      print(_twinId);
+      print('_twinId $_twinId');
     }
 
     if (_initializeQueryClient) {
       _queryClient = QueryClient(_url);
       await _queryClient.connect();
     }
+
+    isInitialized = true;
   }
 
   Future<void> teardownAll() async {

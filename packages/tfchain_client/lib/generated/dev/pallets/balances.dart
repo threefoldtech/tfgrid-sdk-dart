@@ -1,16 +1,18 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i8;
+import 'dart:typed_data' as _i9;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i2;
 
-import '../types/pallet_balances/pallet/call.dart' as _i10;
+import '../types/pallet_balances/pallet/call.dart' as _i12;
 import '../types/pallet_balances/types/account_data.dart' as _i4;
 import '../types/pallet_balances/types/balance_lock.dart' as _i5;
 import '../types/pallet_balances/types/id_amount.dart' as _i7;
 import '../types/pallet_balances/types/reserve_data.dart' as _i6;
 import '../types/sp_core/crypto/account_id32.dart' as _i3;
-import '../types/tfchain_runtime/runtime_call.dart' as _i9;
+import '../types/sp_runtime/multiaddress/multi_address.dart' as _i11;
+import '../types/tfchain_runtime/runtime_call.dart' as _i10;
 
 class Queries {
   const Queries(this.__api);
@@ -208,159 +210,178 @@ class Queries {
     }
     return []; /* Default */
   }
+
+  /// Returns the storage key for `totalIssuance`.
+  _i9.Uint8List totalIssuanceKey() {
+    final hashedKey = _totalIssuance.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `inactiveIssuance`.
+  _i9.Uint8List inactiveIssuanceKey() {
+    final hashedKey = _inactiveIssuance.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `account`.
+  _i9.Uint8List accountKey(_i3.AccountId32 key1) {
+    final hashedKey = _account.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `locks`.
+  _i9.Uint8List locksKey(_i3.AccountId32 key1) {
+    final hashedKey = _locks.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `reserves`.
+  _i9.Uint8List reservesKey(_i3.AccountId32 key1) {
+    final hashedKey = _reserves.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `holds`.
+  _i9.Uint8List holdsKey(_i3.AccountId32 key1) {
+    final hashedKey = _holds.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `freezes`.
+  _i9.Uint8List freezesKey(_i3.AccountId32 key1) {
+    final hashedKey = _freezes.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `account`.
+  _i9.Uint8List accountMapPrefix() {
+    final hashedKey = _account.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `locks`.
+  _i9.Uint8List locksMapPrefix() {
+    final hashedKey = _locks.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `reserves`.
+  _i9.Uint8List reservesMapPrefix() {
+    final hashedKey = _reserves.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `holds`.
+  _i9.Uint8List holdsMapPrefix() {
+    final hashedKey = _holds.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `freezes`.
+  _i9.Uint8List freezesMapPrefix() {
+    final hashedKey = _freezes.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Transfer some liquid free balance to another account.
-  ///
-  /// `transfer_allow_death` will set the `FreeBalance` of the sender and receiver.
-  /// If the sender's account is below the existential deposit as a result
-  /// of the transfer, the account will be reaped.
-  ///
-  /// The dispatch origin for this call must be `Signed` by the transactor.
-  _i9.RuntimeCall transferAllowDeath({
-    required dest,
-    required value,
+  /// See [`Pallet::transfer_allow_death`].
+  _i10.Balances transferAllowDeath({
+    required _i11.MultiAddress dest,
+    required BigInt value,
   }) {
-    final _call = _i10.Call.values.transferAllowDeath(
+    return _i10.Balances(_i12.TransferAllowDeath(
       dest: dest,
       value: value,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 
-  /// Set the regular balance of a given account; it also takes a reserved balance but this
-  /// must be the same as the account's current reserved balance.
-  ///
-  /// The dispatch origin for this call is `root`.
-  ///
-  /// WARNING: This call is DEPRECATED! Use `force_set_balance` instead.
-  _i9.RuntimeCall setBalanceDeprecated({
-    required who,
-    required newFree,
-    required oldReserved,
+  /// See [`Pallet::set_balance_deprecated`].
+  _i10.Balances setBalanceDeprecated({
+    required _i11.MultiAddress who,
+    required BigInt newFree,
+    required BigInt oldReserved,
   }) {
-    final _call = _i10.Call.values.setBalanceDeprecated(
+    return _i10.Balances(_i12.SetBalanceDeprecated(
       who: who,
       newFree: newFree,
       oldReserved: oldReserved,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 
-  /// Exactly as `transfer_allow_death`, except the origin must be root and the source account
-  /// may be specified.
-  _i9.RuntimeCall forceTransfer({
-    required source,
-    required dest,
-    required value,
+  /// See [`Pallet::force_transfer`].
+  _i10.Balances forceTransfer({
+    required _i11.MultiAddress source,
+    required _i11.MultiAddress dest,
+    required BigInt value,
   }) {
-    final _call = _i10.Call.values.forceTransfer(
+    return _i10.Balances(_i12.ForceTransfer(
       source: source,
       dest: dest,
       value: value,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 
-  /// Same as the [`transfer_allow_death`] call, but with a check that the transfer will not
-  /// kill the origin account.
-  ///
-  /// 99% of the time you want [`transfer_allow_death`] instead.
-  ///
-  /// [`transfer_allow_death`]: struct.Pallet.html#method.transfer
-  _i9.RuntimeCall transferKeepAlive({
-    required dest,
-    required value,
+  /// See [`Pallet::transfer_keep_alive`].
+  _i10.Balances transferKeepAlive({
+    required _i11.MultiAddress dest,
+    required BigInt value,
   }) {
-    final _call = _i10.Call.values.transferKeepAlive(
+    return _i10.Balances(_i12.TransferKeepAlive(
       dest: dest,
       value: value,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 
-  /// Transfer the entire transferable balance from the caller account.
-  ///
-  /// NOTE: This function only attempts to transfer _transferable_ balances. This means that
-  /// any locked, reserved, or existential deposits (when `keep_alive` is `true`), will not be
-  /// transferred by this function. To ensure that this function results in a killed account,
-  /// you might need to prepare the account by removing any reference counters, storage
-  /// deposits, etc...
-  ///
-  /// The dispatch origin of this call must be Signed.
-  ///
-  /// - `dest`: The recipient of the transfer.
-  /// - `keep_alive`: A boolean to determine if the `transfer_all` operation should send all
-  ///  of the funds the account has, causing the sender account to be killed (false), or
-  ///  transfer everything except at least the existential deposit, which will guarantee to
-  ///  keep the sender account alive (true).
-  _i9.RuntimeCall transferAll({
-    required dest,
-    required keepAlive,
+  /// See [`Pallet::transfer_all`].
+  _i10.Balances transferAll({
+    required _i11.MultiAddress dest,
+    required bool keepAlive,
   }) {
-    final _call = _i10.Call.values.transferAll(
+    return _i10.Balances(_i12.TransferAll(
       dest: dest,
       keepAlive: keepAlive,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 
-  /// Unreserve some balance from a user by force.
-  ///
-  /// Can only be called by ROOT.
-  _i9.RuntimeCall forceUnreserve({
-    required who,
-    required amount,
+  /// See [`Pallet::force_unreserve`].
+  _i10.Balances forceUnreserve({
+    required _i11.MultiAddress who,
+    required BigInt amount,
   }) {
-    final _call = _i10.Call.values.forceUnreserve(
+    return _i10.Balances(_i12.ForceUnreserve(
       who: who,
       amount: amount,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 
-  /// Upgrade a specified account.
-  ///
-  /// - `origin`: Must be `Signed`.
-  /// - `who`: The account to be upgraded.
-  ///
-  /// This will waive the transaction fee if at least all but 10% of the accounts needed to
-  /// be upgraded. (We let some not have to be upgraded just in order to allow for the
-  /// possibililty of churn).
-  _i9.RuntimeCall upgradeAccounts({required who}) {
-    final _call = _i10.Call.values.upgradeAccounts(who: who);
-    return _i9.RuntimeCall.values.balances(_call);
+  /// See [`Pallet::upgrade_accounts`].
+  _i10.Balances upgradeAccounts({required List<_i3.AccountId32> who}) {
+    return _i10.Balances(_i12.UpgradeAccounts(who: who));
   }
 
-  /// Alias for `transfer_allow_death`, provided only for name-wise compatibility.
-  ///
-  /// WARNING: DEPRECATED! Will be released in approximately 3 months.
-  _i9.RuntimeCall transfer({
-    required dest,
-    required value,
+  /// See [`Pallet::transfer`].
+  _i10.Balances transfer({
+    required _i11.MultiAddress dest,
+    required BigInt value,
   }) {
-    final _call = _i10.Call.values.transfer(
+    return _i10.Balances(_i12.Transfer(
       dest: dest,
       value: value,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 
-  /// Set the regular balance of a given account.
-  ///
-  /// The dispatch origin for this call is `root`.
-  _i9.RuntimeCall forceSetBalance({
-    required who,
-    required newFree,
+  /// See [`Pallet::force_set_balance`].
+  _i10.Balances forceSetBalance({
+    required _i11.MultiAddress who,
+    required BigInt newFree,
   }) {
-    final _call = _i10.Call.values.forceSetBalance(
+    return _i10.Balances(_i12.ForceSetBalance(
       who: who,
       newFree: newFree,
-    );
-    return _i9.RuntimeCall.values.balances(_call);
+    ));
   }
 }
 

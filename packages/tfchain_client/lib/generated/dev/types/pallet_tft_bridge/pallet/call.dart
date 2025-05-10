@@ -6,7 +6,7 @@ import 'package:quiver/collection.dart' as _i4;
 
 import '../../sp_core/crypto/account_id32.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -235,6 +235,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
+/// See [`Pallet::add_bridge_validator`].
 class AddBridgeValidator extends Call {
   const AddBridgeValidator({required this.target});
 
@@ -283,6 +284,7 @@ class AddBridgeValidator extends Call {
   int get hashCode => target.hashCode;
 }
 
+/// See [`Pallet::remove_bridge_validator`].
 class RemoveBridgeValidator extends Call {
   const RemoveBridgeValidator({required this.target});
 
@@ -332,6 +334,7 @@ class RemoveBridgeValidator extends Call {
   int get hashCode => target.hashCode;
 }
 
+/// See [`Pallet::set_fee_account`].
 class SetFeeAccount extends Call {
   const SetFeeAccount({required this.target});
 
@@ -380,6 +383,7 @@ class SetFeeAccount extends Call {
   int get hashCode => target.hashCode;
 }
 
+/// See [`Pallet::set_withdraw_fee`].
 class SetWithdrawFee extends Call {
   const SetWithdrawFee({required this.amount});
 
@@ -424,6 +428,7 @@ class SetWithdrawFee extends Call {
   int get hashCode => amount.hashCode;
 }
 
+/// See [`Pallet::set_deposit_fee`].
 class SetDepositFee extends Call {
   const SetDepositFee({required this.amount});
 
@@ -468,6 +473,7 @@ class SetDepositFee extends Call {
   int get hashCode => amount.hashCode;
 }
 
+/// See [`Pallet::swap_to_stellar`].
 class SwapToStellar extends Call {
   const SwapToStellar({
     required this.targetStellarAddress,
@@ -537,6 +543,7 @@ class SwapToStellar extends Call {
       );
 }
 
+/// See [`Pallet::propose_or_vote_mint_transaction`].
 class ProposeOrVoteMintTransaction extends Call {
   const ProposeOrVoteMintTransaction({
     required this.transaction,
@@ -622,6 +629,7 @@ class ProposeOrVoteMintTransaction extends Call {
       );
 }
 
+/// See [`Pallet::propose_burn_transaction_or_add_sig`].
 class ProposeBurnTransactionOrAddSig extends Call {
   const ProposeBurnTransactionOrAddSig({
     required this.transactionId,
@@ -749,6 +757,7 @@ class ProposeBurnTransactionOrAddSig extends Call {
       );
 }
 
+/// See [`Pallet::set_burn_transaction_executed`].
 class SetBurnTransactionExecuted extends Call {
   const SetBurnTransactionExecuted({required this.transactionId});
 
@@ -795,6 +804,7 @@ class SetBurnTransactionExecuted extends Call {
   int get hashCode => transactionId.hashCode;
 }
 
+/// See [`Pallet::create_refund_transaction_or_add_sig`].
 class CreateRefundTransactionOrAddSig extends Call {
   const CreateRefundTransactionOrAddSig({
     required this.txHash,
@@ -925,6 +935,7 @@ class CreateRefundTransactionOrAddSig extends Call {
       );
 }
 
+/// See [`Pallet::set_refund_transaction_executed`].
 class SetRefundTransactionExecuted extends Call {
   const SetRefundTransactionExecuted({required this.txHash});
 

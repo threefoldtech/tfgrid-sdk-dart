@@ -1,15 +1,17 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i7;
+import 'dart:async' as _i8;
+import 'dart:typed_data' as _i9;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_tft_bridge/pallet/call.dart' as _i9;
+import '../types/pallet_tft_bridge/pallet/call.dart' as _i11;
 import '../types/pallet_tft_bridge/types/burn_transaction.dart' as _i5;
 import '../types/pallet_tft_bridge/types/mint_transaction.dart' as _i4;
 import '../types/pallet_tft_bridge/types/refund_transaction.dart' as _i6;
+import '../types/pallet_tft_bridge/types/storage_version.dart' as _i7;
 import '../types/sp_core/crypto/account_id32.dart' as _i2;
-import '../types/tfchain_runtime/runtime_call.dart' as _i8;
+import '../types/tfchain_runtime/runtime_call.dart' as _i10;
 
 class Queries {
   const Queries(this.__api);
@@ -99,7 +101,14 @@ class Queries {
     valueCodec: _i3.U64Codec.codec,
   );
 
-  _i7.Future<List<_i2.AccountId32>> validators({_i1.BlockHash? at}) async {
+  final _i1.StorageValue<_i7.StorageVersion> _palletVersion =
+      const _i1.StorageValue<_i7.StorageVersion>(
+    prefix: 'TFTBridgeModule',
+    storage: 'PalletVersion',
+    valueCodec: _i7.StorageVersion.codec,
+  );
+
+  _i8.Future<List<_i2.AccountId32>> validators({_i1.BlockHash? at}) async {
     final hashedKey = _validators.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -111,7 +120,7 @@ class Queries {
     return []; /* Default */
   }
 
-  _i7.Future<_i2.AccountId32?> feeAccount({_i1.BlockHash? at}) async {
+  _i8.Future<_i2.AccountId32?> feeAccount({_i1.BlockHash? at}) async {
     final hashedKey = _feeAccount.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -123,7 +132,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i7.Future<_i4.MintTransaction?> mintTransactions(
+  _i8.Future<_i4.MintTransaction?> mintTransactions(
     List<int> key1, {
     _i1.BlockHash? at,
   }) async {
@@ -138,7 +147,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i7.Future<_i4.MintTransaction?> executedMintTransactions(
+  _i8.Future<_i4.MintTransaction?> executedMintTransactions(
     List<int> key1, {
     _i1.BlockHash? at,
   }) async {
@@ -153,7 +162,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i7.Future<_i5.BurnTransaction> burnTransactions(
+  _i8.Future<_i5.BurnTransaction?> burnTransactions(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -165,20 +174,10 @@ class Queries {
     if (bytes != null) {
       return _burnTransactions.decodeValue(bytes);
     }
-    return _i5.BurnTransaction(
-      block: 0,
-      amount: BigInt.zero,
-      target: List<int>.filled(
-        0,
-        0,
-        growable: true,
-      ),
-      signatures: [],
-      sequenceNumber: BigInt.zero,
-    ); /* Default */
+    return null; /* Nullable */
   }
 
-  _i7.Future<_i5.BurnTransaction> executedBurnTransactions(
+  _i8.Future<_i5.BurnTransaction?> executedBurnTransactions(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -190,20 +189,10 @@ class Queries {
     if (bytes != null) {
       return _executedBurnTransactions.decodeValue(bytes);
     }
-    return _i5.BurnTransaction(
-      block: 0,
-      amount: BigInt.zero,
-      target: List<int>.filled(
-        0,
-        0,
-        growable: true,
-      ),
-      signatures: [],
-      sequenceNumber: BigInt.zero,
-    ); /* Default */
+    return null; /* Nullable */
   }
 
-  _i7.Future<_i6.RefundTransaction> refundTransactions(
+  _i8.Future<_i6.RefundTransaction> refundTransactions(
     List<int> key1, {
     _i1.BlockHash? at,
   }) async {
@@ -233,7 +222,7 @@ class Queries {
     ); /* Default */
   }
 
-  _i7.Future<_i6.RefundTransaction> executedRefundTransactions(
+  _i8.Future<_i6.RefundTransaction> executedRefundTransactions(
     List<int> key1, {
     _i1.BlockHash? at,
   }) async {
@@ -263,7 +252,7 @@ class Queries {
     ); /* Default */
   }
 
-  _i7.Future<BigInt> burnTransactionID({_i1.BlockHash? at}) async {
+  _i8.Future<BigInt> burnTransactionID({_i1.BlockHash? at}) async {
     final hashedKey = _burnTransactionID.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -275,7 +264,7 @@ class Queries {
     return BigInt.zero; /* Default */
   }
 
-  _i7.Future<BigInt> withdrawFee({_i1.BlockHash? at}) async {
+  _i8.Future<BigInt> withdrawFee({_i1.BlockHash? at}) async {
     final hashedKey = _withdrawFee.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -287,7 +276,7 @@ class Queries {
     return BigInt.zero; /* Default */
   }
 
-  _i7.Future<BigInt> depositFee({_i1.BlockHash? at}) async {
+  _i8.Future<BigInt> depositFee({_i1.BlockHash? at}) async {
     final hashedKey = _depositFee.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -298,106 +287,230 @@ class Queries {
     }
     return BigInt.zero; /* Default */
   }
+
+  _i8.Future<_i7.StorageVersion> palletVersion({_i1.BlockHash? at}) async {
+    final hashedKey = _palletVersion.hashedKey();
+    final bytes = await __api.getStorage(
+      hashedKey,
+      at: at,
+    );
+    if (bytes != null) {
+      return _palletVersion.decodeValue(bytes);
+    }
+    return _i7.StorageVersion.v1; /* Default */
+  }
+
+  /// Returns the storage key for `validators`.
+  _i9.Uint8List validatorsKey() {
+    final hashedKey = _validators.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `feeAccount`.
+  _i9.Uint8List feeAccountKey() {
+    final hashedKey = _feeAccount.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `mintTransactions`.
+  _i9.Uint8List mintTransactionsKey(List<int> key1) {
+    final hashedKey = _mintTransactions.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `executedMintTransactions`.
+  _i9.Uint8List executedMintTransactionsKey(List<int> key1) {
+    final hashedKey = _executedMintTransactions.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `burnTransactions`.
+  _i9.Uint8List burnTransactionsKey(BigInt key1) {
+    final hashedKey = _burnTransactions.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `executedBurnTransactions`.
+  _i9.Uint8List executedBurnTransactionsKey(BigInt key1) {
+    final hashedKey = _executedBurnTransactions.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `refundTransactions`.
+  _i9.Uint8List refundTransactionsKey(List<int> key1) {
+    final hashedKey = _refundTransactions.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `executedRefundTransactions`.
+  _i9.Uint8List executedRefundTransactionsKey(List<int> key1) {
+    final hashedKey = _executedRefundTransactions.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `burnTransactionID`.
+  _i9.Uint8List burnTransactionIDKey() {
+    final hashedKey = _burnTransactionID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `withdrawFee`.
+  _i9.Uint8List withdrawFeeKey() {
+    final hashedKey = _withdrawFee.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `depositFee`.
+  _i9.Uint8List depositFeeKey() {
+    final hashedKey = _depositFee.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `palletVersion`.
+  _i9.Uint8List palletVersionKey() {
+    final hashedKey = _palletVersion.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `mintTransactions`.
+  _i9.Uint8List mintTransactionsMapPrefix() {
+    final hashedKey = _mintTransactions.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `executedMintTransactions`.
+  _i9.Uint8List executedMintTransactionsMapPrefix() {
+    final hashedKey = _executedMintTransactions.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `burnTransactions`.
+  _i9.Uint8List burnTransactionsMapPrefix() {
+    final hashedKey = _burnTransactions.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `executedBurnTransactions`.
+  _i9.Uint8List executedBurnTransactionsMapPrefix() {
+    final hashedKey = _executedBurnTransactions.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `refundTransactions`.
+  _i9.Uint8List refundTransactionsMapPrefix() {
+    final hashedKey = _refundTransactions.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `executedRefundTransactions`.
+  _i9.Uint8List executedRefundTransactionsMapPrefix() {
+    final hashedKey = _executedRefundTransactions.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  _i8.RuntimeCall addBridgeValidator({required target}) {
-    final _call = _i9.Call.values.addBridgeValidator(target: target);
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+  /// See [`Pallet::add_bridge_validator`].
+  _i10.TFTBridgeModule addBridgeValidator({required _i2.AccountId32 target}) {
+    return _i10.TFTBridgeModule(_i11.AddBridgeValidator(target: target));
   }
 
-  _i8.RuntimeCall removeBridgeValidator({required target}) {
-    final _call = _i9.Call.values.removeBridgeValidator(target: target);
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+  /// See [`Pallet::remove_bridge_validator`].
+  _i10.TFTBridgeModule removeBridgeValidator(
+      {required _i2.AccountId32 target}) {
+    return _i10.TFTBridgeModule(_i11.RemoveBridgeValidator(target: target));
   }
 
-  _i8.RuntimeCall setFeeAccount({required target}) {
-    final _call = _i9.Call.values.setFeeAccount(target: target);
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+  /// See [`Pallet::set_fee_account`].
+  _i10.TFTBridgeModule setFeeAccount({required _i2.AccountId32 target}) {
+    return _i10.TFTBridgeModule(_i11.SetFeeAccount(target: target));
   }
 
-  _i8.RuntimeCall setWithdrawFee({required amount}) {
-    final _call = _i9.Call.values.setWithdrawFee(amount: amount);
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+  /// See [`Pallet::set_withdraw_fee`].
+  _i10.TFTBridgeModule setWithdrawFee({required BigInt amount}) {
+    return _i10.TFTBridgeModule(_i11.SetWithdrawFee(amount: amount));
   }
 
-  _i8.RuntimeCall setDepositFee({required amount}) {
-    final _call = _i9.Call.values.setDepositFee(amount: amount);
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+  /// See [`Pallet::set_deposit_fee`].
+  _i10.TFTBridgeModule setDepositFee({required BigInt amount}) {
+    return _i10.TFTBridgeModule(_i11.SetDepositFee(amount: amount));
   }
 
-  _i8.RuntimeCall swapToStellar({
-    required targetStellarAddress,
-    required amount,
+  /// See [`Pallet::swap_to_stellar`].
+  _i10.TFTBridgeModule swapToStellar({
+    required List<int> targetStellarAddress,
+    required BigInt amount,
   }) {
-    final _call = _i9.Call.values.swapToStellar(
+    return _i10.TFTBridgeModule(_i11.SwapToStellar(
       targetStellarAddress: targetStellarAddress,
       amount: amount,
-    );
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+    ));
   }
 
-  _i8.RuntimeCall proposeOrVoteMintTransaction({
-    required transaction,
-    required target,
-    required amount,
+  /// See [`Pallet::propose_or_vote_mint_transaction`].
+  _i10.TFTBridgeModule proposeOrVoteMintTransaction({
+    required List<int> transaction,
+    required _i2.AccountId32 target,
+    required BigInt amount,
   }) {
-    final _call = _i9.Call.values.proposeOrVoteMintTransaction(
+    return _i10.TFTBridgeModule(_i11.ProposeOrVoteMintTransaction(
       transaction: transaction,
       target: target,
       amount: amount,
-    );
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+    ));
   }
 
-  _i8.RuntimeCall proposeBurnTransactionOrAddSig({
-    required transactionId,
-    required target,
-    required amount,
-    required signature,
-    required stellarPubKey,
-    required sequenceNumber,
+  /// See [`Pallet::propose_burn_transaction_or_add_sig`].
+  _i10.TFTBridgeModule proposeBurnTransactionOrAddSig({
+    required BigInt transactionId,
+    required List<int> target,
+    required BigInt amount,
+    required List<int> signature,
+    required List<int> stellarPubKey,
+    required BigInt sequenceNumber,
   }) {
-    final _call = _i9.Call.values.proposeBurnTransactionOrAddSig(
+    return _i10.TFTBridgeModule(_i11.ProposeBurnTransactionOrAddSig(
       transactionId: transactionId,
       target: target,
       amount: amount,
       signature: signature,
       stellarPubKey: stellarPubKey,
       sequenceNumber: sequenceNumber,
-    );
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+    ));
   }
 
-  _i8.RuntimeCall setBurnTransactionExecuted({required transactionId}) {
-    final _call = _i9.Call.values
-        .setBurnTransactionExecuted(transactionId: transactionId);
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+  /// See [`Pallet::set_burn_transaction_executed`].
+  _i10.TFTBridgeModule setBurnTransactionExecuted(
+      {required BigInt transactionId}) {
+    return _i10.TFTBridgeModule(
+        _i11.SetBurnTransactionExecuted(transactionId: transactionId));
   }
 
-  _i8.RuntimeCall createRefundTransactionOrAddSig({
-    required txHash,
-    required target,
-    required amount,
-    required signature,
-    required stellarPubKey,
-    required sequenceNumber,
+  /// See [`Pallet::create_refund_transaction_or_add_sig`].
+  _i10.TFTBridgeModule createRefundTransactionOrAddSig({
+    required List<int> txHash,
+    required List<int> target,
+    required BigInt amount,
+    required List<int> signature,
+    required List<int> stellarPubKey,
+    required BigInt sequenceNumber,
   }) {
-    final _call = _i9.Call.values.createRefundTransactionOrAddSig(
+    return _i10.TFTBridgeModule(_i11.CreateRefundTransactionOrAddSig(
       txHash: txHash,
       target: target,
       amount: amount,
       signature: signature,
       stellarPubKey: stellarPubKey,
       sequenceNumber: sequenceNumber,
-    );
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+    ));
   }
 
-  _i8.RuntimeCall setRefundTransactionExecuted({required txHash}) {
-    final _call = _i9.Call.values.setRefundTransactionExecuted(txHash: txHash);
-    return _i8.RuntimeCall.values.tFTBridgeModule(_call);
+  /// See [`Pallet::set_refund_transaction_executed`].
+  _i10.TFTBridgeModule setRefundTransactionExecuted(
+      {required List<int> txHash}) {
+    return _i10.TFTBridgeModule(
+        _i11.SetRefundTransactionExecuted(txHash: txHash));
   }
 }
