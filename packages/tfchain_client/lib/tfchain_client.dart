@@ -8,7 +8,6 @@ import 'package:polkadart/polkadart.dart'
         AuthorApi,
         ExtrinsicPayload,
         Hasher,
-        Provider,
         SignatureType,
         SigningPayload,
         StateApi,
