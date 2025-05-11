@@ -3,7 +3,7 @@ part of '../tfchain_client.dart';
 class QueryClient {
   static Map<String, dynamic> connections = {};
   final String url;
-  late Provider? provider;
+  late WsProvider? provider;
   late polkadot.Dev api;
   QueryTwins? _twins;
   QueryContracts? _contracts;
