@@ -1,13 +1,16 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
+import 'dart:typed_data' as _i7;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i4;
 
-import '../types/pallet_grandpa/pallet/call.dart' as _i8;
+import '../types/pallet_grandpa/pallet/call.dart' as _i11;
 import '../types/pallet_grandpa/stored_pending_change.dart' as _i3;
 import '../types/pallet_grandpa/stored_state.dart' as _i2;
-import '../types/tfchain_runtime/runtime_call.dart' as _i7;
+import '../types/sp_consensus_grandpa/equivocation_proof.dart' as _i9;
+import '../types/sp_core/void.dart' as _i10;
+import '../types/tfchain_runtime/runtime_call.dart' as _i8;
 import '../types/tuples_1.dart' as _i5;
 
 class Queries {
@@ -150,67 +153,84 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `state`.
+  _i7.Uint8List stateKey() {
+    final hashedKey = _state.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `pendingChange`.
+  _i7.Uint8List pendingChangeKey() {
+    final hashedKey = _pendingChange.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nextForced`.
+  _i7.Uint8List nextForcedKey() {
+    final hashedKey = _nextForced.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `stalled`.
+  _i7.Uint8List stalledKey() {
+    final hashedKey = _stalled.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `currentSetId`.
+  _i7.Uint8List currentSetIdKey() {
+    final hashedKey = _currentSetId.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `setIdSession`.
+  _i7.Uint8List setIdSessionKey(BigInt key1) {
+    final hashedKey = _setIdSession.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `setIdSession`.
+  _i7.Uint8List setIdSessionMapPrefix() {
+    final hashedKey = _setIdSession.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Report voter equivocation/misbehavior. This method will verify the
-  /// equivocation proof and validate the given key ownership proof
-  /// against the extracted offender. If both are valid, the offence
-  /// will be reported.
-  _i7.RuntimeCall reportEquivocation({
-    required equivocationProof,
-    required keyOwnerProof,
+  /// See [`Pallet::report_equivocation`].
+  _i8.Grandpa reportEquivocation({
+    required _i9.EquivocationProof equivocationProof,
+    required _i10.Void keyOwnerProof,
   }) {
-    final _call = _i8.Call.values.reportEquivocation(
+    return _i8.Grandpa(_i11.ReportEquivocation(
       equivocationProof: equivocationProof,
       keyOwnerProof: keyOwnerProof,
-    );
-    return _i7.RuntimeCall.values.grandpa(_call);
+    ));
   }
 
-  /// Report voter equivocation/misbehavior. This method will verify the
-  /// equivocation proof and validate the given key ownership proof
-  /// against the extracted offender. If both are valid, the offence
-  /// will be reported.
-  ///
-  /// This extrinsic must be called unsigned and it is expected that only
-  /// block authors will call it (validated in `ValidateUnsigned`), as such
-  /// if the block author is defined it will be defined as the equivocation
-  /// reporter.
-  _i7.RuntimeCall reportEquivocationUnsigned({
-    required equivocationProof,
-    required keyOwnerProof,
+  /// See [`Pallet::report_equivocation_unsigned`].
+  _i8.Grandpa reportEquivocationUnsigned({
+    required _i9.EquivocationProof equivocationProof,
+    required _i10.Void keyOwnerProof,
   }) {
-    final _call = _i8.Call.values.reportEquivocationUnsigned(
+    return _i8.Grandpa(_i11.ReportEquivocationUnsigned(
       equivocationProof: equivocationProof,
       keyOwnerProof: keyOwnerProof,
-    );
-    return _i7.RuntimeCall.values.grandpa(_call);
+    ));
   }
 
-  /// Note that the current authority set of the GRANDPA finality gadget has stalled.
-  ///
-  /// This will trigger a forced authority set change at the beginning of the next session, to
-  /// be enacted `delay` blocks after that. The `delay` should be high enough to safely assume
-  /// that the block signalling the forced change will not be re-orged e.g. 1000 blocks.
-  /// The block production rate (which may be slowed down because of finality lagging) should
-  /// be taken into account when choosing the `delay`. The GRANDPA voters based on the new
-  /// authority will start voting on top of `best_finalized_block_number` for new finalized
-  /// blocks. `best_finalized_block_number` should be the highest of the latest finalized
-  /// block of all validators of the new authority set.
-  ///
-  /// Only callable by root.
-  _i7.RuntimeCall noteStalled({
-    required delay,
-    required bestFinalizedBlockNumber,
+  /// See [`Pallet::note_stalled`].
+  _i8.Grandpa noteStalled({
+    required int delay,
+    required int bestFinalizedBlockNumber,
   }) {
-    final _call = _i8.Call.values.noteStalled(
+    return _i8.Grandpa(_i11.NoteStalled(
       delay: delay,
       bestFinalizedBlockNumber: bestFinalizedBlockNumber,
-    );
-    return _i7.RuntimeCall.values.grandpa(_call);
+    ));
   }
 }
 
@@ -219,6 +239,9 @@ class Constants {
 
   /// Max Authorities in use
   final int maxAuthorities = 100;
+
+  /// The maximum number of nominators for each validator.
+  final int maxNominators = 0;
 
   /// The maximum number of entries to keep in the set id to session index mapping.
   ///

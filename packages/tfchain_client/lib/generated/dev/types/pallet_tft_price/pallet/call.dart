@@ -3,7 +3,7 @@ import 'dart:typed_data' as _i2;
 
 import 'package:polkadart/scale_codec.dart' as _i1;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -105,6 +105,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
+/// See [`Pallet::set_prices`].
 class SetPrices extends Call {
   const SetPrices({
     required this.price,
@@ -121,7 +122,7 @@ class SetPrices extends Call {
   /// u32
   final int price;
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int blockNumber;
 
   @override
@@ -171,6 +172,7 @@ class SetPrices extends Call {
       );
 }
 
+/// See [`Pallet::set_min_tft_price`].
 class SetMinTftPrice extends Call {
   const SetMinTftPrice({required this.price});
 
@@ -215,6 +217,7 @@ class SetMinTftPrice extends Call {
   int get hashCode => price.hashCode;
 }
 
+/// See [`Pallet::set_max_tft_price`].
 class SetMaxTftPrice extends Call {
   const SetMaxTftPrice({required this.price});
 

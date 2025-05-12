@@ -6,7 +6,7 @@ import 'package:quiver/collection.dart' as _i4;
 
 import '../../tuples.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -164,10 +164,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
-/// Make some on-chain remark.
-///
-/// ## Complexity
-/// - `O(1)`
+/// See [`Pallet::remark`].
 class Remark extends Call {
   const Remark({required this.remark});
 
@@ -216,7 +213,7 @@ class Remark extends Call {
   int get hashCode => remark.hashCode;
 }
 
-/// Set the number of pages in the WebAssembly environment's heap.
+/// See [`Pallet::set_heap_pages`].
 class SetHeapPages extends Call {
   const SetHeapPages({required this.pages});
 
@@ -261,10 +258,7 @@ class SetHeapPages extends Call {
   int get hashCode => pages.hashCode;
 }
 
-/// Set the new runtime code.
-///
-/// ## Complexity
-/// - `O(C + S)` where `C` length of `code` and `S` complexity of `can_set_code`
+/// See [`Pallet::set_code`].
 class SetCode extends Call {
   const SetCode({required this.code});
 
@@ -313,10 +307,7 @@ class SetCode extends Call {
   int get hashCode => code.hashCode;
 }
 
-/// Set the new runtime code without doing any checks of the given `code`.
-///
-/// ## Complexity
-/// - `O(C)` where `C` length of `code`
+/// See [`Pallet::set_code_without_checks`].
 class SetCodeWithoutChecks extends Call {
   const SetCodeWithoutChecks({required this.code});
 
@@ -365,7 +356,7 @@ class SetCodeWithoutChecks extends Call {
   int get hashCode => code.hashCode;
 }
 
-/// Set some items of storage.
+/// See [`Pallet::set_storage`].
 class SetStorage extends Call {
   const SetStorage({required this.items});
 
@@ -435,7 +426,7 @@ class SetStorage extends Call {
   int get hashCode => items.hashCode;
 }
 
-/// Kill some items from storage.
+/// See [`Pallet::kill_storage`].
 class KillStorage extends Call {
   const KillStorage({required this.keys});
 
@@ -488,10 +479,7 @@ class KillStorage extends Call {
   int get hashCode => keys.hashCode;
 }
 
-/// Kill all storage items with a key that starts with the given prefix.
-///
-/// **NOTE:** We rely on the Root origin to provide us the number of subkeys under
-/// the prefix we are removing to accurately calculate the weight of this function.
+/// See [`Pallet::kill_prefix`].
 class KillPrefix extends Call {
   const KillPrefix({
     required this.prefix,
@@ -561,7 +549,7 @@ class KillPrefix extends Call {
       );
 }
 
-/// Make some on-chain remark and emit event.
+/// See [`Pallet::remark_with_event`].
 class RemarkWithEvent extends Call {
   const RemarkWithEvent({required this.remark});
 

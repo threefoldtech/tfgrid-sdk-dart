@@ -16,10 +16,7 @@ import '../types/service_contract.dart' as _i11;
 import '../types/service_contract_bill.dart' as _i13;
 import '../types/solution_provider.dart' as _i10;
 
-///
-///			The [event](https://docs.substrate.io/main-docs/build/events-errors/) emitted
-///			by this pallet.
-///
+/// The `Event` enum of this pallet
 abstract class Event {
   const Event();
 
@@ -225,6 +222,46 @@ class $Event {
       extraFee: extraFee,
     );
   }
+
+  RentWaived rentWaived({required BigInt contractId}) {
+    return RentWaived(contractId: contractId);
+  }
+
+  ContractGracePeriodElapsed contractGracePeriodElapsed({
+    required BigInt contractId,
+    required BigInt gracePeriod,
+  }) {
+    return ContractGracePeriodElapsed(
+      contractId: contractId,
+      gracePeriod: gracePeriod,
+    );
+  }
+
+  ContractPaymentOverdrawn contractPaymentOverdrawn({
+    required BigInt contractId,
+    required BigInt timestamp,
+    required BigInt partiallyBilledAmount,
+    required BigInt overdraft,
+  }) {
+    return ContractPaymentOverdrawn(
+      contractId: contractId,
+      timestamp: timestamp,
+      partiallyBilledAmount: partiallyBilledAmount,
+      overdraft: overdraft,
+    );
+  }
+
+  RewardDistributed rewardDistributed({
+    required BigInt contractId,
+    required BigInt standardRewards,
+    required BigInt additionalRewards,
+  }) {
+    return RewardDistributed(
+      contractId: contractId,
+      standardRewards: standardRewards,
+      additionalRewards: additionalRewards,
+    );
+  }
 }
 
 class $EventCodec with _i1.Codec<Event> {
@@ -284,6 +321,14 @@ class $EventCodec with _i1.Codec<Event> {
         return BillingFrequencyChanged._decode(input);
       case 24:
         return NodeExtraFeeSet._decode(input);
+      case 25:
+        return RentWaived._decode(input);
+      case 26:
+        return ContractGracePeriodElapsed._decode(input);
+      case 27:
+        return ContractPaymentOverdrawn._decode(input);
+      case 28:
+        return RewardDistributed._decode(input);
       default:
         throw Exception('Event: Invalid variant index: "$index"');
     }
@@ -370,6 +415,18 @@ class $EventCodec with _i1.Codec<Event> {
       case NodeExtraFeeSet:
         (value as NodeExtraFeeSet).encodeTo(output);
         break;
+      case RentWaived:
+        (value as RentWaived).encodeTo(output);
+        break;
+      case ContractGracePeriodElapsed:
+        (value as ContractGracePeriodElapsed).encodeTo(output);
+        break;
+      case ContractPaymentOverdrawn:
+        (value as ContractPaymentOverdrawn).encodeTo(output);
+        break;
+      case RewardDistributed:
+        (value as RewardDistributed).encodeTo(output);
+        break;
       default:
         throw Exception(
             'Event: Unsupported "$value" of type "${value.runtimeType}"');
@@ -429,6 +486,14 @@ class $EventCodec with _i1.Codec<Event> {
         return (value as BillingFrequencyChanged)._sizeHint();
       case NodeExtraFeeSet:
         return (value as NodeExtraFeeSet)._sizeHint();
+      case RentWaived:
+        return (value as RentWaived)._sizeHint();
+      case ContractGracePeriodElapsed:
+        return (value as ContractGracePeriodElapsed)._sizeHint();
+      case ContractPaymentOverdrawn:
+        return (value as ContractPaymentOverdrawn)._sizeHint();
+      case RewardDistributed:
+        return (value as RewardDistributed)._sizeHint();
       default:
         throw Exception(
             'Event: Unsupported "$value" of type "${value.runtimeType}"');
@@ -1152,7 +1217,7 @@ class RentContractCanceled extends Event {
   int get hashCode => contractId.hashCode;
 }
 
-/// A Contract grace period is triggered
+/// A Contract grace period is triggered due to overdarfted
 class ContractGracePeriodStarted extends Event {
   const ContractGracePeriodStarted({
     required this.contractId,
@@ -1245,7 +1310,7 @@ class ContractGracePeriodStarted extends Event {
       );
 }
 
-/// A Contract grace period was ended
+/// A Contract grace period was ended due to overdarfted being settled
 class ContractGracePeriodEnded extends Event {
   const ContractGracePeriodEnded({
     required this.contractId,
@@ -1862,5 +1927,286 @@ class NodeExtraFeeSet extends Event {
   int get hashCode => Object.hash(
         nodeId,
         extraFee,
+      );
+}
+
+class RentWaived extends Event {
+  const RentWaived({required this.contractId});
+
+  factory RentWaived._decode(_i1.Input input) {
+    return RentWaived(contractId: _i1.U64Codec.codec.decode(input));
+  }
+
+  /// u64
+  final BigInt contractId;
+
+  @override
+  Map<String, Map<String, BigInt>> toJson() => {
+        'RentWaived': {'contractId': contractId}
+      };
+
+  int _sizeHint() {
+    int size = 1;
+    size = size + _i1.U64Codec.codec.sizeHint(contractId);
+    return size;
+  }
+
+  void encodeTo(_i1.Output output) {
+    _i1.U8Codec.codec.encodeTo(
+      25,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      contractId,
+      output,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(
+        this,
+        other,
+      ) ||
+      other is RentWaived && other.contractId == contractId;
+
+  @override
+  int get hashCode => contractId.hashCode;
+}
+
+class ContractGracePeriodElapsed extends Event {
+  const ContractGracePeriodElapsed({
+    required this.contractId,
+    required this.gracePeriod,
+  });
+
+  factory ContractGracePeriodElapsed._decode(_i1.Input input) {
+    return ContractGracePeriodElapsed(
+      contractId: _i1.U64Codec.codec.decode(input),
+      gracePeriod: _i1.U64Codec.codec.decode(input),
+    );
+  }
+
+  /// u64
+  final BigInt contractId;
+
+  /// u64
+  final BigInt gracePeriod;
+
+  @override
+  Map<String, Map<String, BigInt>> toJson() => {
+        'ContractGracePeriodElapsed': {
+          'contractId': contractId,
+          'gracePeriod': gracePeriod,
+        }
+      };
+
+  int _sizeHint() {
+    int size = 1;
+    size = size + _i1.U64Codec.codec.sizeHint(contractId);
+    size = size + _i1.U64Codec.codec.sizeHint(gracePeriod);
+    return size;
+  }
+
+  void encodeTo(_i1.Output output) {
+    _i1.U8Codec.codec.encodeTo(
+      26,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      contractId,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      gracePeriod,
+      output,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(
+        this,
+        other,
+      ) ||
+      other is ContractGracePeriodElapsed &&
+          other.contractId == contractId &&
+          other.gracePeriod == gracePeriod;
+
+  @override
+  int get hashCode => Object.hash(
+        contractId,
+        gracePeriod,
+      );
+}
+
+class ContractPaymentOverdrawn extends Event {
+  const ContractPaymentOverdrawn({
+    required this.contractId,
+    required this.timestamp,
+    required this.partiallyBilledAmount,
+    required this.overdraft,
+  });
+
+  factory ContractPaymentOverdrawn._decode(_i1.Input input) {
+    return ContractPaymentOverdrawn(
+      contractId: _i1.U64Codec.codec.decode(input),
+      timestamp: _i1.U64Codec.codec.decode(input),
+      partiallyBilledAmount: _i1.U128Codec.codec.decode(input),
+      overdraft: _i1.U128Codec.codec.decode(input),
+    );
+  }
+
+  /// u64
+  final BigInt contractId;
+
+  /// u64
+  final BigInt timestamp;
+
+  /// BalanceOf<T>
+  final BigInt partiallyBilledAmount;
+
+  /// BalanceOf<T>
+  final BigInt overdraft;
+
+  @override
+  Map<String, Map<String, BigInt>> toJson() => {
+        'ContractPaymentOverdrawn': {
+          'contractId': contractId,
+          'timestamp': timestamp,
+          'partiallyBilledAmount': partiallyBilledAmount,
+          'overdraft': overdraft,
+        }
+      };
+
+  int _sizeHint() {
+    int size = 1;
+    size = size + _i1.U64Codec.codec.sizeHint(contractId);
+    size = size + _i1.U64Codec.codec.sizeHint(timestamp);
+    size = size + _i1.U128Codec.codec.sizeHint(partiallyBilledAmount);
+    size = size + _i1.U128Codec.codec.sizeHint(overdraft);
+    return size;
+  }
+
+  void encodeTo(_i1.Output output) {
+    _i1.U8Codec.codec.encodeTo(
+      27,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      contractId,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      timestamp,
+      output,
+    );
+    _i1.U128Codec.codec.encodeTo(
+      partiallyBilledAmount,
+      output,
+    );
+    _i1.U128Codec.codec.encodeTo(
+      overdraft,
+      output,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(
+        this,
+        other,
+      ) ||
+      other is ContractPaymentOverdrawn &&
+          other.contractId == contractId &&
+          other.timestamp == timestamp &&
+          other.partiallyBilledAmount == partiallyBilledAmount &&
+          other.overdraft == overdraft;
+
+  @override
+  int get hashCode => Object.hash(
+        contractId,
+        timestamp,
+        partiallyBilledAmount,
+        overdraft,
+      );
+}
+
+class RewardDistributed extends Event {
+  const RewardDistributed({
+    required this.contractId,
+    required this.standardRewards,
+    required this.additionalRewards,
+  });
+
+  factory RewardDistributed._decode(_i1.Input input) {
+    return RewardDistributed(
+      contractId: _i1.U64Codec.codec.decode(input),
+      standardRewards: _i1.U128Codec.codec.decode(input),
+      additionalRewards: _i1.U128Codec.codec.decode(input),
+    );
+  }
+
+  /// u64
+  final BigInt contractId;
+
+  /// BalanceOf<T>
+  final BigInt standardRewards;
+
+  /// BalanceOf<T>
+  final BigInt additionalRewards;
+
+  @override
+  Map<String, Map<String, BigInt>> toJson() => {
+        'RewardDistributed': {
+          'contractId': contractId,
+          'standardRewards': standardRewards,
+          'additionalRewards': additionalRewards,
+        }
+      };
+
+  int _sizeHint() {
+    int size = 1;
+    size = size + _i1.U64Codec.codec.sizeHint(contractId);
+    size = size + _i1.U128Codec.codec.sizeHint(standardRewards);
+    size = size + _i1.U128Codec.codec.sizeHint(additionalRewards);
+    return size;
+  }
+
+  void encodeTo(_i1.Output output) {
+    _i1.U8Codec.codec.encodeTo(
+      28,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      contractId,
+      output,
+    );
+    _i1.U128Codec.codec.encodeTo(
+      standardRewards,
+      output,
+    );
+    _i1.U128Codec.codec.encodeTo(
+      additionalRewards,
+      output,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(
+        this,
+        other,
+      ) ||
+      other is RewardDistributed &&
+          other.contractId == contractId &&
+          other.standardRewards == standardRewards &&
+          other.additionalRewards == additionalRewards;
+
+  @override
+  int get hashCode => Object.hash(
+        contractId,
+        standardRewards,
+        additionalRewards,
       );
 }

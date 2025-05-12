@@ -1,14 +1,15 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
+import 'dart:typed_data' as _i8;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_collective/pallet/call.dart' as _i8;
+import '../types/pallet_collective/pallet/call.dart' as _i9;
 import '../types/pallet_collective/votes.dart' as _i5;
 import '../types/primitive_types/h256.dart' as _i2;
 import '../types/sp_core/crypto/account_id32.dart' as _i6;
-import '../types/sp_weights/weight_v2/weight.dart' as _i9;
+import '../types/sp_weights/weight_v2/weight.dart' as _i10;
 import '../types/tfchain_runtime/runtime_call.dart' as _i4;
 
 class Queries {
@@ -142,170 +143,127 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `proposals`.
+  _i8.Uint8List proposalsKey() {
+    final hashedKey = _proposals.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `proposalOf`.
+  _i8.Uint8List proposalOfKey(_i2.H256 key1) {
+    final hashedKey = _proposalOf.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `voting`.
+  _i8.Uint8List votingKey(_i2.H256 key1) {
+    final hashedKey = _voting.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `proposalCount`.
+  _i8.Uint8List proposalCountKey() {
+    final hashedKey = _proposalCount.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `members`.
+  _i8.Uint8List membersKey() {
+    final hashedKey = _members.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `prime`.
+  _i8.Uint8List primeKey() {
+    final hashedKey = _prime.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `proposalOf`.
+  _i8.Uint8List proposalOfMapPrefix() {
+    final hashedKey = _proposalOf.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `voting`.
+  _i8.Uint8List votingMapPrefix() {
+    final hashedKey = _voting.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Set the collective's membership.
-  ///
-  /// - `new_members`: The new member list. Be nice to the chain and provide it sorted.
-  /// - `prime`: The prime member whose vote sets the default.
-  /// - `old_count`: The upper bound for the previous number of members in storage. Used for
-  ///  weight estimation.
-  ///
-  /// The dispatch of this call must be `SetMembersOrigin`.
-  ///
-  /// NOTE: Does not enforce the expected `MaxMembers` limit on the amount of members, but
-  ///      the weight estimations rely on it to estimate dispatchable weight.
-  ///
-  /// # WARNING:
-  ///
-  /// The `pallet-collective` can also be managed by logic outside of the pallet through the
-  /// implementation of the trait [`ChangeMembers`].
-  /// Any call to `set_members` must be careful that the member set doesn't get out of sync
-  /// with other logic managing the member set.
-  ///
-  /// ## Complexity:
-  /// - `O(MP + N)` where:
-  ///  - `M` old-members-count (code- and governance-bounded)
-  ///  - `N` new-members-count (code- and governance-bounded)
-  ///  - `P` proposals-count (code-bounded)
-  _i4.RuntimeCall setMembers({
-    required newMembers,
-    prime,
-    required oldCount,
+  /// See [`Pallet::set_members`].
+  _i4.Council setMembers({
+    required List<_i6.AccountId32> newMembers,
+    _i6.AccountId32? prime,
+    required int oldCount,
   }) {
-    final _call = _i8.Call.values.setMembers(
+    return _i4.Council(_i9.SetMembers(
       newMembers: newMembers,
       prime: prime,
       oldCount: oldCount,
-    );
-    return _i4.RuntimeCall.values.council(_call);
+    ));
   }
 
-  /// Dispatch a proposal from a member using the `Member` origin.
-  ///
-  /// Origin must be a member of the collective.
-  ///
-  /// ## Complexity:
-  /// - `O(B + M + P)` where:
-  /// - `B` is `proposal` size in bytes (length-fee-bounded)
-  /// - `M` members-count (code-bounded)
-  /// - `P` complexity of dispatching `proposal`
-  _i4.RuntimeCall execute({
-    required proposal,
-    required lengthBound,
+  /// See [`Pallet::execute`].
+  _i4.Council execute({
+    required _i4.RuntimeCall proposal,
+    required BigInt lengthBound,
   }) {
-    final _call = _i8.Call.values.execute(
+    return _i4.Council(_i9.Execute(
       proposal: proposal,
       lengthBound: lengthBound,
-    );
-    return _i4.RuntimeCall.values.council(_call);
+    ));
   }
 
-  /// Add a new proposal to either be voted on or executed directly.
-  ///
-  /// Requires the sender to be member.
-  ///
-  /// `threshold` determines whether `proposal` is executed directly (`threshold < 2`)
-  /// or put up for voting.
-  ///
-  /// ## Complexity
-  /// - `O(B + M + P1)` or `O(B + M + P2)` where:
-  ///  - `B` is `proposal` size in bytes (length-fee-bounded)
-  ///  - `M` is members-count (code- and governance-bounded)
-  ///  - branching is influenced by `threshold` where:
-  ///    - `P1` is proposal execution complexity (`threshold < 2`)
-  ///    - `P2` is proposals-count (code-bounded) (`threshold >= 2`)
-  _i4.RuntimeCall propose({
-    required threshold,
-    required proposal,
-    required lengthBound,
+  /// See [`Pallet::propose`].
+  _i4.Council propose({
+    required BigInt threshold,
+    required _i4.RuntimeCall proposal,
+    required BigInt lengthBound,
   }) {
-    final _call = _i8.Call.values.propose(
+    return _i4.Council(_i9.Propose(
       threshold: threshold,
       proposal: proposal,
       lengthBound: lengthBound,
-    );
-    return _i4.RuntimeCall.values.council(_call);
+    ));
   }
 
-  /// Add an aye or nay vote for the sender to the given proposal.
-  ///
-  /// Requires the sender to be a member.
-  ///
-  /// Transaction fees will be waived if the member is voting on any particular proposal
-  /// for the first time and the call is successful. Subsequent vote changes will charge a
-  /// fee.
-  /// ## Complexity
-  /// - `O(M)` where `M` is members-count (code- and governance-bounded)
-  _i4.RuntimeCall vote({
-    required proposal,
-    required index,
-    required approve,
+  /// See [`Pallet::vote`].
+  _i4.Council vote({
+    required _i2.H256 proposal,
+    required BigInt index,
+    required bool approve,
   }) {
-    final _call = _i8.Call.values.vote(
+    return _i4.Council(_i9.Vote(
       proposal: proposal,
       index: index,
       approve: approve,
-    );
-    return _i4.RuntimeCall.values.council(_call);
+    ));
   }
 
-  /// Disapprove a proposal, close, and remove it from the system, regardless of its current
-  /// state.
-  ///
-  /// Must be called by the Root origin.
-  ///
-  /// Parameters:
-  /// * `proposal_hash`: The hash of the proposal that should be disapproved.
-  ///
-  /// ## Complexity
-  /// O(P) where P is the number of max proposals
-  _i4.RuntimeCall disapproveProposal({required proposalHash}) {
-    final _call =
-        _i8.Call.values.disapproveProposal(proposalHash: proposalHash);
-    return _i4.RuntimeCall.values.council(_call);
+  /// See [`Pallet::disapprove_proposal`].
+  _i4.Council disapproveProposal({required _i2.H256 proposalHash}) {
+    return _i4.Council(_i9.DisapproveProposal(proposalHash: proposalHash));
   }
 
-  /// Close a vote that is either approved, disapproved or whose voting period has ended.
-  ///
-  /// May be called by any signed account in order to finish voting and close the proposal.
-  ///
-  /// If called before the end of the voting period it will only close the vote if it is
-  /// has enough votes to be approved or disapproved.
-  ///
-  /// If called after the end of the voting period abstentions are counted as rejections
-  /// unless there is a prime member set and the prime member cast an approval.
-  ///
-  /// If the close operation completes successfully with disapproval, the transaction fee will
-  /// be waived. Otherwise execution of the approved operation will be charged to the caller.
-  ///
-  /// + `proposal_weight_bound`: The maximum amount of weight consumed by executing the closed
-  /// proposal.
-  /// + `length_bound`: The upper bound for the length of the proposal in storage. Checked via
-  /// `storage::read` so it is `size_of::<u32>() == 4` larger than the pure length.
-  ///
-  /// ## Complexity
-  /// - `O(B + M + P1 + P2)` where:
-  ///  - `B` is `proposal` size in bytes (length-fee-bounded)
-  ///  - `M` is members-count (code- and governance-bounded)
-  ///  - `P1` is the complexity of `proposal` preimage.
-  ///  - `P2` is proposal-count (code-bounded)
-  _i4.RuntimeCall close({
-    required proposalHash,
-    required index,
-    required proposalWeightBound,
-    required lengthBound,
+  /// See [`Pallet::close`].
+  _i4.Council close({
+    required _i2.H256 proposalHash,
+    required BigInt index,
+    required _i10.Weight proposalWeightBound,
+    required BigInt lengthBound,
   }) {
-    final _call = _i8.Call.values.close(
+    return _i4.Council(_i9.Close(
       proposalHash: proposalHash,
       index: index,
       proposalWeightBound: proposalWeightBound,
       lengthBound: lengthBound,
-    );
-    return _i4.RuntimeCall.values.council(_call);
+    ));
   }
 }
 
@@ -313,7 +271,7 @@ class Constants {
   Constants();
 
   /// The maximum weight of a dispatch call that can be proposed and executed.
-  final _i9.Weight maxProposalWeight = _i9.Weight(
+  final _i10.Weight maxProposalWeight = _i10.Weight(
     refTime: BigInt.from(1000000000000),
     proofSize: BigInt.parse(
       '9223372036854775807',

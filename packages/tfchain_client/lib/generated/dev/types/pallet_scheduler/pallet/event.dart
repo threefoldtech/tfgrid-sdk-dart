@@ -187,7 +187,7 @@ class Scheduled extends Event {
     );
   }
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int when;
 
   /// u32
@@ -252,7 +252,7 @@ class Canceled extends Event {
     );
   }
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int when;
 
   /// u32
@@ -325,7 +325,7 @@ class Dispatched extends Event {
     );
   }
 
-  /// TaskAddress<T::BlockNumber>
+  /// TaskAddress<BlockNumberFor<T>>
   final _i3.Tuple2<int, int> task;
 
   /// Option<TaskName>
@@ -424,7 +424,7 @@ class CallUnavailable extends Event {
     );
   }
 
-  /// TaskAddress<T::BlockNumber>
+  /// TaskAddress<BlockNumberFor<T>>
   final _i3.Tuple2<int, int> task;
 
   /// Option<TaskName>
@@ -503,7 +503,7 @@ class PeriodicFailed extends Event {
     );
   }
 
-  /// TaskAddress<T::BlockNumber>
+  /// TaskAddress<BlockNumberFor<T>>
   final _i3.Tuple2<int, int> task;
 
   /// Option<TaskName>
@@ -582,7 +582,7 @@ class PermanentlyOverweight extends Event {
     );
   }
 
-  /// TaskAddress<T::BlockNumber>
+  /// TaskAddress<BlockNumberFor<T>>
   final _i3.Tuple2<int, int> task;
 
   /// Option<TaskName>

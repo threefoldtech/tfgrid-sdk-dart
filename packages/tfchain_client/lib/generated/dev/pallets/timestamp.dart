@@ -1,11 +1,12 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
+import 'dart:typed_data' as _i4;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i2;
 
-import '../types/pallet_timestamp/pallet/call.dart' as _i5;
-import '../types/tfchain_runtime/runtime_call.dart' as _i4;
+import '../types/pallet_timestamp/pallet/call.dart' as _i6;
+import '../types/tfchain_runtime/runtime_call.dart' as _i5;
 
 class Queries {
   const Queries(this.__api);
@@ -49,29 +50,26 @@ class Queries {
     }
     return false; /* Default */
   }
+
+  /// Returns the storage key for `now`.
+  _i4.Uint8List nowKey() {
+    final hashedKey = _now.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `didUpdate`.
+  _i4.Uint8List didUpdateKey() {
+    final hashedKey = _didUpdate.hashedKey();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Set the current time.
-  ///
-  /// This call should be invoked exactly once per block. It will panic at the finalization
-  /// phase, if this call hasn't been invoked by that time.
-  ///
-  /// The timestamp should be greater than the previous one by the amount specified by
-  /// `MinimumPeriod`.
-  ///
-  /// The dispatch origin for this call must be `Inherent`.
-  ///
-  /// ## Complexity
-  /// - `O(1)` (Note that implementations of `OnTimestampSet` must also be `O(1)`)
-  /// - 1 storage read and 1 storage mutation (codec `O(1)`). (because of `DidUpdate::take` in
-  ///  `on_finalize`)
-  /// - 1 event handler `on_timestamp_set`. Must be `O(1)`.
-  _i4.RuntimeCall set({required now}) {
-    final _call = _i5.Call.values.set(now: now);
-    return _i4.RuntimeCall.values.timestamp(_call);
+  /// See [`Pallet::set`].
+  _i5.Timestamp set({required BigInt now}) {
+    return _i5.Timestamp(_i6.Set(now: now));
   }
 }
 

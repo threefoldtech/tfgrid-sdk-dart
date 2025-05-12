@@ -12,7 +12,8 @@ enum TokenError {
   frozen('Frozen', 5),
   unsupported('Unsupported', 6),
   cannotCreateHold('CannotCreateHold', 7),
-  notExpendable('NotExpendable', 8);
+  notExpendable('NotExpendable', 8),
+  blocked('Blocked', 9);
 
   const TokenError(
     this.variantName,
@@ -60,6 +61,8 @@ class $TokenErrorCodec with _i1.Codec<TokenError> {
         return TokenError.cannotCreateHold;
       case 8:
         return TokenError.notExpendable;
+      case 9:
+        return TokenError.blocked;
       default:
         throw Exception('TokenError: Invalid variant index: "$index"');
     }

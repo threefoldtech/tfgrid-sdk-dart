@@ -17,7 +17,7 @@ import '../types/location_input.dart' as _i7;
 import '../types/policy.dart' as _i12;
 import '../types/storage_version.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -750,6 +750,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
+/// See [`Pallet::set_storage_version`].
 class SetStorageVersion extends Call {
   const SetStorageVersion({required this.version});
 
@@ -794,6 +795,7 @@ class SetStorageVersion extends Call {
   int get hashCode => version.hashCode;
 }
 
+/// See [`Pallet::create_farm`].
 class CreateFarm extends Call {
   const CreateFarm({
     required this.name,
@@ -867,6 +869,7 @@ class CreateFarm extends Call {
       );
 }
 
+/// See [`Pallet::update_farm`].
 class UpdateFarm extends Call {
   const UpdateFarm({
     required this.farmId,
@@ -936,6 +939,7 @@ class UpdateFarm extends Call {
       );
 }
 
+/// See [`Pallet::add_stellar_payout_v2address`].
 class AddStellarPayoutV2address extends Call {
   const AddStellarPayoutV2address({
     required this.farmId,
@@ -1005,6 +1009,7 @@ class AddStellarPayoutV2address extends Call {
       );
 }
 
+/// See [`Pallet::set_farm_certification`].
 class SetFarmCertification extends Call {
   const SetFarmCertification({
     required this.farmId,
@@ -1071,6 +1076,7 @@ class SetFarmCertification extends Call {
       );
 }
 
+/// See [`Pallet::add_farm_ip`].
 class AddFarmIp extends Call {
   const AddFarmIp({
     required this.farmId,
@@ -1156,6 +1162,7 @@ class AddFarmIp extends Call {
       );
 }
 
+/// See [`Pallet::remove_farm_ip`].
 class RemoveFarmIp extends Call {
   const RemoveFarmIp({
     required this.farmId,
@@ -1225,6 +1232,7 @@ class RemoveFarmIp extends Call {
       );
 }
 
+/// See [`Pallet::create_node`].
 class CreateNode extends Call {
   const CreateNode({
     required this.farmId,
@@ -1365,6 +1373,7 @@ class CreateNode extends Call {
       );
 }
 
+/// See [`Pallet::update_node`].
 class UpdateNode extends Call {
   const UpdateNode({
     required this.nodeId,
@@ -1518,6 +1527,7 @@ class UpdateNode extends Call {
       );
 }
 
+/// See [`Pallet::set_node_certification`].
 class SetNodeCertification extends Call {
   const SetNodeCertification({
     required this.nodeId,
@@ -1584,6 +1594,7 @@ class SetNodeCertification extends Call {
       );
 }
 
+/// See [`Pallet::report_uptime`].
 class ReportUptime extends Call {
   const ReportUptime({required this.uptime});
 
@@ -1628,6 +1639,7 @@ class ReportUptime extends Call {
   int get hashCode => uptime.hashCode;
 }
 
+/// See [`Pallet::add_node_public_config`].
 class AddNodePublicConfig extends Call {
   const AddNodePublicConfig({
     required this.farmId,
@@ -1711,6 +1723,7 @@ class AddNodePublicConfig extends Call {
       );
 }
 
+/// See [`Pallet::delete_node`].
 class DeleteNode extends Call {
   const DeleteNode({required this.nodeId});
 
@@ -1755,6 +1768,7 @@ class DeleteNode extends Call {
   int get hashCode => nodeId.hashCode;
 }
 
+/// See [`Pallet::create_entity`].
 class CreateEntity extends Call {
   const CreateEntity({
     required this.target,
@@ -1875,6 +1889,7 @@ class CreateEntity extends Call {
       );
 }
 
+/// See [`Pallet::update_entity`].
 class UpdateEntity extends Call {
   const UpdateEntity({
     required this.name,
@@ -1963,6 +1978,7 @@ class UpdateEntity extends Call {
       );
 }
 
+/// See [`Pallet::delete_entity`].
 class DeleteEntity extends Call {
   const DeleteEntity();
 
@@ -1983,6 +1999,7 @@ class DeleteEntity extends Call {
   int get hashCode => runtimeType.hashCode;
 }
 
+/// See [`Pallet::create_twin`].
 class CreateTwin extends Call {
   const CreateTwin({
     this.relay,
@@ -2053,6 +2070,7 @@ class CreateTwin extends Call {
       );
 }
 
+/// See [`Pallet::update_twin`].
 class UpdateTwin extends Call {
   const UpdateTwin({
     this.relay,
@@ -2123,6 +2141,7 @@ class UpdateTwin extends Call {
       );
 }
 
+/// See [`Pallet::add_twin_entity`].
 class AddTwinEntity extends Call {
   const AddTwinEntity({
     required this.twinId,
@@ -2205,6 +2224,7 @@ class AddTwinEntity extends Call {
       );
 }
 
+/// See [`Pallet::delete_twin_entity`].
 class DeleteTwinEntity extends Call {
   const DeleteTwinEntity({
     required this.twinId,
@@ -2271,6 +2291,7 @@ class DeleteTwinEntity extends Call {
       );
 }
 
+/// See [`Pallet::create_pricing_policy`].
 class CreatePricingPolicy extends Call {
   const CreatePricingPolicy({
     required this.name,
@@ -2450,6 +2471,7 @@ class CreatePricingPolicy extends Call {
       );
 }
 
+/// See [`Pallet::update_pricing_policy`].
 class UpdatePricingPolicy extends Call {
   const UpdatePricingPolicy({
     required this.pricingPolicyId,
@@ -2642,6 +2664,7 @@ class UpdatePricingPolicy extends Call {
       );
 }
 
+/// See [`Pallet::create_farming_policy`].
 class CreateFarmingPolicy extends Call {
   const CreateFarmingPolicy({
     required this.name,
@@ -2691,7 +2714,7 @@ class CreateFarmingPolicy extends Call {
   /// u16
   final int minimalUptime;
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int policyEnd;
 
   /// bool
@@ -2828,6 +2851,7 @@ class CreateFarmingPolicy extends Call {
       );
 }
 
+/// See [`Pallet::user_accept_tc`].
 class UserAcceptTc extends Call {
   const UserAcceptTc({
     required this.documentLink,
@@ -2900,6 +2924,7 @@ class UserAcceptTc extends Call {
       );
 }
 
+/// See [`Pallet::delete_node_farm`].
 class DeleteNodeFarm extends Call {
   const DeleteNodeFarm({required this.nodeId});
 
@@ -2944,6 +2969,7 @@ class DeleteNodeFarm extends Call {
   int get hashCode => nodeId.hashCode;
 }
 
+/// See [`Pallet::set_farm_dedicated`].
 class SetFarmDedicated extends Call {
   const SetFarmDedicated({
     required this.farmId,
@@ -3010,6 +3036,7 @@ class SetFarmDedicated extends Call {
       );
 }
 
+/// See [`Pallet::force_reset_farm_ip`].
 class ForceResetFarmIp extends Call {
   const ForceResetFarmIp({
     required this.farmId,
@@ -3079,6 +3106,7 @@ class ForceResetFarmIp extends Call {
       );
 }
 
+/// See [`Pallet::set_connection_price`].
 class SetConnectionPrice extends Call {
   const SetConnectionPrice({required this.price});
 
@@ -3123,6 +3151,7 @@ class SetConnectionPrice extends Call {
   int get hashCode => price.hashCode;
 }
 
+/// See [`Pallet::add_node_certifier`].
 class AddNodeCertifier extends Call {
   const AddNodeCertifier({required this.certifier});
 
@@ -3172,6 +3201,7 @@ class AddNodeCertifier extends Call {
   int get hashCode => certifier.hashCode;
 }
 
+/// See [`Pallet::remove_node_certifier`].
 class RemoveNodeCertifier extends Call {
   const RemoveNodeCertifier({required this.certifier});
 
@@ -3221,6 +3251,7 @@ class RemoveNodeCertifier extends Call {
   int get hashCode => certifier.hashCode;
 }
 
+/// See [`Pallet::update_farming_policy`].
 class UpdateFarmingPolicy extends Call {
   const UpdateFarmingPolicy({
     required this.farmingPolicyId,
@@ -3273,7 +3304,7 @@ class UpdateFarmingPolicy extends Call {
   /// u16
   final int minimalUptime;
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int policyEnd;
 
   /// bool
@@ -3407,6 +3438,7 @@ class UpdateFarmingPolicy extends Call {
       );
 }
 
+/// See [`Pallet::attach_policy_to_farm`].
 class AttachPolicyToFarm extends Call {
   const AttachPolicyToFarm({
     required this.farmId,
@@ -3480,6 +3512,7 @@ class AttachPolicyToFarm extends Call {
       );
 }
 
+/// See [`Pallet::set_zos_version`].
 class SetZosVersion extends Call {
   const SetZosVersion({required this.zosVersion});
 
@@ -3528,6 +3561,7 @@ class SetZosVersion extends Call {
   int get hashCode => zosVersion.hashCode;
 }
 
+/// See [`Pallet::change_power_state`].
 class ChangePowerState extends Call {
   const ChangePowerState({required this.powerState});
 
@@ -3572,6 +3606,7 @@ class ChangePowerState extends Call {
   int get hashCode => powerState.hashCode;
 }
 
+/// See [`Pallet::change_power_target`].
 class ChangePowerTarget extends Call {
   const ChangePowerTarget({
     required this.nodeId,
@@ -3638,6 +3673,7 @@ class ChangePowerTarget extends Call {
       );
 }
 
+/// See [`Pallet::bond_twin_account`].
 class BondTwinAccount extends Call {
   const BondTwinAccount({required this.twinId});
 
@@ -3682,6 +3718,7 @@ class BondTwinAccount extends Call {
   int get hashCode => twinId.hashCode;
 }
 
+/// See [`Pallet::report_uptime_v2`].
 class ReportUptimeV2 extends Call {
   const ReportUptimeV2({
     required this.uptime,

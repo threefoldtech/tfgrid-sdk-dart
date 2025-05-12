@@ -1,22 +1,28 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i11;
+import 'dart:async' as _i12;
+import 'dart:typed_data' as _i14;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
 import '../types/pallet_smart_contract/grid_contract/name_contract_name.dart'
     as _i7;
-import '../types/pallet_smart_contract/pallet/call.dart' as _i14;
+import '../types/pallet_smart_contract/pallet/call.dart' as _i16;
 import '../types/pallet_smart_contract/types/contract.dart' as _i2;
 import '../types/pallet_smart_contract/types/contract_billing_information.dart'
     as _i4;
 import '../types/pallet_smart_contract/types/contract_lock.dart' as _i6;
+import '../types/pallet_smart_contract/types/contract_payment_state.dart'
+    as _i11;
 import '../types/pallet_smart_contract/types/contract_resources.dart' as _i5;
+import '../types/pallet_smart_contract/types/nru_consumption.dart' as _i17;
+import '../types/pallet_smart_contract/types/provider.dart' as _i18;
 import '../types/pallet_smart_contract/types/service_contract.dart' as _i10;
 import '../types/pallet_smart_contract/types/solution_provider.dart' as _i8;
 import '../types/pallet_smart_contract/types/storage_version.dart' as _i9;
-import '../types/tfchain_runtime/runtime_call.dart' as _i13;
-import '../types/tfchain_support/resources/resources.dart' as _i12;
+import '../types/sp_core/crypto/account_id32.dart' as _i19;
+import '../types/tfchain_runtime/runtime_call.dart' as _i15;
+import '../types/tfchain_support/resources/resources.dart' as _i13;
 
 class Queries {
   const Queries(this.__api);
@@ -58,16 +64,16 @@ class Queries {
     hasher2: _i1.StorageHasher.blake2b128Concat(_i3.U8ArrayCodec(32)),
   );
 
-  final _i1.StorageMap<int, List<int>> _activeNodeContracts =
-      const _i1.StorageMap<int, List<int>>(
+  final _i1.StorageMap<int, List<BigInt>> _activeNodeContracts =
+      const _i1.StorageMap<int, List<BigInt>>(
     prefix: 'SmartContractModule',
     storage: 'ActiveNodeContracts',
     valueCodec: _i3.U64SequenceCodec.codec,
     hasher: _i1.StorageHasher.blake2b128Concat(_i3.U32Codec.codec),
   );
 
-  final _i1.StorageMap<BigInt, List<int>> _contractsToBillAt =
-      const _i1.StorageMap<BigInt, List<int>>(
+  final _i1.StorageMap<BigInt, List<BigInt>> _contractsToBillAt =
+      const _i1.StorageMap<BigInt, List<BigInt>>(
     prefix: 'SmartContractModule',
     storage: 'ContractsToBillAt',
     valueCodec: _i3.U64SequenceCodec.codec,
@@ -164,7 +170,16 @@ class Queries {
     hasher: _i1.StorageHasher.blake2b128Concat(_i3.U32Codec.codec),
   );
 
-  _i11.Future<_i2.Contract?> contracts(
+  final _i1.StorageMap<BigInt, _i11.ContractPaymentState>
+      _contractPaymentState =
+      const _i1.StorageMap<BigInt, _i11.ContractPaymentState>(
+    prefix: 'SmartContractModule',
+    storage: 'ContractPaymentState',
+    valueCodec: _i11.ContractPaymentState.codec,
+    hasher: _i1.StorageHasher.blake2b128Concat(_i3.U64Codec.codec),
+  );
+
+  _i12.Future<_i2.Contract?> contracts(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -179,7 +194,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i11.Future<_i4.ContractBillingInformation> contractBillingInformationByID(
+  _i12.Future<_i4.ContractBillingInformation> contractBillingInformationByID(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -198,7 +213,7 @@ class Queries {
     ); /* Default */
   }
 
-  _i11.Future<_i5.ContractResources> nodeContractResources(
+  _i12.Future<_i5.ContractResources> nodeContractResources(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -212,7 +227,7 @@ class Queries {
     }
     return _i5.ContractResources(
       contractId: BigInt.zero,
-      used: _i12.Resources(
+      used: _i13.Resources(
         hru: BigInt.zero,
         sru: BigInt.zero,
         cru: BigInt.zero,
@@ -221,7 +236,7 @@ class Queries {
     ); /* Default */
   }
 
-  _i11.Future<BigInt> contractIDByNodeIDAndHash(
+  _i12.Future<BigInt> contractIDByNodeIDAndHash(
     int key1,
     List<int> key2, {
     _i1.BlockHash? at,
@@ -240,7 +255,7 @@ class Queries {
     return BigInt.zero; /* Default */
   }
 
-  _i11.Future<List<int>> activeNodeContracts(
+  _i12.Future<List<BigInt>> activeNodeContracts(
     int key1, {
     _i1.BlockHash? at,
   }) async {
@@ -252,14 +267,14 @@ class Queries {
     if (bytes != null) {
       return _activeNodeContracts.decodeValue(bytes);
     }
-    return List<int>.filled(
+    return List<BigInt>.filled(
       0,
-      0,
+      BigInt.zero,
       growable: true,
     ); /* Default */
   }
 
-  _i11.Future<List<int>> contractsToBillAt(
+  _i12.Future<List<BigInt>> contractsToBillAt(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -271,14 +286,14 @@ class Queries {
     if (bytes != null) {
       return _contractsToBillAt.decodeValue(bytes);
     }
-    return List<int>.filled(
+    return List<BigInt>.filled(
       0,
-      0,
+      BigInt.zero,
       growable: true,
     ); /* Default */
   }
 
-  _i11.Future<_i6.ContractLock> contractLock(
+  _i12.Future<_i6.ContractLock> contractLock(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -298,7 +313,7 @@ class Queries {
     ); /* Default */
   }
 
-  _i11.Future<BigInt> contractIDByNameRegistration(
+  _i12.Future<BigInt> contractIDByNameRegistration(
     _i7.NameContractName key1, {
     _i1.BlockHash? at,
   }) async {
@@ -313,7 +328,7 @@ class Queries {
     return BigInt.zero; /* Default */
   }
 
-  _i11.Future<BigInt?> activeRentContractForNode(
+  _i12.Future<BigInt?> activeRentContractForNode(
     int key1, {
     _i1.BlockHash? at,
   }) async {
@@ -328,7 +343,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i11.Future<BigInt> contractID({_i1.BlockHash? at}) async {
+  _i12.Future<BigInt> contractID({_i1.BlockHash? at}) async {
     final hashedKey = _contractID.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -340,7 +355,7 @@ class Queries {
     return BigInt.zero; /* Default */
   }
 
-  _i11.Future<_i8.SolutionProvider?> solutionProviders(
+  _i12.Future<_i8.SolutionProvider?> solutionProviders(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -355,7 +370,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i11.Future<BigInt> solutionProviderID({_i1.BlockHash? at}) async {
+  _i12.Future<BigInt> solutionProviderID({_i1.BlockHash? at}) async {
     final hashedKey = _solutionProviderID.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -367,7 +382,7 @@ class Queries {
     return BigInt.zero; /* Default */
   }
 
-  _i11.Future<_i9.StorageVersion> palletVersion({_i1.BlockHash? at}) async {
+  _i12.Future<_i9.StorageVersion> palletVersion({_i1.BlockHash? at}) async {
     final hashedKey = _palletVersion.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -379,7 +394,7 @@ class Queries {
     return _i9.StorageVersion.v10; /* Default */
   }
 
-  _i11.Future<BigInt> billingFrequency({_i1.BlockHash? at}) async {
+  _i12.Future<BigInt> billingFrequency({_i1.BlockHash? at}) async {
     final hashedKey = _billingFrequency.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -391,7 +406,7 @@ class Queries {
     return BigInt.from(600); /* Default */
   }
 
-  _i11.Future<_i10.ServiceContract?> serviceContracts(
+  _i12.Future<_i10.ServiceContract?> serviceContracts(
     BigInt key1, {
     _i1.BlockHash? at,
   }) async {
@@ -406,7 +421,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i11.Future<BigInt> serviceContractID({_i1.BlockHash? at}) async {
+  _i12.Future<BigInt> serviceContractID({_i1.BlockHash? at}) async {
     final hashedKey = _serviceContractID.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -419,7 +434,7 @@ class Queries {
   }
 
   /// The current migration's stage, if any.
-  _i11.Future<int?> currentMigrationStage({_i1.BlockHash? at}) async {
+  _i12.Future<int?> currentMigrationStage({_i1.BlockHash? at}) async {
     final hashedKey = _currentMigrationStage.hashedKey();
     final bytes = await __api.getStorage(
       hashedKey,
@@ -431,7 +446,7 @@ class Queries {
     return null; /* Nullable */
   }
 
-  _i11.Future<BigInt> dedicatedNodesExtraFee(
+  _i12.Future<BigInt> dedicatedNodesExtraFee(
     int key1, {
     _i1.BlockHash? at,
   }) async {
@@ -445,193 +460,421 @@ class Queries {
     }
     return BigInt.zero; /* Default */
   }
+
+  _i12.Future<_i11.ContractPaymentState?> contractPaymentState(
+    BigInt key1, {
+    _i1.BlockHash? at,
+  }) async {
+    final hashedKey = _contractPaymentState.hashedKeyFor(key1);
+    final bytes = await __api.getStorage(
+      hashedKey,
+      at: at,
+    );
+    if (bytes != null) {
+      return _contractPaymentState.decodeValue(bytes);
+    }
+    return null; /* Nullable */
+  }
+
+  /// Returns the storage key for `contracts`.
+  _i14.Uint8List contractsKey(BigInt key1) {
+    final hashedKey = _contracts.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `contractBillingInformationByID`.
+  _i14.Uint8List contractBillingInformationByIDKey(BigInt key1) {
+    final hashedKey = _contractBillingInformationByID.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `nodeContractResources`.
+  _i14.Uint8List nodeContractResourcesKey(BigInt key1) {
+    final hashedKey = _nodeContractResources.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `contractIDByNodeIDAndHash`.
+  _i14.Uint8List contractIDByNodeIDAndHashKey(
+    int key1,
+    List<int> key2,
+  ) {
+    final hashedKey = _contractIDByNodeIDAndHash.hashedKeyFor(
+      key1,
+      key2,
+    );
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `activeNodeContracts`.
+  _i14.Uint8List activeNodeContractsKey(int key1) {
+    final hashedKey = _activeNodeContracts.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `contractsToBillAt`.
+  _i14.Uint8List contractsToBillAtKey(BigInt key1) {
+    final hashedKey = _contractsToBillAt.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `contractLock`.
+  _i14.Uint8List contractLockKey(BigInt key1) {
+    final hashedKey = _contractLock.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `contractIDByNameRegistration`.
+  _i14.Uint8List contractIDByNameRegistrationKey(_i7.NameContractName key1) {
+    final hashedKey = _contractIDByNameRegistration.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `activeRentContractForNode`.
+  _i14.Uint8List activeRentContractForNodeKey(int key1) {
+    final hashedKey = _activeRentContractForNode.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `contractID`.
+  _i14.Uint8List contractIDKey() {
+    final hashedKey = _contractID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `solutionProviders`.
+  _i14.Uint8List solutionProvidersKey(BigInt key1) {
+    final hashedKey = _solutionProviders.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `solutionProviderID`.
+  _i14.Uint8List solutionProviderIDKey() {
+    final hashedKey = _solutionProviderID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `palletVersion`.
+  _i14.Uint8List palletVersionKey() {
+    final hashedKey = _palletVersion.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `billingFrequency`.
+  _i14.Uint8List billingFrequencyKey() {
+    final hashedKey = _billingFrequency.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `serviceContracts`.
+  _i14.Uint8List serviceContractsKey(BigInt key1) {
+    final hashedKey = _serviceContracts.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `serviceContractID`.
+  _i14.Uint8List serviceContractIDKey() {
+    final hashedKey = _serviceContractID.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `currentMigrationStage`.
+  _i14.Uint8List currentMigrationStageKey() {
+    final hashedKey = _currentMigrationStage.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `dedicatedNodesExtraFee`.
+  _i14.Uint8List dedicatedNodesExtraFeeKey(int key1) {
+    final hashedKey = _dedicatedNodesExtraFee.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `contractPaymentState`.
+  _i14.Uint8List contractPaymentStateKey(BigInt key1) {
+    final hashedKey = _contractPaymentState.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `contracts`.
+  _i14.Uint8List contractsMapPrefix() {
+    final hashedKey = _contracts.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `contractBillingInformationByID`.
+  _i14.Uint8List contractBillingInformationByIDMapPrefix() {
+    final hashedKey = _contractBillingInformationByID.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `nodeContractResources`.
+  _i14.Uint8List nodeContractResourcesMapPrefix() {
+    final hashedKey = _nodeContractResources.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `contractIDByNodeIDAndHash`.
+  _i14.Uint8List contractIDByNodeIDAndHashMapPrefix(int key1) {
+    final hashedKey = _contractIDByNodeIDAndHash.mapPrefix(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `activeNodeContracts`.
+  _i14.Uint8List activeNodeContractsMapPrefix() {
+    final hashedKey = _activeNodeContracts.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `contractsToBillAt`.
+  _i14.Uint8List contractsToBillAtMapPrefix() {
+    final hashedKey = _contractsToBillAt.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `contractLock`.
+  _i14.Uint8List contractLockMapPrefix() {
+    final hashedKey = _contractLock.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `contractIDByNameRegistration`.
+  _i14.Uint8List contractIDByNameRegistrationMapPrefix() {
+    final hashedKey = _contractIDByNameRegistration.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `activeRentContractForNode`.
+  _i14.Uint8List activeRentContractForNodeMapPrefix() {
+    final hashedKey = _activeRentContractForNode.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `solutionProviders`.
+  _i14.Uint8List solutionProvidersMapPrefix() {
+    final hashedKey = _solutionProviders.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `serviceContracts`.
+  _i14.Uint8List serviceContractsMapPrefix() {
+    final hashedKey = _serviceContracts.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `dedicatedNodesExtraFee`.
+  _i14.Uint8List dedicatedNodesExtraFeeMapPrefix() {
+    final hashedKey = _dedicatedNodesExtraFee.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `contractPaymentState`.
+  _i14.Uint8List contractPaymentStateMapPrefix() {
+    final hashedKey = _contractPaymentState.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  _i13.RuntimeCall createNodeContract({
-    required nodeId,
-    required deploymentHash,
-    required deploymentData,
-    required publicIps,
-    solutionProviderId,
+  /// See [`Pallet::create_node_contract`].
+  _i15.SmartContractModule createNodeContract({
+    required int nodeId,
+    required List<int> deploymentHash,
+    required List<int> deploymentData,
+    required int publicIps,
+    BigInt? solutionProviderId,
   }) {
-    final _call = _i14.Call.values.createNodeContract(
+    return _i15.SmartContractModule(_i16.CreateNodeContract(
       nodeId: nodeId,
       deploymentHash: deploymentHash,
       deploymentData: deploymentData,
       publicIps: publicIps,
       solutionProviderId: solutionProviderId,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall updateNodeContract({
-    required contractId,
-    required deploymentHash,
-    required deploymentData,
+  /// See [`Pallet::update_node_contract`].
+  _i15.SmartContractModule updateNodeContract({
+    required BigInt contractId,
+    required List<int> deploymentHash,
+    required List<int> deploymentData,
   }) {
-    final _call = _i14.Call.values.updateNodeContract(
+    return _i15.SmartContractModule(_i16.UpdateNodeContract(
       contractId: contractId,
       deploymentHash: deploymentHash,
       deploymentData: deploymentData,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall cancelContract({required contractId}) {
-    final _call = _i14.Call.values.cancelContract(contractId: contractId);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::cancel_contract`].
+  _i15.SmartContractModule cancelContract({required BigInt contractId}) {
+    return _i15.SmartContractModule(
+        _i16.CancelContract(contractId: contractId));
   }
 
-  _i13.RuntimeCall createNameContract({required name}) {
-    final _call = _i14.Call.values.createNameContract(name: name);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::create_name_contract`].
+  _i15.SmartContractModule createNameContract({required List<int> name}) {
+    return _i15.SmartContractModule(_i16.CreateNameContract(name: name));
   }
 
-  _i13.RuntimeCall addNruReports({required reports}) {
-    final _call = _i14.Call.values.addNruReports(reports: reports);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::add_nru_reports`].
+  _i15.SmartContractModule addNruReports(
+      {required List<_i17.NruConsumption> reports}) {
+    return _i15.SmartContractModule(_i16.AddNruReports(reports: reports));
   }
 
-  _i13.RuntimeCall reportContractResources({required contractResources}) {
-    final _call = _i14.Call.values
-        .reportContractResources(contractResources: contractResources);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::report_contract_resources`].
+  _i15.SmartContractModule reportContractResources(
+      {required List<_i5.ContractResources> contractResources}) {
+    return _i15.SmartContractModule(
+        _i16.ReportContractResources(contractResources: contractResources));
   }
 
-  _i13.RuntimeCall createRentContract({
-    required nodeId,
-    solutionProviderId,
+  /// See [`Pallet::create_rent_contract`].
+  _i15.SmartContractModule createRentContract({
+    required int nodeId,
+    BigInt? solutionProviderId,
   }) {
-    final _call = _i14.Call.values.createRentContract(
+    return _i15.SmartContractModule(_i16.CreateRentContract(
       nodeId: nodeId,
       solutionProviderId: solutionProviderId,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall createSolutionProvider({
-    required description,
-    required link,
-    required providers,
+  /// See [`Pallet::create_solution_provider`].
+  _i15.SmartContractModule createSolutionProvider({
+    required List<int> description,
+    required List<int> link,
+    required List<_i18.Provider> providers,
   }) {
-    final _call = _i14.Call.values.createSolutionProvider(
+    return _i15.SmartContractModule(_i16.CreateSolutionProvider(
       description: description,
       link: link,
       providers: providers,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall approveSolutionProvider({
-    required solutionProviderId,
-    required approve,
+  /// See [`Pallet::approve_solution_provider`].
+  _i15.SmartContractModule approveSolutionProvider({
+    required BigInt solutionProviderId,
+    required bool approve,
   }) {
-    final _call = _i14.Call.values.approveSolutionProvider(
+    return _i15.SmartContractModule(_i16.ApproveSolutionProvider(
       solutionProviderId: solutionProviderId,
       approve: approve,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall billContractForBlock({required contractId}) {
-    final _call = _i14.Call.values.billContractForBlock(contractId: contractId);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::bill_contract_for_block`].
+  _i15.SmartContractModule billContractForBlock({required BigInt contractId}) {
+    return _i15.SmartContractModule(
+        _i16.BillContractForBlock(contractId: contractId));
   }
 
-  _i13.RuntimeCall serviceContractCreate({
-    required serviceAccount,
-    required consumerAccount,
+  /// See [`Pallet::service_contract_create`].
+  _i15.SmartContractModule serviceContractCreate({
+    required _i19.AccountId32 serviceAccount,
+    required _i19.AccountId32 consumerAccount,
   }) {
-    final _call = _i14.Call.values.serviceContractCreate(
+    return _i15.SmartContractModule(_i16.ServiceContractCreate(
       serviceAccount: serviceAccount,
       consumerAccount: consumerAccount,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall serviceContractSetMetadata({
-    required serviceContractId,
-    required metadata,
+  /// See [`Pallet::service_contract_set_metadata`].
+  _i15.SmartContractModule serviceContractSetMetadata({
+    required BigInt serviceContractId,
+    required List<int> metadata,
   }) {
-    final _call = _i14.Call.values.serviceContractSetMetadata(
+    return _i15.SmartContractModule(_i16.ServiceContractSetMetadata(
       serviceContractId: serviceContractId,
       metadata: metadata,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall serviceContractSetFees({
-    required serviceContractId,
-    required baseFee,
-    required variableFee,
+  /// See [`Pallet::service_contract_set_fees`].
+  _i15.SmartContractModule serviceContractSetFees({
+    required BigInt serviceContractId,
+    required BigInt baseFee,
+    required BigInt variableFee,
   }) {
-    final _call = _i14.Call.values.serviceContractSetFees(
+    return _i15.SmartContractModule(_i16.ServiceContractSetFees(
       serviceContractId: serviceContractId,
       baseFee: baseFee,
       variableFee: variableFee,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall serviceContractApprove({required serviceContractId}) {
-    final _call = _i14.Call.values
-        .serviceContractApprove(serviceContractId: serviceContractId);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::service_contract_approve`].
+  _i15.SmartContractModule serviceContractApprove(
+      {required BigInt serviceContractId}) {
+    return _i15.SmartContractModule(
+        _i16.ServiceContractApprove(serviceContractId: serviceContractId));
   }
 
-  _i13.RuntimeCall serviceContractReject({required serviceContractId}) {
-    final _call = _i14.Call.values
-        .serviceContractReject(serviceContractId: serviceContractId);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::service_contract_reject`].
+  _i15.SmartContractModule serviceContractReject(
+      {required BigInt serviceContractId}) {
+    return _i15.SmartContractModule(
+        _i16.ServiceContractReject(serviceContractId: serviceContractId));
   }
 
-  _i13.RuntimeCall serviceContractCancel({required serviceContractId}) {
-    final _call = _i14.Call.values
-        .serviceContractCancel(serviceContractId: serviceContractId);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::service_contract_cancel`].
+  _i15.SmartContractModule serviceContractCancel(
+      {required BigInt serviceContractId}) {
+    return _i15.SmartContractModule(
+        _i16.ServiceContractCancel(serviceContractId: serviceContractId));
   }
 
-  _i13.RuntimeCall serviceContractBill({
-    required serviceContractId,
-    required variableAmount,
-    required metadata,
+  /// See [`Pallet::service_contract_bill`].
+  _i15.SmartContractModule serviceContractBill({
+    required BigInt serviceContractId,
+    required BigInt variableAmount,
+    required List<int> metadata,
   }) {
-    final _call = _i14.Call.values.serviceContractBill(
+    return _i15.SmartContractModule(_i16.ServiceContractBill(
       serviceContractId: serviceContractId,
       variableAmount: variableAmount,
       metadata: metadata,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall changeBillingFrequency({required frequency}) {
-    final _call = _i14.Call.values.changeBillingFrequency(frequency: frequency);
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+  /// See [`Pallet::change_billing_frequency`].
+  _i15.SmartContractModule changeBillingFrequency({required BigInt frequency}) {
+    return _i15.SmartContractModule(
+        _i16.ChangeBillingFrequency(frequency: frequency));
   }
 
-  _i13.RuntimeCall attachSolutionProviderId({
-    required contractId,
-    required solutionProviderId,
+  /// See [`Pallet::attach_solution_provider_id`].
+  _i15.SmartContractModule attachSolutionProviderId({
+    required BigInt contractId,
+    required BigInt solutionProviderId,
   }) {
-    final _call = _i14.Call.values.attachSolutionProviderId(
+    return _i15.SmartContractModule(_i16.AttachSolutionProviderId(
       contractId: contractId,
       solutionProviderId: solutionProviderId,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
   }
 
-  _i13.RuntimeCall setDedicatedNodeExtraFee({
-    required nodeId,
-    required extraFee,
+  /// See [`Pallet::set_dedicated_node_extra_fee`].
+  _i15.SmartContractModule setDedicatedNodeExtraFee({
+    required int nodeId,
+    required BigInt extraFee,
   }) {
-    final _call = _i14.Call.values.setDedicatedNodeExtraFee(
+    return _i15.SmartContractModule(_i16.SetDedicatedNodeExtraFee(
       nodeId: nodeId,
       extraFee: extraFee,
-    );
-    return _i13.RuntimeCall.values.smartContractModule(_call);
+    ));
+  }
+
+  /// See [`Pallet::cancel_contract_collective`].
+  _i15.SmartContractModule cancelContractCollective(
+      {required BigInt contractId}) {
+    return _i15.SmartContractModule(
+        _i16.CancelContractCollective(contractId: contractId));
   }
 }
 

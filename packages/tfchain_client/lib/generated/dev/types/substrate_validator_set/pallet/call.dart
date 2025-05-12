@@ -6,7 +6,7 @@ import 'package:quiver/collection.dart' as _i4;
 
 import '../../sp_core/crypto/account_id32.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -102,13 +102,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
-/// Add a new validator.
-///
-/// New validator's session keys should be set in Session pallet before
-/// calling this.
-///
-/// The origin can be configured using the `AddRemoveOrigin` type in the
-/// host runtime. Can also be set to sudo/root.
+/// See [`Pallet::add_validator`].
 class AddValidator extends Call {
   const AddValidator({required this.validatorId});
 
@@ -157,10 +151,7 @@ class AddValidator extends Call {
   int get hashCode => validatorId.hashCode;
 }
 
-/// Remove a validator.
-///
-/// The origin can be configured using the `AddRemoveOrigin` type in the
-/// host runtime. Can also be set to sudo/root.
+/// See [`Pallet::remove_validator`].
 class RemoveValidator extends Call {
   const RemoveValidator({required this.validatorId});
 
@@ -210,9 +201,7 @@ class RemoveValidator extends Call {
   int get hashCode => validatorId.hashCode;
 }
 
-/// Add an approved validator again when it comes back online.
-///
-/// For this call, the dispatch origin must be the validator itself.
+/// See [`Pallet::add_validator_again`].
 class AddValidatorAgain extends Call {
   const AddValidatorAgain({required this.validatorId});
 

@@ -86,6 +86,10 @@ class $DispatchError {
   Unavailable unavailable() {
     return Unavailable();
   }
+
+  RootNotAllowed rootNotAllowed() {
+    return RootNotAllowed();
+  }
 }
 
 class $DispatchErrorCodec with _i1.Codec<DispatchError> {
@@ -121,6 +125,8 @@ class $DispatchErrorCodec with _i1.Codec<DispatchError> {
         return const Corruption();
       case 12:
         return const Unavailable();
+      case 13:
+        return const RootNotAllowed();
       default:
         throw Exception('DispatchError: Invalid variant index: "$index"');
     }
@@ -171,6 +177,9 @@ class $DispatchErrorCodec with _i1.Codec<DispatchError> {
       case Unavailable:
         (value as Unavailable).encodeTo(output);
         break;
+      case RootNotAllowed:
+        (value as RootNotAllowed).encodeTo(output);
+        break;
       default:
         throw Exception(
             'DispatchError: Unsupported "$value" of type "${value.runtimeType}"');
@@ -205,6 +214,8 @@ class $DispatchErrorCodec with _i1.Codec<DispatchError> {
       case Corruption:
         return 1;
       case Unavailable:
+        return 1;
+      case RootNotAllowed:
         return 1;
       default:
         throw Exception(
@@ -556,6 +567,26 @@ class Unavailable extends DispatchError {
 
   @override
   bool operator ==(Object other) => other is Unavailable;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+
+class RootNotAllowed extends DispatchError {
+  const RootNotAllowed();
+
+  @override
+  Map<String, dynamic> toJson() => {'RootNotAllowed': null};
+
+  void encodeTo(_i1.Output output) {
+    _i1.U8Codec.codec.encodeTo(
+      13,
+      output,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) => other is RootNotAllowed;
 
   @override
   int get hashCode => runtimeType.hashCode;

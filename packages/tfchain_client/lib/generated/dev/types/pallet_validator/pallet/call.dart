@@ -7,7 +7,7 @@ import 'package:quiver/collection.dart' as _i5;
 import '../../sp_core/crypto/account_id32.dart' as _i3;
 import '../../sp_runtime/multiaddress/multi_address.dart' as _i4;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -152,14 +152,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
-/// Create a request to become a validator
-/// Validator account (signer): the account of the validator (this account will be added to the council)
-/// Validator node account: the account that will validate on consensus layer
-/// Stash account: the "bank" account of the validator (where rewards should be sent to) the stash should be bonded to a validator
-/// Description: why someone wants to become a validator
-/// Tf Connect ID: the threefold connect ID of the person who wants to become a validator
-/// Info: some public info about the validator (website link, blog link, ..)
-/// A user can only have 1 validator request at a time
+/// See [`Pallet::create_validator_request`].
 class CreateValidatorRequest extends Call {
   const CreateValidatorRequest({
     required this.validatorNodeAccount,
@@ -280,10 +273,7 @@ class CreateValidatorRequest extends Call {
       );
 }
 
-/// Start participating in consensus
-/// Will activate the Validator node account on consensus level
-/// A user can only call this if his request to be a validator is approved by the council
-/// Should be called when his node is synced and ready to start validating
+/// See [`Pallet::activate_validator_node`].
 class ActivateValidatorNode extends Call {
   const ActivateValidatorNode();
 
@@ -304,10 +294,7 @@ class ActivateValidatorNode extends Call {
   int get hashCode => runtimeType.hashCode;
 }
 
-/// Change validator node account
-/// In case the Validator wishes to change his validator node account
-/// he can call this method with the new node validator account
-/// this new account will be added as a new consensus validator if he is validating already
+/// See [`Pallet::change_validator_node_account`].
 class ChangeValidatorNodeAccount extends Call {
   const ChangeValidatorNodeAccount({required this.newNodeValidatorAccount});
 
@@ -360,8 +347,7 @@ class ChangeValidatorNodeAccount extends Call {
   int get hashCode => newNodeValidatorAccount.hashCode;
 }
 
-/// Bond an account to a validator account
-/// Just proves that the stash account is indeed under control of the validator account
+/// See [`Pallet::bond`].
 class Bond extends Call {
   const Bond({required this.validator});
 
@@ -406,9 +392,7 @@ class Bond extends Call {
   int get hashCode => validator.hashCode;
 }
 
-/// Approve validator (council)
-/// Approves a validator to be added as a council member and
-/// to participate in consensus
+/// See [`Pallet::approve_validator`].
 class ApproveValidator extends Call {
   const ApproveValidator({required this.validatorAccount});
 
@@ -454,12 +438,7 @@ class ApproveValidator extends Call {
   int get hashCode => validatorAccount.hashCode;
 }
 
-/// Remove validator
-/// Removes a validator from:
-/// 1. Council
-/// 2. Storage
-/// 3. Consensus
-/// Can only be called by the user or the council
+/// See [`Pallet::remove_validator`].
 class RemoveValidator extends Call {
   const RemoveValidator({required this.validatorAccount});
 

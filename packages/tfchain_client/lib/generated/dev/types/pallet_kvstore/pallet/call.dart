@@ -4,7 +4,7 @@ import 'dart:typed_data' as _i2;
 import 'package:polkadart/scale_codec.dart' as _i1;
 import 'package:quiver/collection.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -95,7 +95,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
-/// Set the value stored at a particular key
+/// See [`Pallet::set`].
 class Set extends Call {
   const Set({
     required this.key,
@@ -168,8 +168,7 @@ class Set extends Call {
       );
 }
 
-/// Read the value stored at a particular key, while removing it from the map.
-/// Also emit the read value in an event
+/// See [`Pallet::delete`].
 class Delete extends Call {
   const Delete({required this.key});
 

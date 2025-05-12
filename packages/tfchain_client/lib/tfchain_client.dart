@@ -8,10 +8,10 @@ import 'package:polkadart/polkadart.dart'
         AuthorApi,
         ExtrinsicPayload,
         Hasher,
-        Provider,
         SignatureType,
         SigningPayload,
-        StateApi;
+        StateApi,
+        WsProvider;
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:signer/signer.dart' as Signer;

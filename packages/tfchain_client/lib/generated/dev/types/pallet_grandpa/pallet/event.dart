@@ -7,10 +7,7 @@ import 'package:quiver/collection.dart' as _i5;
 import '../../sp_consensus_grandpa/app/public.dart' as _i4;
 import '../../tuples.dart' as _i3;
 
-///
-///			The [event](https://docs.substrate.io/main-docs/build/events-errors/) emitted
-///			by this pallet.
-///
+/// The `Event` enum of this pallet
 abstract class Event {
   const Event();
 

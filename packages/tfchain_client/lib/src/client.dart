@@ -3,7 +3,7 @@ part of '../tfchain_client.dart';
 class QueryClient {
   static Map<String, dynamic> connections = {};
   final String url;
-  late Provider? provider;
+  late WsProvider? provider;
   late polkadot.Dev api;
   QueryTwins? _twins;
   QueryContracts? _contracts;
@@ -76,24 +76,79 @@ class QueryClient {
 
   Future<void> connect() async {
     _checkInputs();
+    WsProvider? obtainedProvider;
+    polkadot.Dev? obtainedApi;
     if (connections.containsKey(url)) {
-      provider = connections[url]["provider"];
-      api = connections[url]["api"];
-      if (!provider!.isConnected()) {
-        try {
-          await api.connect();
-        } catch (e) {
-          if (e.toString() != "Exception: Already connected") {
+      final connectionEntry = connections[url];
+      obtainedProvider = connectionEntry?["provider"] as WsProvider?;
+      obtainedApi = connectionEntry?["api"] as polkadot.Dev?;
+      if (obtainedProvider == null || obtainedApi == null) {
+        connections.remove(url);
+        obtainedProvider = null;
+        obtainedApi = null;
+      } else {
+        if (!obtainedProvider.isConnected()) {
+          try {
+            await obtainedProvider.connect();
+          } catch (e, stackTrace) {
+            print(
+                '[ERROR] Failed to connect existing provider from map for $url: $e\nStack: $stackTrace');
+            connections.remove(url);
+            try {
+              await obtainedProvider.disconnect();
+            } catch (_) {}
+            obtainedProvider = null;
+            obtainedApi = null;
             throw e;
           }
         }
       }
-    } else {
-      provider = Provider.fromUri(Uri.parse(url));
-      api = polkadot.Dev(provider!);
-      final map = {"provider": provider, "api": api};
+    }
+
+    if (obtainedProvider == null) {
+      print('[INFO] Creating new provider for $url...');
+      final uri = Uri.parse(url);
+      obtainedProvider = WsProvider(uri, autoConnect: false);
+      try {
+        await obtainedProvider.connect();
+        print('[INFO] New provider for $url connected.');
+      } catch (e, stackTrace) {
+        print(
+            '[ERROR] New provider connection failed for $url: $e\n$stackTrace');
+        try {
+          await obtainedProvider.disconnect();
+        } catch (_) {}
+        obtainedProvider = null;
+        throw e;
+      }
+
+      obtainedApi = polkadot.Dev(obtainedProvider);
+
+      final map = {"provider": obtainedProvider, "api": obtainedApi};
       connections[url] = map;
     }
+
+    try {
+      await obtainedProvider.isReady();
+      print('[INFO] Provider for $url is fully ready.');
+    } catch (e, stackTrace) {
+      print(
+          '[ERROR] Provider readiness check failed for $url: $e\n$stackTrace');
+      if (connections.containsKey(url)) {
+        final failedConnection = connections.remove(url);
+        final providerToDispose = failedConnection?["provider"] as WsProvider?;
+        if (providerToDispose != null) {
+          try {
+            await providerToDispose.disconnect();
+          } catch (_) {}
+        }
+      }
+      obtainedProvider = null;
+      obtainedApi = null;
+      throw e;
+    }
+    provider = obtainedProvider;
+    api = obtainedApi!;
   }
 
   Future<void> disconnect() async {

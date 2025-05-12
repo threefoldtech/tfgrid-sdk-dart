@@ -35,7 +35,7 @@ void main() {
 
     test('Test Get Active Contracts by wrong node Id', () async {
       try {
-        List<int> contracts =
+        List<BigInt> contracts =
             await setupManager.client.contracts.getActiveContracts(nodeId: -21);
         expect(contracts, isNotEmpty);
       } catch (error) {

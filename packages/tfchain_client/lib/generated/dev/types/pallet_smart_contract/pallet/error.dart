@@ -3,10 +3,7 @@ import 'dart:typed_data' as _i2;
 
 import 'package:polkadart/scale_codec.dart' as _i1;
 
-///
-///			Custom [dispatch errors](https://docs.substrate.io/main-docs/build/events-errors/)
-///			of this pallet.
-///
+/// The `Error` enum of this pallet.
 enum Error {
   twinNotExists('TwinNotExists', 0),
   nodeNotExists('NodeNotExists', 1),
@@ -65,7 +62,9 @@ enum Error {
   wrongAuthority('WrongAuthority', 49),
   unauthorizedToChangeSolutionProviderId(
       'UnauthorizedToChangeSolutionProviderId', 50),
-  unauthorizedToSetExtraFee('UnauthorizedToSetExtraFee', 51);
+  unauthorizedToSetExtraFee('UnauthorizedToSetExtraFee', 51),
+  rewardDistributionError('RewardDistributionError', 52),
+  contractPaymentStateNotExists('ContractPaymentStateNotExists', 53);
 
   const Error(
     this.variantName,
@@ -199,6 +198,10 @@ class $ErrorCodec with _i1.Codec<Error> {
         return Error.unauthorizedToChangeSolutionProviderId;
       case 51:
         return Error.unauthorizedToSetExtraFee;
+      case 52:
+        return Error.rewardDistributionError;
+      case 53:
+        return Error.contractPaymentStateNotExists;
       default:
         throw Exception('Error: Invalid variant index: "$index"');
     }

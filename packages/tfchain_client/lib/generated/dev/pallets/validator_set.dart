@@ -1,12 +1,13 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:typed_data' as _i5;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
 import '../types/sp_core/crypto/account_id32.dart' as _i2;
-import '../types/substrate_validator_set/pallet/call.dart' as _i6;
-import '../types/tfchain_runtime/runtime_call.dart' as _i5;
+import '../types/substrate_validator_set/pallet/call.dart' as _i7;
+import '../types/tfchain_runtime/runtime_call.dart' as _i6;
 
 class Queries {
   const Queries(this.__api);
@@ -71,37 +72,41 @@ class Queries {
     }
     return []; /* Default */
   }
+
+  /// Returns the storage key for `validators`.
+  _i5.Uint8List validatorsKey() {
+    final hashedKey = _validators.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `approvedValidators`.
+  _i5.Uint8List approvedValidatorsKey() {
+    final hashedKey = _approvedValidators.hashedKey();
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `offlineValidators`.
+  _i5.Uint8List offlineValidatorsKey() {
+    final hashedKey = _offlineValidators.hashedKey();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Add a new validator.
-  ///
-  /// New validator's session keys should be set in Session pallet before
-  /// calling this.
-  ///
-  /// The origin can be configured using the `AddRemoveOrigin` type in the
-  /// host runtime. Can also be set to sudo/root.
-  _i5.RuntimeCall addValidator({required validatorId}) {
-    final _call = _i6.Call.values.addValidator(validatorId: validatorId);
-    return _i5.RuntimeCall.values.validatorSet(_call);
+  /// See [`Pallet::add_validator`].
+  _i6.ValidatorSet addValidator({required _i2.AccountId32 validatorId}) {
+    return _i6.ValidatorSet(_i7.AddValidator(validatorId: validatorId));
   }
 
-  /// Remove a validator.
-  ///
-  /// The origin can be configured using the `AddRemoveOrigin` type in the
-  /// host runtime. Can also be set to sudo/root.
-  _i5.RuntimeCall removeValidator({required validatorId}) {
-    final _call = _i6.Call.values.removeValidator(validatorId: validatorId);
-    return _i5.RuntimeCall.values.validatorSet(_call);
+  /// See [`Pallet::remove_validator`].
+  _i6.ValidatorSet removeValidator({required _i2.AccountId32 validatorId}) {
+    return _i6.ValidatorSet(_i7.RemoveValidator(validatorId: validatorId));
   }
 
-  /// Add an approved validator again when it comes back online.
-  ///
-  /// For this call, the dispatch origin must be the validator itself.
-  _i5.RuntimeCall addValidatorAgain({required validatorId}) {
-    final _call = _i6.Call.values.addValidatorAgain(validatorId: validatorId);
-    return _i5.RuntimeCall.values.validatorSet(_call);
+  /// See [`Pallet::add_validator_again`].
+  _i6.ValidatorSet addValidatorAgain({required _i2.AccountId32 validatorId}) {
+    return _i6.ValidatorSet(_i7.AddValidatorAgain(validatorId: validatorId));
   }
 }

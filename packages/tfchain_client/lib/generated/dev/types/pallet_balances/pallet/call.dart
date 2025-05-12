@@ -7,7 +7,7 @@ import 'package:quiver/collection.dart' as _i5;
 import '../../sp_core/crypto/account_id32.dart' as _i4;
 import '../../sp_runtime/multiaddress/multi_address.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -221,13 +221,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
-/// Transfer some liquid free balance to another account.
-///
-/// `transfer_allow_death` will set the `FreeBalance` of the sender and receiver.
-/// If the sender's account is below the existential deposit as a result
-/// of the transfer, the account will be reaped.
-///
-/// The dispatch origin for this call must be `Signed` by the transactor.
+/// See [`Pallet::transfer_allow_death`].
 class TransferAllowDeath extends Call {
   const TransferAllowDeath({
     required this.dest,
@@ -292,12 +286,7 @@ class TransferAllowDeath extends Call {
       );
 }
 
-/// Set the regular balance of a given account; it also takes a reserved balance but this
-/// must be the same as the account's current reserved balance.
-///
-/// The dispatch origin for this call is `root`.
-///
-/// WARNING: This call is DEPRECATED! Use `force_set_balance` instead.
+/// See [`Pallet::set_balance_deprecated`].
 class SetBalanceDeprecated extends Call {
   const SetBalanceDeprecated({
     required this.who,
@@ -377,8 +366,7 @@ class SetBalanceDeprecated extends Call {
       );
 }
 
-/// Exactly as `transfer_allow_death`, except the origin must be root and the source account
-/// may be specified.
+/// See [`Pallet::force_transfer`].
 class ForceTransfer extends Call {
   const ForceTransfer({
     required this.source,
@@ -458,12 +446,7 @@ class ForceTransfer extends Call {
       );
 }
 
-/// Same as the [`transfer_allow_death`] call, but with a check that the transfer will not
-/// kill the origin account.
-///
-/// 99% of the time you want [`transfer_allow_death`] instead.
-///
-/// [`transfer_allow_death`]: struct.Pallet.html#method.transfer
+/// See [`Pallet::transfer_keep_alive`].
 class TransferKeepAlive extends Call {
   const TransferKeepAlive({
     required this.dest,
@@ -528,21 +511,7 @@ class TransferKeepAlive extends Call {
       );
 }
 
-/// Transfer the entire transferable balance from the caller account.
-///
-/// NOTE: This function only attempts to transfer _transferable_ balances. This means that
-/// any locked, reserved, or existential deposits (when `keep_alive` is `true`), will not be
-/// transferred by this function. To ensure that this function results in a killed account,
-/// you might need to prepare the account by removing any reference counters, storage
-/// deposits, etc...
-///
-/// The dispatch origin of this call must be Signed.
-///
-/// - `dest`: The recipient of the transfer.
-/// - `keep_alive`: A boolean to determine if the `transfer_all` operation should send all
-///  of the funds the account has, causing the sender account to be killed (false), or
-///  transfer everything except at least the existential deposit, which will guarantee to
-///  keep the sender account alive (true).
+/// See [`Pallet::transfer_all`].
 class TransferAll extends Call {
   const TransferAll({
     required this.dest,
@@ -609,9 +578,7 @@ class TransferAll extends Call {
       );
 }
 
-/// Unreserve some balance from a user by force.
-///
-/// Can only be called by ROOT.
+/// See [`Pallet::force_unreserve`].
 class ForceUnreserve extends Call {
   const ForceUnreserve({
     required this.who,
@@ -676,14 +643,7 @@ class ForceUnreserve extends Call {
       );
 }
 
-/// Upgrade a specified account.
-///
-/// - `origin`: Must be `Signed`.
-/// - `who`: The account to be upgraded.
-///
-/// This will waive the transaction fee if at least all but 10% of the accounts needed to
-/// be upgraded. (We let some not have to be upgraded just in order to allow for the
-/// possibililty of churn).
+/// See [`Pallet::upgrade_accounts`].
 class UpgradeAccounts extends Call {
   const UpgradeAccounts({required this.who});
 
@@ -736,9 +696,7 @@ class UpgradeAccounts extends Call {
   int get hashCode => who.hashCode;
 }
 
-/// Alias for `transfer_allow_death`, provided only for name-wise compatibility.
-///
-/// WARNING: DEPRECATED! Will be released in approximately 3 months.
+/// See [`Pallet::transfer`].
 class Transfer extends Call {
   const Transfer({
     required this.dest,
@@ -803,9 +761,7 @@ class Transfer extends Call {
       );
 }
 
-/// Set the regular balance of a given account.
-///
-/// The dispatch origin for this call is `root`.
+/// See [`Pallet::force_set_balance`].
 class ForceSetBalance extends Call {
   const ForceSetBalance({
     required this.who,

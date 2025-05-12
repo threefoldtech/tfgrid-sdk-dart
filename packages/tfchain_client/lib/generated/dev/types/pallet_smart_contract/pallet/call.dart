@@ -9,7 +9,7 @@ import '../types/contract_resources.dart' as _i4;
 import '../types/nru_consumption.dart' as _i3;
 import '../types/provider.dart' as _i5;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -200,6 +200,11 @@ class $Call {
       extraFee: extraFee,
     );
   }
+
+  CancelContractCollective cancelContractCollective(
+      {required BigInt contractId}) {
+    return CancelContractCollective(contractId: contractId);
+  }
 }
 
 class $CallCodec with _i1.Codec<Call> {
@@ -249,6 +254,8 @@ class $CallCodec with _i1.Codec<Call> {
         return AttachSolutionProviderId._decode(input);
       case 20:
         return SetDedicatedNodeExtraFee._decode(input);
+      case 21:
+        return CancelContractCollective._decode(input);
       default:
         throw Exception('Call: Invalid variant index: "$index"');
     }
@@ -320,6 +327,9 @@ class $CallCodec with _i1.Codec<Call> {
       case SetDedicatedNodeExtraFee:
         (value as SetDedicatedNodeExtraFee).encodeTo(output);
         break;
+      case CancelContractCollective:
+        (value as CancelContractCollective).encodeTo(output);
+        break;
       default:
         throw Exception(
             'Call: Unsupported "$value" of type "${value.runtimeType}"');
@@ -369,6 +379,8 @@ class $CallCodec with _i1.Codec<Call> {
         return (value as AttachSolutionProviderId)._sizeHint();
       case SetDedicatedNodeExtraFee:
         return (value as SetDedicatedNodeExtraFee)._sizeHint();
+      case CancelContractCollective:
+        return (value as CancelContractCollective)._sizeHint();
       default:
         throw Exception(
             'Call: Unsupported "$value" of type "${value.runtimeType}"');
@@ -376,6 +388,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
+/// See [`Pallet::create_node_contract`].
 class CreateNodeContract extends Call {
   const CreateNodeContract({
     required this.nodeId,
@@ -490,6 +503,7 @@ class CreateNodeContract extends Call {
       );
 }
 
+/// See [`Pallet::update_node_contract`].
 class UpdateNodeContract extends Call {
   const UpdateNodeContract({
     required this.contractId,
@@ -575,6 +589,7 @@ class UpdateNodeContract extends Call {
       );
 }
 
+/// See [`Pallet::cancel_contract`].
 class CancelContract extends Call {
   const CancelContract({required this.contractId});
 
@@ -619,6 +634,7 @@ class CancelContract extends Call {
   int get hashCode => contractId.hashCode;
 }
 
+/// See [`Pallet::create_name_contract`].
 class CreateNameContract extends Call {
   const CreateNameContract({required this.name});
 
@@ -667,6 +683,7 @@ class CreateNameContract extends Call {
   int get hashCode => name.hashCode;
 }
 
+/// See [`Pallet::add_nru_reports`].
 class AddNruReports extends Call {
   const AddNruReports({required this.reports});
 
@@ -723,6 +740,7 @@ class AddNruReports extends Call {
   int get hashCode => reports.hashCode;
 }
 
+/// See [`Pallet::report_contract_resources`].
 class ReportContractResources extends Call {
   const ReportContractResources({required this.contractResources});
 
@@ -781,6 +799,7 @@ class ReportContractResources extends Call {
   int get hashCode => contractResources.hashCode;
 }
 
+/// See [`Pallet::create_rent_contract`].
 class CreateRentContract extends Call {
   const CreateRentContract({
     required this.nodeId,
@@ -850,6 +869,7 @@ class CreateRentContract extends Call {
       );
 }
 
+/// See [`Pallet::create_solution_provider`].
 class CreateSolutionProvider extends Call {
   const CreateSolutionProvider({
     required this.description,
@@ -941,6 +961,7 @@ class CreateSolutionProvider extends Call {
       );
 }
 
+/// See [`Pallet::approve_solution_provider`].
 class ApproveSolutionProvider extends Call {
   const ApproveSolutionProvider({
     required this.solutionProviderId,
@@ -1007,6 +1028,7 @@ class ApproveSolutionProvider extends Call {
       );
 }
 
+/// See [`Pallet::bill_contract_for_block`].
 class BillContractForBlock extends Call {
   const BillContractForBlock({required this.contractId});
 
@@ -1051,6 +1073,7 @@ class BillContractForBlock extends Call {
   int get hashCode => contractId.hashCode;
 }
 
+/// See [`Pallet::service_contract_create`].
 class ServiceContractCreate extends Call {
   const ServiceContractCreate({
     required this.serviceAccount,
@@ -1123,6 +1146,7 @@ class ServiceContractCreate extends Call {
       );
 }
 
+/// See [`Pallet::service_contract_set_metadata`].
 class ServiceContractSetMetadata extends Call {
   const ServiceContractSetMetadata({
     required this.serviceContractId,
@@ -1192,6 +1216,7 @@ class ServiceContractSetMetadata extends Call {
       );
 }
 
+/// See [`Pallet::service_contract_set_fees`].
 class ServiceContractSetFees extends Call {
   const ServiceContractSetFees({
     required this.serviceContractId,
@@ -1271,6 +1296,7 @@ class ServiceContractSetFees extends Call {
       );
 }
 
+/// See [`Pallet::service_contract_approve`].
 class ServiceContractApprove extends Call {
   const ServiceContractApprove({required this.serviceContractId});
 
@@ -1317,6 +1343,7 @@ class ServiceContractApprove extends Call {
   int get hashCode => serviceContractId.hashCode;
 }
 
+/// See [`Pallet::service_contract_reject`].
 class ServiceContractReject extends Call {
   const ServiceContractReject({required this.serviceContractId});
 
@@ -1363,6 +1390,7 @@ class ServiceContractReject extends Call {
   int get hashCode => serviceContractId.hashCode;
 }
 
+/// See [`Pallet::service_contract_cancel`].
 class ServiceContractCancel extends Call {
   const ServiceContractCancel({required this.serviceContractId});
 
@@ -1409,6 +1437,7 @@ class ServiceContractCancel extends Call {
   int get hashCode => serviceContractId.hashCode;
 }
 
+/// See [`Pallet::service_contract_bill`].
 class ServiceContractBill extends Call {
   const ServiceContractBill({
     required this.serviceContractId,
@@ -1491,6 +1520,7 @@ class ServiceContractBill extends Call {
       );
 }
 
+/// See [`Pallet::change_billing_frequency`].
 class ChangeBillingFrequency extends Call {
   const ChangeBillingFrequency({required this.frequency});
 
@@ -1535,6 +1565,7 @@ class ChangeBillingFrequency extends Call {
   int get hashCode => frequency.hashCode;
 }
 
+/// See [`Pallet::attach_solution_provider_id`].
 class AttachSolutionProviderId extends Call {
   const AttachSolutionProviderId({
     required this.contractId,
@@ -1601,6 +1632,7 @@ class AttachSolutionProviderId extends Call {
       );
 }
 
+/// See [`Pallet::set_dedicated_node_extra_fee`].
 class SetDedicatedNodeExtraFee extends Call {
   const SetDedicatedNodeExtraFee({
     required this.nodeId,
@@ -1665,4 +1697,50 @@ class SetDedicatedNodeExtraFee extends Call {
         nodeId,
         extraFee,
       );
+}
+
+/// See [`Pallet::cancel_contract_collective`].
+class CancelContractCollective extends Call {
+  const CancelContractCollective({required this.contractId});
+
+  factory CancelContractCollective._decode(_i1.Input input) {
+    return CancelContractCollective(
+        contractId: _i1.U64Codec.codec.decode(input));
+  }
+
+  /// u64
+  final BigInt contractId;
+
+  @override
+  Map<String, Map<String, BigInt>> toJson() => {
+        'cancel_contract_collective': {'contractId': contractId}
+      };
+
+  int _sizeHint() {
+    int size = 1;
+    size = size + _i1.U64Codec.codec.sizeHint(contractId);
+    return size;
+  }
+
+  void encodeTo(_i1.Output output) {
+    _i1.U8Codec.codec.encodeTo(
+      21,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      contractId,
+      output,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(
+        this,
+        other,
+      ) ||
+      other is CancelContractCollective && other.contractId == contractId;
+
+  @override
+  int get hashCode => contractId.hashCode;
 }

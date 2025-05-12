@@ -7,7 +7,7 @@ import 'package:quiver/collection.dart' as _i5;
 import '../../sp_core/crypto/account_id32.dart' as _i4;
 import '../../sp_runtime/multiaddress/multi_address.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -153,9 +153,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
-/// Add a member `who` to the set.
-///
-/// May only be called from `T::AddOrigin`.
+/// See [`Pallet::add_member`].
 class AddMember extends Call {
   const AddMember({required this.who});
 
@@ -200,9 +198,7 @@ class AddMember extends Call {
   int get hashCode => who.hashCode;
 }
 
-/// Remove a member `who` from the set.
-///
-/// May only be called from `T::RemoveOrigin`.
+/// See [`Pallet::remove_member`].
 class RemoveMember extends Call {
   const RemoveMember({required this.who});
 
@@ -247,11 +243,7 @@ class RemoveMember extends Call {
   int get hashCode => who.hashCode;
 }
 
-/// Swap out one member `remove` for another `add`.
-///
-/// May only be called from `T::SwapOrigin`.
-///
-/// Prime membership is *not* passed from `remove` to `add`, if extant.
+/// See [`Pallet::swap_member`].
 class SwapMember extends Call {
   const SwapMember({
     required this.remove,
@@ -316,10 +308,7 @@ class SwapMember extends Call {
       );
 }
 
-/// Change the membership to a new set, disregarding the existing membership. Be nice and
-/// pass `members` pre-sorted.
-///
-/// May only be called from `T::ResetOrigin`.
+/// See [`Pallet::reset_members`].
 class ResetMembers extends Call {
   const ResetMembers({required this.members});
 
@@ -375,11 +364,7 @@ class ResetMembers extends Call {
   int get hashCode => members.hashCode;
 }
 
-/// Swap out the sending member for some other key `new`.
-///
-/// May only be called from `Signed` origin of a current member.
-///
-/// Prime membership is passed from the origin account to `new`, if extant.
+/// See [`Pallet::change_key`].
 class ChangeKey extends Call {
   const ChangeKey({required this.new_});
 
@@ -424,9 +409,7 @@ class ChangeKey extends Call {
   int get hashCode => new_.hashCode;
 }
 
-/// Set the prime member. Must be a current member.
-///
-/// May only be called from `T::PrimeOrigin`.
+/// See [`Pallet::set_prime`].
 class SetPrime extends Call {
   const SetPrime({required this.who});
 
@@ -471,9 +454,7 @@ class SetPrime extends Call {
   int get hashCode => who.hashCode;
 }
 
-/// Remove the prime member if it exists.
-///
-/// May only be called from `T::PrimeOrigin`.
+/// See [`Pallet::clear_prime`].
 class ClearPrime extends Call {
   const ClearPrime();
 

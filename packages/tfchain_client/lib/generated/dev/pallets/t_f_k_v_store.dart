@@ -1,12 +1,13 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:typed_data' as _i5;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 import 'package:polkadart/scale_codec.dart' as _i3;
 
-import '../types/pallet_kvstore/pallet/call.dart' as _i6;
+import '../types/pallet_kvstore/pallet/call.dart' as _i7;
 import '../types/sp_core/crypto/account_id32.dart' as _i2;
-import '../types/tfchain_runtime/runtime_call.dart' as _i5;
+import '../types/tfchain_runtime/runtime_call.dart' as _i6;
 
 class Queries {
   const Queries(this.__api);
@@ -44,27 +45,42 @@ class Queries {
       growable: true,
     ); /* Default */
   }
+
+  /// Returns the storage key for `tFKVStore`.
+  _i5.Uint8List tFKVStoreKey(
+    _i2.AccountId32 key1,
+    List<int> key2,
+  ) {
+    final hashedKey = _tFKVStore.hashedKeyFor(
+      key1,
+      key2,
+    );
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `tFKVStore`.
+  _i5.Uint8List tFKVStoreMapPrefix(_i2.AccountId32 key1) {
+    final hashedKey = _tFKVStore.mapPrefix(key1);
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Set the value stored at a particular key
-  _i5.RuntimeCall set({
-    required key,
-    required value,
+  /// See [`Pallet::set`].
+  _i6.TFKVStore set({
+    required List<int> key,
+    required List<int> value,
   }) {
-    final _call = _i6.Call.values.set(
+    return _i6.TFKVStore(_i7.Set(
       key: key,
       value: value,
-    );
-    return _i5.RuntimeCall.values.tFKVStore(_call);
+    ));
   }
 
-  /// Read the value stored at a particular key, while removing it from the map.
-  /// Also emit the read value in an event
-  _i5.RuntimeCall delete({required key}) {
-    final _call = _i6.Call.values.delete(key: key);
-    return _i5.RuntimeCall.values.tFKVStore(_call);
+  /// See [`Pallet::delete`].
+  _i6.TFKVStore delete({required List<int> key}) {
+    return _i6.TFKVStore(_i7.Delete(key: key));
   }
 }

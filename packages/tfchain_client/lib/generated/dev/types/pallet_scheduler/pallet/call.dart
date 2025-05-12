@@ -7,7 +7,7 @@ import 'package:quiver/collection.dart' as _i5;
 import '../../tfchain_runtime/runtime_call.dart' as _i4;
 import '../../tuples_1.dart' as _i3;
 
-/// Contains one variant per dispatchable that can be called by an extrinsic.
+/// Contains a variant per dispatchable extrinsic that this pallet has.
 abstract class Call {
   const Call();
 
@@ -186,7 +186,7 @@ class $CallCodec with _i1.Codec<Call> {
   }
 }
 
-/// Anonymously schedule a task.
+/// See [`Pallet::schedule`].
 class Schedule extends Call {
   const Schedule({
     required this.when,
@@ -208,10 +208,10 @@ class Schedule extends Call {
     );
   }
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int when;
 
-  /// Option<schedule::Period<T::BlockNumber>>
+  /// Option<schedule::Period<BlockNumberFor<T>>>
   final _i3.Tuple2<int, int>? maybePeriodic;
 
   /// schedule::Priority
@@ -293,7 +293,7 @@ class Schedule extends Call {
       );
 }
 
-/// Cancel an anonymously scheduled task.
+/// See [`Pallet::cancel`].
 class Cancel extends Call {
   const Cancel({
     required this.when,
@@ -307,7 +307,7 @@ class Cancel extends Call {
     );
   }
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int when;
 
   /// u32
@@ -358,7 +358,7 @@ class Cancel extends Call {
       );
 }
 
-/// Schedule a named task.
+/// See [`Pallet::schedule_named`].
 class ScheduleNamed extends Call {
   const ScheduleNamed({
     required this.id,
@@ -385,10 +385,10 @@ class ScheduleNamed extends Call {
   /// TaskName
   final List<int> id;
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int when;
 
-  /// Option<schedule::Period<T::BlockNumber>>
+  /// Option<schedule::Period<BlockNumberFor<T>>>
   final _i3.Tuple2<int, int>? maybePeriodic;
 
   /// schedule::Priority
@@ -481,7 +481,7 @@ class ScheduleNamed extends Call {
       );
 }
 
-/// Cancel a named scheduled task.
+/// See [`Pallet::cancel_named`].
 class CancelNamed extends Call {
   const CancelNamed({required this.id});
 
@@ -530,7 +530,7 @@ class CancelNamed extends Call {
   int get hashCode => id.hashCode;
 }
 
-/// Anonymously schedule a task after a delay.
+/// See [`Pallet::schedule_after`].
 class ScheduleAfter extends Call {
   const ScheduleAfter({
     required this.after,
@@ -552,10 +552,10 @@ class ScheduleAfter extends Call {
     );
   }
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int after;
 
-  /// Option<schedule::Period<T::BlockNumber>>
+  /// Option<schedule::Period<BlockNumberFor<T>>>
   final _i3.Tuple2<int, int>? maybePeriodic;
 
   /// schedule::Priority
@@ -637,7 +637,7 @@ class ScheduleAfter extends Call {
       );
 }
 
-/// Schedule a named task after a delay.
+/// See [`Pallet::schedule_named_after`].
 class ScheduleNamedAfter extends Call {
   const ScheduleNamedAfter({
     required this.id,
@@ -664,10 +664,10 @@ class ScheduleNamedAfter extends Call {
   /// TaskName
   final List<int> id;
 
-  /// T::BlockNumber
+  /// BlockNumberFor<T>
   final int after;
 
-  /// Option<schedule::Period<T::BlockNumber>>
+  /// Option<schedule::Period<BlockNumberFor<T>>>
   final _i3.Tuple2<int, int>? maybePeriodic;
 
   /// schedule::Priority

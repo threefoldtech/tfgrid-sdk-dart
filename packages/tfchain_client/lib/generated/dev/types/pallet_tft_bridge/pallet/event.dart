@@ -10,10 +10,7 @@ import '../types/mint_transaction.dart' as _i4;
 import '../types/refund_transaction.dart' as _i7;
 import '../types/stellar_signature.dart' as _i5;
 
-///
-///			The [event](https://docs.substrate.io/main-docs/build/events-errors/) emitted
-///			by this pallet.
-///
+/// The `Event` enum of this pallet
 abstract class Event {
   const Event();
 
@@ -57,8 +54,14 @@ class $Event {
     return MintTransactionVoted(value0);
   }
 
-  MintCompleted mintCompleted(_i4.MintTransaction value0) {
-    return MintCompleted(value0);
+  MintCompleted mintCompleted(
+    _i4.MintTransaction value0,
+    List<int> value1,
+  ) {
+    return MintCompleted(
+      value0,
+      value1,
+    );
   }
 
   MintTransactionExpired mintTransactionExpired(
@@ -120,13 +123,15 @@ class $Event {
 
   BurnTransactionExpired burnTransactionExpired(
     BigInt value0,
-    List<int> value1,
-    BigInt value2,
+    _i3.AccountId32? value1,
+    List<int> value2,
+    BigInt value3,
   ) {
     return BurnTransactionExpired(
       value0,
       value1,
       value2,
+      value3,
     );
   }
 
@@ -445,22 +450,36 @@ class MintTransactionVoted extends Event {
 }
 
 class MintCompleted extends Event {
-  const MintCompleted(this.value0);
+  const MintCompleted(
+    this.value0,
+    this.value1,
+  );
 
   factory MintCompleted._decode(_i1.Input input) {
-    return MintCompleted(_i4.MintTransaction.codec.decode(input));
+    return MintCompleted(
+      _i4.MintTransaction.codec.decode(input),
+      _i1.U8SequenceCodec.codec.decode(input),
+    );
   }
 
-  /// MintTransaction<T::AccountId, T::BlockNumber>
+  /// MintTransaction<T::AccountId, BlockNumberFor<T>>
   final _i4.MintTransaction value0;
 
+  /// Vec<u8>
+  final List<int> value1;
+
   @override
-  Map<String, Map<String, dynamic>> toJson() =>
-      {'MintCompleted': value0.toJson()};
+  Map<String, List<dynamic>> toJson() => {
+        'MintCompleted': [
+          value0.toJson(),
+          value1,
+        ]
+      };
 
   int _sizeHint() {
     int size = 1;
     size = size + _i4.MintTransaction.codec.sizeHint(value0);
+    size = size + _i1.U8SequenceCodec.codec.sizeHint(value1);
     return size;
   }
 
@@ -473,6 +492,10 @@ class MintCompleted extends Event {
       value0,
       output,
     );
+    _i1.U8SequenceCodec.codec.encodeTo(
+      value1,
+      output,
+    );
   }
 
   @override
@@ -481,10 +504,18 @@ class MintCompleted extends Event {
         this,
         other,
       ) ||
-      other is MintCompleted && other.value0 == value0;
+      other is MintCompleted &&
+          other.value0 == value0 &&
+          _i8.listsEqual(
+            other.value1,
+            value1,
+          );
 
   @override
-  int get hashCode => value0.hashCode;
+  int get hashCode => Object.hash(
+        value0,
+        value1,
+      );
 }
 
 class MintTransactionExpired extends Event {
@@ -867,7 +898,7 @@ class BurnTransactionProcessed extends Event {
     return BurnTransactionProcessed(_i6.BurnTransaction.codec.decode(input));
   }
 
-  /// BurnTransaction<T::BlockNumber>
+  /// BurnTransaction<T::AccountId, BlockNumberFor<T>>
   final _i6.BurnTransaction value0;
 
   @override
@@ -908,11 +939,14 @@ class BurnTransactionExpired extends Event {
     this.value0,
     this.value1,
     this.value2,
+    this.value3,
   );
 
   factory BurnTransactionExpired._decode(_i1.Input input) {
     return BurnTransactionExpired(
       _i1.U64Codec.codec.decode(input),
+      const _i1.OptionCodec<_i3.AccountId32>(_i3.AccountId32Codec())
+          .decode(input),
       _i1.U8SequenceCodec.codec.decode(input),
       _i1.U64Codec.codec.decode(input),
     );
@@ -921,26 +955,33 @@ class BurnTransactionExpired extends Event {
   /// u64
   final BigInt value0;
 
+  /// Option<T::AccountId>
+  final _i3.AccountId32? value1;
+
   /// Vec<u8>
-  final List<int> value1;
+  final List<int> value2;
 
   /// u64
-  final BigInt value2;
+  final BigInt value3;
 
   @override
   Map<String, List<dynamic>> toJson() => {
         'BurnTransactionExpired': [
           value0,
-          value1,
+          value1?.toList(),
           value2,
+          value3,
         ]
       };
 
   int _sizeHint() {
     int size = 1;
     size = size + _i1.U64Codec.codec.sizeHint(value0);
-    size = size + _i1.U8SequenceCodec.codec.sizeHint(value1);
-    size = size + _i1.U64Codec.codec.sizeHint(value2);
+    size = size +
+        const _i1.OptionCodec<_i3.AccountId32>(_i3.AccountId32Codec())
+            .sizeHint(value1);
+    size = size + _i1.U8SequenceCodec.codec.sizeHint(value2);
+    size = size + _i1.U64Codec.codec.sizeHint(value3);
     return size;
   }
 
@@ -953,12 +994,16 @@ class BurnTransactionExpired extends Event {
       value0,
       output,
     );
-    _i1.U8SequenceCodec.codec.encodeTo(
+    const _i1.OptionCodec<_i3.AccountId32>(_i3.AccountId32Codec()).encodeTo(
       value1,
       output,
     );
-    _i1.U64Codec.codec.encodeTo(
+    _i1.U8SequenceCodec.codec.encodeTo(
       value2,
+      output,
+    );
+    _i1.U64Codec.codec.encodeTo(
+      value3,
       output,
     );
   }
@@ -971,17 +1016,19 @@ class BurnTransactionExpired extends Event {
       ) ||
       other is BurnTransactionExpired &&
           other.value0 == value0 &&
+          other.value1 == value1 &&
           _i8.listsEqual(
-            other.value1,
-            value1,
+            other.value2,
+            value2,
           ) &&
-          other.value2 == value2;
+          other.value3 == value3;
 
   @override
   int get hashCode => Object.hash(
         value0,
         value1,
         value2,
+        value3,
       );
 }
 
@@ -1193,7 +1240,7 @@ class RefundTransactionProcessed extends Event {
         _i7.RefundTransaction.codec.decode(input));
   }
 
-  /// RefundTransaction<T::BlockNumber>
+  /// RefundTransaction<BlockNumberFor<T>>
   final _i7.RefundTransaction value0;
 
   @override

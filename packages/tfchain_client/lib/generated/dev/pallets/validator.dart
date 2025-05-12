@@ -1,12 +1,14 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:typed_data' as _i5;
 
 import 'package:polkadart/polkadart.dart' as _i1;
 
-import '../types/pallet_validator/pallet/call.dart' as _i6;
+import '../types/pallet_validator/pallet/call.dart' as _i7;
 import '../types/pallet_validator/types/validator.dart' as _i3;
 import '../types/sp_core/crypto/account_id32.dart' as _i2;
-import '../types/tfchain_runtime/runtime_call.dart' as _i5;
+import '../types/sp_runtime/multiaddress/multi_address.dart' as _i8;
+import '../types/tfchain_runtime/runtime_call.dart' as _i6;
 
 class Queries {
   const Queries(this.__api);
@@ -58,81 +60,78 @@ class Queries {
     }
     return null; /* Nullable */
   }
+
+  /// Returns the storage key for `validator`.
+  _i5.Uint8List validatorKey(_i2.AccountId32 key1) {
+    final hashedKey = _validator.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage key for `bonded`.
+  _i5.Uint8List bondedKey(_i2.AccountId32 key1) {
+    final hashedKey = _bonded.hashedKeyFor(key1);
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `validator`.
+  _i5.Uint8List validatorMapPrefix() {
+    final hashedKey = _validator.mapPrefix();
+    return hashedKey;
+  }
+
+  /// Returns the storage map key prefix for `bonded`.
+  _i5.Uint8List bondedMapPrefix() {
+    final hashedKey = _bonded.mapPrefix();
+    return hashedKey;
+  }
 }
 
 class Txs {
   const Txs();
 
-  /// Create a request to become a validator
-  /// Validator account (signer): the account of the validator (this account will be added to the council)
-  /// Validator node account: the account that will validate on consensus layer
-  /// Stash account: the "bank" account of the validator (where rewards should be sent to) the stash should be bonded to a validator
-  /// Description: why someone wants to become a validator
-  /// Tf Connect ID: the threefold connect ID of the person who wants to become a validator
-  /// Info: some public info about the validator (website link, blog link, ..)
-  /// A user can only have 1 validator request at a time
-  _i5.RuntimeCall createValidatorRequest({
-    required validatorNodeAccount,
-    required stashAccount,
-    required description,
-    required tfConnectId,
-    required info,
+  /// See [`Pallet::create_validator_request`].
+  _i6.Validator createValidatorRequest({
+    required _i2.AccountId32 validatorNodeAccount,
+    required _i2.AccountId32 stashAccount,
+    required List<int> description,
+    required List<int> tfConnectId,
+    required List<int> info,
   }) {
-    final _call = _i6.Call.values.createValidatorRequest(
+    return _i6.Validator(_i7.CreateValidatorRequest(
       validatorNodeAccount: validatorNodeAccount,
       stashAccount: stashAccount,
       description: description,
       tfConnectId: tfConnectId,
       info: info,
-    );
-    return _i5.RuntimeCall.values.validator(_call);
+    ));
   }
 
-  /// Start participating in consensus
-  /// Will activate the Validator node account on consensus level
-  /// A user can only call this if his request to be a validator is approved by the council
-  /// Should be called when his node is synced and ready to start validating
-  _i5.RuntimeCall activateValidatorNode() {
-    final _call = _i6.Call.values.activateValidatorNode();
-    return _i5.RuntimeCall.values.validator(_call);
+  /// See [`Pallet::activate_validator_node`].
+  _i6.Validator activateValidatorNode() {
+    return _i6.Validator(_i7.ActivateValidatorNode());
   }
 
-  /// Change validator node account
-  /// In case the Validator wishes to change his validator node account
-  /// he can call this method with the new node validator account
-  /// this new account will be added as a new consensus validator if he is validating already
-  _i5.RuntimeCall changeValidatorNodeAccount(
-      {required newNodeValidatorAccount}) {
-    final _call = _i6.Call.values.changeValidatorNodeAccount(
-        newNodeValidatorAccount: newNodeValidatorAccount);
-    return _i5.RuntimeCall.values.validator(_call);
+  /// See [`Pallet::change_validator_node_account`].
+  _i6.Validator changeValidatorNodeAccount(
+      {required _i2.AccountId32 newNodeValidatorAccount}) {
+    return _i6.Validator(_i7.ChangeValidatorNodeAccount(
+        newNodeValidatorAccount: newNodeValidatorAccount));
   }
 
-  /// Bond an account to a validator account
-  /// Just proves that the stash account is indeed under control of the validator account
-  _i5.RuntimeCall bond({required validator}) {
-    final _call = _i6.Call.values.bond(validator: validator);
-    return _i5.RuntimeCall.values.validator(_call);
+  /// See [`Pallet::bond`].
+  _i6.Validator bond({required _i8.MultiAddress validator}) {
+    return _i6.Validator(_i7.Bond(validator: validator));
   }
 
-  /// Approve validator (council)
-  /// Approves a validator to be added as a council member and
-  /// to participate in consensus
-  _i5.RuntimeCall approveValidator({required validatorAccount}) {
-    final _call =
-        _i6.Call.values.approveValidator(validatorAccount: validatorAccount);
-    return _i5.RuntimeCall.values.validator(_call);
+  /// See [`Pallet::approve_validator`].
+  _i6.Validator approveValidator({required _i8.MultiAddress validatorAccount}) {
+    return _i6.Validator(
+        _i7.ApproveValidator(validatorAccount: validatorAccount));
   }
 
-  /// Remove validator
-  /// Removes a validator from:
-  /// 1. Council
-  /// 2. Storage
-  /// 3. Consensus
-  /// Can only be called by the user or the council
-  _i5.RuntimeCall removeValidator({required validatorAccount}) {
-    final _call =
-        _i6.Call.values.removeValidator(validatorAccount: validatorAccount);
-    return _i5.RuntimeCall.values.validator(_call);
+  /// See [`Pallet::remove_validator`].
+  _i6.Validator removeValidator({required _i8.MultiAddress validatorAccount}) {
+    return _i6.Validator(
+        _i7.RemoveValidator(validatorAccount: validatorAccount));
   }
 }
