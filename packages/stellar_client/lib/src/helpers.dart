@@ -63,7 +63,10 @@ class _TempTx {
 }
 
 Future<List<TradeResponse>> getTradingHistory(
-    {required NetworkType network, required String accountId}) async {
+    {required NetworkType network,
+    required String accountId,
+    required Asset baseAsset,
+    required Asset counterAsset}) async {
   try {
     late StellarSDK _sdk;
     List<TradeResponse> allTrades = [];
@@ -77,8 +80,11 @@ Future<List<TradeResponse>> getTradingHistory(
         break;
     }
 
-    Page<TradeResponse>? tradesPage =
-        await _sdk.trades.forAccount(accountId).execute();
+    Page<TradeResponse>? tradesPage = await _sdk.trades
+        .forAccount(accountId)
+        .baseAsset(baseAsset)
+        .counterAsset(counterAsset)
+        .execute();
     final httpClient = http.Client();
     try {
       while (tradesPage != null) {
