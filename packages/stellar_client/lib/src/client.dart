@@ -715,7 +715,7 @@ class Client {
     }
   }
 
-  /// Updating a DEX order by submitting a `ManageBuyOfferOperation` transaction.
+  /// Updating a DEX order by submitting a `ManageSellOfferOperation` transaction.
   ///
   /// This function allows user to update previously created order by its offerId.
   ///
@@ -739,8 +739,8 @@ class Client {
           'Offer with ID $offerId not found in user\'s account.'),
     );
 
-    ManageBuyOfferOperation updateOfferOperation =
-        ManageBuyOfferOperationBuilder(
+    ManageSellOfferOperation updateOfferOperation =
+        ManageSellOfferOperationBuilder(
       targetOffer!.selling,
       targetOffer.buying,
       amount,
