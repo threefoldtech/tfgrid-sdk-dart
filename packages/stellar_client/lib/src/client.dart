@@ -667,8 +667,9 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        if (response.extras!.resultCodes!.operationsResultCodes!
-            .contains('op_low_reserve')) {
+        if (response.extras?.resultCodes?.operationsResultCodes
+                ?.contains('op_low_reserve') ==
+            true) {
           throw Exception('Transaction failed due to low reserve.');
         }
         logger.e('Transaction failed with result: ${response.resultXdr}');
@@ -711,8 +712,9 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        if (response.extras!.resultCodes!.operationsResultCodes!
-            .contains('op_low_reserve')) {
+        if (response.extras?.resultCodes?.operationsResultCodes
+                ?.contains('op_low_reserve') ==
+            true) {
           throw Exception('Transaction failed due to low reserve.');
         }
         logger.e('Transaction failed with result: ${response.resultXdr}');
@@ -764,8 +766,9 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        if (response.extras!.resultCodes!.operationsResultCodes!
-            .contains('op_low_reserve')) {
+        if (response.extras?.resultCodes?.operationsResultCodes
+                ?.contains('op_low_reserve') ==
+            true) {
           throw Exception('Transaction failed due to low reserve.');
         }
         logger.e('Transaction failed with result: ${response.resultXdr}');
