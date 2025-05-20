@@ -667,10 +667,15 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        logger.e('Transaction failed with result: ${response.resultXdr}');
-        return false;
+        throw StellarBalanceException.fromOperationResult(
+          response.extras?.resultCodes?.operationsResultCodes,
+          response.resultXdr,
+        );
       }
+
       return true;
+    } on StellarBalanceException catch (_) {
+      rethrow;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
     }
@@ -706,10 +711,14 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        logger.e('Transaction failed with result: ${response.resultXdr}');
-        return false;
+        throw StellarBalanceException.fromOperationResult(
+          response.extras?.resultCodes?.operationsResultCodes,
+          response.resultXdr,
+        );
       }
       return true;
+    } on StellarBalanceException catch (_) {
+      rethrow;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
     }
@@ -755,10 +764,14 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
-        logger.e('Transaction failed with result: ${response.resultXdr}');
-        return false;
+        throw StellarBalanceException.fromOperationResult(
+          response.extras?.resultCodes?.operationsResultCodes,
+          response.resultXdr,
+        );
       }
       return true;
+    } on StellarBalanceException catch (_) {
+      rethrow;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
     }
