@@ -667,9 +667,14 @@ class Client {
       final SubmitTransactionResponse response =
           await _sdk.submitTransaction(transaction);
       if (!response.success) {
+        if (response.extras!.resultCodes!.operationsResultCodes!
+            .contains('op_low_reserve')) {
+          throw Exception('Transaction failed due to low reserve.');
+        }
         logger.e('Transaction failed with result: ${response.resultXdr}');
         return false;
       }
+
       return true;
     } catch (error) {
       throw Exception('Transaction failed due to: ${error.toString()}');
