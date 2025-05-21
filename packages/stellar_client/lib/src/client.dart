@@ -365,9 +365,10 @@ class Client {
       throw Exception('Balance with asset code ${currency} not found.');
     });
     // check that receiver account exists
-    final receiver = await _sdk.accounts.account(accountId);
+    final balance = await getBalanceByAccountID(
+        network: _network, accountId: destinationAddress);
     // check that asset exists
-    var specificBalance = receiver.balances.firstWhere(
+    var specificBalance = balance.firstWhere(
       (balance) => balance.assetCode == currency,
       orElse: () {
         throw Exception('Balance with asset code ${currency} not found.');
