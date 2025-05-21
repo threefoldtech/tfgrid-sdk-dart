@@ -367,7 +367,7 @@ class Client {
     List<BalanceInfo> balance = [];
     try {
       // check that receiver account exists
-      balance = await getBalanceByAccountID(
+      receiverBalance = await getBalanceByAccountID(
           network: _network, accountId: destinationAddress);
     } catch (e) {
       throw Exception('Receiver account does not exist.');
