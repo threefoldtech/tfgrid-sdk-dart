@@ -364,7 +364,7 @@ class Client {
       }
       throw Exception('Balance with asset code ${currency} not found.');
     });
-    List<BalanceInfo> balance = [];
+    List<BalanceInfo> receiverBalance = [];
     try {
       // check that receiver account exists
       receiverBalance = await getBalanceByAccountID(
@@ -374,7 +374,7 @@ class Client {
     }
 
     // check that asset exists
-    var specificBalance = balance.firstWhere(
+    var specificBalance = receiverBalance.firstWhere(
       (balance) => balance.assetCode == currency,
       orElse: () {
         throw Exception('Balance with asset code ${currency} not found.');
