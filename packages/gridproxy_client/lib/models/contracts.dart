@@ -90,6 +90,7 @@ class ContractInfo {
   String state;
   int twin_id;
   String type;
+  int? nodeId;
 
   ContractInfo({
     required this.contract_id,
@@ -98,6 +99,7 @@ class ContractInfo {
     required this.state,
     required this.twin_id,
     required this.type,
+    this.nodeId,
   });
 
   factory ContractInfo.fromJson(Map<String, dynamic> json) {
@@ -122,6 +124,7 @@ class ContractInfo {
 
     return ContractInfo(
       contract_id: json['contract_id'] ?? 0,
+      nodeId: json['details']['nodeId'] ?? '',
       created_at: json['created_at'] ?? 0,
       details: details,
       state: json['state'] ?? '',
@@ -201,7 +204,7 @@ class ContractInfoQueryParams {
   int? node_id;
   String? name;
   ContractTypes? type;
-  ContractState? state;
+  List<ContractState>? state;
   String? deployment_data;
   String? deployment_hash;
   int? number_of_public_ips;
