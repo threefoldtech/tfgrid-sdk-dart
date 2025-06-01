@@ -124,7 +124,7 @@ class ContractInfo {
 
     return ContractInfo(
       contract_id: json['contract_id'] ?? 0,
-      nodeId: json['details']['nodeId'] ?? '',
+      nodeId: json['details']['nodeId'] ?? 0,
       created_at: json['created_at'] ?? 0,
       details: details,
       state: json['state'] ?? '',
