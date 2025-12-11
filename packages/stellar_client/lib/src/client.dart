@@ -480,7 +480,13 @@ class Client {
           }
         }
 
-        if (tempList.isEmpty) break;
+        if (tempList.isEmpty) {
+          // No matches in this page, continue to next page
+          final lastPayment = page.records.last;
+          if (lastPayment is! PaymentOperationResponse) break;
+          currentCursor = lastPayment.pagingToken;
+          continue;
+        }
 
         currentCursor = tempList.last.response.pagingToken;
 
