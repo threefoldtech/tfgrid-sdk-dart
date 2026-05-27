@@ -1,4 +1,4 @@
-# tfgrid-sdk-dart
+# ZOS SDK Dart
 
 [![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos) [![codecov](https://codecov.io/gh/threefoldtech/tfgrid-sdk-dart/graph/badge.svg?token=KrlhzzdP72)](https://codecov.io/gh/threefoldtech/tfgrid-sdk-dart)
 
