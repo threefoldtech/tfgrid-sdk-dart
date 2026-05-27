@@ -2,7 +2,7 @@
 
 [![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos) [![codecov](https://codecov.io/gh/threefoldtech/tfgrid-sdk-dart/graph/badge.svg?token=KrlhzzdP72)](https://codecov.io/gh/threefoldtech/tfgrid-sdk-dart)
 
-This repo contains the dart clients for Threefold grid.
+This repository contains the Dart SDK clients for interacting with the ThreeFold Grid, including TFChain, grid proxy, GraphQL, and Stellar clients.
 
 ## Packages
 
@@ -63,4 +63,9 @@ Check results from `result.txt` with the following command
 
 ```bash
 cat coverage/result.txt
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+Copyright (c) TFTech NV.
 ```
