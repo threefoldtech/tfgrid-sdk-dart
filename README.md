@@ -18,7 +18,7 @@ This repository provides a set of Dart packages that abstract the grid's RPC, bl
 
 ## Role in the stack
 
-The SDK sits at the application layer, providing Dart and Flutter apps with a typed interface to the lower-level grid services. It communicates with TFChain for on-chain operations, the grid proxy for resource discovery, GraphQL for data queries, and Stellar for payments. It is typically used alongside other grid SDKs and tooling when building cross-platform user interfaces or mobile automation.
+The SDK sits at the application layer, providing Dart and Flutter apps with a typed interface to the lower-level grid services. It communicates with Ledger Chain for on-chain operations, the grid proxy for resource discovery, GraphQL for data queries, and Stellar for payments. It is typically used alongside other grid SDKs and tooling when building cross-platform user interfaces or mobile automation.
 
 ## Relation to ThreeFold
 
